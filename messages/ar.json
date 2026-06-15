@@ -1,0 +1,82 @@
+{
+  "HomePage": {
+    "title": "مرحباً بالعالم!"
+  },
+  "auth": {
+    "header": {
+      "brand": "RankAI",
+      "language": "اللغة",
+      "english": "English",
+      "arabic": "العربية"
+    },
+    "metadata": {
+      "title": "Rank AI — إنشاء حساب",
+      "description": "أنشئ حسابك في Rank AI وابدأ تجربتك المجانية لمدة 14 يوماً."
+    },
+    "preview": {
+      "headline": "SEO يحقق نتائج - بشكل تلقائي ويعمل باستمرار",
+      "subtitle": "نقوم بعمل فحص شامل لكل صفحات موقعك، نكتشف مشاكل السيو فوراً، ونولّد تحسينات مدعومة بالذكاء الاصطناعي",
+      "featureTitle": "تحسينات ذكية",
+      "featureSubtitle": "توصيات مدعومة بـ AI",
+      "trustedBy": "موثوق به من قبل",
+      "wordpress": "WordPress",
+      "shopify": "Shopify"
+    },
+    "register": {
+      "title": "إنشاء حسابك",
+      "subtitle": "ابدأ تجربتك المجانية لمدة 14 يوماً - لا يلزم بطاقة ائتمانية",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "عبدالرحمن ثروت",
+      "email": "البريد الالكتروني",
+      "emailPlaceholder": "info@howeyah.com",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "****************",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "confirmPasswordPlaceholder": "****************",
+      "submit": "انشاء حساب",
+      "hasAccount": "لديك حساب بالفعل؟",
+      "login": "تسجيل الدخول",
+      "or": "أو",
+      "orCreateAccount": "او انشاء حساب",
+      "google": "المتابعة مع Google",
+      "fieldValid": "رسالة التأكيد",
+      "validation": {
+        "fullNameMin": "يجب أن يكون الاسم الكامل حرفين على الأقل",
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
+        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+        "passwordsMismatch": "كلمات المرور غير متطابقة"
+      }
+    },
+    "verify": {
+      "metadata": {
+        "title": "Rank AI — تأكيد البريد الإلكتروني",
+        "description": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني لإكمال التسجيل."
+      },
+      "steps": {
+        "label": "تقدم التسجيل",
+        "createAccount": "انشاء حساب",
+        "verifyEmail": "تاكيد البريد الالكتروني",
+        "finish": "الانتهاء"
+      },
+      "title": "ادخل الكود",
+      "subtitle": "ادخل الكود الذي تم ارساله الى {email}",
+      "submit": "تاكيد البريد الالكتروني",
+      "resendPrompt": "لم تستلم الرمز؟",
+      "resendAction": "أعد إرسال الرمز"
+    },
+    "resendOtp": {
+      "metadata": {
+        "title": "Rank AI — إعادة إرسال الرمز",
+        "description": "أدخل بريدك الإلكتروني لإعادة إرسال رمز التحقق."
+      },
+      "title": "لم تستلم الرمز؟",
+      "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك كود آخر",
+      "email": "البريد الالكتروني",
+      "emailPlaceholder": "info@howeyah.com",
+      "submit": "ارسال",
+      "footerPrompt": "لم تستلم الرمز؟",
+      "footerAction": "أعد إرسال الرمز"
+    }
+  }
+}

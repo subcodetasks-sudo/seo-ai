@@ -1,5 +1,82 @@
 {
   "HomePage": {
     "title": "Hello world!"
+  },
+  "auth": {
+    "header": {
+      "brand": "RankAI",
+      "language": "Language",
+      "english": "English",
+      "arabic": "Arabic"
+    },
+    "metadata": {
+      "title": "Rank AI — Create account",
+      "description": "Create your Rank AI account and start your 14-day free trial."
+    },
+    "preview": {
+      "headline": "SEO that delivers results — automatically and continuously",
+      "subtitle": "We perform a comprehensive scan of every page on your site, detect SEO issues instantly, and generate AI-powered improvements.",
+      "featureTitle": "Smart improvements",
+      "featureSubtitle": "AI-powered recommendations",
+      "trustedBy": "Trusted by",
+      "wordpress": "WordPress",
+      "shopify": "Shopify"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Start your 14-day free trial — no credit card required",
+      "fullName": "Full name",
+      "fullNamePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "info@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Confirm password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "login": "Log in",
+      "or": "or",
+      "orCreateAccount": "or create an account",
+      "google": "Continue with Google",
+      "fieldValid": "Looks good",
+      "validation": {
+        "fullNameMin": "Full name must be at least 2 characters",
+        "emailInvalid": "Please enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters",
+        "confirmPasswordRequired": "Please confirm your password",
+        "passwordsMismatch": "Passwords do not match"
+      }
+    },
+    "verify": {
+      "metadata": {
+        "title": "Rank AI — Verify email",
+        "description": "Enter the verification code sent to your email to complete registration."
+      },
+      "steps": {
+        "label": "Registration progress",
+        "createAccount": "Create account",
+        "verifyEmail": "Verify email",
+        "finish": "Finish"
+      },
+      "title": "Enter the code",
+      "subtitle": "Enter the code sent to {email}",
+      "submit": "Confirm email",
+      "resendPrompt": "Didn't receive the code?",
+      "resendAction": "Resend code"
+    },
+    "resendOtp": {
+      "metadata": {
+        "title": "Rank AI — Resend code",
+        "description": "Enter your email to receive a new verification code."
+      },
+      "title": "Didn't receive the code?",
+      "subtitle": "Enter your email and we will send you another code",
+      "email": "Email",
+      "emailPlaceholder": "info@example.com",
+      "submit": "Send",
+      "footerPrompt": "Didn't receive the code?",
+      "footerAction": "Resend code"
+    }
   }
 }
