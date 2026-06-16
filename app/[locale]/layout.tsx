@@ -1,8 +1,10 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 
 import { LocaleDirectionProvider } from "@/components/locale-direction-provider";
+import { Spinner } from "@/components/ui/spinner";
 import { routing } from "@/i18n/routing";
 
 type LocaleLayoutProps = {
@@ -14,7 +16,23 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export default async function LocaleLayout({
+function LocaleLayoutFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <Spinner className="size-8 text-primary" />
+    </div>
+  );
+}
+
+export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  return (
+    <Suspense fallback={<LocaleLayoutFallback />}>
+      <LocaleLayoutContent params={params}>{children}</LocaleLayoutContent>
+    </Suspense>
+  );
+}
+
+async function LocaleLayoutContent({
   children,
   params,
 }: LocaleLayoutProps) {

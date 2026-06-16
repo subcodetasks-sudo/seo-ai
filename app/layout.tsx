@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import {IBM_Plex_Sans_Arabic,IBM_Plex_Sans } from "next/font/google";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale } from "next-intl/server";
+import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
+
 import Providers from "@/app/providers";
+import { getLocaleDirection, routing } from "@/i18n/routing";
 import "./globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -22,31 +22,23 @@ export const metadata: Metadata = {
   description: "Rank AI is a platform for ranking and analyzing data.",
 };
 
-const RTL_LOCALES = new Set(["ar", "fa", "he", "ur"]);
-
-function getDirection(locale: string) {
-  const baseLocale = locale.toLowerCase().split("-")[0];
-  return RTL_LOCALES.has(baseLocale) ? "rtl" : "ltr";
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-  const direction = getDirection(locale);
+  const locale = routing.defaultLocale;
+  const direction = getLocaleDirection(locale);
 
   return (
     <html
       lang={locale}
       dir={direction}
+      suppressHydrationWarning
       className={`${ibmPlexSans.variable} ${ibmPlexSansArabic.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
-        <Providers>
-          <NextIntlClientProvider>{children}</NextIntlClientProvider>
-        </Providers>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

@@ -1,15 +1,23 @@
-import { getTranslations } from "next-intl/server";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+
 import { PostsList } from "@/features/home/src/components/posts-list";
 import { postsQueryOptions } from "@/features/home/src/queries/posts";
 import { UploadDialog } from "@/features/uploads/components/upload-dialog";
 
-export default async function Home() {
-  const t = await getTranslations("HomePage");
+type HomePageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function Home({ params }: HomePageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "HomePage" });
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery(postsQueryOptions);
