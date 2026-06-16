@@ -1,6 +1,5 @@
 "use client";
 
-import { Fragment } from "react";
 import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -14,6 +13,8 @@ const STEPS = [
 
 type RegisterProgressProps = {
   currentStep: 1 | 2 | 3;
+  /** When true on step 3, all steps render as completed (success screen). */
+  isComplete?: boolean;
   className?: string;
 };
 
@@ -21,8 +22,8 @@ function StepConnector({ completed }: { completed: boolean }) {
   return (
     <div
       className={cn(
-        "mt-5 h-px min-w-4 flex-1 sm:min-w-8",
-        completed ? "bg-success-200" : "bg-neutral-200 border-2 border-neutral-200"
+        "h-px w-full self-center",
+        completed ? "bg-success-200" : "bg-neutral-200"
       )}
       aria-hidden
     />
@@ -55,10 +56,15 @@ function StepCircle({ step, status }: StepCircleProps) {
   );
 }
 
-export function RegisterProgress({ currentStep, className }: RegisterProgressProps) {
+export function RegisterProgress({
+  currentStep,
+  isComplete = false,
+  className,
+}: RegisterProgressProps) {
   const t = useTranslations("auth.verify.steps");
 
   function stepStatus(step: number): StepCircleProps["status"] {
+    if (isComplete && currentStep === 3 && step === 3) return "completed";
     if (step < currentStep) return "completed";
     if (step === currentStep) return "active";
     return "pending";
@@ -67,28 +73,34 @@ export function RegisterProgress({ currentStep, className }: RegisterProgressPro
   return (
     <nav
       aria-label={t("label")}
-      className={cn("w-full", className)}
+      className={cn("relative w-full", className)}
     >
-      <ol className="flex w-full items-start">
-        {STEPS.map((step, index) => (
-          <Fragment key={step.id}>
-            {index > 0 ? (
-              <StepConnector completed={currentStep > index} />
-            ) : null}
-            <li className="flex min-w-0 flex-1 flex-col items-center gap-2 px-1 last:flex-none">
-              <StepCircle step={step.id} status={stepStatus(step.id)} />
-              <span
-                className={cn(
-                  "max-w-24 text-center text-label-sm leading-tight sm:max-w-none",
-                  stepStatus(step.id) === "pending"
-                    ? "text-neutral-400"
-                    : "text-secondary-500"
-                )}
-              >
-                {t(step.labelKey)}
-              </span>
-            </li>
-          </Fragment>
+      <div
+        className="pointer-events-none absolute inset-x-[16.666%] top-4.5 grid grid-cols-2 sm:top-5"
+        aria-hidden
+      >
+        <StepConnector completed={currentStep > 1} />
+        <StepConnector completed={currentStep > 2} />
+      </div>
+
+      <ol className="relative grid w-full grid-cols-3">
+        {STEPS.map((step) => (
+          <li
+            key={step.id}
+            className="flex flex-col items-center gap-2 px-1"
+          >
+            <StepCircle step={step.id} status={stepStatus(step.id)} />
+            <span
+              className={cn(
+                "max-w-24 text-center text-label-sm leading-tight sm:max-w-none",
+                stepStatus(step.id) === "pending"
+                  ? "text-neutral-400"
+                  : "text-secondary-500"
+              )}
+            >
+              {t(step.labelKey)}
+            </span>
+          </li>
         ))}
       </ol>
     </nav>
