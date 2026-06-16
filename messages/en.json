@@ -2,12 +2,73 @@
   "HomePage": {
     "title": "Hello world!"
   },
-  "auth": {
+  "common": {
     "header": {
-      "brand": "RankAI",
       "language": "Language",
       "english": "English",
-      "arabic": "Arabic"
+      "arabic": "Arabic",
+      "settings": "Settings",
+      "notifications": "Notifications"
+    }
+  },
+  "plans": {
+    "metadata": {
+      "title": "Rank AI — Choose your plan",
+      "description": "Select the plan that fits your needs. All paid plans include a 14-day free trial."
+    },
+    "title": "Choose your plan",
+    "subtitle": "Start for free and scale as you grow. All paid plans include a 14-day free trial — no credit card required.",
+    "perMonth": "/month",
+    "mostPopular": "Most popular",
+    "continue": "Continue",
+    "cards": {
+      "free": {
+        "name": "Free",
+        "description": "For individuals getting started",
+        "price": "$0",
+        "usage": "100 pages / month",
+        "features": [
+          "1 project",
+          "100 scanned pages monthly",
+          "Basic SEO reports",
+          "Email support"
+        ]
+      },
+      "professional": {
+        "name": "Professional",
+        "description": "For growing businesses",
+        "price": "$79",
+        "usage": "500 pages / month",
+        "features": [
+          "10 projects",
+          "500 scanned pages monthly",
+          "AI-powered recommendations",
+          "Priority email support",
+          "Weekly scan schedules"
+        ]
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "For agencies and advanced users",
+        "price": "$149",
+        "usage": "2,000 pages / month",
+        "features": [
+          "Unlimited projects",
+          "2,000 scanned pages monthly",
+          "Everything in Professional",
+          "Team collaboration (5 seats)",
+          "API access",
+          "White-label reports",
+          "Custom scan schedules",
+          "Dedicated account manager",
+          "SLA guarantee"
+        ]
+      }
+    }
+  },
+  "auth": {
+    "header": {
+      "brand": "RankAI"
     },
     "metadata": {
       "title": "Rank AI — Create account",
@@ -64,6 +125,14 @@
       "submit": "Confirm email",
       "resendPrompt": "Didn't receive the code?",
       "resendAction": "Resend code"
+    },
+    "success": {
+      "metadata": {
+        "title": "Rank AI — Welcome",
+        "description": "Your account has been created. Welcome to Rank AI."
+      },
+      "title": "Welcome to RankAI",
+      "continue": "Continue"
     },
     "resendOtp": {
       "metadata": {
