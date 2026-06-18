@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 
-import { LocaleDirectionProvider } from "@/components/locale-direction-provider";
+import { LocaleDirectionProvider } from "@/app/[locale]/locale-direction-provider";
 import { Spinner } from "@/components/ui/spinner";
 import { routing } from "@/i18n/routing";
+
+import { LocaleShell } from "./locale-shell";
 
 type LocaleLayoutProps = {
   children: React.ReactNode;
@@ -47,7 +49,9 @@ async function LocaleLayoutContent({
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <LocaleDirectionProvider>{children}</LocaleDirectionProvider>
+      <LocaleDirectionProvider>
+        <LocaleShell>{children}</LocaleShell>
+      </LocaleDirectionProvider>
     </NextIntlClientProvider>
   );
 }
