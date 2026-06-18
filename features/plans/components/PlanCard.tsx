@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import type { PlanId } from "../types";
+import type { PlanId } from "../types/types";
 
 type PlanCardProps = {
   planId: PlanId;

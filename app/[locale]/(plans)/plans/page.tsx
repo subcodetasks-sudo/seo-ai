@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Header } from "@/components/Header";
-import { PlansContent } from "@/features/plans/components/PlansContent";
+import { PlansContent } from "@/features/plans";
 import { getLocaleDirection } from "@/i18n/routing";
-
 type PlansPageProps = {
   params: Promise<{ locale: string }>;
 };

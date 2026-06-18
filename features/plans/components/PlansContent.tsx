@@ -9,7 +9,7 @@ import { Link } from "@/i18n/navigation";
 import { getLocaleDirection } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
-import { DEFAULT_PLAN_ID, PLAN_IDS, type PlanId } from "../types";
+import { DEFAULT_PLAN_ID, PLAN_IDS, type PlanId } from "../types/types";
 import { PlanCard } from "./PlanCard";
 
 export function PlansContent() {
