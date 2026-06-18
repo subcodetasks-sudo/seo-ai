@@ -29,7 +29,8 @@ export default async function Home({ params }: HomePageProps) {
           {t("title")}
         </h1>
         <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          TanStack Query is pre-fetched on the server and hydrated on the client.
+          TanStack Query is pre-fetched on the server and hydrated on the
+          client.
         </p>
         <div className="mt-6">
           <UploadDialog />
