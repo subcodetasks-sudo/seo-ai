@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
-import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
+import { Check, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
@@ -13,7 +13,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       className="toaster group"
       icons={{
         success: (
-          <CircleCheckIcon className="size-4" />
+          <Check className="size-4" />
         ),
         info: (
           <InfoIcon className="size-4" />
@@ -30,15 +30,19 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       style={
         {
-          "--normal-bg": "var(--popover)",
-          "--normal-text": "var(--popover-foreground)",
-          "--normal-border": "var(--border)",
-          "--border-radius": "var(--radius)",
+          "--normal-bg": "color-mix(in srgb, var(--primary-50) 80%, transparent)",
+          "--normal-text": "var(--secondary-500)",
+          "--normal-border": "color-mix(in srgb, var(--primary-200) 40%, transparent)",
+          "--success-bg": "color-mix(in srgb, var(--primary-75) 95%, transparent)",
+          "--success-text": "var(--secondary-500)",
+          "--success-border": "color-mix(in srgb, var(--primary-200) 40%, transparent)",
+          "--border-radius": "1rem",
         } as React.CSSProperties
       }
       toastOptions={{
         classNames: {
-          toast: "cn-toast",
+          toast:
+            "cn-toast !bg-primary-50/80 backdrop-blur-md !rounded-2xl !text-secondary-500 !border-primary-200/40 !shadow-sm !shadow-primary-100/50 !shadow-inner",
         },
       }}
       {...props}
