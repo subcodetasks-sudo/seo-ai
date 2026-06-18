@@ -11,6 +11,20 @@
       "notifications": "الإشعارات"
     }
   },
+  "sidebar": {
+    "open": "فتح القائمة الجانبية",
+    "close": "إغلاق القائمة الجانبية",
+    "store": "متجر",
+    "overview": "نظرة عامة",
+    "problemList": "قائمة المشاكل",
+    "aiSuggestions": "اقتراحات الـ AI",
+    "notFoundProblems": "مشاكل 404",
+    "reports": "التقارير",
+    "changelog": "سجل التغييرات",
+    "userName": "محمد أحمد",
+    "userPlan": "الخطة المدفوعة",
+    "userInitials": "م أ"
+  },
   "plans": {
     "metadata": {
       "title": "Rank AI — اختر خطتك",
@@ -83,6 +97,29 @@
       "wordpress": "WordPress",
       "shopify": "Shopify"
     },
+    "login": {
+      "metadata": {
+        "title": "Rank AI — تسجيل الدخول",
+        "description": "سجّل دخولك إلى حساب Rank AI."
+      },
+      "title": "مرحباً بعودتك",
+      "subtitle": "سجّل دخولك إلى حساب RankAI",
+      "email": "البريد الالكتروني",
+      "emailPlaceholder": "info@howeyah.com",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "****************",
+      "forgotPassword": "نسيت كلمة المرور",
+      "submit": "تسجيل دخول",
+      "noAccount": "ليس لديك حساب؟",
+      "createAccount": "إنشاء حساب",
+      "or": "أو",
+      "google": "المتابعة مع Google",
+      "fieldValid": "يبدو رائعاً",
+      "validation": {
+        "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
+        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
+      }
+    },
     "register": {
       "title": "إنشاء حسابك",
       "subtitle": "ابدأ تجربتك المجانية لمدة 14 يوماً - لا يلزم بطاقة ائتمانية",
@@ -100,7 +137,7 @@
       "or": "أو",
       "orCreateAccount": "او انشاء حساب",
       "google": "المتابعة مع Google",
-      "fieldValid": "رسالة التأكيد",
+      "fieldValid": "يبدو رائعاً",
       "validation": {
         "fullNameMin": "يجب أن يكون الاسم الكامل حرفين على الأقل",
         "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
@@ -134,6 +171,30 @@
       "title": "اهلا بك في RankAI",
       "continue": "استمرار"
     },
+    "forgetPassword": {
+      "metadata": {
+        "title": "Rank AI — إعادة تعيين كلمة المرور",
+        "description": "أدخل بريدك الإلكتروني لتلقي رابط إعادة تعيين كلمة المرور."
+      },
+      "title": "إعادة تعيين كلمة المرور",
+      "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين.",
+      "email": "البريد الالكتروني",
+      "emailPlaceholder": "info@howeyah.com",
+      "submit": "ارسال",
+      "cancel": "الغاء"
+    },
+    "forgetPasswordVerify": {
+      "metadata": {
+        "title": "Rank AI — تأكيد رمز إعادة التعيين",
+        "description": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني لإعادة تعيين كلمة المرور."
+      }
+    },
+    "forgetPasswordResendOtp": {
+      "metadata": {
+        "title": "Rank AI — إعادة إرسال رمز التعيين",
+        "description": "أدخل بريدك الإلكتروني لإعادة إرسال رمز إعادة تعيين كلمة المرور."
+      }
+    },
     "resendOtp": {
       "metadata": {
         "title": "Rank AI — إعادة إرسال الرمز",
@@ -146,6 +207,40 @@
       "submit": "ارسال",
       "footerPrompt": "لم تستلم الرمز؟",
       "footerAction": "أعد إرسال الرمز"
+    },
+    "resetPassword": {
+      "metadata": {
+        "title": "Rank AI — تعيين كلمة مرور جديدة",
+        "description": "اختر كلمة مرور جديدة لحسابك في Rank AI."
+      },
+      "title": "تعيين كلمة مرور جديدة",
+      "subtitle": "اعادة تعيين لكلمة المرور",
+      "password": "كلمة المرور",
+      "passwordPlaceholder": "****************",
+      "confirmPassword": "كلمة المرور",
+      "confirmPasswordPlaceholder": "****************",
+      "submit": "تسجيل دخول",
+      "fieldValid": "يبدو رائعاً",
+      "validation": {
+        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
+        "passwordsMismatch": "كلمات المرور غير متطابقة"
+      }
+    },
+    "resetPasswordSuccess": {
+      "metadata": {
+        "title": "Rank AI — تم تعيين كلمة المرور",
+        "description": "تم تعيين كلمة المرور الخاصة بك بنجاح."
+      },
+      "title": "تم تعيين كلمة المرور بنجاح",
+      "submit": "تسجيل دخول"
+    },
+    "toast": {
+      "accountCreated": "تم إنشاء الحساب بنجاح",
+      "otpSent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
+      "forgetPasswordOtpSent": "تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني",
+      "passwordReset": "تم إعادة تعيين كلمة المرور بنجاح",
+      "welcomeBack": "مرحباً بعودتك!"
     }
   }
 }

@@ -11,6 +11,20 @@
       "notifications": "Notifications"
     }
   },
+  "sidebar": {
+    "open": "Open sidebar",
+    "close": "Close sidebar",
+    "store": "Store",
+    "overview": "Overview",
+    "problemList": "Problem list",
+    "aiSuggestions": "AI suggestions",
+    "notFoundProblems": "404 problems",
+    "reports": "Reports",
+    "changelog": "Changelog",
+    "userName": "Mohamed Ahmed",
+    "userPlan": "Paid plan",
+    "userInitials": "MA"
+  },
   "plans": {
     "metadata": {
       "title": "Rank AI — Choose your plan",
@@ -83,6 +97,29 @@
       "wordpress": "WordPress",
       "shopify": "Shopify"
     },
+    "login": {
+      "metadata": {
+        "title": "Rank AI — Log in",
+        "description": "Log in to your Rank AI account."
+      },
+      "title": "Welcome back",
+      "subtitle": "Log in to your RankAI account",
+      "email": "Email",
+      "emailPlaceholder": "info@example.com",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "forgotPassword": "Forgot password?",
+      "submit": "Log in",
+      "noAccount": "Don't have an account?",
+      "createAccount": "Create account",
+      "or": "or",
+      "google": "Continue with Google",
+      "fieldValid": "Looks good",
+      "validation": {
+        "emailInvalid": "Please enter a valid email address",
+        "passwordMin": "Password must be at least 8 characters"
+      }
+    },
     "register": {
       "title": "Create your account",
       "subtitle": "Start your 14-day free trial — no credit card required",
@@ -134,6 +171,30 @@
       "title": "Welcome to RankAI",
       "continue": "Continue"
     },
+    "forgetPassword": {
+      "metadata": {
+        "title": "Rank AI — Reset password",
+        "description": "Enter your email to receive a password reset link."
+      },
+      "title": "Reset password",
+      "subtitle": "Enter your email and we will send you a reset link.",
+      "email": "Email",
+      "emailPlaceholder": "info@example.com",
+      "submit": "Send",
+      "cancel": "Cancel"
+    },
+    "forgetPasswordVerify": {
+      "metadata": {
+        "title": "Rank AI — Verify reset code",
+        "description": "Enter the verification code sent to your email to reset your password."
+      }
+    },
+    "forgetPasswordResendOtp": {
+      "metadata": {
+        "title": "Rank AI — Resend reset code",
+        "description": "Enter your email to receive a new password reset code."
+      }
+    },
     "resendOtp": {
       "metadata": {
         "title": "Rank AI — Resend code",
@@ -146,6 +207,40 @@
       "submit": "Send",
       "footerPrompt": "Didn't receive the code?",
       "footerAction": "Resend code"
+    },
+    "resetPassword": {
+      "metadata": {
+        "title": "Rank AI — Set new password",
+        "description": "Choose a new password for your Rank AI account."
+      },
+      "title": "Set new password",
+      "subtitle": "Reset your password",
+      "password": "Password",
+      "passwordPlaceholder": "••••••••",
+      "confirmPassword": "Password",
+      "confirmPasswordPlaceholder": "••••••••",
+      "submit": "Log in",
+      "fieldValid": "Looks good",
+      "validation": {
+        "passwordMin": "Password must be at least 8 characters",
+        "confirmPasswordRequired": "Please confirm your password",
+        "passwordsMismatch": "Passwords do not match"
+      }
+    },
+    "resetPasswordSuccess": {
+      "metadata": {
+        "title": "Rank AI — Password reset",
+        "description": "Your password has been successfully reset."
+      },
+      "title": "Password reset successfully",
+      "submit": "Log in"
+    },
+    "toast": {
+      "accountCreated": "Account created successfully",
+      "otpSent": "Verification code sent to your email",
+      "forgetPasswordOtpSent": "Reset code sent to your email",
+      "passwordReset": "Password reset successfully",
+      "welcomeBack": "Welcome back!"
     }
   }
 }
