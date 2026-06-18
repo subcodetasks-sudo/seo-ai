@@ -4,3 +4,13 @@ export type RegisterFormValues = {
   password: string;
   confirmPassword: string;
 };
+
+export type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
+export type ResetPasswordFormValues = {
+  password: string;
+  confirmPassword: string;
+};
