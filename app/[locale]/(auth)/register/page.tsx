@@ -1,8 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-
-import { AuthPreview } from "@/features/auth/components/AuthPreview";
-import { Header } from "@/features/auth/components/Header";
-import { RegisterForm } from "@/features/auth/components/register/RegisterForm";
+import { AuthPreview, Header, RegisterForm } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
 
 type RegisterPageProps = {
@@ -30,7 +27,7 @@ export default async function RegisterPage({ params }: RegisterPageProps) {
       </div>
       <div
         dir={direction}
-        className="flex flex-col bg-secondary-50 lg:col-start-2 lg:row-start-2"
+        className="flex flex-col items-center justify-center bg-secondary-50 lg:col-start-2 lg:row-start-2"
       >
         <RegisterForm />
       </div>

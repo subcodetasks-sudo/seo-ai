@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-
-import { Header } from "@/features/auth/components/Header";
-import { RegisterProgress } from "@/features/auth/components/register/RegisterProgress";
-import { RegisterSuccess } from "@/features/auth/components/register/RegisterSuccess";
+import { Header, RegisterProgress, RegisterSuccess } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
 
 type RegisterSuccessPageProps = {

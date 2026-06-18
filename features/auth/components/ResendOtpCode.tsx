@@ -5,12 +5,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type ResendOtpFormValues = {
@@ -20,10 +21,17 @@ type ResendOtpFormValues = {
 type ResendOtpCodeProps = {
   defaultEmail?: string;
   className?: string;
+  verifyPath?: string;
 };
 
-export function ResendOtpCode({ defaultEmail = "", className }: ResendOtpCodeProps) {
+export function ResendOtpCode({
+  defaultEmail = "",
+  className,
+  verifyPath = "/register/verify",
+}: ResendOtpCodeProps) {
+  const router = useRouter();
   const t = useTranslations("auth.resendOtp");
+  const tToast = useTranslations("auth.toast");
   const tValidation = useTranslations("auth.register.validation");
 
   const schema = useMemo(
@@ -46,8 +54,13 @@ export function ResendOtpCode({ defaultEmail = "", className }: ResendOtpCodePro
     },
   });
 
-  function onSubmit(_data: ResendOtpFormValues) {
+  function onSubmit(data: ResendOtpFormValues) {
     // UI-only: no API wiring yet.
+    const isForgetPasswordFlow = verifyPath.includes("forget-password");
+    toast.success(
+      tToast(isForgetPasswordFlow ? "forgetPasswordOtpSent" : "otpSent")
+    );
+    router.push(`${verifyPath}?email=${encodeURIComponent(data.email)}`);
   }
 
   return (
@@ -81,7 +94,7 @@ export function ResendOtpCode({ defaultEmail = "", className }: ResendOtpCodePro
         <div className="flex flex-col gap-4">
           <Button
             type="submit"
-            className="h-11 w-full rounded-xl bg-primary-300 text-secondary-500 hover:bg-primary-200"
+            className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
           >
             {t("submit")}
           </Button>

@@ -3,10 +3,11 @@
 import { useContext, useState } from "react";
 import { OTPInputContext } from "input-otp";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup } from "@/components/ui/input-otp";
-import { Link } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const OTP_LENGTH = 5;
@@ -25,6 +26,9 @@ function maskEmail(email: string): string {
 type OtpCodeProps = {
   email: string;
   className?: string;
+  resendHref?: string;
+  successHref?: string;
+  successToastKey?: "accountCreated";
 };
 
 function CircularOtpSlot({
@@ -61,13 +65,35 @@ function CircularOtpSlot({
   );
 }
 
-export function OtpCode({ email, className }: OtpCodeProps) {
+export function OtpCode({
+  email,
+  className,
+  resendHref,
+  successHref,
+  successToastKey,
+}: OtpCodeProps) {
+  const router = useRouter();
   const t = useTranslations("auth.verify");
+  const tToast = useTranslations("auth.toast");
   const [code, setCode] = useState("");
   const displayEmail = maskEmail(email);
+  const resendLink =
+    resendHref ?? `/register/resend-otp?email=${encodeURIComponent(email)}`;
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (code.length < OTP_LENGTH) {
+      return;
+    }
+
+    if (successHref) {
+      if (successToastKey) {
+        toast.success(tToast(successToastKey));
+      }
+      router.push(successHref);
+      return;
+    }
+
     // UI-only: no API wiring yet.
   }
 
@@ -101,7 +127,7 @@ export function OtpCode({ email, className }: OtpCodeProps) {
           <Button
             type="submit"
             disabled={code.length < OTP_LENGTH}
-            className="h-11 w-full rounded-xl bg-primary-300 text-secondary-500 hover:bg-primary-200 disabled:opacity-50"
+            className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200 disabled:opacity-50"
           >
             {t("submit")}
           </Button>
@@ -109,7 +135,7 @@ export function OtpCode({ email, className }: OtpCodeProps) {
           <p className="text-center text-sm text-muted-foreground">
             {t("resendPrompt")}{" "}
             <Link
-              href={`/register/resend-otp?email=${encodeURIComponent(email)}`}
+              href={resendLink}
               className="font-medium text-primary-400 underline underline-offset-4 hover:text-primary-500"
             >
               {t("resendAction")}

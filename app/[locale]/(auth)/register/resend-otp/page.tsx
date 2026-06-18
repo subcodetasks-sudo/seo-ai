@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-
-import { Header } from "@/features/auth/components/Header";
-import { ResendOtpCode } from "@/features/auth/components/ResendOtpCode";
+import { Header, ResendOtpCode } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
 
 type ResendOtpPageProps = {

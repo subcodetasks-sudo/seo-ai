@@ -2,9 +2,10 @@
 
 import { Check } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type RegisterSuccessProps = {
@@ -12,7 +13,14 @@ type RegisterSuccessProps = {
 };
 
 export function RegisterSuccess({ className }: RegisterSuccessProps) {
+  const router = useRouter();
   const t = useTranslations("auth.success");
+  const tToast = useTranslations("auth.toast");
+
+  function handleContinue() {
+    toast.success(tToast("accountCreated"));
+    router.push("/plans");
+  }
 
   return (
     <div className={cn("flex w-full flex-col items-center gap-8", className)}>
@@ -28,10 +36,11 @@ export function RegisterSuccess({ className }: RegisterSuccessProps) {
       </h1>
 
       <Button
-        asChild
-        className="h-11 w-full rounded-xl bg-primary-300 text-secondary-500 hover:bg-primary-200"
+        type="button"
+        onClick={handleContinue}
+        className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
       >
-        <Link href="/plans">{t("continue")}</Link>
+        {t("continue")}
       </Button>
     </div>
   );

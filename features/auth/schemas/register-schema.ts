@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import type { RegisterFormValues } from "@/features/auth/types";
-
 type RegisterSchemaMessages = {
   fullNameMin: string;
   emailInvalid: string;

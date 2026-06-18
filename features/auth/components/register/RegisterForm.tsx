@@ -30,6 +30,7 @@ import { createRegisterSchema } from "@/features/auth/schemas/register-schema";
 import type { RegisterFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useRouter } from "@/i18n/navigation";
 
 function GoogleIcon() {
   return (
@@ -111,6 +112,7 @@ function GoogleSignInButton({ label, className }: GoogleSignInButtonProps) {
 }
 
 export function RegisterForm() {
+  const router = useRouter();
   const t = useTranslations("auth.register");
   const tValidation = useTranslations("auth.register.validation");
   const [showPassword, setShowPassword] = useState(false);
@@ -148,6 +150,7 @@ export function RegisterForm() {
 
   function onSubmit(_data: RegisterFormValues) {
     // UI-only: validation passed; no API wiring yet.
+    router.push(`/register/verify?email=${encodeURIComponent(_data.email)}`);
   }
 
   function fieldSuccess(field: keyof RegisterFormValues) {
@@ -160,7 +163,7 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-md flex-1 px-4 py-8 lg:py-12">
+    <div className="mx-auto w-full max-w-md px-4 py-8 lg:py-12">
       <div
         className="relative overflow-hidden rounded-2xl border border-neutral-200 bg-white p-6 lg:p-8"
         style={{
@@ -237,7 +240,7 @@ export function RegisterForm() {
                   placeholder={t("passwordPlaceholder")}
                   aria-invalid={!!errors.password}
                 />
-                <InputGroupAddon align="inline-start">
+                <InputGroupAddon align="inline-end" className="m-1">
                   <InputGroupButton
                     type="button"
                     variant="ghost"
@@ -274,7 +277,7 @@ export function RegisterForm() {
                   placeholder={t("confirmPasswordPlaceholder")}
                   aria-invalid={!!errors.confirmPassword}
                 />
-                <InputGroupAddon align="inline-start">
+                <InputGroupAddon align="inline-end" className="m-1">
                   <InputGroupButton
                     type="button"
                     variant="ghost"
@@ -314,7 +317,7 @@ export function RegisterForm() {
 
           <FieldSeparator className="hidden lg:flex">{t("or")}</FieldSeparator>
 
-          <GoogleSignInButton label={t("google")} className="hidden lg:flex" />
+          <GoogleSignInButton label={t("google")} className="hidden lg:flex hover:border-primary-300" />
         </form>
       </div>
     </div>
