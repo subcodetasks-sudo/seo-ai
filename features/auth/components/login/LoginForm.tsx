@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
@@ -32,6 +33,7 @@ import type { LoginFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
+import { useLogin } from "../../queries/mutations";
 
 function GoogleIcon() {
   return (
@@ -151,12 +153,22 @@ export function LoginForm() {
     },
   });
 
+
+  const { mutate: login, isPending } = useLogin();
+
   const values = watch();
 
   function onSubmit(_data: LoginFormValues) {
-    // UI-only: validation passed; no API wiring yet.
-    toast.success(tToast("welcomeBack"));
-    router.push(`/`);
+    login(_data, {
+      onSuccess: () => {
+        toast.success(tToast("welcomeBack"));
+        router.push(`/`);
+      },
+      onError: (error) => {
+        toast.error(error.message || tToast("loginFailed"));
+      }
+    });
+
   }
 
   function fieldSuccess(field: keyof LoginFormValues) {
@@ -258,9 +270,13 @@ export function LoginForm() {
 
           <Button
             type="submit"
-            className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
+            className={cn(
+              "h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200",
+              isPending && "cursor-not-allowed opacity-70"
+            )}
+            disabled={isPending}
           >
-            {t("submit")}
+            {isPending ? <LoaderCircle /> : t("submit")}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
