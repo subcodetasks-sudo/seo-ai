@@ -10,7 +10,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -89,7 +89,7 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
     register,
     handleSubmit,
     formState: { errors, touchedFields, dirtyFields },
-    watch,
+    control,
   } = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(schema),
     mode: "onTouched",
@@ -99,7 +99,7 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
     },
   });
 
-  const values = watch();
+  const values = useWatch({ control });
 
   function onSubmit(data: ResetPasswordFormValues) {
     resetPassword(
@@ -126,7 +126,7 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
       touchedFields[field] &&
       dirtyFields[field] &&
       !errors[field] &&
-      values[field]?.length > 0
+      (values[field]?.length ?? 0) > 0
     );
   }
 

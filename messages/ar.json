@@ -129,7 +129,10 @@
       "subtitle": "ادخل الكود الذي تم ارساله الى {email}",
       "submit": "تاكيد البريد الالكتروني",
       "resendPrompt": "لم تستلم الرمز؟",
-      "resendAction": "أعد إرسال الرمز"
+      "resendAction": "أعد إرسال الرمز",
+      "validation": {
+        "tokenRequired": "يرجى إدخال رمز التحقق"
+      }
     },
     "success": {
       "metadata": {

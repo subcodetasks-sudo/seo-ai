@@ -129,7 +129,10 @@
       "subtitle": "Enter the code sent to {email}",
       "submit": "Confirm email",
       "resendPrompt": "Didn't receive the code?",
-      "resendAction": "Resend code"
+      "resendAction": "Resend code",
+      "validation": {
+        "tokenRequired": "Please enter the verification code"
+      }
     },
     "success": {
       "metadata": {

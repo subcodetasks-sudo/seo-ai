@@ -95,12 +95,17 @@ export function OtpCode({
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (code.length < OTP_LENGTH) {
+
+    const result = schema.safeParse({ token: code });
+
+    if (!result.success) {
+      const message = result.error.issues[0]?.message;
+      toast.error(message);
       return;
     }
 
     verifyEmail(
-      { token: code },
+      result.data,
       {
         onSuccess: () => {
           if (successToastKey) {

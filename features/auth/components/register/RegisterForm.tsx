@@ -10,7 +10,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -135,7 +135,7 @@ export function RegisterForm() {
     register,
     handleSubmit,
     formState: { errors, touchedFields, dirtyFields },
-    watch,
+    control,
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(schema),
     mode: "onTouched",
@@ -149,7 +149,7 @@ export function RegisterForm() {
 
   const { mutate: registerUser, isPending } = useRegister();
 
-  const values = watch();
+  const values = useWatch({ control });
 
   function onSubmit(_data: RegisterFormValues) {
     registerUser(_data, {
@@ -167,7 +167,8 @@ export function RegisterForm() {
       touchedFields[field] &&
       dirtyFields[field] &&
       !errors[field] &&
-      values[field]?.length > 0
+      typeof values[field] === "string" &&
+      values[field].length > 0
     );
   }
 
