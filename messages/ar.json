@@ -145,7 +145,8 @@
         "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
         "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
         "passwordsMismatch": "كلمات المرور غير متطابقة"
-      }
+      },
+      "registrationFailed": "فشل التسجيل."
     },
     "verify": {
       "metadata": {

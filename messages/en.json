@@ -145,7 +145,8 @@
         "passwordMin": "Password must be at least 8 characters",
         "confirmPasswordRequired": "Please confirm your password",
         "passwordsMismatch": "Passwords do not match"
-      }
+      },
+      "registrationFailed": "Registration failed."
     },
     "verify": {
       "metadata": {
