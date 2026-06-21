@@ -118,7 +118,8 @@
       "validation": {
         "emailInvalid": "Please enter a valid email address",
         "passwordMin": "Password must be at least 8 characters"
-      }
+      },
+      "loginFailed": "Login failed."
     },
     "register": {
       "title": "Create your account",
