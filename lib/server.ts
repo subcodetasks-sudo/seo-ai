@@ -6,7 +6,8 @@ export async function serverClient<T>(
   alternativeErrorMessage: string = "Request failed",
 ): Promise<T> {
 
-  const res = await fetch(`${env.API_URL}/api/v1${endpoint}`, {
+    // endpoint should be relative to API_PREFIX, for example "auth/login"
+  const res = await fetch(`${env.API_URL}${env.API_PREFIX}${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",

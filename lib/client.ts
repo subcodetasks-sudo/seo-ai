@@ -3,7 +3,9 @@ export async function apiClient<T>(
   options: RequestInit = {},
   alternativeErrorMessage: string = "Request failed"
 ): Promise<T> {
-  const response = await fetch(`${endpoint}`, {
+
+  // endpoint should be relative to /api, for example "auth/login"
+  const response = await fetch(`/api/${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
