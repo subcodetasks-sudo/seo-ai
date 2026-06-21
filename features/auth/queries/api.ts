@@ -2,7 +2,12 @@ import { apiClient } from "@/lib/client";
 import {
   LoginFormValues,
   RegisterFormValues,
+  resendVerificationFormValues,
   ResetPasswordFormValues,
+  VerifyEmailFormValues,
+  RefreshFormValues,
+  ForgotPasswordFormValues,
+  UpdatePasswordFormValues,
 } from "../types";
 
 export const register = (body: RegisterFormValues) =>
@@ -22,3 +27,33 @@ export const resetPassword = (body: ResetPasswordFormValues) =>
     method: "POST",
     body: JSON.stringify(body),
   });
+
+  export const resendVerification = (body: resendVerificationFormValues) =>
+  apiClient("auth/resend-verification", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+export const verifyEmail = (body: VerifyEmailFormValues) =>
+  apiClient("auth/verify-email", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+export const refresh = (body: RefreshFormValues) =>
+  apiClient("auth/refresh", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+export const forgotPassword = (body: ForgotPasswordFormValues) =>
+  apiClient("auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+export const updatePassword = (body: UpdatePasswordFormValues) =>
+  apiClient("auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });;

@@ -1,14 +1,17 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useState, useMemo } from "react";
 import { OTPInputContext } from "input-otp";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup } from "@/components/ui/input-otp";
+import { createVerifyEmailSchema } from "@/features/auth/schemas/verify-email-schema";
+import { useVerifyEmail } from "@/features/auth/queries/mutations";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { LoaderCircle } from "lucide-react";
 
 const OTP_LENGTH = 5;
 
@@ -75,10 +78,20 @@ export function OtpCode({
   const router = useRouter();
   const t = useTranslations("auth.verify");
   const tToast = useTranslations("auth.toast");
+  const tValidation = useTranslations("auth.verify.validation");
   const [code, setCode] = useState("");
+  const { mutate: verifyEmail, isPending } = useVerifyEmail();
   const displayEmail = maskEmail(email);
   const resendLink =
     resendHref ?? `/register/resend-otp?email=${encodeURIComponent(email)}`;
+
+  const schema = useMemo(
+    () =>
+      createVerifyEmailSchema({
+        tokenRequired: tValidation("tokenRequired") || "Token is required",
+      }),
+    [tValidation]
+  );
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -86,15 +99,24 @@ export function OtpCode({
       return;
     }
 
-    if (successHref) {
-      if (successToastKey) {
-        toast.success(tToast(successToastKey));
+    verifyEmail(
+      { token: code },
+      {
+        onSuccess: () => {
+          if (successToastKey) {
+            toast.success(tToast(successToastKey));
+          }
+          if (successHref) {
+            router.push(successHref);
+          }
+        },
+        onError: (error) => {
+          toast.error(
+            error instanceof Error ? error.message : "error"
+          );
+        },
       }
-      router.push(successHref);
-      return;
-    }
-
-    // UI-only: no API wiring yet.
+    );
   }
 
   return (
@@ -126,10 +148,15 @@ export function OtpCode({
         <div className="flex flex-col gap-4">
           <Button
             type="submit"
-            disabled={code.length < OTP_LENGTH}
-            className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200 disabled:opacity-50"
+            disabled={code.length < OTP_LENGTH || isPending}
+            className={cn(
+              "h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200",
+              {
+                "cursor-not-allowed opacity-50": isPending,
+              }
+            )}
           >
-            {t("submit")}
+            {isPending ? <LoaderCircle /> : t("submit")}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">

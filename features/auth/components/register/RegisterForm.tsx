@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
@@ -31,6 +32,8 @@ import type { RegisterFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
+import { useRegister } from "../../queries/mutations";
+import { toast } from "sonner";
 
 function GoogleIcon() {
   return (
@@ -116,7 +119,6 @@ export function RegisterForm() {
   const t = useTranslations("auth.register");
   const tValidation = useTranslations("auth.register.validation");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const schema = useMemo(
     () =>
@@ -124,8 +126,7 @@ export function RegisterForm() {
         fullNameMin: tValidation("fullNameMin"),
         emailInvalid: tValidation("emailInvalid"),
         passwordMin: tValidation("passwordMin"),
-        confirmPasswordRequired: tValidation("confirmPasswordRequired"),
-        passwordsMismatch: tValidation("passwordsMismatch"),
+        passwordDigitRequired: tValidation("passwordDigitRequired"),
       }),
     [tValidation]
   );
@@ -139,18 +140,26 @@ export function RegisterForm() {
     resolver: zodResolver(schema),
     mode: "onTouched",
     defaultValues: {
-      fullName: "",
+      display_name: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      // confirmPassword: "",
     },
   });
+
+  const { mutate: registerUser, isPending } = useRegister();
 
   const values = watch();
 
   function onSubmit(_data: RegisterFormValues) {
-    // UI-only: validation passed; no API wiring yet.
-    router.push(`/register/verify?email=${encodeURIComponent(_data.email)}`);
+    registerUser(_data, {
+      onSuccess: () => {
+        router.push(`/register/verify?email=${encodeURIComponent(_data.email)}`);
+      },
+      onError: (error) => {
+        toast.error(error.message || t("registrationFailed"));
+      }
+    });
   }
 
   function fieldSuccess(field: keyof RegisterFormValues) {
@@ -187,17 +196,17 @@ export function RegisterForm() {
           <FieldGroup>
             <AuthFormField
               label={t("fullName")}
-              error={errors.fullName}
+              error={errors.display_name}
               successMessage={t("fieldValid")}
-              showSuccess={fieldSuccess("fullName")}
+              showSuccess={fieldSuccess("display_name")}
             >
               <Input
-                {...register("fullName")}
+                {...register("display_name")}
                 placeholder={t("fullNamePlaceholder")}
-                aria-invalid={!!errors.fullName}
+                aria-invalid={!!errors.display_name}
                 className={cn(
                   "h-11 bg-white",
-                  fieldSuccess("fullName") && "border-success-300"
+                  fieldSuccess("display_name") && "border-success-300"
                 )}
               />
             </AuthFormField>
@@ -258,7 +267,7 @@ export function RegisterForm() {
               </InputGroup>
             </AuthFormField>
 
-            <AuthFormField
+            {/* <AuthFormField
               label={t("confirmPassword")}
               error={errors.confirmPassword}
               successMessage={t("fieldValid")}
@@ -295,14 +304,18 @@ export function RegisterForm() {
                   </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
-            </AuthFormField>
+            </AuthFormField> */}
           </FieldGroup>
 
           <Button
             type="submit"
-            className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
+            className={cn(
+              "h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200",
+              isPending && "cursor-not-allowed opacity-70"
+            )}
+            disabled={isPending}
           >
-            {t("submit")}
+            {isPending ? <LoaderCircle /> : t("submit")}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">

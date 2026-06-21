@@ -2,21 +2,19 @@
 
 import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, LoaderCircle } from 'lucide-react';
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { createForgotPasswordSchema } from "@/features/auth/schemas/forgot-password-schema";
+import { useForgotPassword } from "@/features/auth/queries/mutations";
+import type { ForgotPasswordFormValues } from "@/features/auth/types";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-
-type ForgetPasswordFormValues = {
-  email: string;
-};
 
 type ForgetPasswordFormProps = {
   defaultEmail?: string;
@@ -31,11 +29,12 @@ export function ForgetPasswordForm({
   const t = useTranslations("auth.forgetPassword");
   const tToast = useTranslations("auth.toast");
   const tValidation = useTranslations("auth.login.validation");
+  const { mutate: forgotPassword, isPending } = useForgotPassword();
 
   const schema = useMemo(
     () =>
-      z.object({
-        email: z.string().trim().email(tValidation("emailInvalid")),
+      createForgotPasswordSchema({
+        emailInvalid: tValidation("emailInvalid"),
       }),
     [tValidation]
   );
@@ -44,7 +43,7 @@ export function ForgetPasswordForm({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ForgetPasswordFormValues>({
+  } = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(schema),
     mode: "onTouched",
     defaultValues: {
@@ -52,12 +51,20 @@ export function ForgetPasswordForm({
     },
   });
 
-  function onSubmit(data: ForgetPasswordFormValues) {
-    // UI-only: no API wiring yet.
-    toast.success(tToast("forgetPasswordOtpSent"));
-    router.push(
-      `/login/forget-password/verify?email=${encodeURIComponent(data.email)}`
-    );
+  function onSubmit(data: ForgotPasswordFormValues) {
+    forgotPassword(data, {
+      onSuccess: () => {
+        toast.success(tToast("forgetPasswordOtpSent"));
+        router.push(
+          `/login/forget-password/verify?email=${encodeURIComponent(data.email)}`
+        );
+      },
+      onError: (error) => {
+        toast.error(
+          error instanceof Error ? error.message : "error"
+        );
+      },
+    });
   }
 
   function handleCancel() {
@@ -95,9 +102,12 @@ export function ForgetPasswordForm({
         <div className="flex flex-col gap-4">
           <Button
             type="submit"
-            className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
+            // className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200 disabled:opacity-50"
+            className={cn("h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200", {
+              "cursor-not-allowed opacity-50": isPending,
+            })}
           >
-            {t("submit")}
+            {isPending ? <LoaderCircle /> : t("submit")}
           </Button>
           <Button
             type="button"

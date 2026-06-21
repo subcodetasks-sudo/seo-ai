@@ -5,18 +5,18 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import type { PlanId } from "../types/types";
+import type { Plan } from "../types/types";
 
 type PlanCardProps = {
-  planId: PlanId;
+  plan: Plan;
   isSelected?: boolean;
   isPopular?: boolean;
   onSelect?: () => void;
   className?: string;
 };
 
-function PlanIcon({ planId }: { planId: PlanId }) {
-  if (planId === "free") {
+function PlanIcon({ planName }: { planName: string }) {
+  if (planName.toLowerCase() === "free") {
     return (
       <div
         className="flex size-14 items-center justify-center rounded-full bg-neutral-200 sm:size-16"
@@ -37,15 +37,53 @@ function PlanIcon({ planId }: { planId: PlanId }) {
   );
 }
 
+function formatPrice(price: string): string {
+  const num = parseFloat(price);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(num);
+}
+
+function getFeatures(plan: Plan, t: ReturnType<typeof useTranslations>): string[] {
+  const features: string[] = [];
+
+  if (plan.max_projects !== -1) {
+    features.push(`${plan.max_projects} ${t("max_projects")}`);
+  } else {
+    features.push(`${t("unlimited")} ${t("max_projects")}`);
+  }
+
+  features.push(`${plan.max_pages_per_crawl} ${t("max_pages_per_crawl")}`);
+
+  if (plan.max_crawls_per_month === -1) {
+    features.push(`${t("unlimited")} ${t("max_crawls_per_month")}`);
+  } else {
+    features.push(`${plan.max_crawls_per_month} ${t("max_crawls_per_month")}`);
+  }
+
+  features.push(`${plan.crawl_schedule.charAt(0).toUpperCase() + plan.crawl_schedule.slice(1)} ${t("max_crawls_per_month")}`);
+
+  if (plan.max_ai_pages_per_month === -1) {
+    features.push(`${t("unlimited")} ${t("max_ai_pages_per_month")}`);
+  } else {
+    features.push(`${plan.max_ai_pages_per_month} ${t("max_ai_pages_per_month")}`);
+  }
+
+  return features;
+}
+
 export function PlanCard({
-  planId,
+  plan,
   isSelected = false,
   isPopular = false,
   onSelect,
   className,
 }: PlanCardProps) {
   const t = useTranslations("plans");
-  const features = t.raw(`cards.${planId}.features`) as string[];
+  const features = getFeatures(plan, t);
 
   return (
     <article
@@ -76,27 +114,21 @@ export function PlanCard({
       ) : null}
 
       <div className="flex flex-1 flex-col items-center gap-6 text-center">
-        <PlanIcon planId={planId} />
+        <PlanIcon planName={plan.name} />
 
         <div className="flex flex-col gap-1">
           <h2 className="text-h3 font-medium text-secondary-500">
-            {t(`cards.${planId}.name`)}
+            {plan.name}
           </h2>
-          <p className="text-label-md text-neutral-500">
-            {t(`cards.${planId}.description`)}
-          </p>
         </div>
 
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline justify-center gap-1">
             <span className="text-4xl font-semibold text-secondary-500">
-              {t(`cards.${planId}.price`)}
+              {formatPrice(plan.price_monthly_usd)}
             </span>
             <span className="text-label-md text-neutral-500">{t("perMonth")}</span>
           </div>
-          <p className="text-label-md text-neutral-500">
-            {t(`cards.${planId}.usage`)}
-          </p>
         </div>
 
         <ul className="flex w-full flex-1 flex-col gap-3 text-start">

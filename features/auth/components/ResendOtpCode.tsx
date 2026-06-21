@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle, LoaderCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useResendVerification } from "../queries/mutations";
 
 type ResendOtpFormValues = {
   email: string;
@@ -54,13 +55,21 @@ export function ResendOtpCode({
     },
   });
 
+  const { mutate: resendVerification, isPending } = useResendVerification();
+
   function onSubmit(data: ResendOtpFormValues) {
-    // UI-only: no API wiring yet.
-    const isForgetPasswordFlow = verifyPath.includes("forget-password");
-    toast.success(
-      tToast(isForgetPasswordFlow ? "forgetPasswordOtpSent" : "otpSent")
-    );
-    router.push(`${verifyPath}?email=${encodeURIComponent(data.email)}`);
+    resendVerification(data, {
+      onSuccess: () => {
+        const isForgetPasswordFlow = verifyPath.includes("forget-password");
+        toast.success(
+          tToast(isForgetPasswordFlow ? "forgetPasswordOtpSent" : "otpSent")
+        );
+        router.push(`${verifyPath}?email=${encodeURIComponent(data.email)}`);
+      },
+      onError: (error) => {
+        toast.error(error.message || tToast("resendOtpFailed"));
+      }
+    });
   }
 
   return (
@@ -94,9 +103,13 @@ export function ResendOtpCode({
         <div className="flex flex-col gap-4">
           <Button
             type="submit"
-            className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
+            // className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
+            className={cn("h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200", {
+              "cursor-not-allowed opacity-50": isPending,
+            })}
+            // disabled={isPending}
           >
-            {t("submit")}
+            {isPending ? <LoaderCircle /> : t("submit")}
           </Button>
         </div>
       </form>

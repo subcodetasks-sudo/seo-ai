@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
@@ -21,6 +22,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { createResetPasswordSchema } from "@/features/auth/schemas/reset-password-schema";
+import { useResetPassword } from "@/features/auth/queries/mutations";
 import type { ResetPasswordFormValues } from "@/features/auth/types";
 import { useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -71,6 +73,7 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
   const tValidation = useTranslations("auth.resetPassword.validation");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { mutate: resetPassword, isPending } = useResetPassword();
 
   const schema = useMemo(
     () =>
@@ -98,10 +101,24 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
 
   const values = watch();
 
-  function onSubmit(_data: ResetPasswordFormValues) {
-    // UI-only: validation passed; no API wiring yet.
-    toast.success(tToast("passwordReset"));
-    router.push("/reset-password/success");
+  function onSubmit(data: ResetPasswordFormValues) {
+    resetPassword(
+      {
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+      },
+      {
+        onSuccess: () => {
+          toast.success(tToast("passwordReset"));
+          router.push("/reset-password/success");
+        },
+        onError: (error) => {
+          toast.error(
+            error instanceof Error ? error.message : "error"
+          );
+        },
+      }
+    );
   }
 
   function fieldSuccess(field: keyof ResetPasswordFormValues) {
@@ -201,9 +218,16 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
 
         <Button
           type="submit"
-          className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200"
+          disabled={isPending}
+          // className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200 disabled:opacity-50"
+          className={cn(
+            "h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200",
+            {
+              "cursor-not-allowed opacity-50": isPending,
+            }
+          )}
         >
-          {t("submit")}
+          {isPending ? <LoaderCircle /> : t("submit")}
         </Button>
       </form>
     </div>

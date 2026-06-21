@@ -10,7 +10,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -140,10 +140,10 @@ export function LoginForm() {
   );
 
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors, touchedFields, dirtyFields },
-    watch,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(schema),
     mode: "onTouched",
@@ -156,13 +156,16 @@ export function LoginForm() {
 
   const { mutate: login, isPending } = useLogin();
 
-  const values = watch();
+  const values = (useWatch({ control }) ?? {
+    email: "",
+    password: "",
+  }) as LoginFormValues;
 
   function onSubmit(_data: LoginFormValues) {
     login(_data, {
       onSuccess: () => {
         toast.success(tToast("welcomeBack"));
-        router.push(`/`);
+        router.push(`/dashboard`);
       },
       onError: (error) => {
         toast.error(error.message || tToast("loginFailed"));

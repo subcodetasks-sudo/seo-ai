@@ -1,3 +1,4 @@
+import { resendVerification } from '../queries/api';
 export type ApiResponse<T> = {
   status: boolean;
   message: string;
@@ -6,10 +7,9 @@ export type ApiResponse<T> = {
 };
 
 export type RegisterFormValues = {
-  fullName: string;
+  display_name: string;
   email: string;
   password: string;
-  confirmPassword: string;
 };
 
 export type LoginFormValues = {
@@ -21,3 +21,24 @@ export type ResetPasswordFormValues = {
   password: string;
   confirmPassword: string;
 };
+
+export type resendVerificationFormValues = {
+  email: string;
+};
+
+export type VerifyEmailFormValues = {
+  token: string;
+};
+
+export type RefreshFormValues = {
+  refresh_token: string;
+};
+
+export type ForgotPasswordFormValues = {
+  email: string;
+};
+
+export type UpdatePasswordFormValues = {
+  current_password: string;
+  new_password: string;
+}
