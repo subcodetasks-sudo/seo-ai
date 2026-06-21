@@ -13,3 +13,4 @@ export { createLoginSchema } from "./schemas/login-schema";
 export { createRegisterSchema } from "./schemas/register-schema";
 export { createResetPasswordSchema } from "./schemas/reset-password-schema";
 export type { LoginFormValues, RegisterFormValues, ResetPasswordFormValues } from "./types";
+export { useLogin, useRegister, useResetPassword } from "./queries/mutations";
