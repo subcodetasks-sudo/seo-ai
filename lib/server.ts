@@ -16,9 +16,9 @@ export async function serverClient<T>(
   });
 
   const data = await res.json();
-
-  if (!res.ok || data.status === false) {
-    throw new Error(data.message || alternativeErrorMessage);
+    console.log(`Server response from ${env.API_URL}${env.API_PREFIX}${endpoint}:`, data);
+  if (data.status === false) {
+    throw new Error(data?.message || alternativeErrorMessage);
   }
 
   return data;
