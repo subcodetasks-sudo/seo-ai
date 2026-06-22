@@ -1,18 +1,21 @@
 import { apiClient } from "@/lib/client";
-import {
+import type {
+  AllProjectsResponse,
   CreateProjectRequest,
+  Project,
+  ProjectSectionsApiResponse,
   ProjectSectionsRequest,
   UpdateProjectRequest,
 } from "../types";
 
 export const createProject = (body: CreateProjectRequest) =>
-  apiClient("projects", {
+  apiClient<{ status: boolean; message: string; data: Project }>("projects", {
     method: "POST",
     body: JSON.stringify(body),
   });
 
 export const updateProject = (body: UpdateProjectRequest, project_id: string) =>
-  apiClient(`projects/${project_id}`, {
+  apiClient<{ status: boolean; message: string; data: Project }>(`projects/${project_id}`, {
     method: "PATCH",
     body: JSON.stringify(body),
   });
@@ -23,18 +26,18 @@ export const deleteProject = (project_id: string) =>
   });
 
 export const getSiteSections = (body: ProjectSectionsRequest) =>
-  apiClient("projects/sections", {
+  apiClient<ProjectSectionsApiResponse>("projects/sections", {
     method: "POST",
     body: JSON.stringify(body),
   });
 
 export const getAllProjects = () =>
-  apiClient("projects", {
+  apiClient<AllProjectsResponse>("projects", {
     method: "GET",
   });
 
 export const getSingleProject = (project_id: string) =>
-  apiClient(`projects/${project_id}`, {
+  apiClient<{ status: boolean; message: string; data: Project }>(`projects/${project_id}`, {
     method: "GET",
   });
 
@@ -51,8 +54,9 @@ export const getVerificationToken = (project_id: string) =>
 export const verifyDomain = (method: string, project_id: string) =>
   apiClient(`projects/${project_id}/verify`, {
     method: "POST",
-    body: JSON.stringify(method),
+    body: JSON.stringify({ method }),
   });
+
 export const getPageDetails = (project_id: string, domain: string) =>
   apiClient(`projects/${project_id}/pages/${domain}`, {
     method: "GET",

@@ -11,16 +11,16 @@ function getAuthHeaders(req: NextRequest) {
   return { Authorization: `Bearer ${accessToken}` };
 }
 
-export async function POST(req: NextRequest, context: RouteContext) {
+export async function GET(req: NextRequest, context: RouteContext) {
   const authHeaders = getAuthHeaders(req);
   if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   const { project_id } = await context.params;
   try {
     const data = await serverClient(
-      `projects/${project_id}/crawls`,
-      { method: "POST", headers: authHeaders },
-      "Failed to start crawl",
+      `projects/${project_id}`,
+      { method: "GET", headers: authHeaders },
+      "Failed to get project details",
     );
     return NextResponse.json(data);
   } catch (error: unknown) {
@@ -29,19 +29,35 @@ export async function POST(req: NextRequest, context: RouteContext) {
   }
 }
 
-export async function GET(req: NextRequest, context: RouteContext) {
+export async function PATCH(req: NextRequest, context: RouteContext) {
   const authHeaders = getAuthHeaders(req);
   if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
   const { project_id } = await context.params;
-  const page = req.nextUrl.searchParams.get("page") ?? "1";
-  const pageSize = req.nextUrl.searchParams.get("page_size") ?? "20";
+  try {
+    const body = await req.json();
+    const data = await serverClient(
+      `projects/${project_id}`,
+      { method: "PATCH", headers: authHeaders, body: JSON.stringify(body) },
+      "Failed to update project",
+    );
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ message }, { status: 400 });
+  }
+}
 
+export async function DELETE(req: NextRequest, context: RouteContext) {
+  const authHeaders = getAuthHeaders(req);
+  if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const { project_id } = await context.params;
   try {
     const data = await serverClient(
-      `projects/${project_id}/crawls?page=${page}&page_size=${pageSize}`,
-      { method: "GET", headers: authHeaders },
-      "Failed to list crawls",
+      `projects/${project_id}`,
+      { method: "DELETE", headers: authHeaders },
+      "Failed to delete project",
     );
     return NextResponse.json(data);
   } catch (error: unknown) {

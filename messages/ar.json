@@ -216,8 +216,8 @@
       "welcomeBack": "مرحباً بعودتك!"
     }
   },
-  "home":{
-    "emptyProjects":{
+  "home": {
+    "emptyProjects": {
       "title": "لا توجد مشاريع بعد",
       "subtitle": "أضف موقعك الأول لبدء تحليل وتحسين SEO. لا يستغرق الإعداد سوى دقائق قليلة.",
       "addProject": "اضافة مشروع"
@@ -328,7 +328,11 @@
         "wordpress": "wordpress",
         "salla": "salla",
         "custom": "custom"
-      }
+      },
+      "health": "الصحة",
+      "status": "الحالة",
+      "verified": "موثّق",
+      "unverified": "غير موثّق"
     }
   }
 }

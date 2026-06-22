@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { serverClient } from "@/lib/server";
 
 type RouteContext = {
-  params: Promise<{ project_id: string; crawl_id: string }>;
+  params: Promise<{ project_id: string }>;
 };
 
 function getAuthHeaders(req: NextRequest) {
@@ -11,19 +11,17 @@ function getAuthHeaders(req: NextRequest) {
   return { Authorization: `Bearer ${accessToken}` };
 }
 
-export async function GET(req: NextRequest, context: RouteContext) {
+export async function POST(req: NextRequest, context: RouteContext) {
   const authHeaders = getAuthHeaders(req);
   if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-  const { project_id, crawl_id } = await context.params;
-  const page = req.nextUrl.searchParams.get("page") ?? "1";
-  const pageSize = req.nextUrl.searchParams.get("page_size") ?? "20";
-
+  const { project_id } = await context.params;
   try {
+    const body = await req.json();
     const data = await serverClient(
-      `projects/${project_id}/crawls/${crawl_id}/pages?page=${page}&page_size=${pageSize}`,
-      { method: "GET", headers: authHeaders },
-      "Failed to get crawl pages",
+      `projects/${project_id}/verify`,
+      { method: "POST", headers: authHeaders, body: JSON.stringify(body) },
+      "Failed to verify domain",
     );
     return NextResponse.json(data);
   } catch (error: unknown) {

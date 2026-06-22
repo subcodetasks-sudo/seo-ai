@@ -10,7 +10,17 @@ import Step2 from "@/features/home/components/add-project/Step2";
 import Step3 from "@/features/home/components/add-project/Step3";
 
 function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
-  const { step, nextStep, exitAddProject, finishAddProject } = useAddProject();
+  const {
+    step,
+    formData,
+    sections,
+    isSectionsLoading,
+    nextStep,
+    backStep,
+    exitAddProject,
+    finishAddProject,
+    updateFormData,
+  } = useAddProject();
 
   if (step !== null) {
     return (
@@ -24,12 +34,31 @@ function DashboardLayoutContent({ children }: { children: React.ReactNode }) {
                 key={step}
                 className="flex w-full animate-fade-in-left justify-center"
               >
-                {step === 1 && <Step1 onNext={() => nextStep()} />}
+                {step === 1 && (
+                  <Step1
+                    onNext={(data) => {
+                      updateFormData(data);
+                      nextStep();
+                    }}
+                  />
+                )}
                 {step === 2 && (
-                  <Step2 onNext={nextStep} onBack={exitAddProject} />
+                  <Step2
+                    onNext={({ token }) => {
+                      updateFormData({ token });
+                      nextStep();
+                    }}
+                    onBack={backStep}
+                  />
                 )}
                 {step === 3 && (
-                  <Step3 onBack={exitAddProject} onFinish={finishAddProject} />
+                  <Step3
+                    onBack={backStep}
+                    onFinish={finishAddProject}
+                    domain={formData.websiteUrl}
+                    sections={sections}
+                    isSectionsLoading={isSectionsLoading}
+                  />
                 )}
               </div>
             </div>

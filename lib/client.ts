@@ -12,7 +12,8 @@ export async function apiClient<T>(
     },
   });
 
-  const result = await response.json();
+  const result = await response?.json();
+  console.log("result", result);
 
   if (!response.ok || result.status === false) {
     throw new Error(result.message || alternativeErrorMessage);

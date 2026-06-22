@@ -10,10 +10,10 @@ import { useDirection } from "@/components/ui/direction";
 import { toast } from "sonner";
 
 const PLUGIN_DOWNLOAD_URL = "#";
-const TOKEN_PATTERN = /^rank-ai-token-[a-zA-Z0-9-]+$/;
+// const TOKEN_PATTERN = /^rank-ai-token-[a-zA-Z0-9-]+$/;
 
 interface Step2Props {
-  onNext: () => void;
+  onNext: (data: { token: string }) => void;
   onBack: () => void;
 }
 
@@ -35,10 +35,10 @@ export default function Step2({ onNext, onBack }: Step2Props) {
       return;
     }
 
-    if (!TOKEN_PATTERN.test(trimmedToken)) {
-      setError(t("invalidToken"));
-      return;
-    }
+    // if (!TOKEN_PATTERN.test(trimmedToken)) {
+    //   setError(t("invalidToken"));
+    //   return;
+    // }
 
     setError("");
     setIsVerifying(true);
@@ -53,7 +53,7 @@ export default function Step2({ onNext, onBack }: Step2Props) {
       loading: t("verifying"),
       success: () => {
         setIsVerifying(false);
-        onNext();
+        onNext({ token: trimmedToken });
         return t("verificationSuccess");
       },
       error: () => {

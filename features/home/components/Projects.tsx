@@ -29,19 +29,6 @@ type ProjectStatProps = {
   valueClassName?: string;
 };
 
-function formatPagesCount(count: number): string {
-  if (count >= 1000) {
-    const formatted = (count / 1000).toFixed(1);
-    return `${formatted.endsWith(".0") ? formatted.slice(0, -2) : formatted}K`;
-  }
-
-  return new Intl.NumberFormat().format(count);
-}
-
-function formatCount(count: number, locale: string): string {
-  return new Intl.NumberFormat(locale).format(count);
-}
-
 function ProjectStat({ value, label, valueClassName }: ProjectStatProps) {
   return (
     <div className="flex min-w-16 flex-col items-center gap-1 text-center">
@@ -62,11 +49,16 @@ function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("home.projects");
   const locale = useLocale();
 
-  const lastScanDate = new Intl.DateTimeFormat(locale, {
+  const scanDate = project.last_crawl_at ?? project.created_at;
+  const formattedDate = new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",
-  }).format(new Date(project.lastScanDate));
+  }).format(new Date(scanDate));
+
+  const healthScore = project.health_score !== null
+    ? `${project.health_score}`
+    : "—";
 
   return (
     <article className="flex flex-col gap-5 rounded-xl border border-neutral-200 bg-white p-5 lg:flex-row lg:items-center lg:justify-between">
@@ -80,31 +72,26 @@ function ProjectCard({ project }: ProjectCardProps) {
           <h3 className="text-h4 font-semibold text-secondary-500">
             {project.name}
           </h3>
-          <p className="truncate text-label-md text-neutral-500">{project.url}</p>
+          <p className="truncate text-label-md text-neutral-500">{project.domain}</p>
         </div>
 
         <p className="flex items-center gap-1.5 text-label-sm text-neutral-400">
           <Clock className="size-3.5 shrink-0" aria-hidden="true" />
-          {t("lastScan", { date: lastScanDate })}
+          {t("lastScan", { date: formattedDate })}
         </p>
       </div>
 
       <div className="flex items-center justify-center gap-4 lg:px-4">
         <ProjectStat
-          value={formatPagesCount(project.pagesCount)}
-          label={t("pages")}
+          value={healthScore}
+          label={t("health")}
+          valueClassName={project.health_score !== null ? "text-secondary-500" : "text-neutral-400"}
         />
         <div className="h-10 w-px bg-neutral-200" aria-hidden="true" />
         <ProjectStat
-          value={formatCount(project.errorCount, locale)}
-          label={t("errors")}
-          valueClassName="text-error-300"
-        />
-        <div className="h-10 w-px bg-neutral-200" aria-hidden="true" />
-        <ProjectStat
-          value={formatCount(project.error404Count, locale)}
-          label={t("errors404")}
-          valueClassName="text-warning-400"
+          value={project.is_verified ? t("verified") : t("unverified")}
+          label={t("status")}
+          valueClassName={project.is_verified ? "text-success-500" : "text-warning-400"}
         />
       </div>
 
@@ -112,10 +99,13 @@ function ProjectCard({ project }: ProjectCardProps) {
         <Button
           type="button"
           variant="outline"
+          asChild
           className="h-9 gap-2 border-neutral-200 bg-white px-4 text-secondary-500 hover:bg-neutral-50"
         >
-          <ExternalLink className="size-4" aria-hidden="true" />
-          {t("open")}
+          <a href={project.domain} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="size-4" aria-hidden="true" />
+            {t("open")}
+          </a>
         </Button>
         <Button type="button" className="h-9 gap-2 bg-primary-300 text-secondary-500 px-4 hover:bg-primary-400">
           <RefreshCw className="size-4" aria-hidden="true" />
@@ -128,14 +118,10 @@ function ProjectCard({ project }: ProjectCardProps) {
 
 export default function Projects({ projects }: ProjectsProps) {
   const t = useTranslations("home.projects");
-  const locale = useLocale();
   const { startAddProject } = useAddProject();
 
-  const totalErrors = projects.reduce((sum, project) => sum + project.errorCount, 0);
-  const total404Errors = projects.reduce(
-    (sum, project) => sum + project.error404Count,
-    0,
-  );
+  const verifiedCount = projects.filter((p) => p.is_verified).length;
+  const unverifiedCount = projects.length - verifiedCount;
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
@@ -147,19 +133,19 @@ export default function Projects({ projects }: ProjectsProps) {
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="rounded-xl border border-error-75 bg-white px-5 py-4">
+        <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
           <p className="text-label-md text-secondary-400">
-            {t("totalErrors")} :{" "}
-            <span className="font-semibold text-error-300">
-              {formatCount(totalErrors, locale)}
+            {t("verified")} :{" "}
+            <span className="font-semibold text-success-500">
+              {verifiedCount}
             </span>
           </p>
         </div>
-        <div className="rounded-xl border border-error-75 bg-white px-5 py-4">
+        <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
           <p className="text-label-md text-secondary-400">
-            {t("total404Errors")} :{" "}
-            <span className="font-semibold text-error-300">
-              {formatCount(total404Errors, locale)}
+            {t("unverified")} :{" "}
+            <span className="font-semibold text-warning-400">
+              {unverifiedCount}
             </span>
           </p>
         </div>

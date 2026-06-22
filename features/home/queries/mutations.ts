@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import {
 	createProject,
@@ -10,6 +10,7 @@ import type {
 	CreateProjectRequest,
 	UpdateProjectRequest,
 } from "../types";
+import { allProjectsQueryOptions } from './queries';
 
 export const useCreateProject = () =>
 	useMutation({
@@ -32,3 +33,7 @@ export const useVerifyDomain = () =>
 		mutationFn: (variables: { method: string; projectId: string }) =>
 			verifyDomain(variables.method, variables.projectId),
 	});
+
+
+	export const useAllProjects = () =>
+	useQuery(allProjectsQueryOptions());

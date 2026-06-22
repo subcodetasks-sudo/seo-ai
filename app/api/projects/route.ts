@@ -1,0 +1,64 @@
+import { NextRequest, NextResponse } from "next/server";
+import { serverClient } from "@/lib/server";
+
+function getAuthHeaders(req: NextRequest) {
+  const accessToken = req.cookies.get("access_token")?.value;
+
+  if (!accessToken) {
+    return null;
+  }
+
+  return {
+    Authorization: `Bearer ${accessToken}`,
+  };
+}
+
+export async function GET(req: NextRequest) {
+  const authHeaders = getAuthHeaders(req);
+
+  if (!authHeaders) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const data = await serverClient(
+      "projects",
+      {
+        method: "GET",
+        headers: authHeaders,
+      },
+      "Failed to list projects",
+    );
+
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ message }, { status: 400 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  const authHeaders = getAuthHeaders(req);
+
+  if (!authHeaders) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const body = await req.json();
+    const data = await serverClient(
+      "projects",
+      {
+        method: "POST",
+        headers: authHeaders,
+        body: JSON.stringify(body),
+      },
+      "Failed to create project",
+    );
+
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ message }, { status: 400 });
+  }
+}

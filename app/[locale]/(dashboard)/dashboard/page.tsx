@@ -1,9 +1,12 @@
 import { setRequestLocale } from "next-intl/server";
 import EmptyProjects from "@/features/home/components/empty-projects";
 import Projects from "@/features/home/components/Projects";
-import type { ProjectListItem } from "@/features/home/types";
+import { QueryClient } from "@tanstack/react-query";
+import { allProjectsQueryOptions } from "@/features/home";
 
-const FAKE_PROJECTS: ProjectListItem[] = [];
+// const FAKE_PROJECTS: ProjectListItem[] = [];
+
+
 
 type DashboardPageProps = {
   params: Promise<{ locale: string }>;
@@ -12,14 +15,17 @@ type DashboardPageProps = {
 export default async function DashboardPage({ params }: DashboardPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const queryClient = new QueryClient();
+  const data = await queryClient.fetchQuery(allProjectsQueryOptions());
 
-  const hasProjects = FAKE_PROJECTS.length > 0;
+  const projects = data?.data?.items ?? [];
+  const hasProjects = projects.length > 0;
 
   return (
     <div className="flex flex-1 bg-neutral-75 px-6 py-8 lg:px-10">
       {hasProjects ? (
         <div className="flex-1 animate-fade-in-up">
-          <Projects projects={FAKE_PROJECTS} />
+          <Projects projects={projects} />
         </div>
       ) : (
         <div className="flex flex-1 items-center justify-center animate-fade-in-up">

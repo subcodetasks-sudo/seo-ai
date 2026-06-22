@@ -216,7 +216,7 @@
       "welcomeBack": "Welcome back!"
     }
   },
-  "home":{
+  "home": {
     "emptyProjects": {
       "title": "No projects yet",
       "subtitle": "Add your first website to start analyzing and improving SEO. Setup takes just a few minutes.",
@@ -328,7 +328,11 @@
         "wordpress": "wordpress",
         "salla": "salla",
         "custom": "custom"
-      }
+      },
+      "health": "Health",
+      "status": "Status",
+      "verified": "Verified",
+      "unverified": "Unverified"
     }
   }
 }

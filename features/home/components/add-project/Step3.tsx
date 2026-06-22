@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -11,27 +11,20 @@ import { useDirection } from "@/components/ui/direction";
 
 const PAGE_SIZE = 10;
 
-const MOCK_SECTIONS: Section[] = [
-  { prefix: "/", label: "home", count: 1 },
-  ...Array.from({ length: 10 }, (_, index) => ({
-    prefix: `techcorp.sa/blog/ai-solutions${index > 0 ? `-${index}` : ""}`,
-    label: "techcorp.sa/blog/ai-solutions",
-    count: 1,
-  })),
-];
-
 interface Step3Props {
   onBack: () => void;
-  onFinish: () => void;
+  onFinish: (selectedSections: Set<string>) => void;
   domain?: string;
   sections?: Section[];
+  isSectionsLoading?: boolean;
 }
 
 export default function Step3({
   onBack,
   onFinish,
-  domain = "https://www.matjr.com",
-  sections = MOCK_SECTIONS,
+  domain = "",
+  sections = [],
+  isSectionsLoading = false,
 }: Step3Props) {
   const dir = useDirection();
   const t = useTranslations("home.addProject.step3");
@@ -94,7 +87,7 @@ export default function Step3({
       return;
     }
     setError("");
-    onFinish();
+    onFinish(selectedPrefixes);
   };
 
   return (
@@ -232,8 +225,10 @@ export default function Step3({
         <Button
           type="button"
           onClick={handleScan}
+          disabled={isSectionsLoading}
           className="h-12 w-full sm:w-auto sm:px-8 rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px"
         >
+          {isSectionsLoading && <LoaderCircle className="size-4 animate-spin" />}
           {t("scan")}
         </Button>
 

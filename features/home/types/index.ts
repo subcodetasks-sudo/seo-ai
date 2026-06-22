@@ -1,12 +1,30 @@
 export type ProjectListItem = {
   id: string;
   name: string;
-  url: string;
+  domain: string;
   platform: "wordpress" | "salla" | "custom";
-  lastScanDate: string;
-  pagesCount: number;
-  errorCount: number;
-  error404Count: number;
+  sitemap_url: string | null;
+  url_filter: string | null;
+  verification_token: string;
+  verification_method: string | null;
+  is_verified: boolean;
+  verified_at: string | null;
+  health_score: number | null;
+  last_crawl_at: string | null;
+  is_archived: boolean;
+  preferred_language: string;
+  created_at: string;
+  setup_token: string | null;
+  setup_link: string | null;
+  setup_token_used: boolean;
+};
+
+export type AllProjectsResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    items: ProjectListItem[];
+  };
 };
 
 /* get project */
@@ -57,8 +75,8 @@ export type CreateProjectRequest = {
   name: string;
   domain: string;
   platform: "wordpress" | "salla" | "custom";
-  sitemap_url: string;
-  url_filter: string;
+  sitemap_url: string | null;
+  url_filter: string | null;
 };
 
 export type UpdateProjectRequest = {
@@ -86,4 +104,10 @@ export type Section = {
 
 export type ProjectSectionsRequest = {
   domain: string;
+};
+
+export type ProjectSectionsApiResponse = {
+  status: boolean;
+  message: string;
+  data: ProjectSections;
 };
