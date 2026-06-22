@@ -8,7 +8,9 @@
       "english": "English",
       "arabic": "Arabic",
       "settings": "Settings",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "dashboard": "Dashboard",
+      "home": "Home"
     }
   },
   "sidebar": {
@@ -217,7 +219,116 @@
   "home":{
     "emptyProjects": {
       "title": "No projects yet",
-      "subtitle": "Add your first website to start analyzing and improving SEO. Setup takes just a few minutes."
+      "subtitle": "Add your first website to start analyzing and improving SEO. Setup takes just a few minutes.",
+      "addProject": "Add project"
+    },
+    "addProject": {
+      "progress": {
+        "step1": "Website Info",
+        "step2": "Ownership Verification",
+        "step3": "Connection"
+      },
+      "step1": {
+        "title": "Add your new website",
+        "subtitle": "Enter the website URL and choose the type to start analyzing it",
+        "urlLabel": "Website URL",
+        "typeLabel": "Website Type",
+        "wordpressTitle": "WordPress",
+        "wordpressDesc": "PHP integration working directly with the database",
+        "customTitle": "Custom Website",
+        "customDesc": "External crawling for any HTML or Headless website",
+        "continue": "Continue",
+        "urlRequired": "Please enter the website URL",
+        "invalidUrl": "Please enter a valid website URL"
+      },
+      "step2": {
+        "title": "Verify site ownership",
+        "subtitle": "Install the plugin and link it to your account using the connection token",
+        "instruction1": "Download the RankAI plugin and install it on WordPress",
+        "instruction2": "Activate the plugin from the WordPress dashboard",
+        "instruction3": "Copy the connection token from the plugin settings and paste it here",
+        "downloadPlugin": "Download plugin",
+        "tokenLabel": "Connection token",
+        "tokenPlaceholder": "rank-ai-token-xxxxx",
+        "tokenHint": "You will find the token in: WordPress → Plugins → RankAI → Settings",
+        "verifyNow": "Verify now",
+        "back": "Back",
+        "tokenRequired": "Please enter the connection token",
+        "invalidToken": "Please enter a valid connection token",
+        "verifying": "Verifying site ownership...",
+        "verificationSuccess": "Ownership verified successfully!",
+        "verificationFailed": "Ownership verification failed. Please try again."
+      },
+      "step3": {
+        "successTitle": "Connected successfully!",
+        "successSubtitle": "RankAI plugin successfully linked to",
+        "selectSections": "Select sections to crawl",
+        "sectionsSelected": "{count} sections selected",
+        "approxPages": "~{count} pages approximately",
+        "homePage": "Home page",
+        "pageCount": "{count} pages",
+        "showingResults": "Showing {shown} of {total} results",
+        "scan": "Scan",
+        "cancel": "Cancel",
+        "sectionsRequired": "Please select at least one section"
+      }
+    },
+    "projectAnalysis": {
+      "loading": {
+        "statusBadge": "Analyzing",
+        "title": "Site analysis in progress",
+        "footer": "This process may take a few minutes depending on site size — you can leave the page and we'll notify you when it's complete.",
+        "completed": "Completed",
+        "waiting": "Waiting",
+        "pages": "{count} pages",
+        "steps": {
+          "queued": {
+            "title": "Queued",
+            "description": "Task added to the processing queue"
+          },
+          "crawling": {
+            "title": "Crawling in progress",
+            "description": "Collecting page and link data"
+          },
+          "analysis": {
+            "title": "Analysis",
+            "description": "Analyzing SEO issues on each page"
+          },
+          "aiSuggestions": {
+            "title": "AI suggestion generation",
+            "description": "Claude generates Meta, Schema, and FAQ improvements"
+          }
+        }
+      },
+      "success": {
+        "title": "Analysis completed successfully",
+        "subtitle": "Your site analysis and suggestion generation are complete!",
+        "metrics": {
+          "aiSuggestions": "AI suggestions",
+          "issues": "Discovered issues",
+          "pages": "Analyzed pages"
+        },
+        "viewIssues": "View issues",
+        "viewProject": "View project"
+      }
+    },
+    "projects": {
+      "title": "All projects",
+      "linkedSites": "{count} linked sites",
+      "totalErrors": "Total errors",
+      "total404Errors": "Total 404 errors",
+      "lastScan": "Last scan: {date}",
+      "pages": "Pages",
+      "errors": "Errors",
+      "errors404": "404 errors",
+      "open": "Open",
+      "rescan": "Re-scan",
+      "addProject": "Add project",
+      "platforms": {
+        "wordpress": "wordpress",
+        "salla": "salla",
+        "custom": "custom"
+      }
     }
   }
 }

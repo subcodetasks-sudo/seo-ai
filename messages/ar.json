@@ -8,7 +8,9 @@
       "english": "English",
       "arabic": "العربية",
       "settings": "الإعدادات",
-      "notifications": "الإشعارات"
+      "notifications": "الإشعارات",
+      "dashboard": "لوحة تحكم",
+      "home": "الرئيسية"
     }
   },
   "sidebar": {
@@ -217,7 +219,116 @@
   "home":{
     "emptyProjects":{
       "title": "لا توجد مشاريع بعد",
-      "subtitle": "أضف موقعك الأول لبدء تحليل وتحسين SEO. لا يستغرق الإعداد سوى دقائق قليلة."
+      "subtitle": "أضف موقعك الأول لبدء تحليل وتحسين SEO. لا يستغرق الإعداد سوى دقائق قليلة.",
+      "addProject": "اضافة مشروع"
+    },
+    "addProject": {
+      "progress": {
+        "step1": "معلومات الموقع",
+        "step2": "التحقق من الملكية",
+        "step3": "الاتصال"
+      },
+      "step1": {
+        "title": "أضف موقعك الجديد",
+        "subtitle": "أدخل رابط الموقع واختر النوع لنبدأ في تحليله",
+        "urlLabel": "رابط الموقع",
+        "typeLabel": "نوع الموقع",
+        "wordpressTitle": "WordPress",
+        "wordpressDesc": "إضافة PHP تعمل مباشرة مع قاعدة البيانات",
+        "customTitle": "موقع مخصص",
+        "customDesc": "زحف خارجي لأي موقع HTML أو Headless",
+        "continue": "استمرار",
+        "urlRequired": "يرجى إدخال رابط الموقع",
+        "invalidUrl": "يرجى إدخال رابط موقع صالح"
+      },
+      "step2": {
+        "title": "التحقق من ملكية الموقع",
+        "subtitle": "ثبّت الإضافة واربطها بحسابك باستخدام رمز الربط",
+        "instruction1": "حمّل إضافة RankAI وثبّتها على WordPress",
+        "instruction2": "فعّل الإضافة من لوحة تحكم WordPress",
+        "instruction3": "انسخ رمز الربط من إعدادات الإضافة وألصقه هنا",
+        "downloadPlugin": "تحميل الإضافة",
+        "tokenLabel": "رمز الربط (Token)",
+        "tokenPlaceholder": "rank-ai-token-xxxxx",
+        "tokenHint": "ستجد الرمز في: WordPress → الإضافات → RankAI → الإعدادات",
+        "verifyNow": "التحقق الآن",
+        "back": "رجوع",
+        "tokenRequired": "يرجى إدخال رمز الربط",
+        "invalidToken": "يرجى إدخال رمز ربط صالح",
+        "verifying": "جاري التحقق من ملكية الموقع...",
+        "verificationSuccess": "تم التحقق من الملكية بنجاح!",
+        "verificationFailed": "فشل التحقق من الملكية. يرجى المحاولة مرة أخرى."
+      },
+      "step3": {
+        "successTitle": "تم الاتصال بنجاح!",
+        "successSubtitle": "إضافة RankAI مرتبطة بنجاح بـ",
+        "selectSections": "اختر الأقسام للزحف",
+        "sectionsSelected": "{count} قسم محدد",
+        "approxPages": "~{count} صفحة تقريباً",
+        "homePage": "الصفحة الرئيسية",
+        "pageCount": "{count} صفحة",
+        "showingResults": "عرض {shown} من {total} نتائج",
+        "scan": "فحص",
+        "cancel": "إلغاء",
+        "sectionsRequired": "يرجى اختيار قسم واحد على الأقل"
+      }
+    },
+    "projectAnalysis": {
+      "loading": {
+        "statusBadge": "جاري التحليل",
+        "title": "جاري تحليل الموقع",
+        "footer": "قد تستغرق هذه العملية بضع دقائق حسب حجم الموقع - يمكنك مغادرة الصفحة وستعلمك عند الاكتمال",
+        "completed": "مكتمل",
+        "waiting": "انتظار",
+        "pages": "{count} صفحة",
+        "steps": {
+          "queued": {
+            "title": "قيد الانتظار",
+            "description": "تم إضافة المهمة إلى قائمة المعالجة"
+          },
+          "crawling": {
+            "title": "جاري الزحف",
+            "description": "يتم جمع بيانات الصفحات والروابط"
+          },
+          "analysis": {
+            "title": "التحليل",
+            "description": "تحليل مشاكل SEO في كل صفحة"
+          },
+          "aiSuggestions": {
+            "title": "توليد اقتراحات AI",
+            "description": "يولّد Claude تحسينات Meta و Schema و FAQs"
+          }
+        }
+      },
+      "success": {
+        "title": "اكتمل التحليل بنجاح",
+        "subtitle": "تم الانتهاء من تحليل موقعك وتوليد الاقتراحات!",
+        "metrics": {
+          "aiSuggestions": "اقتراح AI",
+          "issues": "مشكلة مكتشفة",
+          "pages": "صفحة محللة"
+        },
+        "viewIssues": "عرض المشاكل",
+        "viewProject": "عرض المشروع"
+      }
+    },
+    "projects": {
+      "title": "جميع المشاريع",
+      "linkedSites": "{count} مواقع مربوطة",
+      "totalErrors": "اجمالي الاخطاء",
+      "total404Errors": "اجمالي اخطاء الـ 404",
+      "lastScan": "آخر فحص: منذ {date}",
+      "pages": "صفحة",
+      "errors": "خطاء",
+      "errors404": "خطاء 404",
+      "open": "فتح",
+      "rescan": "اعادة فحص",
+      "addProject": "اضافة مشروع",
+      "platforms": {
+        "wordpress": "wordpress",
+        "salla": "salla",
+        "custom": "custom"
+      }
     }
   }
 }

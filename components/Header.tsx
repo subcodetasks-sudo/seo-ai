@@ -3,11 +3,19 @@
 import { Bell, Settings } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
 import LogoIcon from "@/components/LogoIcon";
 import { Button } from "@/components/ui/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import {
   Tooltip,
   TooltipContent,
@@ -19,6 +27,7 @@ import {
   SIDEBAR_TRANSITION,
   useSidebarMotion,
 } from "@/hooks/use-sidebar-motion";
+import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type HeaderProps = {
@@ -28,6 +37,20 @@ type HeaderProps = {
 type HeaderIconButtonProps = {
   label: string;
   children: ReactNode;
+};
+
+type BreadcrumbItemData = {
+  href?: string;
+  label: string;
+};
+
+const DASHBOARD_PAGE_LABEL_KEYS: Record<string, string> = {
+  overview: "overview",
+  problems: "problemList",
+  "ai-suggestions": "aiSuggestions",
+  "404-problems": "notFoundProblems",
+  reports: "reports",
+  changelog: "changelog",
 };
 
 const iconButtonClassName =
@@ -52,6 +75,78 @@ function HeaderIconButton({ label, children }: HeaderIconButtonProps) {
   );
 }
 
+function useDashboardBreadcrumbs(): BreadcrumbItemData[] | null {
+  const pathname = usePathname();
+  const t = useTranslations("common.header");
+  const tSidebar = useTranslations("sidebar");
+
+  if (!pathname.startsWith("/dashboard")) {
+    return null;
+  }
+
+  const items: BreadcrumbItemData[] = [
+    { href: "/dashboard", label: t("dashboard") },
+  ];
+
+  if (pathname === "/dashboard") {
+    items.push({ label: t("home") });
+    return items;
+  }
+
+  const segment = pathname.replace(/^\/dashboard\/?/, "");
+  const labelKey = DASHBOARD_PAGE_LABEL_KEYS[segment];
+
+  items.push({
+    label: labelKey ? tSidebar(labelKey) : segment,
+  });
+
+  return items;
+}
+
+function DashboardBreadcrumbs() {
+  const items = useDashboardBreadcrumbs();
+
+  if (!items) {
+    return null;
+  }
+
+  return (
+    <Breadcrumb className="hidden min-w-0 md:block">
+      <BreadcrumbList className="text-label-md text-neutral-500">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+
+          return (
+            <Fragment key={`${item.label}-${index}`}>
+              {index > 0 ? (
+                <BreadcrumbSeparator className="text-neutral-400">
+                  <span aria-hidden="true">&gt;</span>
+                </BreadcrumbSeparator>
+              ) : null}
+              <BreadcrumbItem>
+                {isLast ? (
+                  <BreadcrumbPage className="font-semibold text-secondary-500">
+                    {item.label}
+                  </BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href={item.href!}
+                      className="text-neutral-500 hover:text-secondary-500"
+                    >
+                      {item.label}
+                    </Link>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+            </Fragment>
+          );
+        })}
+      </BreadcrumbList>
+    </Breadcrumb>
+  );
+}
+
 export function Header({ className }: HeaderProps) {
   const t = useTranslations("common.header");
   const tSidebar = useTranslations("sidebar");
@@ -71,12 +166,12 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "flex items-center gap-2 border-b border-neutral-200 px-6 py-4 lg:px-10 h-18.75",
+        "flex items-center justify-between gap-4 border-b border-neutral-200 bg-white px-6 py-4 lg:px-10 h-18.75",
         className,
       )}
     >
-      {sidebar ? (
-        <div className="flex min-w-0 flex-1 items-center">
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        {sidebar ? (
           <AnimatePresence initial={false}>
             {showHeaderLogo ? (
               <motion.div
@@ -108,10 +203,11 @@ export function Header({ className }: HeaderProps) {
               </motion.div>
             ) : null}
           </AnimatePresence>
-        </div>
-      ) : (
-        <div className="flex-1" />
-      )}
+        ) : null}
+
+        <DashboardBreadcrumbs />
+      </div>
+
       <TooltipProvider>
         <div className="flex shrink-0 items-center gap-2">
           <LanguageSelector />
