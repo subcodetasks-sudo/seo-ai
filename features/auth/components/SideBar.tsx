@@ -29,7 +29,7 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/dashboard", labelKey: "overview", icon: Home },
+  { href: "/dashboard/overview", labelKey: "overview", icon: Home },
   { href: "/dashboard/problems", labelKey: "problemList", icon: List },
   { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle },
   { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off },
