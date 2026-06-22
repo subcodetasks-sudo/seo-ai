@@ -29,12 +29,12 @@ import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/", labelKey: "overview", icon: Home },
-  { href: "/problems", labelKey: "problemList", icon: List },
-  { href: "/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle },
+  { href: "/dashboard", labelKey: "overview", icon: Home },
+  { href: "/dashboard/problems", labelKey: "problemList", icon: List },
+  { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle },
   { href: "/404-problems", labelKey: "notFoundProblems", icon: Link2Off },
-  { href: "/reports", labelKey: "reports", icon: BarChart3 },
-  { href: "/changelog", labelKey: "changelog", icon: Clock },
+  { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3 },
+  { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock },
 ] as const;
 
 type SidebarMotionItemProps = {
@@ -125,7 +125,7 @@ export default function SideBar() {
         <nav className="flex flex-1 flex-col gap-1">
           {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
             const isActive =
-              href === "/" ? pathname === "/" : pathname.startsWith(href);
+              href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
 
             return (
               <SidebarMotionItem key={href} side={side}>
