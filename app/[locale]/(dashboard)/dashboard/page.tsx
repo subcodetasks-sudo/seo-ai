@@ -16,16 +16,16 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
   const queryClient = new QueryClient();
-  const data = await queryClient.fetchQuery(allProjectsQueryOptions());
-
-  const projects = data?.data?.items ?? [];
-  const hasProjects = projects.length > 0;
+  const data = await queryClient.prefetchQuery(allProjectsQueryOptions());
+  console.log(data)
+  // const projects = data  [];
+  const hasProjects = false;
 
   return (
     <div className="flex flex-1 bg-neutral-75 px-6 py-8 lg:px-10">
       {hasProjects ? (
         <div className="flex-1 animate-fade-in-up">
-          <Projects projects={projects} />
+          <Projects projects={[]} />
         </div>
       ) : (
         <div className="flex flex-1 items-center justify-center animate-fade-in-up">
