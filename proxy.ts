@@ -45,20 +45,22 @@ function buildLocalizedPath(pathname: string, targetPath: string) {
 }
 
 export default function middleware(request: NextRequest) {
-  const pathname = stripLocalePrefix(request.nextUrl.pathname);
-  const accessTokenExists = hasAccessToken(request);
+  // Temporarily disabled while backend auth APIs are in progress.
+  // Re-enable before production.
+  // const pathname = stripLocalePrefix(request.nextUrl.pathname);
+  // const accessTokenExists = hasAccessToken(request);
 
-  if (!accessTokenExists && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(
-      new URL(buildLocalizedPath(request.nextUrl.pathname, "/login"), request.url)
-    );
-  }
+  // if (!accessTokenExists && pathname.startsWith("/dashboard")) {
+  //   return NextResponse.redirect(
+  //     new URL(buildLocalizedPath(request.nextUrl.pathname, "/login"), request.url)
+  //   );
+  // }
 
-  if (accessTokenExists && AUTH_PATH_PATTERN.test(pathname)) {
-    return NextResponse.redirect(
-      new URL(buildLocalizedPath(request.nextUrl.pathname, "/dashboard"), request.url)
-    );
-  }
+  // if (accessTokenExists && AUTH_PATH_PATTERN.test(pathname)) {
+  //   return NextResponse.redirect(
+  //     new URL(buildLocalizedPath(request.nextUrl.pathname, "/dashboard"), request.url)
+  //   );
+  // }
 
   return intlMiddleware(request);
 }
