@@ -125,7 +125,7 @@ export default function SideBar() {
         <nav className="flex flex-1 flex-col gap-1">
           {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
             const isActive =
-              href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
+              href === "/dashboard/overview" ? pathname === "/dashboard/overview" : pathname.startsWith(href);
 
             return (
               <SidebarMotionItem key={href} side={side}>
