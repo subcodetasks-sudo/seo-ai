@@ -27,5 +27,4 @@
      - Nullable fields (Is it `string` or `string | null`?).
      - Nested objects vs. flat IDs.
      - Date formats (ISO string vs. timestamp).
-  4. **Type Generation:** Only AFTER seeing the real response, generate the TypeScript `interface`. 
- 
+  4. **Type Generation:** Only AFTER seeing the real response, generate the TypeScript `interface`.
