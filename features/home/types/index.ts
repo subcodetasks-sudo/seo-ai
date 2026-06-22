@@ -1,3 +1,14 @@
+export type ProjectListItem = {
+  id: string;
+  name: string;
+  url: string;
+  platform: "wordpress" | "salla" | "custom";
+  lastScanDate: string;
+  pagesCount: number;
+  errorCount: number;
+  error404Count: number;
+};
+
 /* get project */
 export type Project = {
   id: string;
