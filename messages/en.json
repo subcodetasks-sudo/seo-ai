@@ -213,5 +213,11 @@
       "passwordReset": "Password reset successfully",
       "welcomeBack": "Welcome back!"
     }
+  },
+  "home":{
+    "emptyProjects": {
+      "title": "No projects yet",
+      "subtitle": "Add your first website to start analyzing and improving SEO. Setup takes just a few minutes."
+    }
   }
 }

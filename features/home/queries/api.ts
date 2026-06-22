@@ -1,0 +1,73 @@
+import { apiClient } from "@/lib/client";
+import {
+  CreateProjectRequest,
+  ProjectSectionsRequest,
+  UpdateProjectRequest,
+} from "../types";
+
+export const createProject = (body: CreateProjectRequest) =>
+  apiClient("projects", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+export const updateProject = (body: UpdateProjectRequest, project_id: string) =>
+  apiClient(`projects/${project_id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  });
+
+export const deleteProject = (project_id: string) =>
+  apiClient(`projects/${project_id}`, {
+    method: "DELETE",
+  });
+
+export const getSiteSections = (body: ProjectSectionsRequest) =>
+  apiClient("projects/sections", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
+export const getAllProjects = () =>
+  apiClient("projects", {
+    method: "GET",
+  });
+
+export const getSingleProject = (project_id: string) =>
+  apiClient(`projects/${project_id}`, {
+    method: "GET",
+  });
+
+export const getProjectDashboard = (project_id: string) =>
+  apiClient(`projects/${project_id}/dashboard`, {
+    method: "GET",
+  });
+
+export const getVerificationToken = (project_id: string) =>
+  apiClient(`projects/${project_id}/verify/token`, {
+    method: "GET",
+  });
+
+export const verifyDomain = (method: string, project_id: string) =>
+  apiClient(`projects/${project_id}/verify`, {
+    method: "POST",
+    body: JSON.stringify(method),
+  });
+export const getPageDetails = (project_id: string, domain: string) =>
+  apiClient(`projects/${project_id}/pages/${domain}`, {
+    method: "GET",
+  });
+
+export const getBrokenPages = (project_id: string) =>
+  apiClient(
+    `projects/${project_id}/broken-pages?status=new&page=1&page_size=20`,
+    {
+      method: "GET",
+    },
+  );
+
+export const detectLanguage = (domain: string) =>
+  apiClient("projects/detect-language", {
+    method: "POST",
+    body: JSON.stringify({ domain }),
+  });

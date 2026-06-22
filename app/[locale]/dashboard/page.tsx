@@ -5,8 +5,8 @@ import {
 } from "@tanstack/react-query";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
-import { PostsList } from "@/features/home/src/components/posts-list";
-import { postsQueryOptions } from "@/features/home/src/queries/posts";
+import { PostsList } from "@/features/home/components/posts-list";
+import { postsQueryOptions } from "@/features/home/queries/queries";
 import { UploadDialog } from "@/features/uploads/components/upload-dialog";
 
 type HomePageProps = {
