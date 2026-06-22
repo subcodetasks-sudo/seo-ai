@@ -1,6 +1,5 @@
 import { videoChunkStore } from "@/app/api/uploads/video/store";
 
-export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
