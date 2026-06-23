@@ -84,7 +84,7 @@ export type UpdateProjectRequest = {
   domain?: string;
   platform?: "wordpress" | "salla" | "custom";
   sitemap_url?: string;
-  url_filter?: string;
+  url_filter?: string[] | string | null;
 };
 
 /* get site sections */

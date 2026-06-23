@@ -65,5 +65,9 @@ export const crawlStatusQueryOptions = (projectId: string, crawlId: string) =>
   queryOptions({
     queryKey: homeKeys.crawl(projectId, crawlId),
     queryFn: () => getCrawlStatus(projectId, crawlId),
-    refetchInterval: 2000,
+    enabled: !!projectId && !!crawlId,
+    refetchInterval: (query) => {
+      const status = query.state.data?.data.status;
+      return status === "done" || status === "failed" ? false : 2000;
+    },
   });

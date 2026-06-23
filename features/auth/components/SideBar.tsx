@@ -27,6 +27,7 @@ import {
 import { useAuth } from "@/features/auth/context/auth-context";
 import { useLogout } from "@/features/auth/queries/mutations";
 import { useAllProjects, useSelectedProject } from "@/features/home";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   getSidebarContainerVariants,
   getSidebarItemVariants,
@@ -67,24 +68,29 @@ export default function SideBar() {
   const t = useTranslations("sidebar");
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth();
-  const { setUser } = useAuth();
+  const { user, setUser } = useAuth();
+  const queryClient = useQueryClient();
   const { setOpen, isMobile, setOpenMobile } = useSidebar();
   const { side, isOpen } = useSidebarMotion();
   const { mutate: logout } = useLogout();
   const { data: projectsData } = useAllProjects();
   const { selectedProjectId, setSelectedProjectId, clearSelectedProject } = useSelectedProject();
 
-  const projects = projectsData?.data?.items ?? [];
+  const projects = React.useMemo(
+    () => projectsData?.data?.items ?? [],
+    [projectsData]
+  );
 
-  // Set default to first project if no selection exists
+  // Reset selection if it belongs to a different account or doesn't exist yet
   React.useEffect(() => {
-    if (projects.length > 0 && !selectedProjectId) {
+    if (projects.length === 0) return;
+    const isValid = projects.some((p) => p.id === selectedProjectId);
+    if (!isValid) {
       setSelectedProjectId(projects[0].id);
     }
   }, [projects, selectedProjectId, setSelectedProjectId]);
 
-  const selectedProject = projects.find((p) => p.id === selectedProjectId);
+  const selectedProject = projects.find((p) => p.id === selectedProjectId) ?? projects[0];
 
   const closeSidebar = () => {
     if (isMobile) {
@@ -98,6 +104,8 @@ export default function SideBar() {
     clearSelectedProject();
     logout(undefined, {
       onSuccess: () => {
+        // Wipe React Query cache so the next login always fetches fresh data.
+        queryClient.clear();
         setUser(null);
         router.push("/login");
       },
@@ -141,7 +149,7 @@ export default function SideBar() {
         </div>
         <SidebarMotionItem side={side} className="mb-6">
           {projects.length > 0 && selectedProject ? (
-            <Select value={selectedProjectId || ""} onValueChange={setSelectedProjectId}>
+            <Select value={selectedProject.id} onValueChange={setSelectedProjectId}>
               <SelectTrigger className="h-auto! w-full items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2.5 hover:border-neutral-300 transition-colors">
                 <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
                   <p className="truncate text-sm font-semibold text-secondary-500">

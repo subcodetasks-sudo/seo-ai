@@ -378,3 +378,23 @@
   animation: fadeInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Radix primitives (Select, Dropdown, Dialog…) lock the body scroll when open
+   via react-remove-scroll. Two side effects need neutralizing:
+
+   1. It sets `overflow: hidden` on <body>. With the default `overflow: visible`
+      on <html>, that propagates to the viewport and the page scrollbar vanishes.
+      A permanent scrollbar on <html> stops the propagation and prevents reflow.
+   2. It still injects `margin-right: <scrollbar-width> !important` on <body> to
+      compensate for a scrollbar it thinks it removed. Since our scrollbar is now
+      permanent, that compensation is unwanted — it pushes in-flow content away
+      from the fixed sidebar, leaving a gap. The `html`-prefixed selector outranks
+      the injected rule so we can cancel it. */
+html {
+  overflow-y: scroll;
+}
+
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
+  padding-right: 0 !important;
+}
+

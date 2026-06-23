@@ -1,66 +1,73 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, Download, LoaderCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Copy, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useDirection } from "@/components/ui/direction";
-import { useVerifyDomain } from "@/features/home";
-import { step2Schema, type Step2FormData } from "@/features/home/schemas/add-project";
 
 const PLUGIN_DOWNLOAD_URL = "#";
 const instructions = ["instruction1", "instruction2", "instruction3"] as const;
 
 interface Step2Props {
-  onNext: (data: Step2FormData) => void;
+  onNext: () => void;
   onBack: () => void;
-  projectId?: string;
+  setupLink?: string;
+  setupToken?: string;
 }
 
-export default function Step2({ onNext, onBack, projectId }: Step2Props) {
-  const dir = useDirection();
+interface CopyFieldProps {
+  label: string;
+  value: string;
+}
+
+function CopyField({ label, value }: CopyFieldProps) {
   const t = useTranslations("home.addProject.step2");
-  const verifyMutation = useVerifyDomain();
+  const [copied, setCopied] = useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<Step2FormData>({
-    resolver: zodResolver(step2Schema),
-    defaultValues: {
-      token: "",
-    },
-  });
-
-  const tokenError = errors.token;
-
-  const onSubmit = async (data: Step2FormData) => {
-    if (projectId) {
-      try {
-        await verifyMutation.mutateAsync({
-          projectId,
-          method: "dns",
-        });
-        onNext(data);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : "Verification failed";
-        console.error("Verification error:", message);
-      }
-    } else {
-      onNext(data);
-    }
+  const handleCopy = async () => {
+    if (!value) return;
+    await navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex w-full max-w-[600px] flex-col items-center gap-6"
-      dir={dir}
-    >
+    <div className="flex w-full flex-col gap-2 text-start">
+      <label className="text-label-md font-semibold text-secondary-500">{label}</label>
+      <div className="relative w-full">
+        <Input
+          value={value}
+          readOnly
+          dir="ltr"
+          className="h-12 w-full rounded-[10px] border border-neutral-300 bg-neutral-50 px-4 pe-28 py-2 text-left text-body text-secondary-500"
+        />
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleCopy}
+          className={cn(
+            "absolute start-1.5 top-1/2 h-9 -translate-y-1/2 gap-1.5 rounded-[8px] border-neutral-200 bg-white px-3 text-label-md font-medium text-secondary-500 hover:bg-neutral-50",
+            copied && "border-success-200 bg-success-50 text-success-600 hover:bg-success-50"
+          )}
+        >
+          {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+          <span>{copied ? t("copied") : t("copy")}</span>
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+export default function Step2({ onNext, onBack, setupLink, setupToken }: Step2Props) {
+  const dir = useDirection();
+  const t = useTranslations("home.addProject.step2");
+
+  return (
+    <div className="flex w-full max-w-[600px] flex-col items-center gap-6" dir={dir}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-h1 font-bold text-secondary-500">{t("title")}</h1>
         <p className="text-label-md text-neutral-500">{t("subtitle")}</p>
@@ -98,40 +105,14 @@ export default function Step2({ onNext, onBack, projectId }: Step2Props) {
         </ol>
       </div>
 
-      <div className="flex w-full flex-col gap-2 text-start">
-        <label htmlFor="connection-token" className="text-label-md font-semibold text-secondary-500">
-          {t("tokenLabel")}
-        </label>
-        <Controller
-          name="token"
-          control={control}
-          render={({ field }) => (
-            <Input
-              {...field}
-              id="connection-token"
-              type="text"
-              placeholder={t("tokenPlaceholder")}
-              className={cn(
-                "h-12 w-full rounded-[10px] border border-neutral-300 bg-white px-4 py-2 text-left text-body placeholder:text-neutral-400 focus-visible:border-primary-300 focus-visible:ring-3 focus-visible:ring-primary-100/50",
-                tokenError && "border-error-300 focus-visible:border-error-300 focus-visible:ring-error-100/50"
-              )}
-              dir="ltr"
-            />
-          )}
-        />
-        {tokenError ? (
-          <span className="text-label-sm text-error-300">{tokenError.message}</span>
-        ) : (
-          <span className="text-label-sm text-neutral-400">{t("tokenHint")}</span>
-        )}
-      </div>
+      <CopyField label={t("setupLinkLabel")} value={setupLink ?? ""} />
+      <CopyField label={t("setupTokenLabel")} value={setupToken ?? ""} />
 
       <div className="mt-4 flex w-full items-center justify-between">
         <Button
           type="button"
           variant="ghost"
           onClick={onBack}
-          disabled={isSubmitting}
           className="flex h-11 items-center gap-2 px-2 text-label-md font-medium text-neutral-500 hover:bg-transparent hover:text-secondary-500 disabled:opacity-50"
         >
           {dir === "rtl" ? <ArrowRight className="size-4" /> : <ArrowLeft className="size-4" />}
@@ -139,14 +120,14 @@ export default function Step2({ onNext, onBack, projectId }: Step2Props) {
         </Button>
 
         <Button
-          type="submit"
-          disabled={isSubmitting}
+          type="button"
+          onClick={onNext}
           className="flex h-11 items-center gap-2 rounded-[10px] bg-primary-300 px-6 font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px disabled:opacity-50"
         >
-          {isSubmitting && <LoaderCircle className="size-4 animate-spin" />}
-          <span>{t("verifyNow")}</span>
+          <span>{t("continue")}</span>
+          {dir === "rtl" ? <ArrowLeft className="size-4" /> : <ArrowRight className="size-4" />}
         </Button>
       </div>
-    </form>
+    </div>
   );
 }

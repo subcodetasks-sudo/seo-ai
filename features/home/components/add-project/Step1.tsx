@@ -3,20 +3,23 @@
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, Globe } from "lucide-react";
+import { ArrowLeft, ArrowRight, Globe, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useDirection } from "@/components/ui/direction";
+import { useCreateProject } from "@/features/home";
+import type { Project } from "@/features/home/types";
 import { step1Schema, type Step1FormData } from "@/features/home/schemas/add-project";
 
 interface Step1Props {
-  onNext: (data: Step1FormData) => void;
+  onNext: (project: Project) => void;
 }
 
 export default function Step1({ onNext }: Step1Props) {
   const dir = useDirection();
   const t = useTranslations("home.addProject.step1");
+  const createProjectMutation = useCreateProject();
   const {
     control,
     handleSubmit,
@@ -33,8 +36,34 @@ export default function Step1({ onNext }: Step1Props) {
   const projectType = watch("projectType");
   const urlError = errors.websiteUrl;
 
+  const onSubmit = async (data: Step1FormData) => {
+    const fullUrl = data.websiteUrl.startsWith("http") ? data.websiteUrl : `https://${data.websiteUrl}`;
+
+    let projectName = "Untitled Project";
+    try {
+      projectName = new URL(fullUrl).hostname || projectName;
+    } catch {
+      // keep fallback name
+    }
+
+    try {
+      const response = await createProjectMutation.mutateAsync({
+        name: projectName,
+        domain: fullUrl,
+        platform: data.projectType,
+        sitemap_url: null,
+        url_filter: null,
+      });
+      onNext(response.data);
+    } catch {
+      // Errors surface via the global mutation handler.
+    }
+  };
+
+  const isSubmitting = createProjectMutation.isPending;
+
   return (
-    <form onSubmit={handleSubmit(onNext)} className="flex w-full max-w-[600px] flex-col items-center gap-6" dir={dir}>
+    <form onSubmit={handleSubmit(onSubmit)} className="flex w-full max-w-[600px] flex-col items-center gap-6" dir={dir}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-h1 font-bold text-secondary-500">{t("title")}</h1>
         <p className="text-label-md text-neutral-500">{t("subtitle")}</p>
@@ -149,10 +178,12 @@ export default function Step1({ onNext }: Step1Props) {
       <div className="mt-4 flex w-full justify-start">
         <Button
           type="submit"
+          disabled={isSubmitting}
           className="flex h-11 items-center gap-2 rounded-[10px] bg-primary-300 px-6 font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px disabled:opacity-50"
         >
+          {isSubmitting && <LoaderCircle className="size-4 animate-spin" />}
           <span>{t("continue")}</span>
-          {dir === "rtl" ? <ArrowLeft className="size-4" /> : <ArrowRight className="size-4" />}
+          {!isSubmitting && (dir === "rtl" ? <ArrowLeft className="size-4" /> : <ArrowRight className="size-4" />)}
         </Button>
       </div>
     </form>
