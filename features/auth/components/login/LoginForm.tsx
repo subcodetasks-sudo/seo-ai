@@ -28,6 +28,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/features/auth/context/auth-context";
 import { createLoginSchema } from "@/features/auth/schemas/login-schema";
 import type { LoginFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
@@ -125,6 +126,7 @@ function GoogleSignInButton({ label, className }: GoogleSignInButtonProps) {
 
 export function LoginForm() {
   const router = useRouter();
+  const { setUser } = useAuth();
   const t = useTranslations("auth.login");
   const tToast = useTranslations("auth.toast");
   const tValidation = useTranslations("auth.login.validation");
@@ -163,7 +165,27 @@ export function LoginForm() {
 
   function onSubmit(_data: LoginFormValues) {
     login(_data, {
-      onSuccess: () => {
+      onSuccess: (response: any) => {
+        const userData = response?.data;
+        if (userData) {
+          const initials = userData.display_name
+            ? userData.display_name
+                .split(" ")
+                .map((n: string) => n[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 2)
+            : "";
+          setUser({
+            id: userData.id,
+            email: userData.email,
+            display_name: userData.display_name || userData.name,
+            name: userData.display_name || userData.name,
+            plan: userData.plan,
+            avatar: userData.avatar,
+            initials,
+          });
+        }
         toast.success(tToast("welcomeBack"));
         router.push(`/dashboard`);
       },

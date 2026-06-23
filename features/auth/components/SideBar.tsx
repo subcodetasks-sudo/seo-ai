@@ -8,6 +8,7 @@ import {
   Home,
   Link2Off,
   List,
+  LogOut,
   PanelRightClose,
 } from "lucide-react";
 import { motion } from "motion/react";
@@ -18,6 +19,8 @@ import Logo from "@/components/Logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sidebar as UiSidebar, useSidebar } from "@/components/ui/sidebar";
+import { useAuth } from "@/features/auth/context/auth-context";
+import { useLogout } from "@/features/auth/queries/mutations";
 import {
   getSidebarContainerVariants,
   getSidebarItemVariants,
@@ -25,7 +28,7 @@ import {
   type SidebarSide,
   useSidebarMotion,
 } from "@/hooks/use-sidebar-motion";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -57,8 +60,12 @@ function SidebarMotionItem({ children, className, side }: SidebarMotionItemProps
 export default function SideBar() {
   const t = useTranslations("sidebar");
   const pathname = usePathname();
+  const router = useRouter();
+  const { user } = useAuth();
+  const { setUser } = useAuth();
   const { setOpen, isMobile, setOpenMobile } = useSidebar();
   const { side, isOpen } = useSidebarMotion();
+  const { mutate: logout } = useLogout();
 
   const closeSidebar = () => {
     if (isMobile) {
@@ -66,6 +73,15 @@ export default function SideBar() {
       return;
     }
     setOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        setUser(null);
+        router.push("/login");
+      },
+    });
   };
 
   return (
@@ -147,20 +163,32 @@ export default function SideBar() {
         </nav>
 
         <SidebarMotionItem side={side} className="mt-6">
-          <div className="flex items-center gap-3 border-t border-neutral-200 pt-5">
-            <Avatar size="lg">
-              <AvatarFallback className="bg-primary-75 text-sm font-semibold text-secondary-500">
-                {t("userInitials")}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <p className="truncate font-semibold text-secondary-500">
-                {t("userName")}
-              </p>
-              <p className="truncate text-sm text-secondary-200">
-                {t("userPlan")}
-              </p>
+          <div className="border-t border-neutral-200 pt-5">
+            <div className="mb-3 flex items-center gap-3">
+              <Avatar size="lg">
+                <AvatarFallback className="bg-primary-75 text-sm font-semibold text-secondary-500">
+                  {user?.initials || t("userInitials")}
+                </AvatarFallback>
+              </Avatar>
+              <div className="min-w-0">
+                <p className="truncate font-semibold text-secondary-500">
+                  {user?.display_name || t("userName")}
+                </p>
+                <p className="truncate text-sm text-secondary-200">
+                  {user?.plan || t("userPlan")}
+                </p>
+              </div>
             </div>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleLogout}
+              className="w-full gap-2"
+            >
+              <LogOut className="size-4" />
+              {t("logout")}
+            </Button>
           </div>
         </SidebarMotionItem>
       </motion.div>

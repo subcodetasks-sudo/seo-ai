@@ -25,7 +25,8 @@
     "changelog": "Changelog",
     "userName": "Mohamed Ahmed",
     "userPlan": "Paid plan",
-    "userInitials": "MA"
+    "userInitials": "MA",
+    "logout": "Log out"
   },
   "plans": {
     "metadata": {

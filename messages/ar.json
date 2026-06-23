@@ -25,7 +25,8 @@
     "changelog": "سجل التغييرات",
     "userName": "محمد أحمد",
     "userPlan": "الخطة المدفوعة",
-    "userInitials": "م أ"
+    "userInitials": "م أ",
+    "logout": "تسجيل الخروج"
   },
   "plans": {
     "metadata": {

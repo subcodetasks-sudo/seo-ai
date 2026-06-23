@@ -1,3 +1,5 @@
+let refreshing: Promise<void> | null = null;
+
 export async function apiClient<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -14,6 +16,44 @@ export async function apiClient<T>(
 
   const result = await response?.json();
   console.log("result", result);
+
+  if (response.status === 401) {
+    if (!refreshing) {
+      refreshing = fetch("/api/auth/refresh", { method: "POST" })
+        .then(async (r) => {
+          if (!r.ok) throw new Error("refresh_failed");
+        })
+        .finally(() => {
+          refreshing = null;
+        });
+    }
+
+    try {
+      await refreshing;
+      // Retry once after refresh
+      const retryResponse = await fetch(`/api/${endpoint}`, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
+      });
+      const retryResult = await retryResponse.json();
+
+      if (!retryResponse.ok || retryResult.status === false) {
+        throw new Error(retryResult.message || alternativeErrorMessage);
+      }
+
+      return retryResult;
+    } catch {
+      // Refresh failed — redirect to login (locale-aware)
+      const locale = window.location.pathname.split("/")[1];
+      const prefix =
+        ["ar", "en"].includes(locale) && locale ? `/${locale}` : "/ar";
+      window.location.href = `${prefix}/login`;
+      throw new Error("Session expired. Please log in again.");
+    }
+  }
 
   if (!response.ok || result.status === false) {
     throw new Error(result.message || alternativeErrorMessage);

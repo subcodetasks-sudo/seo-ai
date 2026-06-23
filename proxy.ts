@@ -5,13 +5,16 @@ import { routing } from "./i18n/routing";
 
 const intlMiddleware = createMiddleware(routing);
 
-const AUTH_COOKIE_NAMES = ["access_token", "accessToken"];
-const AUTH_PATH_PATTERN = /\/(login|register|reset-password|reset-passwod)(?=\/|$)/;
+const REFRESH_TOKEN_COOKIE = "refresh_token";
+const AUTH_PATH_PATTERN =
+  /\/(login|register|reset-password)(?=\/|$)/;
 
 function getLocaleFromPathname(pathname: string) {
   const firstSegment = pathname.split("/")[1];
 
-  return routing.locales.includes(firstSegment as (typeof routing.locales)[number])
+  return routing.locales.includes(
+    firstSegment as (typeof routing.locales)[number]
+  )
     ? firstSegment
     : null;
 }
@@ -28,10 +31,8 @@ function stripLocalePrefix(pathname: string) {
   return stripped.length > 0 ? stripped : "/";
 }
 
-function hasAccessToken(request: NextRequest) {
-  return AUTH_COOKIE_NAMES.some(
-    (cookieName) => request.cookies.get(cookieName)?.value
-  );
+function hasRefreshToken(request: NextRequest) {
+  return !!request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
 }
 
 function buildLocalizedPath(pathname: string, targetPath: string) {
@@ -45,22 +46,20 @@ function buildLocalizedPath(pathname: string, targetPath: string) {
 }
 
 export default function middleware(request: NextRequest) {
-  // Temporarily disabled while backend auth APIs are in progress.
-  // Re-enable before production.
-  // const pathname = stripLocalePrefix(request.nextUrl.pathname);
-  // const accessTokenExists = hasAccessToken(request);
+  const pathname = stripLocalePrefix(request.nextUrl.pathname);
+  const isAuthenticated = hasRefreshToken(request);
 
-  // if (!accessTokenExists && pathname.startsWith("/dashboard")) {
-  //   return NextResponse.redirect(
-  //     new URL(buildLocalizedPath(request.nextUrl.pathname, "/login"), request.url)
-  //   );
-  // }
+  if (!isAuthenticated && pathname.startsWith("/dashboard")) {
+    return NextResponse.redirect(
+      new URL(buildLocalizedPath(request.nextUrl.pathname, "/login"), request.url)
+    );
+  }
 
-  // if (accessTokenExists && AUTH_PATH_PATTERN.test(pathname)) {
-  //   return NextResponse.redirect(
-  //     new URL(buildLocalizedPath(request.nextUrl.pathname, "/dashboard"), request.url)
-  //   );
-  // }
+  if (isAuthenticated && AUTH_PATH_PATTERN.test(pathname)) {
+    return NextResponse.redirect(
+      new URL(buildLocalizedPath(request.nextUrl.pathname, "/dashboard"), request.url)
+    );
+  }
 
   return intlMiddleware(request);
 }

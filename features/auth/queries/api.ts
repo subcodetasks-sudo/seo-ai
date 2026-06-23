@@ -56,4 +56,9 @@ export const updatePassword = (body: UpdatePasswordFormValues) =>
   apiClient("auth/reset-password", {
     method: "POST",
     body: JSON.stringify(body),
-  });;
+  });
+
+export const logout = () =>
+  apiClient("auth/logout", {
+    method: "POST",
+  });
