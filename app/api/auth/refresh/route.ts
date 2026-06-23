@@ -21,7 +21,9 @@ export async function POST(req: NextRequest) {
   const refresh_token = req.cookies.get("refresh_token")?.value;
 
   if (!refresh_token) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    return clearAuthCookies(
+      NextResponse.json({ message: "Unauthorized" }, { status: 401 }),
+    );
   }
 
   try {
@@ -61,6 +63,15 @@ export async function POST(req: NextRequest) {
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : String(error);
 
-    return NextResponse.json({ message }, { status: 400 });
+    // Refresh failed — clear cookies so middleware/client treat the user as
+    // logged out instead of bouncing them back into an authenticated route.
+    return clearAuthCookies(NextResponse.json({ message }, { status: 401 }));
   }
+}
+
+function clearAuthCookies(response: NextResponse) {
+  response.cookies.delete("access_token");
+  response.cookies.delete("refresh_token");
+
+  return response;
 }
