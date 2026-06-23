@@ -1,71 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, ArrowRight, Download, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useDirection } from "@/components/ui/direction";
-import { toast } from "sonner";
+import { useVerifyDomain } from "@/features/home";
+import { step2Schema, type Step2FormData } from "@/features/home/schemas/add-project";
 
 const PLUGIN_DOWNLOAD_URL = "#";
-// const TOKEN_PATTERN = /^rank-ai-token-[a-zA-Z0-9-]+$/;
-
-interface Step2Props {
-  onNext: (data: { token: string }) => void;
-  onBack: () => void;
-}
-
 const instructions = ["instruction1", "instruction2", "instruction3"] as const;
 
-export default function Step2({ onNext, onBack }: Step2Props) {
+interface Step2Props {
+  onNext: (data: Step2FormData) => void;
+  onBack: () => void;
+  projectId?: string;
+}
+
+export default function Step2({ onNext, onBack, projectId }: Step2Props) {
   const dir = useDirection();
   const t = useTranslations("home.addProject.step2");
-  const [token, setToken] = useState("");
-  const [error, setError] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
+  const verifyMutation = useVerifyDomain();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<Step2FormData>({
+    resolver: zodResolver(step2Schema),
+    defaultValues: {
+      token: "",
+    },
+  });
 
-    const trimmedToken = token.trim();
-    if (!trimmedToken) {
-      setError(t("tokenRequired"));
-      return;
+  const tokenError = errors.token;
+
+  const onSubmit = async (data: Step2FormData) => {
+    if (projectId) {
+      try {
+        await verifyMutation.mutateAsync({
+          projectId,
+          method: "dns",
+        });
+        onNext(data);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Verification failed";
+        console.error("Verification error:", message);
+      }
+    } else {
+      onNext(data);
     }
-
-    // if (!TOKEN_PATTERN.test(trimmedToken)) {
-    //   setError(t("invalidToken"));
-    //   return;
-    // }
-
-    setError("");
-    setIsVerifying(true);
-
-    const verificationPromise = new Promise<void>((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 2000);
-    });
-
-    toast.promise(verificationPromise, {
-      loading: t("verifying"),
-      success: () => {
-        setIsVerifying(false);
-        onNext({ token: trimmedToken });
-        return t("verificationSuccess");
-      },
-      error: () => {
-        setIsVerifying(false);
-        return t("verificationFailed");
-      },
-    });
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex w-full max-w-[600px] flex-col items-center gap-6"
       dir={dir}
     >
@@ -110,23 +102,25 @@ export default function Step2({ onNext, onBack }: Step2Props) {
         <label htmlFor="connection-token" className="text-label-md font-semibold text-secondary-500">
           {t("tokenLabel")}
         </label>
-        <Input
-          id="connection-token"
-          type="text"
-          placeholder={t("tokenPlaceholder")}
-          value={token}
-          onChange={(e) => {
-            setToken(e.target.value);
-            if (error) setError("");
-          }}
-          className={cn(
-            "h-12 w-full rounded-[10px] border border-neutral-300 bg-white px-4 py-2 text-left text-body placeholder:text-neutral-400 focus-visible:border-primary-300 focus-visible:ring-3 focus-visible:ring-primary-100/50",
-            error && "border-error-300 focus-visible:border-error-300 focus-visible:ring-error-100/50"
+        <Controller
+          name="token"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              id="connection-token"
+              type="text"
+              placeholder={t("tokenPlaceholder")}
+              className={cn(
+                "h-12 w-full rounded-[10px] border border-neutral-300 bg-white px-4 py-2 text-left text-body placeholder:text-neutral-400 focus-visible:border-primary-300 focus-visible:ring-3 focus-visible:ring-primary-100/50",
+                tokenError && "border-error-300 focus-visible:border-error-300 focus-visible:ring-error-100/50"
+              )}
+              dir="ltr"
+            />
           )}
-          dir="ltr"
         />
-        {error ? (
-          <span className="text-label-sm text-error-300">{error}</span>
+        {tokenError ? (
+          <span className="text-label-sm text-error-300">{tokenError.message}</span>
         ) : (
           <span className="text-label-sm text-neutral-400">{t("tokenHint")}</span>
         )}
@@ -137,8 +131,8 @@ export default function Step2({ onNext, onBack }: Step2Props) {
           type="button"
           variant="ghost"
           onClick={onBack}
-          disabled={isVerifying}
-          className="flex h-11 items-center gap-2 px-2 text-label-md font-medium text-neutral-500 hover:bg-transparent hover:text-secondary-500"
+          disabled={isSubmitting}
+          className="flex h-11 items-center gap-2 px-2 text-label-md font-medium text-neutral-500 hover:bg-transparent hover:text-secondary-500 disabled:opacity-50"
         >
           {dir === "rtl" ? <ArrowRight className="size-4" /> : <ArrowLeft className="size-4" />}
           <span>{t("back")}</span>
@@ -146,10 +140,10 @@ export default function Step2({ onNext, onBack }: Step2Props) {
 
         <Button
           type="submit"
-          disabled={isVerifying}
-          className="flex h-11 items-center gap-2 rounded-[10px] bg-primary-300 px-6 font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px"
+          disabled={isSubmitting}
+          className="flex h-11 items-center gap-2 rounded-[10px] bg-primary-300 px-6 font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px disabled:opacity-50"
         >
-          {isVerifying && <LoaderCircle className="size-4 animate-spin" />}
+          {isSubmitting && <LoaderCircle className="size-4 animate-spin" />}
           <span>{t("verifyNow")}</span>
         </Button>
       </div>

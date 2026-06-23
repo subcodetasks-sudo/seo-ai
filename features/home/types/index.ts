@@ -76,7 +76,7 @@ export type CreateProjectRequest = {
   domain: string;
   platform: "wordpress" | "salla" | "custom";
   sitemap_url: string | null;
-  url_filter: string | null;
+  url_filter: string[] | string | null;
 };
 
 export type UpdateProjectRequest = {

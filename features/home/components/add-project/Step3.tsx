@@ -1,6 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { CheckCircle2, ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
 import type { Section } from "@/features/home/types";
 import { useDirection } from "@/components/ui/direction";
+import { step3Schema, type Step3FormData } from "@/features/home/schemas/add-project";
 
 const PAGE_SIZE = 10;
 
@@ -29,10 +32,21 @@ export default function Step3({
   const dir = useDirection();
   const t = useTranslations("home.addProject.step3");
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedPrefixes, setSelectedPrefixes] = useState<Set<string>>(
-    () => new Set([sections[0]?.prefix].filter(Boolean))
-  );
-  const [error, setError] = useState("");
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<Step3FormData>({
+    resolver: zodResolver(step3Schema),
+    defaultValues: {
+      selectedSections: new Set([sections[0]?.prefix].filter(Boolean)),
+    },
+  });
+
+  const selectedSections = watch("selectedSections");
+  const selectedPrefixes = selectedSections;
 
   const totalPages = Math.max(1, Math.ceil(sections.length / PAGE_SIZE));
   const paginatedSections = useMemo(() => {
@@ -53,45 +67,12 @@ export default function Step3({
   const getSectionLabel = (section: Section) =>
     section.label === "home" ? t("homePage") : section.label;
 
-  const toggleSection = (prefix: string, checked: boolean) => {
-    setSelectedPrefixes((prev) => {
-      const next = new Set(prev);
-      if (checked) {
-        next.add(prefix);
-      } else {
-        next.delete(prefix);
-      }
-      return next;
-    });
-    if (error) setError("");
-  };
-
-  const toggleVisibleSections = (checked: boolean) => {
-    setSelectedPrefixes((prev) => {
-      const next = new Set(prev);
-      visiblePrefixes.forEach((prefix) => {
-        if (checked) {
-          next.add(prefix);
-        } else {
-          next.delete(prefix);
-        }
-      });
-      return next;
-    });
-    if (error) setError("");
-  };
-
-  const handleScan = () => {
-    if (selectedCount === 0) {
-      setError(t("sectionsRequired"));
-      return;
-    }
-    setError("");
-    onFinish(selectedPrefixes);
-  };
-
   return (
-    <div className="flex w-full max-w-[720px] flex-col items-center gap-6" dir={dir}>
+    <form
+      onSubmit={handleSubmit((data) => onFinish(data.selectedSections))}
+      className="flex w-full max-w-[720px] flex-col items-center gap-6"
+      dir={dir}
+    >
       <div className="flex flex-col items-center gap-3 text-center">
         <div className="flex size-16 items-center justify-center rounded-full bg-success-300 text-white">
           <CheckCircle2 className="size-8 stroke-[2.5px]" />
@@ -110,10 +91,26 @@ export default function Step3({
       <div className="w-full overflow-hidden rounded-[12px] border border-neutral-200 bg-white">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-neutral-200 px-4 py-3">
           <div className="flex items-center gap-3">
-            <Checkbox
-              checked={allVisibleSelected ? true : someVisibleSelected ? "indeterminate" : false}
-              onCheckedChange={(checked) => toggleVisibleSections(checked === true)}
-              className="size-4 rounded-[4px] border-neutral-300 data-checked:border-primary-300 data-checked:bg-primary-300 data-checked:text-secondary-500"
+            <Controller
+              name="selectedSections"
+              control={control}
+              render={({ field }) => (
+                <Checkbox
+                  checked={allVisibleSelected ? true : someVisibleSelected ? "indeterminate" : false}
+                  onCheckedChange={(checked) => {
+                    const newSet = new Set(field.value);
+                    visiblePrefixes.forEach((prefix) => {
+                      if (checked) {
+                        newSet.add(prefix);
+                      } else {
+                        newSet.delete(prefix);
+                      }
+                    });
+                    field.onChange(newSet);
+                  }}
+                  className="size-4 rounded-[4px] border-neutral-300 data-checked:border-primary-300 data-checked:bg-primary-300 data-checked:text-secondary-500"
+                />
+              )}
             />
             <span className="text-label-md font-semibold text-secondary-500">{t("selectSections")}</span>
           </div>
@@ -126,40 +123,56 @@ export default function Step3({
         </div>
 
         <div className="flex flex-col">
-          {paginatedSections.map((section) => {
-            const isSelected = selectedPrefixes.has(section.prefix);
+          <Controller
+            name="selectedSections"
+            control={control}
+            render={({ field }) => (
+              <>
+                {paginatedSections.map((section) => {
+                  const isSelected = field.value.has(section.prefix);
 
-            return (
-              <label
-                key={section.prefix}
-                className={cn(
-                  "flex cursor-pointer items-center justify-between gap-4 border-b border-neutral-100 px-4 py-3 transition-colors last:border-b-0",
-                  isSelected && "bg-primary-50/60"
-                )}
-              >
-                <div className="flex min-w-0 flex-1 items-center gap-3">
-                  <Checkbox
-                    checked={isSelected}
-                    onCheckedChange={(checked) => toggleSection(section.prefix, checked === true)}
-                    className="size-4 rounded-[4px] border-neutral-300 data-checked:border-primary-300 data-checked:bg-primary-300 data-checked:text-secondary-500"
-                  />
-                  <span
-                    className={cn(
-                      "truncate text-body text-secondary-500",
-                      section.label !== "home" && "text-left"
-                    )}
-                    dir={section.label === "home" ? dir : "ltr"}
-                  >
-                    {getSectionLabel(section)}
-                  </span>
-                </div>
+                  return (
+                    <label
+                      key={section.prefix}
+                      className={cn(
+                        "flex cursor-pointer items-center justify-between gap-4 border-b border-neutral-100 px-4 py-3 transition-colors last:border-b-0",
+                        isSelected && "bg-primary-50/60"
+                      )}
+                    >
+                      <div className="flex min-w-0 flex-1 items-center gap-3">
+                        <Checkbox
+                          checked={isSelected}
+                          onCheckedChange={(checked) => {
+                            const newSet = new Set(field.value);
+                            if (checked) {
+                              newSet.add(section.prefix);
+                            } else {
+                              newSet.delete(section.prefix);
+                            }
+                            field.onChange(newSet);
+                          }}
+                          className="size-4 rounded-[4px] border-neutral-300 data-checked:border-primary-300 data-checked:bg-primary-300 data-checked:text-secondary-500"
+                        />
+                        <span
+                          className={cn(
+                            "truncate text-body text-secondary-500",
+                            section.label !== "home" && "text-left"
+                          )}
+                          dir={section.label === "home" ? dir : "ltr"}
+                        >
+                          {getSectionLabel(section)}
+                        </span>
+                      </div>
 
-                <span className="shrink-0 rounded-full bg-primary-100 px-2.5 py-1 text-label-sm font-medium text-primary-500">
-                  {t("pageCount", { count: section.count })}
-                </span>
-              </label>
-            );
-          })}
+                      <span className="shrink-0 rounded-full bg-primary-100 px-2.5 py-1 text-label-sm font-medium text-primary-500">
+                        {t("pageCount", { count: section.count })}
+                      </span>
+                    </label>
+                  );
+                })}
+              </>
+            )}
+          />
         </div>
 
         <div className="flex items-center justify-between gap-4 border-t border-neutral-200 px-4 py-3">
@@ -219,16 +232,19 @@ export default function Step3({
         </div>
       </div>
 
-      {error && <span className="w-full text-start text-label-sm text-error-300">{error}</span>}
+      {errors.selectedSections && (
+        <span className="w-full text-start text-label-sm text-error-300">
+          {errors.selectedSections.message}
+        </span>
+      )}
 
       <div className="flex w-full flex-col gap-3 sm:flex-row-reverse sm:justify-between">
         <Button
-          type="button"
-          onClick={handleScan}
-          disabled={isSectionsLoading}
-          className="h-12 w-full sm:w-auto sm:px-8 rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px"
+          type="submit"
+          disabled={isSectionsLoading || isSubmitting}
+          className="h-12 w-full sm:w-auto sm:px-8 rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px disabled:opacity-50"
         >
-          {isSectionsLoading && <LoaderCircle className="size-4 animate-spin" />}
+          {(isSectionsLoading || isSubmitting) && <LoaderCircle className="size-4 animate-spin" />}
           {t("scan")}
         </Button>
 
@@ -236,11 +252,12 @@ export default function Step3({
           type="button"
           variant="outline"
           onClick={onBack}
-          className="h-12 w-full sm:w-auto sm:px-8 rounded-[10px] border-neutral-200 bg-white text-body font-semibold text-secondary-500 hover:bg-neutral-50"
+          disabled={isSubmitting}
+          className="h-12 w-full sm:w-auto sm:px-8 rounded-[10px] border-neutral-200 bg-white text-body font-semibold text-secondary-500 hover:bg-neutral-50 disabled:opacity-50"
         >
           {t("cancel")}
         </Button>
       </div>
-    </div>
+    </form>
   );
 }
