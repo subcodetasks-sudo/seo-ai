@@ -38,6 +38,7 @@ type AddProjectContextValue = {
   backStep: () => void;
   exitAddProject: () => void;
   setAnalysisState: (state: "loading" | "success" | null) => void;
+  completeAnalysis: (data: { aiSuggestionsCount: number; issuesCount: number; pagesCount: number }) => void;
 };
 
 const AddProjectContext = createContext<AddProjectContextValue | null>(null);
@@ -181,6 +182,17 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
     }));
   }, []);
 
+  const completeAnalysis = useCallback(
+    (data: { aiSuggestionsCount: number; issuesCount: number; pagesCount: number }) => {
+      setFormDataState((prev) => ({
+        ...prev,
+        analysisState: "success",
+        analysisData: data,
+      }));
+    },
+    []
+  );
+
   return (
     <AddProjectContext.Provider
       value={{
@@ -195,6 +207,7 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
         backStep,
         exitAddProject,
         setAnalysisState,
+        completeAnalysis,
       }}
     >
       {children}

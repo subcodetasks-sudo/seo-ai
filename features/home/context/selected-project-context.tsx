@@ -38,14 +38,10 @@ export function SelectedProjectProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(STORAGE_KEY);
   };
 
-  if (!isMounted) {
-    return children;
-  }
-
   return (
     <SelectedProjectContext.Provider
       value={{
-        selectedProjectId,
+        selectedProjectId: isMounted ? selectedProjectId : null,
         setSelectedProjectId: handleSetProjectId,
         clearSelectedProject: handleClearProject,
       }}
