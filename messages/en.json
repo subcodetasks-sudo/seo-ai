@@ -236,10 +236,30 @@
       "detectedAt": "Detection Date",
       "action": "Action",
       "fixWithAi": "Fix with AI",
-      "noReferrer": "—"
+      "noReferrer": "—",
+      "copyUrl": "Copy full URL",
+      "openUrl": "Open in new tab"
     },
     "pagination": {
       "showing": "Showing {shown} of {total} problems"
+    },
+    "aifix": {
+      "title": "404 Error",
+      "referrer": "Referrer",
+      "brokenUrl": "Broken URL",
+      "status": "Status",
+      "detectedAt": "Detected",
+      "daysAgo": "{count} days ago",
+      "unresolved": "Unresolved",
+      "aiSuggestion": "AI Redirect Suggestion",
+      "suggestedUrl": "Suggested Redirect URL",
+      "reason": "Reason",
+      "reasonText": "The URL slug closely matches the active products list. The previous product name was changed during the 2024 catalog update.",
+      "approve": "Approve",
+      "enterManually": "Enter manually",
+      "manualPlaceholder": "Enter redirect URL",
+      "apply": "Apply",
+      "back": "Back"
     }
   },
   "home": {

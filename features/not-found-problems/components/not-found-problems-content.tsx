@@ -92,7 +92,7 @@ export function NotFoundProblemsContent() {
             <p className="text-label-md text-neutral-500">{t("empty")}</p>
           </div>
         ) : (
-          <BrokenPagesTable items={items} />
+          <BrokenPagesTable items={items} projectDomain={domain} />
         )}
 
         {totalPages > 1 || items.length > 0 ? (

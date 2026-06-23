@@ -236,10 +236,30 @@
       "detectedAt": "تاريخ الاكتشاف",
       "action": "الإجراء",
       "fixWithAi": "إصلاح بالذكاء الاصطناعي",
-      "noReferrer": "—"
+      "noReferrer": "—",
+      "copyUrl": "نسخ الرابط الكامل",
+      "openUrl": "فتح في تبويب جديد"
     },
     "pagination": {
       "showing": "يتم عرض {shown} من أصل {total} مشكلة"
+    },
+    "aifix": {
+      "title": "خطاء 404",
+      "referrer": "Referrer",
+      "brokenUrl": "Broken URL",
+      "status": "الحالة",
+      "detectedAt": "محدد",
+      "daysAgo": "منذ {count} أيام",
+      "unresolved": "غير محلول",
+      "aiSuggestion": "AI Redirect Suggestion",
+      "suggestedUrl": "Suggested Redirect URL",
+      "reason": "السبب",
+      "reasonText": "يتطابق اسم الرابط الإلكتروني بشكل كبير مع قائمة المنتجات النشطة. تم تغيير اسم المنتج السابق خلال تحديث الكتالوج لعام 2024.",
+      "approve": "موافقة",
+      "enterManually": "ادخل يدوياً",
+      "manualPlaceholder": "أدخل رابط إعادة التوجيه",
+      "apply": "تطبيق",
+      "back": "العودة"
     }
   },
   "home": {
