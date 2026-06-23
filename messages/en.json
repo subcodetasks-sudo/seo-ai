@@ -17,6 +17,7 @@
     "open": "Open sidebar",
     "close": "Close sidebar",
     "store": "Store",
+    "selectProject": "Select a project",
     "overview": "Overview",
     "problemList": "Problem list",
     "aiSuggestions": "AI suggestions",
@@ -215,6 +216,30 @@
       "forgetPasswordOtpSent": "Reset code sent to your email",
       "passwordReset": "Password reset successfully",
       "welcomeBack": "Welcome back!"
+    }
+  },
+  "notFoundProblems": {
+    "title": "404 Problems",
+    "subtitle": "{count} problems in {domain}",
+    "noProject": "Select a project to view 404 problems",
+    "loading": "Loading...",
+    "error": "Failed to load broken pages",
+    "empty": "No problems found",
+    "tabs": {
+      "new": "New",
+      "resolved": "Resolved",
+      "ignored": "Ignored"
+    },
+    "table": {
+      "brokenUrl": "Broken URL",
+      "source": "Source",
+      "detectedAt": "Detection Date",
+      "action": "Action",
+      "fixWithAi": "Fix with AI",
+      "noReferrer": "—"
+    },
+    "pagination": {
+      "showing": "Showing {shown} of {total} problems"
     }
   },
   "home": {

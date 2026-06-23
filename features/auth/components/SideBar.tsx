@@ -3,7 +3,6 @@
 import {
   AlertTriangle,
   BarChart3,
-  ChevronDown,
   Clock,
   Home,
   Link2Off,
@@ -13,14 +12,21 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import type { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 
 import Logo from "@/components/Logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sidebar as UiSidebar, useSidebar } from "@/components/ui/sidebar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { useAuth } from "@/features/auth/context/auth-context";
 import { useLogout } from "@/features/auth/queries/mutations";
+import { useAllProjects, useSelectedProject } from "@/features/home";
 import {
   getSidebarContainerVariants,
   getSidebarItemVariants,
@@ -66,6 +72,19 @@ export default function SideBar() {
   const { setOpen, isMobile, setOpenMobile } = useSidebar();
   const { side, isOpen } = useSidebarMotion();
   const { mutate: logout } = useLogout();
+  const { data: projectsData } = useAllProjects();
+  const { selectedProjectId, setSelectedProjectId, clearSelectedProject } = useSelectedProject();
+
+  const projects = projectsData?.data?.items ?? [];
+
+  // Set default to first project if no selection exists
+  React.useEffect(() => {
+    if (projects.length > 0 && !selectedProjectId) {
+      setSelectedProjectId(projects[0].id);
+    }
+  }, [projects, selectedProjectId, setSelectedProjectId]);
+
+  const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
   const closeSidebar = () => {
     if (isMobile) {
@@ -76,6 +95,7 @@ export default function SideBar() {
   };
 
   const handleLogout = () => {
+    clearSelectedProject();
     logout(undefined, {
       onSuccess: () => {
         setUser(null);
@@ -119,23 +139,48 @@ export default function SideBar() {
             </Button>
           </SidebarMotionItem>
         </div>
-
         <SidebarMotionItem side={side} className="mb-6">
-          <button
-            type="button"
-            className="flex w-full items-center justify-between gap-3 rounded-lg border border-neutral-200 bg-white px-3 py-2.5 text-start transition-colors hover:bg-neutral-50"
-          >
-            <div className="min-w-0">
-              <p className="font-semibold text-secondary-500">{t("store")}</p>
-              <p className="truncate text-sm text-secondary-200">
-                www.luxuryperfumes.com
-              </p>
+          {projects.length > 0 && selectedProject ? (
+            <Select value={selectedProjectId || ""} onValueChange={setSelectedProjectId}>
+              <SelectTrigger className="h-auto! w-full items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2.5 hover:border-neutral-300 transition-colors">
+                <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
+                  <p className="truncate text-sm font-semibold text-secondary-500">
+                    {selectedProject.name}
+                  </p>
+                  <p className="truncate text-xs text-secondary-300" dir="ltr">
+                    {selectedProject.domain}
+                  </p>
+                </div>
+              </SelectTrigger>
+              <SelectContent
+                position="popper"
+                sideOffset={4}
+                className="max-h-[40vh] w-(--radix-select-trigger-width) p-1"
+              >
+                {projects.map((project) => (
+                  <SelectItem
+                    key={project.id}
+                    value={project.id}
+                    className="rounded-md px-3 py-2.5 pe-8 data-[state=checked]:bg-success-75"
+                  >
+                    <div className="flex min-w-0 flex-col items-start gap-0.5">
+                      <p className="truncate text-sm font-medium text-secondary-500">
+                        {project.name}
+                      </p>
+                      <p className="truncate text-xs text-secondary-300" dir="ltr">
+                        {project.domain}
+                      </p>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ) : (
+            <div className="w-full rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-2.5">
+              <p className="text-sm font-semibold text-secondary-400">{t("store")}</p>
+              <p className="mt-1 text-xs text-secondary-300">{t("selectProject")}</p>
             </div>
-            <ChevronDown
-              className="size-4 shrink-0 text-primary-400"
-              aria-hidden="true"
-            />
-          </button>
+          )}
         </SidebarMotionItem>
 
         <nav className="flex flex-1 flex-col gap-1">

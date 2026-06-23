@@ -8,6 +8,7 @@ import {
 import { ThemeProvider } from "next-themes";
 
 import { AuthProvider } from "@/features/auth/context/auth-context";
+import { SelectedProjectProvider } from "@/features/home";
 import { Toaster } from "@/components/ui/sonner";
 
 function makeQueryClient() {
@@ -42,8 +43,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          {children}
-          <Toaster position="bottom-center" />
+          <SelectedProjectProvider>
+            {children}
+            <Toaster position="bottom-center" />
+          </SelectedProjectProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ThemeProvider>

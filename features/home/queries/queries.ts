@@ -9,6 +9,7 @@ import {
   getSingleProject,
   getSiteSections,
   getVerificationToken,
+  getCrawlStatus,
 } from "./api";
 import { homeKeys } from "./query-keys";
 
@@ -58,4 +59,11 @@ export const languageDetectionQueryOptions = (domain: string) =>
   queryOptions({
     queryKey: homeKeys.languageDetection(domain),
     queryFn: () => detectLanguage(domain),
+  });
+
+export const crawlStatusQueryOptions = (projectId: string, crawlId: string) =>
+  queryOptions({
+    queryKey: homeKeys.crawl(projectId, crawlId),
+    queryFn: () => getCrawlStatus(projectId, crawlId),
+    refetchInterval: 2000,
   });

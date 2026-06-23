@@ -75,3 +75,31 @@ export const detectLanguage = (domain: string) =>
     method: "POST",
     body: JSON.stringify({ domain }),
   });
+
+export type CrawlJobResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    crawl_job_id: string;
+    project_id: string;
+    status: "queued" | "in_progress" | "done" | "failed";
+    pages_limit: number;
+    pages_crawled?: number;
+    pages_total_est?: number;
+    progress_pct?: number;
+    created_at: string;
+    started_at?: string;
+    finished_at?: string;
+    error_message?: string | null;
+  };
+};
+
+export const startCrawl = (project_id: string) =>
+  apiClient<CrawlJobResponse>(`projects/${project_id}/crawls`, {
+    method: "POST",
+  });
+
+export const getCrawlStatus = (project_id: string, crawl_id: string) =>
+  apiClient<CrawlJobResponse>(`projects/${project_id}/crawls/${crawl_id}`, {
+    method: "GET",
+  });

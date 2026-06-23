@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useDirection } from "@/components/ui/direction";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { useAddProject } from "./add-project-provider";
+import { useStartCrawl } from "@/features/home/queries/mutations";
+import { useCrawlProgress } from "@/features/home/hooks/useCrawlProgress";
 import Progress from "./Progress";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
@@ -13,6 +16,8 @@ import AnalysisSuccess from "../project-analysis/AnalysisSuccess";
 
 export function AddProject() {
   const dir = useDirection();
+  const [crawlId, setCrawlId] = useState<string | null>(null);
+
   const {
     step,
     formData,
@@ -23,7 +28,37 @@ export function AddProject() {
     handleStep3Submit,
     backStep,
     exitAddProject,
+    completeAnalysis,
   } = useAddProject();
+
+  const startCrawlMutation = useStartCrawl();
+  const crawlProgress = useCrawlProgress({
+    projectId: formData.projectId || "",
+    crawlId: crawlId || "",
+    url: formData.domain || "",
+  });
+
+  // Start crawl when entering loading state
+  useEffect(() => {
+    if (formData.analysisState === "loading" && formData.projectId && !crawlId) {
+      startCrawlMutation.mutate(formData.projectId, {
+        onSuccess: (data) => {
+          setCrawlId(data.data.crawl_job_id);
+        },
+      });
+    }
+  }, [formData.analysisState, formData.projectId, crawlId, startCrawlMutation]);
+
+  // Complete analysis when crawl finishes
+  useEffect(() => {
+    if (crawlId && crawlProgress?.isDone && formData.analysisState === "loading") {
+      completeAnalysis({
+        aiSuggestionsCount: 42,
+        issuesCount: 15,
+        pagesCount: 221,
+      });
+    }
+  }, [crawlId, crawlProgress?.isDone, formData.analysisState, completeAnalysis]);
 
   if (!step) {
     return null;
@@ -34,7 +69,10 @@ export function AddProject() {
   if (analysisState === "loading") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-75">
-        <AnalysisLoading url={formData.domain || ""} />
+        <AnalysisLoading
+          url={formData.domain || ""}
+          steps={crawlProgress?.loadingProps.steps}
+        />
       </div>
     );
   }

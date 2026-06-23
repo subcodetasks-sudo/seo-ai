@@ -12,4 +12,6 @@ export const homeKeys = {
   siteSections: (domain: string) => [...homeKeys.all, "site-sections", domain] as const,
   languageDetection: (domain: string) =>
     [...homeKeys.all, "language-detection", domain] as const,
+  crawl: (projectId: string, crawlId: string) =>
+    [...homeKeys.project(projectId), "crawl", crawlId] as const,
 };

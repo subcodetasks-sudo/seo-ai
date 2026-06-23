@@ -137,18 +137,6 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
         }));
 
         await queryClient.invalidateQueries({ queryKey: homeKeys.projects() });
-
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        setFormDataState((prev) => ({
-          ...prev,
-          analysisState: "success",
-          analysisData: {
-            aiSuggestionsCount: 12,
-            issuesCount: 24,
-            pagesCount: 145,
-          },
-        }));
       } catch (error) {
         const message = error instanceof Error ? error.message : "Failed to create project";
         toast.error(message);

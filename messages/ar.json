@@ -17,6 +17,7 @@
     "open": "فتح القائمة الجانبية",
     "close": "إغلاق القائمة الجانبية",
     "store": "متجر",
+    "selectProject": "اختر مشروعاً",
     "overview": "نظرة عامة",
     "problemList": "قائمة المشاكل",
     "aiSuggestions": "اقتراحات الـ AI",
@@ -215,6 +216,30 @@
       "forgetPasswordOtpSent": "تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني",
       "passwordReset": "تم إعادة تعيين كلمة المرور بنجاح",
       "welcomeBack": "مرحباً بعودتك!"
+    }
+  },
+  "notFoundProblems": {
+    "title": "مشاكل 404",
+    "subtitle": "{count} مشكلة في {domain}",
+    "noProject": "اختر مشروعاً لعرض مشاكل 404",
+    "loading": "جاري التحميل...",
+    "error": "فشل تحميل الصفحات المعطلة",
+    "empty": "لا توجد مشاكل",
+    "tabs": {
+      "new": "جديد",
+      "resolved": "محلول",
+      "ignored": "مُتجاهل"
+    },
+    "table": {
+      "brokenUrl": "الرابط المعطل",
+      "source": "المصدر",
+      "detectedAt": "تاريخ الاكتشاف",
+      "action": "الإجراء",
+      "fixWithAi": "إصلاح بالذكاء الاصطناعي",
+      "noReferrer": "—"
+    },
+    "pagination": {
+      "showing": "يتم عرض {shown} من أصل {total} مشكلة"
     }
   },
   "home": {

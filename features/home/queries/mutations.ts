@@ -5,6 +5,7 @@ import {
 	deleteProject,
 	updateProject,
 	verifyDomain,
+	startCrawl,
 } from "./api";
 import type {
 	CreateProjectRequest,
@@ -34,6 +35,10 @@ export const useVerifyDomain = () =>
 			verifyDomain(variables.method, variables.projectId),
 	});
 
+export const useStartCrawl = () =>
+	useMutation({
+		mutationFn: (projectId: string) => startCrawl(projectId),
+	});
 
-	export const useAllProjects = () =>
+export const useAllProjects = () =>
 	useQuery(allProjectsQueryOptions());
