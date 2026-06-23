@@ -3,7 +3,6 @@ import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query
 import { DashboardContent } from "./dashboard-content";
 import { allProjectsQueryOptions } from "@/features/home";
 import { AddProjectProvider } from "@/features/home/components/add-project/add-project-provider";
-import { AddProjectModal } from "@/features/home/components/add-project/add-project-modal";
 
 type DashboardPageProps = {
   params: Promise<{ locale: string }>;
@@ -21,7 +20,6 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
       <HydrationBoundary state={dehydrate(queryClient)}>
         <DashboardContent />
       </HydrationBoundary>
-      <AddProjectModal />
     </AddProjectProvider>
   );
 }

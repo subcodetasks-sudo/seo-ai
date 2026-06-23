@@ -2,10 +2,16 @@
 
 import EmptyProjects from "@/features/home/components/empty-projects";
 import Projects from "@/features/home/components/Projects";
-import { useAllProjects } from "@/features/home";
+import { AddProject } from "@/features/home/components/add-project/add-project";
+import { useAllProjects, useAddProject } from "@/features/home";
 
 export function DashboardContent() {
   const { data, isLoading, error } = useAllProjects();
+  const { step } = useAddProject();
+
+  if (step !== null) {
+    return <AddProject />;
+  }
 
   if (isLoading) {
     return (
