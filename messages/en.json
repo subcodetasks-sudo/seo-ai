@@ -27,7 +27,8 @@
     "userName": "Mohamed Ahmed",
     "userPlan": "Paid plan",
     "userInitials": "MA",
-    "logout": "Log out"
+    "logout": "Log out",
+    "settings": "Settings"
   },
   "plans": {
     "metadata": {
@@ -337,6 +338,36 @@
       }
     }
   },
+  "reports": {
+    "title": "Reports",
+    "subtitle": "SEO performance overview for {domain}",
+    "noProject": "Select a project to view reports",
+    "empty": "No scan history found for this period",
+    "loading": "Loading...",
+    "createReport": "Create Report",
+    "period": "{days} days",
+    "charts": {
+      "healthTrend": "Health Score Trend",
+      "issuesTrend": "SEO Issues Trend",
+      "notFoundTrend": "404 Errors Trend",
+      "weeklyChanges": "Weekly Applied Changes"
+    },
+    "scanLog": {
+      "title": "Scan Log",
+      "table": {
+        "date": "Date",
+        "pages": "Pages",
+        "issues": "Discovered Issues",
+        "duration": "Duration",
+        "status": "Status"
+      },
+      "status": {
+        "completed": "Completed",
+        "running": "Running",
+        "failed": "Failed"
+      }
+    }
+  },
   "changelog": {
     "title": "Changelog",
     "subtitle": "Complete audit log of all applied SEO changes",
@@ -537,6 +568,106 @@
       "status": "Status",
       "verified": "Verified",
       "unverified": "Unverified"
+    }
+  },
+  "overview": {
+    "title": "Overview",
+    "lastUpdate": "Last update: {date}",
+    "noProject": "Select a project to view the overview",
+    "healthIndicator": "Health Indicator",
+    "healthStatus": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor"
+    },
+    "pages": "{count} pages",
+    "lastScan": "Last scan: {time}",
+    "rescan": "Re-scan",
+    "nextCrawl": "Next crawl in {hours} hours",
+    "nextCrawlUnknown": "Next crawl scheduled automatically",
+    "stats": {
+      "suggestions": "Suggestions",
+      "seoErrors": "SEO Errors",
+      "notFoundErrors": "404 Errors"
+    },
+    "charts": {
+      "healthTrend": "Health Score Trend",
+      "issuesTrend": "SEO Issues Trend"
+    },
+    "recentChanges": "Recent Changes",
+    "viewAll": "View All",
+    "crawlCompleted": "Crawl completed successfully"
+  },
+  "settings": {
+    "metadata": {
+      "title": "Rank AI — Settings",
+      "description": "Manage your account and preferences."
+    },
+    "title": "Settings",
+    "subtitle": "Manage your account and preferences",
+    "tabs": {
+      "profile": "Personal profile",
+      "notifications": "Notifications",
+      "integrations": "Integrations",
+      "billing": "Billing"
+    },
+    "profile": {
+      "personalInfo": "Personal information",
+      "email": "Email",
+      "fullName": "Full name",
+      "saveChanges": "Save changes"
+    },
+    "password": {
+      "title": "Change password",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "saveChanges": "Save changes",
+      "saved": "Password updated successfully."
+    },
+    "notifications": {
+      "title": "Notification preferences",
+      "emailAlerts": "Email alerts",
+      "emailAlertsDesc": "Receive important alerts via email",
+      "alerts404": "404 alerts detected",
+      "alerts404Desc": "Get notified when new broken links are found",
+      "aiSuggestions": "New AI suggestions",
+      "aiSuggestionsDesc": "You will be notified when new suggestions are ready for review",
+      "crawlCompleted": "Crawl completed",
+      "crawlCompletedDesc": "Send a notification when a scheduled crawl finishes",
+      "weeklyReport": "Weekly email report",
+      "weeklyReportDesc": "Get a weekly SEO summary every Monday"
+    },
+    "integrations": {
+      "wordpress": "WordPress",
+      "wordpressDesc": "Apply SEO changes directly via plugin",
+      "connected": "Connected",
+      "disconnect": "Disconnect",
+      "connect": "Connect"
+    },
+    "billing": {
+      "paidPlan": "Paid plan",
+      "active": "Active",
+      "perMonth": "/ month",
+      "usedScanPages": "Used scan pages",
+      "quotaUsed": "{percent}% of the monthly quota has been used.",
+      "nextInvoice": "Next invoice: {date}",
+      "changePlan": "Change plan",
+      "invoiceHistory": "Invoice history",
+      "pdf": "PDF",
+      "status": {
+        "paid": "Paid",
+        "pending": "Pending"
+      }
+    },
+    "validation": {
+      "emailInvalid": "Please enter a valid email address",
+      "fullNameMin": "Full name must be at least 2 characters",
+      "currentPasswordMin": "Current password must be at least 8 characters",
+      "newPasswordMin": "New password must be at least 8 characters",
+      "confirmPasswordMin": "Confirm password must be at least 8 characters",
+      "passwordsMismatch": "Passwords do not match"
     }
   }
 }
