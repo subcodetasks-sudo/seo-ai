@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { useDirection } from "@/components/ui/direction";
@@ -15,21 +16,12 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useSelectedProject } from "@/features/home";
 import { ProblemsTable } from "./problems-table";
-import type { Problem, ProblemFilter } from "../types";
+import { issueSummaryQueryOptions } from "../queries/queries";
+import type { ProblemFilter, ProblemSeverity } from "../types";
 
 const PAGE_SIZE = 10;
 
-const MOCK_PROBLEMS: Problem[] = [
-  { id: "1", type: "missing_meta_title", affected_pages: 12, severity: "high" },
-  { id: "2", type: "missing_meta_description", affected_pages: 8, severity: "high" },
-  { id: "3", type: "duplicate_title", affected_pages: 5, severity: "high" },
-  { id: "4", type: "missing_alt_text", affected_pages: 23, severity: "high" },
-  { id: "5", type: "slow_page_speed", affected_pages: 3, severity: "medium" },
-  { id: "6", type: "missing_schema", affected_pages: 18, severity: "medium" },
-  { id: "7", type: "broken_internal_links", affected_pages: 2, severity: "low" },
-];
-
-const FILTER_TABS: ProblemFilter[] = ["all", "high", "medium", "low"];
+const FILTER_TABS: ProblemFilter[] = ["all", "critical", "high", "medium", "low"];
 
 export function ProblemsContent() {
   const t = useTranslations("problems");
@@ -38,14 +30,22 @@ export function ProblemsContent() {
   const [filter, setFilter] = useState<ProblemFilter>("all");
   const [page, setPage] = useState(1);
 
-  const counts = {
-    high: MOCK_PROBLEMS.filter((p) => p.severity === "high").length,
-    medium: MOCK_PROBLEMS.filter((p) => p.severity === "medium").length,
-    low: MOCK_PROBLEMS.filter((p) => p.severity === "low").length,
+  const { data, isLoading, isError } = useQuery(
+    issueSummaryQueryOptions({ projectId: selectedProjectId ?? "" }),
+  );
+
+  const items = data?.items ?? [];
+  const crawlJobId = data?.crawl_job_id ?? "";
+
+  const counts: Record<Exclude<ProblemFilter, "all">, number> = {
+    critical: items.filter((p) => p.severity === "critical").length,
+    high: items.filter((p) => p.severity === "high").length,
+    medium: items.filter((p) => p.severity === "medium").length,
+    low: items.filter((p) => p.severity === "low").length,
   };
 
   const filteredItems =
-    filter === "all" ? MOCK_PROBLEMS : MOCK_PROBLEMS.filter((p) => p.severity === filter);
+    filter === "all" ? items : items.filter((p) => p.severity === filter);
 
   const total = filteredItems.length;
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -70,7 +70,7 @@ export function ProblemsContent() {
         <div className="flex flex-col gap-1 text-start">
           <h1 className="text-h1 font-semibold text-secondary-500">{t("title")}</h1>
           <p className="text-label-md text-neutral-500">
-            {t("subtitle", { count: MOCK_PROBLEMS.length, domain: "www.example.com" })}
+            {t("subtitle", { count: data?.total_issues ?? 0 })}
           </p>
         </div>
 
@@ -81,7 +81,7 @@ export function ProblemsContent() {
                 {t(`tabs.${tab}`)}
                 {tab !== "all" && (
                   <span className="rounded-full bg-neutral-200 px-1.5 py-0.5 text-label-xs leading-none text-neutral-600">
-                    {counts[tab]}
+                    {counts[tab as ProblemSeverity]}
                   </span>
                 )}
               </TabsTrigger>
@@ -89,12 +89,20 @@ export function ProblemsContent() {
           </TabsList>
         </Tabs>
 
-        {paginatedItems.length === 0 ? (
+        {isLoading ? (
+          <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
+            <p className="text-label-md text-neutral-500">{t("loading")}</p>
+          </div>
+        ) : isError ? (
+          <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
+            <p className="text-label-md text-error-500">{t("error")}</p>
+          </div>
+        ) : paginatedItems.length === 0 ? (
           <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
             <p className="text-label-md text-neutral-500">{t("empty")}</p>
           </div>
         ) : (
-          <ProblemsTable items={paginatedItems} />
+          <ProblemsTable items={paginatedItems} crawlJobId={crawlJobId} />
         )}
 
         {total > 0 && (

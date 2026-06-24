@@ -419,11 +419,14 @@
   },
   "problems": {
     "title": "قائمة المشاكل",
-    "subtitle": "{count} مشكلة في {domain}",
+    "subtitle": "تم العثور على {count} مشكلة",
     "noProject": "اختر مشروعاً لعرض المشاكل",
     "empty": "لا توجد مشاكل",
+    "loading": "جارٍ تحميل المشاكل…",
+    "error": "تعذّر تحميل المشاكل",
     "tabs": {
       "all": "جميع المشكلات",
+      "critical": "حرجة",
       "high": "عال",
       "medium": "متوسطة",
       "low": "منخفضة"
@@ -439,22 +442,46 @@
       "pageCount": "{count} صفحة"
     },
     "severity": {
+      "critical": "حرجة",
       "high": "عال",
       "medium": "متوسطة",
       "low": "منخفضة"
     },
     "problemTypes": {
-      "missing_meta_title": "Missing Meta Title",
-      "missing_meta_description": "Missing Meta Description",
-      "duplicate_title": "Duplicate Title",
-      "missing_alt_text": "Missing Alt Text",
-      "slow_page_speed": "Slow Page Speed",
-      "missing_schema": "Missing Schema",
-      "broken_internal_links": "Broken Internal Links",
-      "missing_h1": "Missing H1 Tag"
+      "missing_meta_title": "عنوان Meta مفقود",
+      "missing_meta_description": "وصف Meta مفقود",
+      "duplicate_title": "عنوان مكرر",
+      "missing_alt_text": "نص بديل مفقود",
+      "slow_page_speed": "بطء سرعة الصفحة",
+      "missing_schema": "مخطط Schema مفقود",
+      "broken_internal_links": "روابط داخلية معطلة",
+      "missing_h1": "وسم H1 مفقود",
+      "images_missing_alt": "صور بدون نص بديل",
+      "no_schema_markup": "لا يوجد مخطط Schema",
+      "meta_title_too_long": "عنوان Meta طويل جداً",
+      "word_count_low": "عدد كلمات منخفض",
+      "meta_description_too_long": "وصف Meta طويل جداً",
+      "multiple_h1s": "وسوم H1 متعددة",
+      "http_error": "خطأ HTTP",
+      "no_canonical": "وسم Canonical مفقود",
+      "is_noindex": "الصفحة مضبوطة على Noindex"
     },
     "pagination": {
       "showing": "يتم عرض {shown} من أصل {total} مشكلة"
+    },
+    "detail": {
+      "affectedPagesCount": "الصفحات المتأثرة: {count}",
+      "priorityBadge": "أولوية {severity}",
+      "whyTitle": "لماذا هذا مهم",
+      "whyBody": "الصفحات التي تفتقر إلى وسم عنوان meta تفوّت إشارة SEO بالغة الأهمية. تستخدم محركات البحث العنوان كمؤشر رئيسي لمحتوى الصفحة، وتعرضه كالعنوان القابل للنقر في نتائج البحث. غياب العنوان كثيراً ما يدفع Google إلى توليد عنوان تلقائي من محتوى الصفحة، وهو نادراً ما يكون مثالياً.",
+      "affectedLinks": "الروابط المتأثرة",
+      "noLinks": "لا توجد روابط متأثرة",
+      "showingLinks": "يتم عرض {shown} من أصل {total} روابط",
+      "backToList": "العودة لقائمة المشاكل",
+      "fixAllAi": "إصلاح تلقائي بالذكاء الاصطناعي للكل",
+      "fixing": "جارٍ توليد الإصلاحات…",
+      "fixSuccess": "تم طلب إصلاحات الذكاء الاصطناعي لـ {count} صفحة",
+      "fixError": "تعذّر توليد إصلاحات الذكاء الاصطناعي"
     }
   },
   "home": {

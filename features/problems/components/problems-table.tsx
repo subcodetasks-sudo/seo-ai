@@ -12,38 +12,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import type { Problem } from "../types";
+import type { IssueSummaryItem } from "../types";
 
 type ProblemsTableProps = {
-  items: Problem[];
+  items: IssueSummaryItem[];
+  crawlJobId: string;
 };
 
 const severityStyles: Record<string, string> = {
+  critical: "bg-error-50 text-error-700 border border-error-300",
   high: "bg-error-50 text-error-600 border border-error-200",
   medium: "bg-warning-50 text-warning-600 border border-warning-200",
   low: "bg-neutral-100 text-neutral-500 border border-neutral-200",
 };
 
-export function ProblemsTable({ items }: ProblemsTableProps) {
+export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
   const t = useTranslations("problems");
 
-  const problemLabels: Record<string, string> = {
-    missing_meta_title: t("problemTypes.missing_meta_title"),
-    missing_meta_description: t("problemTypes.missing_meta_description"),
-    duplicate_title: t("problemTypes.duplicate_title"),
-    missing_alt_text: t("problemTypes.missing_alt_text"),
-    slow_page_speed: t("problemTypes.slow_page_speed"),
-    missing_schema: t("problemTypes.missing_schema"),
-    broken_internal_links: t("problemTypes.broken_internal_links"),
-    missing_h1: t("problemTypes.missing_h1"),
-  };
-
   function getProblemLabel(type: string) {
-    return problemLabels[type] ?? type;
+    const key = `problemTypes.${type}`;
+    return t.has(key) ? t(key) : type;
   }
 
-  function ActionButtons({ item }: { item: Problem }) {
+  function viewPagesHref(item: IssueSummaryItem) {
+    return `/dashboard/problems/${crawlJobId}?type=${item.type}&severity=${item.severity}`;
+  }
+
+  function ActionButtons({ item }: { item: IssueSummaryItem }) {
     return (
       <div className="flex items-center gap-2">
         <Button
@@ -64,13 +61,15 @@ export function ProblemsTable({ items }: ProblemsTableProps) {
           {t("table.ignore")}
         </Button>
         <Button
-          type="button"
+          asChild
           size="sm"
           variant="ghost"
           className="gap-1.5 text-neutral-500 hover:text-neutral-700 text-label-sm"
         >
-          {t("table.viewPages")}
-          <ChevronRight className="size-3.5" aria-hidden="true" />
+          <Link href={viewPagesHref(item)}>
+            {t("table.viewPages")}
+            <ChevronRight className="size-3.5 rtl:rotate-180" aria-hidden="true" />
+          </Link>
         </Button>
       </div>
     );
@@ -81,7 +80,7 @@ export function ProblemsTable({ items }: ProblemsTableProps) {
       {/* Mobile: card layout */}
       <div className="flex flex-col divide-y divide-neutral-200 md:hidden">
         {items.map((item) => (
-          <div key={item.id} className="flex flex-col gap-3 p-4">
+          <div key={item.type} className="flex flex-col gap-3 p-4">
             <div className="flex items-center gap-2">
               <TriangleAlert className="size-4 text-warning-500 shrink-0" aria-hidden="true" />
               <span className="text-label-sm font-medium text-secondary-500">
@@ -133,7 +132,7 @@ export function ProblemsTable({ items }: ProblemsTableProps) {
           </TableHeader>
           <TableBody>
             {items.map((item) => (
-              <TableRow key={item.id} className="border-neutral-200">
+              <TableRow key={item.type} className="border-neutral-200">
                 <TableCell className="py-3 px-4 text-start">
                   <div className="flex items-center gap-2">
                     <TriangleAlert className="size-4 text-warning-500 shrink-0" aria-hidden="true" />

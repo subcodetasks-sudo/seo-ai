@@ -419,11 +419,14 @@
   },
   "problems": {
     "title": "Problem List",
-    "subtitle": "{count} problems in {domain}",
+    "subtitle": "{count} problems found",
     "noProject": "Select a project to view problems",
     "empty": "No problems found",
+    "loading": "Loading problems…",
+    "error": "Failed to load problems",
     "tabs": {
       "all": "All Problems",
+      "critical": "Critical",
       "high": "High",
       "medium": "Medium",
       "low": "Low"
@@ -439,6 +442,7 @@
       "pageCount": "{count} pages"
     },
     "severity": {
+      "critical": "Critical",
       "high": "High",
       "medium": "Medium",
       "low": "Low"
@@ -451,10 +455,33 @@
       "slow_page_speed": "Slow Page Speed",
       "missing_schema": "Missing Schema",
       "broken_internal_links": "Broken Internal Links",
-      "missing_h1": "Missing H1 Tag"
+      "missing_h1": "Missing H1 Tag",
+      "images_missing_alt": "Images Missing Alt Text",
+      "no_schema_markup": "No Schema Markup",
+      "meta_title_too_long": "Meta Title Too Long",
+      "word_count_low": "Low Word Count",
+      "meta_description_too_long": "Meta Description Too Long",
+      "multiple_h1s": "Multiple H1 Tags",
+      "http_error": "HTTP Error",
+      "no_canonical": "Missing Canonical Tag",
+      "is_noindex": "Page Set to Noindex"
     },
     "pagination": {
       "showing": "Showing {shown} of {total} problems"
+    },
+    "detail": {
+      "affectedPagesCount": "Affected pages: {count}",
+      "priorityBadge": "{severity} priority",
+      "whyTitle": "Why this matters",
+      "whyBody": "Pages missing a meta title tag lose a strong SEO signal. Search engines use the title as a primary indicator of page content and display it as the clickable headline in results. Without a title, Google generates one automatically from page content, which is rarely optimal.",
+      "affectedLinks": "Affected links",
+      "noLinks": "No affected links found",
+      "showingLinks": "Showing {shown} of {total} links",
+      "backToList": "Back to problems list",
+      "fixAllAi": "Fix automatically with AI for all",
+      "fixing": "Generating fixes…",
+      "fixSuccess": "Requested AI fixes for {count} pages",
+      "fixError": "Failed to generate AI fixes"
     }
   },
   "home": {

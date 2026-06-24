@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { serverClient } from "@/lib/server";
 
 type RouteContext = {
-  params: Promise<{ project_id: string; crawl_id: string }>;
+  params: Promise<{ project_id: string }>;
 };
 
 function getAuthHeaders(req: NextRequest) {
@@ -15,15 +16,15 @@ export async function GET(req: NextRequest, context: RouteContext) {
   const authHeaders = getAuthHeaders(req);
   if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
 
-  const { project_id, crawl_id } = await context.params;
+  const { project_id } = await context.params;
   const searchParams = req.nextUrl.searchParams.toString();
-  const endpoint = `projects/${project_id}/crawls/${crawl_id}/pages${searchParams ? `?${searchParams}` : ""}`;
+  const endpoint = `projects/${project_id}/ai/issue-summary${searchParams ? `?${searchParams}` : ""}`;
 
   try {
     const data = await serverClient(
       endpoint,
       { method: "GET", headers: authHeaders },
-      "Failed to get crawl pages",
+      "Failed to get issue summary",
     );
     return NextResponse.json(data);
   } catch (error: unknown) {
