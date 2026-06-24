@@ -13,6 +13,22 @@ export function scoreToLevel(score: number): ImpactLevel {
   return "low";
 }
 
+// Overlay human modifications onto the AI suggested_value, but only for keys that
+// belong to the suggestion's own shape. This keeps the canonical shape intact and
+// ignores stray modification keys (e.g. a test PATCH that left mismatched fields).
+function applyModifications(
+  suggested: Record<string, unknown>,
+  modifications: unknown,
+): Record<string, unknown> {
+  if (!modifications || typeof modifications !== "object") return suggested;
+  const mods = modifications as Record<string, unknown>;
+  const merged: Record<string, unknown> = { ...suggested };
+  for (const key of Object.keys(suggested)) {
+    if (key in mods) merged[key] = mods[key];
+  }
+  return merged;
+}
+
 function extractPrimaryText(type: string, value: Record<string, unknown>): string {
   switch (type) {
     case "meta": return String(value.meta_title ?? value.meta_description ?? "");
@@ -25,6 +41,7 @@ function extractPrimaryText(type: string, value: Record<string, unknown>): strin
 
 export function transformSuggestionDetail(s: ApiSuggestion): AiSuggestionDetail {
   const level = scoreToLevel(s.confidence_score);
+  const suggestedValue = applyModifications(s.suggested_value, s.modifications);
 
   const base: AiSuggestion = {
     id: s.id,
@@ -36,14 +53,14 @@ export function transformSuggestionDetail(s: ApiSuggestion): AiSuggestionDetail 
   };
 
   if (s.suggestion_type === "redirect") {
-    const sv = s.suggested_value as unknown as RedirectSuggestedValue;
+    const sv = suggestedValue as unknown as RedirectSuggestedValue;
     return {
       ...base,
       suggestedText: sv.redirect?.target_url ?? "",
       currentText: s.page_url,
       explanation: sv.diagnosis?.explanation ?? "",
       keywords: [],
-      rawSuggestedValue: s.display_value,
+      rawSuggestedValue: suggestedValue,
       rawCurrentValue: s.current_value,
       redirectCandidates: sv.redirect?.top_candidates,
     };
@@ -51,11 +68,11 @@ export function transformSuggestionDetail(s: ApiSuggestion): AiSuggestionDetail 
 
   return {
     ...base,
-    suggestedText: extractPrimaryText(s.suggestion_type, s.display_value),
+    suggestedText: extractPrimaryText(s.suggestion_type, suggestedValue),
     currentText: extractPrimaryText(s.suggestion_type, s.current_value),
     explanation: "",
     keywords: Array.isArray(s.keywords_used) ? s.keywords_used : [],
-    rawSuggestedValue: s.display_value,
+    rawSuggestedValue: suggestedValue,
     rawCurrentValue: s.current_value,
   };
 }

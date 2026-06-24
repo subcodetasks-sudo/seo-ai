@@ -358,6 +358,20 @@
       "internalLink": {
         "count": "{count} روابط مقترحة"
       },
+      "editForm": {
+        "ogTitle": "OG Title",
+        "ogDescription": "OG Description",
+        "question": "السؤال",
+        "answer": "الإجابة",
+        "addPair": "إضافة سؤال",
+        "anchorText": "نص الرابط",
+        "targetUrl": "الرابط المستهدف",
+        "relevanceReason": "سبب الصلة",
+        "addLink": "إضافة رابط",
+        "remove": "حذف",
+        "invalidJson": "صيغة JSON غير صحيحة",
+        "emptyList": "لا توجد عناصر — أضف عنصراً للمتابعة."
+      },
       "impactLevel": {
         "high": "تأثير عالي",
         "medium": "تأثير متوسط",

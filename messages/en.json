@@ -358,6 +358,20 @@
       "internalLink": {
         "count": "{count} suggested links"
       },
+      "editForm": {
+        "ogTitle": "OG Title",
+        "ogDescription": "OG Description",
+        "question": "Question",
+        "answer": "Answer",
+        "addPair": "Add question",
+        "anchorText": "Anchor text",
+        "targetUrl": "Target URL",
+        "relevanceReason": "Relevance reason",
+        "addLink": "Add link",
+        "remove": "Remove",
+        "invalidJson": "Invalid JSON format",
+        "emptyList": "No items yet — add one to continue."
+      },
       "impactLevel": {
         "high": "High Impact",
         "medium": "Medium Impact",
