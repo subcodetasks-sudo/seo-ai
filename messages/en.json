@@ -262,6 +262,159 @@
       "back": "Back"
     }
   },
+  "aiSuggestions": {
+    "title": "AI Suggestions",
+    "subtitle": "{count} suggestions total",
+    "noProject": "Select a project to view AI suggestions",
+    "empty": "No suggestions found",
+    "loading": "Loading suggestions...",
+    "error": "Failed to load suggestions",
+    "approve": "Approve",
+    "reject": "Reject",
+    "review": "Review",
+    "exportCsv": "Export CSV",
+    "exporting": "Exporting...",
+    "filters": {
+      "allTypes": "All Types",
+      "allStatuses": "All Statuses"
+    },
+    "table": {
+      "url": "URL",
+      "type": "Type",
+      "priority": "Priority",
+      "impact": "Impact",
+      "action": "Actions"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "impact": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "applied": "Applied",
+      "failed": "Failed"
+    },
+    "types": {
+      "meta": "Meta",
+      "og_title": "OG Title",
+      "og_description": "OG Description",
+      "schema": "Schema",
+      "faq": "FAQ",
+      "redirect": "Redirect",
+      "alt_text": "Alt Text",
+      "internal_link": "Internal Link"
+    },
+    "pagination": {
+      "showing": "Showing {shown} of {total} results"
+    },
+    "reviewPage": {
+      "title": "Review Suggestion",
+      "aiSuggestion": "AI Suggestion",
+      "currentValue": "Current",
+      "currentVersion": "Current Version",
+      "noCurrentValue": "No current value",
+      "whyGenerated": "Why was this suggestion generated?",
+      "keywords": "Keywords",
+      "idealLength": "Ideal length ({min}-{max})",
+      "chars": "{count} chars",
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "back": "Back",
+      "notFound": "Suggestion not found",
+      "impactLevel": {
+        "high": "High Impact",
+        "medium": "Medium Impact",
+        "low": "Low Impact"
+      }
+    }
+  },
+  "changelog": {
+    "title": "Changelog",
+    "subtitle": "Complete audit log of all applied SEO changes",
+    "noProject": "Select a project to view the changelog",
+    "empty": "No changes found for this period",
+    "loading": "Loading...",
+    "createReport": "Create Report",
+    "period": "{days} days",
+    "table": {
+      "date": "Date",
+      "url": "URL",
+      "field": "Field",
+      "oldValue": "Old",
+      "newValue": "New",
+      "status": "Status"
+    },
+    "status": {
+      "applied": "Applied",
+      "pending": "Pending",
+      "failed": "Failed",
+      "reverted": "Reverted"
+    },
+    "pagination": {
+      "showing": "Showing {shown} of {total} changes"
+    },
+    "report": {
+      "dialogTitle": "Create Report",
+      "titleLabel": "Report Title",
+      "titlePlaceholder": "e.g. May 2026 SEO Changes",
+      "titleRequired": "Report title is required",
+      "emailLabel": "Send to Email",
+      "emailPlaceholder": "you@example.com",
+      "emailRequired": "A valid email address is required",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "cancel": "Cancel"
+    }
+  },
+  "problems": {
+    "title": "Problem List",
+    "subtitle": "{count} problems in {domain}",
+    "noProject": "Select a project to view problems",
+    "empty": "No problems found",
+    "tabs": {
+      "all": "All Problems",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "table": {
+      "problem": "Problem",
+      "affectedPages": "Affected Pages",
+      "priority": "Priority",
+      "action": "Action",
+      "suggestFix": "Suggest Fix",
+      "ignore": "Ignore",
+      "viewPages": "View Pages",
+      "pageCount": "{count} pages"
+    },
+    "severity": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "problemTypes": {
+      "missing_meta_title": "Missing Meta Title",
+      "missing_meta_description": "Missing Meta Description",
+      "duplicate_title": "Duplicate Title",
+      "missing_alt_text": "Missing Alt Text",
+      "slow_page_speed": "Slow Page Speed",
+      "missing_schema": "Missing Schema",
+      "broken_internal_links": "Broken Internal Links",
+      "missing_h1": "Missing H1 Tag"
+    },
+    "pagination": {
+      "showing": "Showing {shown} of {total} problems"
+    }
+  },
   "home": {
     "emptyProjects": {
       "title": "No projects yet",

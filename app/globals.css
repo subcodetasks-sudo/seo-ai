@@ -129,13 +129,13 @@
 
 :root {
   /* ── Primary palette ── */
-  --primary-50: #f6faeb;
-  --primary-75: #d8ebae;
-  --primary-100: #c8e28c;
-  --primary-200: #b0d65b;
-  --primary-300: #a0cd39;
-  --primary-400: #709028;
-  --primary-500: #627d23;
+  --primary-50: #ecf6d9;
+  --primary-75: #d9edb3;
+  --primary-100: #c7e48d;
+  --primary-200: #b4db67;
+  --primary-300: #A1D241;
+  --primary-400: #81a834;
+  --primary-500: #617e27;
 
   /* ── Secondary palette ── */
   --secondary-50: #eeeeef;

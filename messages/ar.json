@@ -262,6 +262,159 @@
       "back": "العودة"
     }
   },
+  "aiSuggestions": {
+    "title": "اقتراحات الذكاء الاصطناعي",
+    "subtitle": "{count} اقتراح إجمالي",
+    "noProject": "اختر مشروعاً لعرض اقتراحات الذكاء الاصطناعي",
+    "empty": "لا توجد اقتراحات",
+    "loading": "جاري تحميل الاقتراحات...",
+    "error": "فشل تحميل الاقتراحات",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "review": "مراجعة",
+    "exportCsv": "تصدير CSV",
+    "exporting": "جاري التصدير...",
+    "filters": {
+      "allTypes": "كل الأنواع",
+      "allStatuses": "كل الحالات"
+    },
+    "table": {
+      "url": "URL",
+      "type": "الحالة",
+      "priority": "نوع التأثير",
+      "impact": "التأثير",
+      "action": "الإجراءات"
+    },
+    "priority": {
+      "high": "عال",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "impact": {
+      "high": "عال",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض",
+      "applied": "مُطبَّق",
+      "failed": "فشل"
+    },
+    "types": {
+      "meta": "Meta",
+      "og_title": "OG Title",
+      "og_description": "OG Description",
+      "schema": "Schema",
+      "faq": "FAQ",
+      "redirect": "Redirect",
+      "alt_text": "نص Alt",
+      "internal_link": "رابط داخلي"
+    },
+    "pagination": {
+      "showing": "عرض {shown} من {total} نتائج"
+    },
+    "reviewPage": {
+      "title": "مراجعة الاقتراح",
+      "aiSuggestion": "اقتراح الذكاء الاصطناعي",
+      "currentValue": "الحال",
+      "currentVersion": "النسخة الحالية",
+      "noCurrentValue": "لا توجد قيمة حالية",
+      "whyGenerated": "لماذا تم توليد هذا الاقتراح؟",
+      "keywords": "الكلمات المفتاحية",
+      "idealLength": "طول مثالي ({min}-{max})",
+      "chars": "{count} chars",
+      "edit": "تعديل",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "back": "العودة",
+      "notFound": "الاقتراح غير موجود",
+      "impactLevel": {
+        "high": "تأثير عالي",
+        "medium": "تأثير متوسط",
+        "low": "تأثير منخفض"
+      }
+    }
+  },
+  "changelog": {
+    "title": "سجل التغييرات",
+    "subtitle": "سجل تدقيق كامل لجميع تغييرات السيو المطابقة",
+    "noProject": "اختر مشروعاً لعرض سجل التغييرات",
+    "empty": "لا توجد تغييرات في هذه الفترة",
+    "loading": "جاري التحميل...",
+    "createReport": "أنشاء تقرير",
+    "period": "{days} يوم",
+    "table": {
+      "date": "التاريخ",
+      "url": "الرابط",
+      "field": "الحقل",
+      "oldValue": "القديم",
+      "newValue": "الجديد",
+      "status": "الحالة"
+    },
+    "status": {
+      "applied": "مُطبَّق",
+      "pending": "قيد الانتظار",
+      "failed": "فشل",
+      "reverted": "مُعاد"
+    },
+    "pagination": {
+      "showing": "يتم عرض {shown} من أصل {total}"
+    },
+    "report": {
+      "dialogTitle": "أنشاء تقرير",
+      "titleLabel": "عنوان التقرير",
+      "titlePlaceholder": "مثال: تغييرات السيو لشهر مايو 2026",
+      "titleRequired": "عنوان التقرير مطلوب",
+      "emailLabel": "إرسال إلى البريد الإلكتروني",
+      "emailPlaceholder": "example@email.com",
+      "emailRequired": "يرجى إدخال بريد إلكتروني صحيح",
+      "generate": "إنشاء",
+      "generating": "جاري الإنشاء...",
+      "cancel": "إلغاء"
+    }
+  },
+  "problems": {
+    "title": "قائمة المشاكل",
+    "subtitle": "{count} مشكلة في {domain}",
+    "noProject": "اختر مشروعاً لعرض المشاكل",
+    "empty": "لا توجد مشاكل",
+    "tabs": {
+      "all": "جميع المشكلات",
+      "high": "عال",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "table": {
+      "problem": "المشكلة",
+      "affectedPages": "الصفحات المتأثرة",
+      "priority": "الأولوية",
+      "action": "الإجراء",
+      "suggestFix": "اقتراح حل",
+      "ignore": "تجاهل",
+      "viewPages": "عرض الصفحات",
+      "pageCount": "{count} صفحة"
+    },
+    "severity": {
+      "high": "عال",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "problemTypes": {
+      "missing_meta_title": "Missing Meta Title",
+      "missing_meta_description": "Missing Meta Description",
+      "duplicate_title": "Duplicate Title",
+      "missing_alt_text": "Missing Alt Text",
+      "slow_page_speed": "Slow Page Speed",
+      "missing_schema": "Missing Schema",
+      "broken_internal_links": "Broken Internal Links",
+      "missing_h1": "Missing H1 Tag"
+    },
+    "pagination": {
+      "showing": "يتم عرض {shown} من أصل {total} مشكلة"
+    }
+  },
   "home": {
     "emptyProjects": {
       "title": "لا توجد مشاريع بعد",

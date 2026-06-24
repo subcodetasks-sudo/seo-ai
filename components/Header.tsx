@@ -75,10 +75,20 @@ function HeaderIconButton({ label, children }: HeaderIconButtonProps) {
   );
 }
 
+// Maps a parent segment to the label shown for its dynamic detail sub-route
+const DASHBOARD_DETAIL_LABELS: Record<string, { ns: "aiSuggestions"; key: string }> = {
+  "ai-suggestions": { ns: "aiSuggestions", key: "reviewPage.title" },
+};
+
 function useDashboardBreadcrumbs(): BreadcrumbItemData[] | null {
   const pathname = usePathname();
   const t = useTranslations("common.header");
   const tSidebar = useTranslations("sidebar");
+  const tAiSuggestions = useTranslations("aiSuggestions");
+
+  const nsTranslators: Record<string, (key: string) => string> = {
+    aiSuggestions: tAiSuggestions as unknown as (key: string) => string,
+  };
 
   if (!pathname.startsWith("/dashboard")) {
     return null;
@@ -93,12 +103,27 @@ function useDashboardBreadcrumbs(): BreadcrumbItemData[] | null {
     return items;
   }
 
-  const segment = pathname.replace(/^\/dashboard\/?/, "");
-  const labelKey = DASHBOARD_PAGE_LABEL_KEYS[segment];
+  const parts = pathname.replace(/^\/dashboard\/?/, "").split("/").filter(Boolean);
 
-  items.push({
-    label: labelKey ? tSidebar(labelKey) : segment,
-  });
+  if (parts.length === 0) {
+    items.push({ label: t("home") });
+    return items;
+  }
+
+  const firstPart = parts[0];
+  const labelKey = DASHBOARD_PAGE_LABEL_KEYS[firstPart];
+  const firstLabel = labelKey ? tSidebar(labelKey) : firstPart;
+
+  if (parts.length === 1) {
+    items.push({ label: firstLabel });
+  } else {
+    // Has a dynamic sub-route — show parent as a link, replace the raw ID with a known label
+    items.push({ href: `/dashboard/${firstPart}`, label: firstLabel });
+    const detail = DASHBOARD_DETAIL_LABELS[firstPart];
+    if (detail) {
+      items.push({ label: nsTranslators[detail.ns](detail.key) });
+    }
+  }
 
   return items;
 }
