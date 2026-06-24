@@ -37,6 +37,8 @@ type HeaderProps = {
 type HeaderIconButtonProps = {
   label: string;
   children: ReactNode;
+  href?: string;
+  isActive?: boolean;
 };
 
 type BreadcrumbItemData = {
@@ -51,24 +53,42 @@ const DASHBOARD_PAGE_LABEL_KEYS: Record<string, string> = {
   "404-problems": "notFoundProblems",
   reports: "reports",
   changelog: "changelog",
+  settings: "settings",
 };
 
 const iconButtonClassName =
   "size-10 rounded-lg border-neutral-200 bg-white text-secondary-300 hover:bg-neutral-50 hover:text-secondary-400";
 
-function HeaderIconButton({ label, children }: HeaderIconButtonProps) {
+function HeaderIconButton({ label, children, href, isActive }: HeaderIconButtonProps) {
+  const buttonClassName = cn(
+    iconButtonClassName,
+    isActive && "border-primary-200 bg-primary-50 text-primary-700 hover:bg-primary-50",
+  );
+
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          className={iconButtonClassName}
-          aria-label={label}
-        >
-          {children}
-        </Button>
+        {href ? (
+          <Button
+            asChild
+            variant="outline"
+            size="icon"
+            className={buttonClassName}
+            aria-label={label}
+          >
+            <Link href={href}>{children}</Link>
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            className={buttonClassName}
+            aria-label={label}
+          >
+            {children}
+          </Button>
+        )}
       </TooltipTrigger>
       <TooltipContent side="bottom">{label}</TooltipContent>
     </Tooltip>
@@ -175,7 +195,9 @@ function DashboardBreadcrumbs() {
 export function Header({ className }: HeaderProps) {
   const t = useTranslations("common.header");
   const tSidebar = useTranslations("sidebar");
+  const pathname = usePathname();
   const { side, isOpen, sidebar } = useSidebarMotion();
+  const isSettingsActive = pathname.startsWith("/dashboard/settings");
   const showHeaderLogo = !isOpen;
 
   const openSidebar = () => {
@@ -236,7 +258,11 @@ export function Header({ className }: HeaderProps) {
       <TooltipProvider>
         <div className="flex shrink-0 items-center gap-2">
           <LanguageSelector />
-          <HeaderIconButton label={t("settings")}>
+          <HeaderIconButton
+            label={t("settings")}
+            href="/dashboard/settings"
+            isActive={isSettingsActive}
+          >
             <Settings className="size-5" aria-hidden="true" />
           </HeaderIconButton>
           <HeaderIconButton label={t("notifications")}>

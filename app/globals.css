@@ -378,6 +378,110 @@
   animation: fadeInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Settings page — tab indicator + panel/card entrance */
+@keyframes settings-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes settings-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-tabs-list {
+  --settings-tab-index: 0;
+
+  position: relative;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.125rem;
+  padding: 0.25rem;
+  border: 2px solid var(--color-neutral-200);
+  border-radius: 9999px;
+  width: fit-content;
+}
+
+.settings-tabs-indicator {
+  position: absolute;
+  inset-block: 0.25rem;
+  border-radius: 9999px;
+  background-color: var(--color-primary-50);
+  transition:
+    inset-inline-start 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.settings-tab-trigger {
+  position: relative;
+  z-index: 1;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+  font-size: var(--text-button-size);
+  font-weight: var(--text-label-md-weight);
+  line-height: var(--text-label-md-line-height);
+  color: var(--color-neutral-500);
+  transition: color 0.25s ease;
+}
+
+.settings-tab-trigger:hover {
+  color: var(--color-secondary-500);
+}
+
+.settings-tab-trigger[aria-selected="true"] {
+  color: var(--color-primary-700);
+}
+
+.settings-panel {
+  animation: settings-panel-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.settings-panel .settings-card {
+  opacity: 0;
+  animation: settings-card-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.settings-panel .settings-card:nth-child(1) {
+  animation-delay: 0.04s;
+}
+
+.settings-panel .settings-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.settings-panel .settings-card:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-tabs-indicator {
+    transition: none;
+  }
+
+  .settings-panel,
+  .settings-panel .settings-card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 /* Radix primitives (Select, Dropdown, Dialog…) lock the body scroll when open
    via react-remove-scroll. Two side effects need neutralizing:
 
