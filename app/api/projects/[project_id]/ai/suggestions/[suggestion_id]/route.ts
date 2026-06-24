@@ -30,3 +30,33 @@ export async function GET(req: NextRequest, context: RouteContext) {
     return NextResponse.json({ message }, { status: 400 });
   }
 }
+
+export async function PATCH(req: NextRequest, context: RouteContext) {
+  const authHeaders = getAuthHeaders(req);
+  if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const { project_id, suggestion_id } = await context.params;
+
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ message: "Invalid request body" }, { status: 400 });
+  }
+
+  try {
+    const data = await serverClient(
+      `projects/${project_id}/ai/suggestions/${suggestion_id}`,
+      {
+        method: "PATCH",
+        headers: authHeaders,
+        body: JSON.stringify(body),
+      },
+      "Failed to update suggestion",
+    );
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ message }, { status: 400 });
+  }
+}

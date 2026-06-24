@@ -12,7 +12,7 @@ export type SuggestionType =
 
 export type SuggestionStatus = "pending" | "approved" | "rejected" | "applied" | "failed";
 
-// --- API: concrete value shapes per suggestion_type ---
+// --- Value shapes per suggestion_type ---
 
 export interface MetaCurrentValue {
   meta_title: string;
@@ -25,6 +25,58 @@ export interface MetaSuggestedValue {
   keywords_used: string[];
   language_detected: string;
   confidence_score: number;
+}
+
+export interface OgTitleCurrentValue {
+  og_title: string;
+}
+
+export interface OgTitleSuggestedValue {
+  og_title: string;
+}
+
+export interface OgDescriptionCurrentValue {
+  og_description: string;
+}
+
+export interface OgDescriptionSuggestedValue {
+  og_description: string;
+}
+
+export interface AltTextValue {
+  alt_text: string;
+  image_url: string;
+}
+
+export interface FaqPair {
+  question: string;
+  answer: string;
+}
+
+export interface FaqSuggestedValue {
+  pairs: FaqPair[];
+  pair_count: number;
+  language_detected: string;
+  hallucination_warning: boolean;
+  dropped_pairs: number;
+}
+
+export interface SchemaSuggestedValue {
+  schema: Record<string, unknown>;
+  page_type: string;
+  language_detected: string;
+  validation_warnings: string[];
+}
+
+export interface InternalLink {
+  target_url: string;
+  anchor_text: string;
+  relevance_reason: string;
+  confidence: number;
+}
+
+export interface InternalLinkSuggestedValue {
+  links: InternalLink[];
 }
 
 export interface RedirectCandidate {
@@ -51,7 +103,7 @@ export interface RedirectSuggestedValue {
   low_confidence: boolean;
 }
 
-// --- API: raw suggestion (value shapes vary by suggestion_type) ---
+// --- API: raw suggestion ---
 
 export interface ApiSuggestion {
   id: string;
@@ -89,7 +141,7 @@ export interface ApiSuggestionsResponse {
 export type AiSuggestion = {
   id: string;
   url: string;
-  type: string;
+  type: SuggestionType | string;
   priority: ImpactLevel;
   impact: ImpactLevel;
   status: SuggestionStatus;
@@ -100,4 +152,7 @@ export type AiSuggestionDetail = AiSuggestion & {
   currentText: string;
   explanation: string;
   keywords: string[];
+  rawSuggestedValue: Record<string, unknown>;
+  rawCurrentValue: Record<string, unknown>;
+  redirectCandidates?: RedirectCandidate[];
 };

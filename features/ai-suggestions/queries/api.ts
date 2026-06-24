@@ -37,6 +37,13 @@ export async function fetchSuggestionDetail(
   );
 }
 
+export async function approveSuggestionBatch(projectId: string, ids: string[]): Promise<void> {
+  return apiClient(`projects/${projectId}/ai/suggestions/approve-batch`, {
+    method: "POST",
+    body: JSON.stringify({ ids }),
+  });
+}
+
 export async function approveSuggestion(projectId: string, suggestionId: string): Promise<void> {
   return apiClient(`projects/${projectId}/ai/suggestions/${suggestionId}/approve`, {
     method: "POST",
@@ -47,4 +54,18 @@ export async function rejectSuggestion(projectId: string, suggestionId: string):
   return apiClient(`projects/${projectId}/ai/suggestions/${suggestionId}/reject`, {
     method: "POST",
   });
+}
+
+export async function editSuggestion(
+  projectId: string,
+  suggestionId: string,
+  suggestedValue: Record<string, unknown>,
+): Promise<ApiSuggestion> {
+  return apiClient<ApiSuggestion>(
+    `projects/${projectId}/ai/suggestions/${suggestionId}`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ suggested_value: suggestedValue }),
+    },
+  );
 }

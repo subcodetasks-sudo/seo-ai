@@ -270,6 +270,7 @@
     "loading": "جاري تحميل الاقتراحات...",
     "error": "فشل تحميل الاقتراحات",
     "approve": "موافقة",
+    "approving": "جاري الموافقة...",
     "reject": "رفض",
     "review": "مراجعة",
     "exportCsv": "تصدير CSV",
@@ -324,12 +325,39 @@
       "whyGenerated": "لماذا تم توليد هذا الاقتراح؟",
       "keywords": "الكلمات المفتاحية",
       "idealLength": "طول مثالي ({min}-{max})",
-      "chars": "{count} chars",
+      "chars": "{count} حرف",
       "edit": "تعديل",
+      "editTitle": "تعديل الاقتراح",
       "save": "حفظ",
+      "saving": "جاري الحفظ...",
       "cancel": "إلغاء",
       "back": "العودة",
       "notFound": "الاقتراح غير موجود",
+      "confidence": "ثقة",
+      "jsonValue": "القيمة (JSON)",
+      "redirectReason": "لماذا هذا التوجيه؟",
+      "redirectCandidates": "صفحات التوجيه البديلة",
+      "diagnosisExplanation": "التشخيص",
+      "diagnosisSuggestion": "الإجراء الموصى به",
+      "meta": {
+        "title": "العنوان",
+        "description": "الوصف"
+      },
+      "altText": {
+        "label": "النص البديل"
+      },
+      "redirect": {
+        "targetUrl": "رابط التوجيه"
+      },
+      "faq": {
+        "pairsCount": "{count} سؤال وجواب"
+      },
+      "schema": {
+        "validationWarnings": "تحذيرات التحقق"
+      },
+      "internalLink": {
+        "count": "{count} روابط مقترحة"
+      },
       "impactLevel": {
         "high": "تأثير عالي",
         "medium": "تأثير متوسط",

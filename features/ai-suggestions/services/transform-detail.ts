@@ -3,8 +3,6 @@ import type {
   AiSuggestionDetail,
   ApiSuggestion,
   ImpactLevel,
-  MetaCurrentValue,
-  MetaSuggestedValue,
   RedirectSuggestedValue,
   SuggestionStatus,
 } from "../types";
@@ -13,6 +11,16 @@ export function scoreToLevel(score: number): ImpactLevel {
   if (score >= 0.8) return "high";
   if (score >= 0.5) return "medium";
   return "low";
+}
+
+function extractPrimaryText(type: string, value: Record<string, unknown>): string {
+  switch (type) {
+    case "meta": return String(value.meta_title ?? value.meta_description ?? "");
+    case "og_title": return String(value.og_title ?? "");
+    case "og_description": return String(value.og_description ?? "");
+    case "alt_text": return String(value.alt_text ?? "");
+    default: return "";
+  }
 }
 
 export function transformSuggestionDetail(s: ApiSuggestion): AiSuggestionDetail {
@@ -35,17 +43,19 @@ export function transformSuggestionDetail(s: ApiSuggestion): AiSuggestionDetail 
       currentText: s.page_url,
       explanation: sv.diagnosis?.explanation ?? "",
       keywords: [],
+      rawSuggestedValue: s.display_value,
+      rawCurrentValue: s.current_value,
+      redirectCandidates: sv.redirect?.top_candidates,
     };
   }
 
-  // meta, og_title, og_description, alt_text, schema, faq, internal_link
-  const sv = s.suggested_value as unknown as MetaSuggestedValue;
-  const cv = s.current_value as unknown as Partial<MetaCurrentValue>;
   return {
     ...base,
-    suggestedText: sv.meta_title ?? sv.meta_description ?? "",
-    currentText: cv.meta_title ?? cv.meta_description ?? "",
+    suggestedText: extractPrimaryText(s.suggestion_type, s.display_value),
+    currentText: extractPrimaryText(s.suggestion_type, s.current_value),
     explanation: "",
-    keywords: sv.keywords_used ?? [],
+    keywords: Array.isArray(s.keywords_used) ? s.keywords_used : [],
+    rawSuggestedValue: s.display_value,
+    rawCurrentValue: s.current_value,
   };
 }

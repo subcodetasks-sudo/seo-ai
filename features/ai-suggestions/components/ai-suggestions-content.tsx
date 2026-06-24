@@ -25,7 +25,7 @@ import {
 import { useSelectedProject } from "@/features/home";
 import { AiSuggestionsTable } from "./ai-suggestions-table";
 import { aiSuggestionsQueryOptions } from "../queries/queries";
-import { useApproveSuggestion } from "../queries/mutations";
+import { useApproveSuggestion, useApproveSuggestionBatch } from "../queries/mutations";
 import type { SuggestionStatus, SuggestionType } from "../types";
 
 const PAGE_SIZE = 20;
@@ -61,6 +61,7 @@ export function AiSuggestionsContent() {
   const [isExporting, setIsExporting] = useState(false);
 
   const approveMutation = useApproveSuggestion();
+  const approveBatchMutation = useApproveSuggestionBatch();
 
   const { data, isLoading, isError } = useQuery(
     aiSuggestionsQueryOptions({
@@ -98,7 +99,11 @@ export function AiSuggestionsContent() {
   }
 
   function handleBulkApprove() {
-    setSelectedIds(new Set());
+    if (!selectedProjectId || selectedIds.size === 0) return;
+    approveBatchMutation.mutate(
+      { projectId: selectedProjectId, ids: Array.from(selectedIds) },
+      { onSuccess: () => setSelectedIds(new Set()) },
+    );
   }
 
   function handleBulkReject() {
@@ -226,11 +231,11 @@ export function AiSuggestionsContent() {
             <Button
               type="button"
               size="sm"
-              disabled={selectionCount === 0}
+              disabled={selectionCount === 0 || approveBatchMutation.isPending}
               onClick={handleBulkApprove}
               className="gap-1 bg-primary-300 text-secondary-500 hover:bg-primary-400 disabled:opacity-40 text-label-sm font-medium"
             >
-              {t("approve")}({selectionCount})
+              {approveBatchMutation.isPending ? t("approving") : `${t("approve")}(${selectionCount})`}
             </Button>
           </div>
         </div>

@@ -270,6 +270,7 @@
     "loading": "Loading suggestions...",
     "error": "Failed to load suggestions",
     "approve": "Approve",
+    "approving": "Approving...",
     "reject": "Reject",
     "review": "Review",
     "exportCsv": "Export CSV",
@@ -326,10 +327,37 @@
       "idealLength": "Ideal length ({min}-{max})",
       "chars": "{count} chars",
       "edit": "Edit",
+      "editTitle": "Edit Suggestion",
       "save": "Save",
+      "saving": "Saving...",
       "cancel": "Cancel",
       "back": "Back",
       "notFound": "Suggestion not found",
+      "confidence": "confidence",
+      "jsonValue": "Value (JSON)",
+      "redirectReason": "Why this redirect?",
+      "redirectCandidates": "Alternative redirect targets",
+      "diagnosisExplanation": "Diagnosis",
+      "diagnosisSuggestion": "Recommended action",
+      "meta": {
+        "title": "Title",
+        "description": "Description"
+      },
+      "altText": {
+        "label": "Alt Text"
+      },
+      "redirect": {
+        "targetUrl": "Redirect URL"
+      },
+      "faq": {
+        "pairsCount": "{count} Q&A pairs"
+      },
+      "schema": {
+        "validationWarnings": "Validation Warnings"
+      },
+      "internalLink": {
+        "count": "{count} suggested links"
+      },
       "impactLevel": {
         "high": "High Impact",
         "medium": "Medium Impact",
