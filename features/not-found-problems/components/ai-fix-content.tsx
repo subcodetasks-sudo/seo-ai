@@ -71,7 +71,7 @@ export function AiFixContent() {
             <span className="text-label-md font-semibold text-secondary-500">{t("aiSuggestion")}</span>
           </div>
 
-          <div className="flex flex-col gap-2 rounded-lg bg-neutral-50 p-3">
+          <div className="flex flex-col gap-2 rounded-lg bg-neutral-100 p-3">
             <span className="text-label-xs text-neutral-400 text-start">{t("suggestedUrl")}</span>
             <span className="font-mono text-label-md font-semibold text-secondary-500 text-start">
               {MOCK_DATA.suggestedRedirectUrl}
