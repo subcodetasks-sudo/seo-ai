@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/chart";
 import type { ChartPoint } from "../types";
 
+const HEALTH_SCORE_COLOR = "#7C7BE6";
+
 const chartConfig = {
   value: {
     label: "Health Score",
-    color: "hsl(var(--primary-400))",
+    color: HEALTH_SCORE_COLOR,
   },
 };
 
@@ -32,9 +34,9 @@ export function HealthScoreTrendChart({ data }: HealthScoreTrendChartProps) {
       <ChartContainer config={chartConfig} className="aspect-[2/1] h-56 w-full">
         <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <defs>
-            <linearGradient id="healthScoreFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--color-value)" stopOpacity={0.3} />
-              <stop offset="100%" stopColor="var(--color-value)" stopOpacity={0.05} />
+            <linearGradient id="reportsHealthScoreFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={HEALTH_SCORE_COLOR} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={HEALTH_SCORE_COLOR} stopOpacity={0.05} />
             </linearGradient>
           </defs>
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
@@ -49,16 +51,17 @@ export function HealthScoreTrendChart({ data }: HealthScoreTrendChartProps) {
             axisLine={false}
             tickMargin={8}
             domain={[0, 8]}
+            width={48}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Area
             type="monotone"
             dataKey="value"
-            stroke="var(--color-value)"
+            stroke={HEALTH_SCORE_COLOR}
             strokeWidth={2}
-            fill="url(#healthScoreFill)"
-            dot={{ fill: "var(--color-value)", r: 3 }}
-            activeDot={{ r: 5 }}
+            fill="url(#reportsHealthScoreFill)"
+            dot={false}
+            activeDot={{ r: 4, fill: HEALTH_SCORE_COLOR }}
           />
         </AreaChart>
       </ChartContainer>

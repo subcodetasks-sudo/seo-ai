@@ -24,6 +24,7 @@
     "aiSuggestions": "اقتراحات الـ AI",
     "notFoundProblems": "مشاكل 404",
     "reports": "التقارير",
+    "googleAnalytics": "Google Analytics",
     "changelog": "سجل التغييرات",
     "userName": "محمد أحمد",
     "userPlan": "الخطة المدفوعة",
@@ -95,7 +96,10 @@
       "fieldValid": "يبدو رائعاً",
       "validation": {
         "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
-        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
+        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "passwordLetterRequired": "يجب أن تحتوي كلمة المرور على حرف واحد على الأقل",
+        "passwordDigitRequired": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
+        "passwordSymbolRequired": "يجب أن تحتوي كلمة المرور على رمز واحد على الأقل (مثل @ أو # أو $)"
       },
       "loginFailed": "فشل تسجيل الدخول."
     },
@@ -121,9 +125,11 @@
         "fullNameMin": "يجب أن يكون الاسم الكامل حرفين على الأقل",
         "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
         "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+        "passwordLetterRequired": "يجب أن تحتوي كلمة المرور على حرف واحد على الأقل",
+        "passwordDigitRequired": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
+        "passwordSymbolRequired": "يجب أن تحتوي كلمة المرور على رمز واحد على الأقل (مثل @ أو # أو $)",
         "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
-        "passwordsMismatch": "كلمات المرور غير متطابقة",
-        "passwordDigitRequired": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل"
+        "passwordsMismatch": "كلمات المرور غير متطابقة"
       },
       "registrationFailed": "فشل التسجيل."
     },
@@ -323,7 +329,11 @@
       "internal_link": "رابط داخلي"
     },
     "pagination": {
-      "showing": "عرض {shown} من {total} نتائج"
+      "showing": "عرض {shown} من {total} نتائج",
+      "previous": "السابق",
+      "next": "التالي",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية"
     },
     "reviewPage": {
       "title": "مراجعة الاقتراح",
@@ -415,6 +425,168 @@
         "completed": "مكتمل",
         "running": "قيد التشغيل",
         "failed": "فشل"
+      }
+    }
+  },
+  "googleAnalytics": {
+    "noProject": "اختر مشروعاً لربط Google Analytics",
+    "loading": "جاري التحميل...",
+    "title": "ربط Google Analytics",
+    "description": "اربط حساب Google Analytics الخاص بك لمشاهدة تحليلات الزوار والزيارات لموقع {domain} مباشرة داخل المنصة.",
+    "connectButton": "ربط مع Google",
+    "secureNote": "سيتم توجيهك بشكل آمن إلى Google لمنح الصلاحيات.",
+    "logoAlt": "Google Analytics",
+    "tabs": {
+      "label": "أقسام Google Analytics",
+      "overview": "نظرة عامة",
+      "ecommerce": "التجارة الإلكترونية",
+      "conversions": "التحويلات",
+      "events": "الأحداث",
+      "audience": "الجمهور",
+      "pages": "الصفحات",
+      "traffic-sources": "مصادر الزيارات"
+    },
+    "toolbar": {
+      "connected": "متصل",
+      "lastMonitored": "آخر مراقبة: منذ 5 دقائق",
+      "period": "آخر {days} يوم",
+      "refresh": "تحديث",
+      "disconnect": "قطع الاتصال"
+    },
+    "charts": {
+      "trafficDistribution": "توزيع الزيارات",
+      "distribution": {
+        "organic": "البحث العضوي",
+        "direct": "مباشر",
+        "social": "اجتماعي",
+        "paid": "البحث المدفوع",
+        "referral": "إحالة"
+      }
+    },
+    "audience": {
+      "countries": "الدول",
+      "country": {
+        "sa": "المملكة العربية السعودية",
+        "ae": "الإمارات العربية المتحدة",
+        "eg": "مصر",
+        "kw": "الكويت",
+        "bh": "البحرين"
+      }
+    },
+    "trafficSources": {
+      "title": "مصادر الزيارات",
+      "visitorsSuccess": "الزوار / النجاح",
+      "items": {
+        "organic": "البحث العضوي",
+        "direct": "مباشر",
+        "social": "اجتماعي",
+        "paid": "البحث المدفوع",
+        "referral": "إحالة"
+      }
+    },
+    "ecommerceDashboard": {
+      "revenue": "الإيرادات",
+      "purchases": "المشتريات",
+      "avgOrderValue": "متوسط قيمة الطلب",
+      "abandonedCarts": "سلات مهجورة",
+      "currency": "ريال",
+      "revenuePath": "مسار الإيرادات",
+      "revenuePathSubtitle": "آخر 15 يوم",
+      "topProducts": "أعلى المنتجات مبيعاً",
+      "table": {
+        "product": "المنتج",
+        "revenue": "الإيرادات",
+        "units": "الوحدات",
+        "share": "الحصة"
+      },
+      "products": {
+        "enterprise": "حزمة Enterprise السنوية",
+        "pro": "حزمة Pro الشهرية",
+        "starter": "حزمة Starter السنوية",
+        "addons": "إضافات مخصصة"
+      }
+    },
+    "pagesDashboard": {
+      "title": "أعلى الصفحات",
+      "sortByViews": "حسب المشاهدات",
+      "sortByBounceRate": "حسب الارتداد",
+      "searchPlaceholder": "بحث في الصفحات...",
+      "copyPath": "نسخ مسار الصفحة",
+      "pagination": "عرض {start}-{end} من {total} صفحة",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "pageNumber": "صفحة {page}",
+      "table": {
+        "page": "الصفحة",
+        "views": "المشاهدات",
+        "avgTime": "متوسط الوقت",
+        "bounceRate": "معدل الارتداد"
+      },
+      "items": {
+        "home": "الرئيسية",
+        "aiSolutions": "حلول الذكاء الاصطناعي للأعمال",
+        "pricing": "الأسعار",
+        "seoGuide": "دليل السيو الشامل",
+        "about": "من نحن",
+        "contact": "تواصل معنا",
+        "features": "المميزات",
+        "caseStudies": "دراسات الحالة"
+      }
+    },
+    "metrics": {
+      "footer": "إجمالي هذه الفترة",
+      "overview": {
+        "totalUsers": "إجمالي المستخدمين",
+        "newUsers": "المستخدمون الجدد",
+        "activeUsers": "المستخدمون النشطون",
+        "sessions": "الجلسات",
+        "engagedSessions": "الجلسات التفاعلية",
+        "avgSessionDuration": "متوسط مدة الجلسة",
+        "engagementRate": "معدل التفاعل",
+        "bounceRate": "معدل الارتداد"
+      },
+      "ecommerce": {
+        "revenue": "الإيرادات",
+        "transactions": "المعاملات",
+        "avgOrderValue": "متوسط قيمة الطلب",
+        "itemsPurchased": "المنتجات المشتراة",
+        "cartAbandonment": "التخلي عن السلة",
+        "purchaseConversion": "تحويل الشراء"
+      },
+      "conversions": {
+        "orders": "الطلبات",
+        "conversionRate": "معدل التحويل",
+        "conversionValue": "قيمة التحويل",
+        "totalConversions": "إجمالي التحويلات",
+        "registrations": "التسجيلات"
+      },
+      "events": {
+        "videoPlayback": "تشغيل الفيديو",
+        "totalUsers": "إجمالي المستخدمين",
+        "buttonClicks": "النقرات على الأزرار",
+        "fileDownloads": "تنزيل الملفات",
+        "customEvents": "أحداث مخصصة",
+        "formSubmissions": "إرسال النماذج"
+      },
+      "audience": {
+        "returningUsers": "المستخدمون العائدون",
+        "newVisitors": "الزوار الجدد",
+        "sessionsPerUser": "الجلسات لكل مستخدم",
+        "avgEngagementTime": "متوسط وقت التفاعل"
+      },
+      "pages": {
+        "pageViews": "مشاهدات الصفحة",
+        "uniquePageViews": "مشاهدات الصفحة الفريدة",
+        "avgTimeOnPage": "متوسط الوقت في الصفحة",
+        "exitRate": "معدل الخروج"
+      },
+      "trafficSources": {
+        "organicSearch": "البحث العضوي",
+        "direct": "مباشر",
+        "referral": "إحالة",
+        "social": "وسائل التواصل",
+        "paid": "مدفوع",
+        "email": "البريد الإلكتروني"
       }
     }
   },

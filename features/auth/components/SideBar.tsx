@@ -10,7 +10,9 @@ import {
   List,
   LogOut,
   PanelRightClose,
+  type LucideIcon,
 } from "lucide-react";
+import Image from "next/image";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import React, { type ReactNode } from "react";
@@ -39,13 +41,23 @@ import {
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
+type NavItem =
+  | { href: string; labelKey: string; icon: LucideIcon; exact: boolean }
+  | { href: string; labelKey: string; imageSrc: string; exact: boolean };
+
+const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", labelKey: "projects", icon: FolderOpen, exact: true },
   { href: "/dashboard/overview", labelKey: "overview", icon: Home, exact: true },
   { href: "/dashboard/problems", labelKey: "problemList", icon: List, exact: false },
   { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle, exact: false },
   { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off, exact: false },
   { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3, exact: false },
+  {
+    href: "/dashboard/google-analytics",
+    labelKey: "googleAnalytics",
+    imageSrc: "/imgs/google_analytics_logo.webp",
+    exact: false,
+  },
   { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock, exact: false },
 ] as const;
 
@@ -103,6 +115,12 @@ export default function SideBar() {
       return;
     }
     setOpen(false);
+  };
+
+  const handleNavClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
   };
 
   const handleLogout = () => {
@@ -197,13 +215,15 @@ export default function SideBar() {
         </SidebarMotionItem>
 
         <nav className="flex flex-1 flex-col gap-1">
-          {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
+          {NAV_ITEMS.map((item) => {
+            const { href, labelKey, exact } = item;
             const isActive = exact ? pathname === href : pathname.startsWith(href);
 
             return (
               <SidebarMotionItem key={href} side={side}>
                 <Link
                   href={href}
+                  onClick={handleNavClick}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                     isActive
@@ -211,7 +231,18 @@ export default function SideBar() {
                       : "text-secondary-400 hover:bg-neutral-50 hover:text-secondary-500",
                   )}
                 >
-                  <Icon className="size-5 shrink-0" aria-hidden="true" />
+                  {"icon" in item ? (
+                    <item.icon className="size-5 shrink-0" aria-hidden="true" />
+                  ) : (
+                    <Image
+                      src={item.imageSrc}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className="size-5 shrink-0 object-contain"
+                      aria-hidden="true"
+                    />
+                  )}
                   <span>{t(labelKey)}</span>
                 </Link>
               </SidebarMotionItem>

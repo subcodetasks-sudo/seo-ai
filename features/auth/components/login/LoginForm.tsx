@@ -30,7 +30,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/features/auth/context/auth-context";
 import { createLoginSchema } from "@/features/auth/schemas/login-schema";
-import type { LoginFormValues } from "@/features/auth/types";
+import type { ApiResponse, LoginFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
@@ -108,6 +108,15 @@ type GoogleSignInButtonProps = {
   className?: string;
 };
 
+type LoginUser = {
+  id?: string;
+  email?: string;
+  display_name?: string;
+  name?: string;
+  plan?: string | { name?: string };
+  avatar?: string;
+};
+
 function GoogleSignInButton({ label, className }: GoogleSignInButtonProps) {
   return (
     <Button
@@ -137,6 +146,9 @@ export function LoginForm() {
       createLoginSchema({
         emailInvalid: tValidation("emailInvalid"),
         passwordMin: tValidation("passwordMin"),
+        passwordLetterRequired: tValidation("passwordLetterRequired"),
+        passwordDigitRequired: tValidation("passwordDigitRequired"),
+        passwordSymbolRequired: tValidation("passwordSymbolRequired"),
       }),
     [tValidation]
   );
@@ -165,8 +177,9 @@ export function LoginForm() {
 
   function onSubmit(_data: LoginFormValues) {
     login(_data, {
-      onSuccess: (response: any) => {
-        const userData = response?.data;
+      onSuccess: (response) => {
+        const typedResponse = response as ApiResponse<LoginUser>;
+        const userData = typedResponse.data;
         if (userData) {
           const initials = userData.display_name
             ? userData.display_name
@@ -181,7 +194,10 @@ export function LoginForm() {
             email: userData.email,
             display_name: userData.display_name || userData.name,
             name: userData.display_name || userData.name,
-            plan: userData.plan?.name ?? (typeof userData.plan === "string" ? userData.plan : undefined),
+            plan:
+              typeof userData.plan === "string"
+                ? userData.plan
+                : userData.plan?.name,
             avatar: userData.avatar,
             initials,
           });

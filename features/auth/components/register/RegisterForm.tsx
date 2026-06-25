@@ -126,7 +126,9 @@ export function RegisterForm() {
         fullNameMin: tValidation("fullNameMin"),
         emailInvalid: tValidation("emailInvalid"),
         passwordMin: tValidation("passwordMin"),
+        passwordLetterRequired: tValidation("passwordLetterRequired"),
         passwordDigitRequired: tValidation("passwordDigitRequired"),
+        passwordSymbolRequired: tValidation("passwordSymbolRequired"),
       }),
     [tValidation]
   );
