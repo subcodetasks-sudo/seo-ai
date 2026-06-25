@@ -36,7 +36,7 @@ export function LocaleShell({ children }: LocaleShellProps) {
       <SideBar />
       <SidebarInset className="min-h-svh">
         <Header />
-        {children}
+        <div className="min-w-0 flex-1 overflow-x-hidden">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
