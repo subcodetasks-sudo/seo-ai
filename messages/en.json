@@ -28,7 +28,8 @@
     "userPlan": "Paid plan",
     "userInitials": "MA",
     "logout": "Log out",
-    "settings": "Settings"
+    "settings": "Settings",
+    "notifications": "Notifications"
   },
   "plans": {
     "metadata": {
@@ -738,5 +739,22 @@
       "confirmPasswordMin": "Confirm password must be at least 8 characters",
       "passwordsMismatch": "Passwords do not match"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread": "{count, plural, one {# unread notification} other {# unread notifications}}",
+    "allCaughtUp": "You're all caught up",
+    "markAllRead": "Mark all as read",
+    "markRead": "Mark as read",
+    "selectAll": "Select all",
+    "selectItem": "Select notification",
+    "selectedCount": "{count} selected",
+    "clearSelection": "Clear",
+    "filterAll": "All",
+    "filterUnread": "Unread",
+    "emptyTitle": "No notifications yet",
+    "emptyDescription": "When something happens across your projects, you'll see it here.",
+    "emptyUnreadTitle": "No unread notifications",
+    "emptyUnreadDescription": "You've read everything. Nice work."
   }
 }

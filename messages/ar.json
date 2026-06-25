@@ -28,7 +28,8 @@
     "userPlan": "الخطة المدفوعة",
     "userInitials": "م أ",
     "logout": "تسجيل الخروج",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "notifications": "الإشعارات"
   },
   "plans": {
     "metadata": {
@@ -738,5 +739,22 @@
       "confirmPasswordMin": "يجب أن يكون تأكيد كلمة المرور 8 أحرف على الأقل",
       "passwordsMismatch": "كلمات المرور غير متطابقة"
     }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "unread": "{count, plural, zero {لا إشعارات غير مقروءة} one {إشعار واحد غير مقروء} two {إشعاران غير مقروءين} few {# إشعارات غير مقروءة} many {# إشعاراً غير مقروء} other {# إشعار غير مقروء}}",
+    "allCaughtUp": "لقد اطّلعت على كل شيء",
+    "markAllRead": "تعليم الكل كمقروء",
+    "markRead": "تعليم كمقروء",
+    "selectAll": "تحديد الكل",
+    "selectItem": "تحديد الإشعار",
+    "selectedCount": "{count} محدد",
+    "clearSelection": "إلغاء التحديد",
+    "filterAll": "الكل",
+    "filterUnread": "غير المقروءة",
+    "emptyTitle": "لا توجد إشعارات بعد",
+    "emptyDescription": "عند حدوث أي شيء في مشاريعك، سيظهر هنا.",
+    "emptyUnreadTitle": "لا إشعارات غير مقروءة",
+    "emptyUnreadDescription": "لقد اطّلعت على كل شيء. عمل رائع."
   }
 }
