@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { useDirection } from "@/components/ui/direction";
@@ -13,7 +14,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSelectedProject } from "@/features/home";
+import { allProjectsQueryOptions, useSelectedProject } from "@/features/home";
 import { ProblemsTable } from "./problems-table";
 import type { Problem, ProblemFilter } from "../types";
 
@@ -35,6 +36,10 @@ export function ProblemsContent() {
   const t = useTranslations("problems");
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
+  const { data: projectsResponse } = useQuery(allProjectsQueryOptions());
+  const projects = projectsResponse?.data?.items ?? [];
+  const selectedProject = projects.find((project) => project.id === selectedProjectId);
+  const domain = selectedProject?.domain ?? selectedProject?.name ?? "—";
   const [filter, setFilter] = useState<ProblemFilter>("all");
   const [page, setPage] = useState(1);
 
@@ -70,7 +75,7 @@ export function ProblemsContent() {
         <div className="flex flex-col gap-1 text-start">
           <h1 className="text-h1 font-semibold text-secondary-500">{t("title")}</h1>
           <p className="text-label-md text-neutral-500">
-            {t("subtitle", { count: MOCK_PROBLEMS.length, domain: "www.example.com" })}
+            {t("subtitle", { count: MOCK_PROBLEMS.length, domain })}
           </p>
         </div>
 
