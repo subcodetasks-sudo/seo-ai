@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
 	createProject,
@@ -12,6 +12,7 @@ import type {
 	UpdateProjectRequest,
 } from "../types";
 import { allProjectsQueryOptions } from './queries';
+import { homeKeys } from "./query-keys";
 
 export const useCreateProject = () =>
 	useMutation({
@@ -24,10 +25,15 @@ export const useUpdateProject = () =>
 			updateProject(variables.body, variables.projectId),
 	});
 
-export const useDeleteProject = () =>
-	useMutation({
+export const useDeleteProject = () => {
+	const queryClient = useQueryClient();
+	return useMutation({
 		mutationFn: (projectId: string) => deleteProject(projectId),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: homeKeys.projects() });
+		},
 	});
+};
 
 export const useVerifyDomain = () =>
 	useMutation({
