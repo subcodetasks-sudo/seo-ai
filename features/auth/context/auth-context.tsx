@@ -20,11 +20,22 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function buildInitials(displayName: string | undefined) {
+  if (!displayName) return "";
+  return displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Load from localStorage immediately for instant display
     const stored = localStorage.getItem("user");
     if (stored) {
       try {
@@ -33,7 +44,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem("user");
       }
     }
-    setIsLoading(false);
+
+    // Fetch fresh data from /me to keep sidebar up-to-date
+    fetch("/api/users/me")
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((result) => {
+        const data = result?.data;
+        if (!data) return;
+        const freshUser: User = {
+          id: data.id,
+          email: data.email,
+          display_name: data.display_name,
+          name: data.display_name,
+          plan: data.plan?.name ?? (typeof data.plan === "string" ? data.plan : undefined),
+          initials: buildInitials(data.display_name),
+        };
+        setUser(freshUser);
+        localStorage.setItem("user", JSON.stringify(freshUser));
+      })
+      .catch(() => {
+        // Not authenticated or network error — use localStorage value as-is
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   const handleSetUser = (newUser: User | null) => {

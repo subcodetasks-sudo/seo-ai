@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/features/auth/context/auth-context";
+import { useUpdateProfile } from "../queries/mutations";
 
 import { createProfileSchema } from "../schemas/profile-schema";
 import type { ProfileFormValues } from "../types";
@@ -27,6 +29,7 @@ export function ProfileForm({ onSaved }: ProfileFormProps) {
   const t = useTranslations("settings.profile");
   const tValidation = useTranslations("settings.validation");
   const { user, setUser } = useAuth();
+  const { mutate: updateProfile, isPending } = useUpdateProfile();
 
   const schema = useMemo(
     () =>
@@ -41,7 +44,7 @@ export function ProfileForm({ onSaved }: ProfileFormProps) {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ProfileFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -60,13 +63,33 @@ export function ProfileForm({ onSaved }: ProfileFormProps) {
   }, [user, reset]);
 
   function onSubmit(values: ProfileFormValues) {
-    setUser({
-      ...user,
-      email: values.email,
-      display_name: values.display_name,
-      name: values.display_name,
+    updateProfile(values, {
+      onSuccess: (response) => {
+        const data = response.data;
+        const initials = data.display_name
+          ? data.display_name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
+          : "";
+        setUser({
+          ...user,
+          id: data.id,
+          email: data.email,
+          display_name: data.display_name,
+          name: data.display_name,
+          plan: data.plan?.name,
+          initials,
+        });
+        toast.success(t("saved"));
+        onSaved?.();
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
     });
-    onSaved?.();
   }
 
   return (
@@ -93,7 +116,7 @@ export function ProfileForm({ onSaved }: ProfileFormProps) {
           <div className="flex justify-end">
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isPending}
               className="bg-primary-300 text-secondary-500 hover:bg-primary-400"
             >
               {t("saveChanges")}

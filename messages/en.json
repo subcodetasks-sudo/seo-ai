@@ -26,6 +26,12 @@
     "changelog": "Changelog",
     "userName": "Mohamed Ahmed",
     "userPlan": "Paid plan",
+    "plans": {
+      "free": "Free",
+      "starter": "Starter",
+      "pro": "Pro",
+      "agency": "Agency"
+    },
     "userInitials": "MA",
     "logout": "Log out",
     "settings": "Settings",
@@ -686,7 +692,8 @@
       "personalInfo": "Personal information",
       "email": "Email",
       "fullName": "Full name",
-      "saveChanges": "Save changes"
+      "saveChanges": "Save changes",
+      "saved": "Profile updated successfully."
     },
     "password": {
       "title": "Change password",

@@ -181,7 +181,7 @@ export function LoginForm() {
             email: userData.email,
             display_name: userData.display_name || userData.name,
             name: userData.display_name || userData.name,
-            plan: userData.plan,
+            plan: userData.plan?.name ?? (typeof userData.plan === "string" ? userData.plan : undefined),
             avatar: userData.avatar,
             initials,
           });

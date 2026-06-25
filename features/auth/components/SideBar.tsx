@@ -66,8 +66,11 @@ function SidebarMotionItem({ children, className, side }: SidebarMotionItemProps
   );
 }
 
+const KNOWN_PLANS = new Set(["free", "starter", "pro", "agency"]);
+
 export default function SideBar() {
   const t = useTranslations("sidebar");
+  const tPlans = useTranslations("sidebar.plans");
   const pathname = usePathname();
   const router = useRouter();
   const { user, setUser } = useAuth();
@@ -230,7 +233,11 @@ export default function SideBar() {
                   {user?.display_name || t("userName")}
                 </p>
                 <p className="truncate text-sm text-secondary-200">
-                  {user?.plan || t("userPlan")}
+                  {user?.plan
+                    ? KNOWN_PLANS.has(user.plan)
+                      ? tPlans(user.plan as Parameters<typeof tPlans>[0])
+                      : user.plan
+                    : t("userPlan")}
                 </p>
               </div>
             </div>

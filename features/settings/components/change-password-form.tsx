@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,7 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { useChangePassword } from "../queries/mutations";
 
 import { createChangePasswordSchema } from "../schemas/change-password-schema";
 import type { ChangePasswordFormValues } from "../types";
@@ -63,15 +65,13 @@ function PasswordField({ id, label, error, registration }: PasswordFieldProps) {
 export function ChangePasswordForm() {
   const t = useTranslations("settings.password");
   const tValidation = useTranslations("settings.validation");
-  const [saved, setSaved] = useState(false);
+  const { mutate: changePassword, isPending } = useChangePassword();
 
   const schema = useMemo(
     () =>
       createChangePasswordSchema({
         currentPasswordMin: tValidation("currentPasswordMin"),
         newPasswordMin: tValidation("newPasswordMin"),
-        confirmPasswordMin: tValidation("confirmPasswordMin"),
-        passwordsMismatch: tValidation("passwordsMismatch"),
       }),
     [tValidation],
   );
@@ -80,20 +80,28 @@ export function ChangePasswordForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       current_password: "",
       new_password: "",
-      confirm_password: "",
     },
   });
 
-  function onSubmit() {
-    setSaved(true);
-    reset();
-    setTimeout(() => setSaved(false), 3000);
+  function onSubmit(values: ChangePasswordFormValues) {
+    changePassword(
+      { current_password: values.current_password, new_password: values.new_password },
+      {
+        onSuccess: () => {
+          reset();
+          toast.success(t("saved"));
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      },
+    );
   }
 
   return (
@@ -118,20 +126,11 @@ export function ChangePasswordForm() {
               error={errors.new_password}
               registration={register("new_password")}
             />
-            <PasswordField
-              id="confirm-password"
-              label={t("confirmPassword")}
-              error={errors.confirm_password}
-              registration={register("confirm_password")}
-            />
           </FieldGroup>
-          {saved ? (
-            <p className="text-label-sm text-primary-700">{t("saved")}</p>
-          ) : null}
           <div className="flex justify-end">
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isPending}
               className="bg-primary-300 text-secondary-500 hover:bg-primary-400"
             >
               {t("saveChanges")}
