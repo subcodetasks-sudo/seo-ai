@@ -52,6 +52,6 @@ export async function POST(req: Request) {
     return response;
   } catch (error) {
     const message = error instanceof Error ? error.message : "Login failed";
-    return NextResponse.json({ message }, { status: 400 });
+    return NextResponse.json({ status: false, message }, { status: 400 });
   }
 }

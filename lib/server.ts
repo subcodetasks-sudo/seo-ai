@@ -42,7 +42,8 @@ export async function serverClient<T>(
   console.log(`Server response from ${url}:`, data);
 
   // Backend business errors carry a safe, user-facing message.
-  if (data.status === false) {
+  // Check both HTTP status and the body's status field — backends vary in which they set.
+  if (!res.ok || data.status === false) {
     throw new Error(data?.message || alternativeErrorMessage);
   }
 
