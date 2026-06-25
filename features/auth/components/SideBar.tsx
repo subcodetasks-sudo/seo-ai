@@ -5,6 +5,7 @@ import {
   BarChart3,
   Bell,
   Clock,
+  FolderOpen,
   Home,
   Link2Off,
   List,
@@ -40,13 +41,14 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/dashboard/overview", labelKey: "overview", icon: Home },
-  { href: "/dashboard/problems", labelKey: "problemList", icon: List },
-  { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle },
-  { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off },
-  { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3 },
-  { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock },
-  { href: "/dashboard/notifications", labelKey: "notifications", icon: Bell },
+  { href: "/dashboard", labelKey: "projects", icon: FolderOpen, exact: true },
+  { href: "/dashboard/overview", labelKey: "overview", icon: Home, exact: true },
+  { href: "/dashboard/problems", labelKey: "problemList", icon: List, exact: false },
+  { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle, exact: false },
+  { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off, exact: false },
+  { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3, exact: false },
+  { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock, exact: false },
+  { href: "/dashboard/notifications", labelKey: "notifications", icon: Bell, exact: false },
 ] as const;
 
 type SidebarMotionItemProps = {
@@ -197,9 +199,8 @@ export default function SideBar() {
         </SidebarMotionItem>
 
         <nav className="flex flex-1 flex-col gap-1">
-          {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
-            const isActive =
-              href === "/dashboard/overview" ? pathname === "/dashboard/overview" : pathname.startsWith(href);
+          {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
+            const isActive = exact ? pathname === href : pathname.startsWith(href);
 
             return (
               <SidebarMotionItem key={href} side={side}>

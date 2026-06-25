@@ -125,11 +125,22 @@ export default function Projects({ projects }: ProjectsProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-      <div className="space-y-1">
-        <h1 className="text-h1 font-semibold text-secondary-500">{t("title")}</h1>
-        <p className="text-label-md text-neutral-500">
-          {t("linkedSites", { count: projects.length })}
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-h1 font-semibold text-secondary-500">{t("title")}</h1>
+          <p className="text-label-md text-neutral-500">
+            {t("linkedSites", { count: projects.length })}
+          </p>
+        </div>
+        <Button
+          type="button"
+          size="lg"
+          onClick={startAddProject}
+          className="h-10 shrink-0 gap-2 bg-primary-300 text-secondary-500 px-5 hover:bg-primary-400"
+        >
+          <Plus className="size-4" aria-hidden="true" />
+          {t("addProject")}
+        </Button>
       </div>
 
       <div className="flex flex-col gap-4 sm:flex-row">
@@ -155,18 +166,6 @@ export default function Projects({ projects }: ProjectsProps) {
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
-      </div>
-
-      <div className="flex justify-start">
-        <Button
-          type="button"
-          size="lg"
-          onClick={startAddProject}
-          className="h-10 gap-2 bg-primary-300 text-secondary-500 px-5 hover:bg-primary-400"
-        >
-          <Plus className="size-4" aria-hidden="true" />
-          {t("addProject")}
-        </Button>
       </div>
     </div>
   );
