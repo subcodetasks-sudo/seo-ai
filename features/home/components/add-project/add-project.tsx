@@ -8,6 +8,7 @@ import Progress from "./Progress";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
+import ProjectAnalysis from "../project-analysis/ProjectAnalysis";
 
 export function AddProject() {
   const dir = useDirection();
@@ -17,11 +18,14 @@ export function AddProject() {
     formData,
     sections,
     isSectionsLoading,
+    crawlJobId,
     handleStep1Submit,
     handleStep2Submit,
     handleStep3Submit,
     backStep,
     exitAddProject,
+    viewProject,
+    viewIssues,
   } = useAddProject();
 
   if (!step) {
@@ -68,6 +72,16 @@ export function AddProject() {
             domain={formData.domain}
             sections={sections}
             isSectionsLoading={isSectionsLoading}
+          />
+        )}
+
+        {step === 4 && formData.projectId && crawlJobId && (
+          <ProjectAnalysis
+            projectId={formData.projectId}
+            crawlJobId={crawlJobId}
+            url={formData.domain ?? ""}
+            onViewIssues={viewIssues}
+            onViewProject={viewProject}
           />
         )}
       </div>

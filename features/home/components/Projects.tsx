@@ -62,6 +62,7 @@ function ProjectStat({ value, label, valueClassName }: ProjectStatProps) {
 function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("home.projects");
   const locale = useLocale();
+  const { enterAnalysis } = useAddProject();
 
   const { mutate: deleteProject, isPending: isDeleting } = useDeleteProject();
   const { mutate: startCrawl, isPending: isRescanning } = useStartCrawl();
@@ -83,7 +84,13 @@ function ProjectCard({ project }: ProjectCardProps) {
 
   function handleRescan() {
     startCrawl(project.id, {
-      onSuccess: () => toast.success(t("rescanSuccess")),
+      onSuccess: (response) => {
+        enterAnalysis({
+          projectId: project.id,
+          domain: project.domain,
+          crawlJobId: response.data.crawl_job_id,
+        });
+      },
     });
   }
 

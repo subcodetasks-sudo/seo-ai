@@ -54,9 +54,11 @@ const STEP_ORDER: AnalysisStepId[] = [
   "aiSuggestions",
 ];
 
+// Default shown before any crawl data has arrived — a genuine loading state
+// (first step spinning, the rest waiting), not a mocked progress snapshot.
 const DEFAULT_STEPS: Record<AnalysisStepId, AnalysisStepState> = {
-  queued: { status: "completed" },
-  crawling: { status: "active", pageCount: 137 },
+  queued: { status: "active" },
+  crawling: { status: "pending" },
   analysis: { status: "pending" },
   aiSuggestions: { status: "pending" },
 };

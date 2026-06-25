@@ -7,6 +7,7 @@ import { useStartCrawl, useUpdateProject } from "@/features/home";
 import { siteSectionsQueryOptions } from "@/features/home/queries/queries";
 import type { Project, Section } from "@/features/home/types";
 import { homeKeys } from "@/features/home/queries/query-keys";
+import { useSelectedProject } from "@/features/home/context/selected-project-context";
 
 type AddProjectFormData = {
   projectId?: string;
@@ -22,13 +23,24 @@ type AddProjectContextValue = {
   formData: Partial<AddProjectFormData>;
   sections: Section[];
   isSectionsLoading: boolean;
+  crawlJobId: string | null;
   startAddProject: () => void;
+  enterAnalysis: (params: {
+    projectId: string;
+    domain: string;
+    crawlJobId: string;
+  }) => void;
   handleStep1Submit: (project: Project) => void;
   handleStep2Submit: () => void;
   handleStep3Submit: (selectedSections: Set<string>) => void;
   backStep: () => void;
   exitAddProject: () => void;
+  viewProject: () => void;
+  viewIssues: () => void;
 };
+
+// Step 4 is the live crawl analysis screen shown after the form is submitted.
+const ANALYSIS_STEP = 4;
 
 const initialFormData: Partial<AddProjectFormData> = {
   platform: "wordpress",
@@ -44,9 +56,11 @@ const AddProjectContext = createContext<AddProjectContextValue | null>(null);
 export function AddProjectProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { setSelectedProjectId } = useSelectedProject();
   const startCrawlMutation = useStartCrawl();
   const updateProjectMutation = useUpdateProject();
   const [step, setStep] = useState<number | null>(null);
+  const [crawlJobId, setCrawlJobId] = useState<string | null>(null);
   const [formData, setFormDataState] = useState<Partial<AddProjectFormData>>(initialFormData);
 
   const { data: sectionsApiResponse, isLoading: isSectionsLoading } = useQuery({
@@ -58,8 +72,28 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
 
   const startAddProject = useCallback(() => {
     setStep(1);
+    setCrawlJobId(null);
     setFormDataState(initialFormData);
   }, []);
+
+  // Jump straight to the live analysis screen for an already-started crawl
+  // (used by the projects-list rescan button).
+  const enterAnalysis = useCallback(
+    ({
+      projectId,
+      domain,
+      crawlJobId: jobId,
+    }: {
+      projectId: string;
+      domain: string;
+      crawlJobId: string;
+    }) => {
+      setFormDataState((prev) => ({ ...prev, projectId, domain }));
+      setCrawlJobId(jobId);
+      setStep(ANALYSIS_STEP);
+    },
+    []
+  );
 
   const handleStep1Submit = useCallback(
     (project: Project) => {
@@ -93,14 +127,14 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
       }
 
       startCrawlMutation.mutate(formData.projectId, {
-        onSuccess: () => {
-          setStep(null);
-          setFormDataState(initialFormData);
-          router.push("/dashboard");
+        onSuccess: (response) => {
+          setCrawlJobId(response.data.crawl_job_id);
+          queryClient.invalidateQueries({ queryKey: homeKeys.projects() });
+          setStep(ANALYSIS_STEP);
         },
       });
     },
-    [formData.projectId, startCrawlMutation, updateProjectMutation, router]
+    [formData.projectId, startCrawlMutation, updateProjectMutation, queryClient]
   );
 
   const backStep = useCallback(() => {
@@ -110,11 +144,28 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
     });
   }, []);
 
-  const exitAddProject = useCallback(() => {
+  const resetFlow = useCallback(() => {
     setStep(null);
+    setCrawlJobId(null);
     setFormDataState(initialFormData);
+  }, []);
+
+  const exitAddProject = useCallback(() => {
+    resetFlow();
     router.push("/dashboard");
-  }, [router]);
+  }, [resetFlow, router]);
+
+  const viewProject = useCallback(() => {
+    if (formData.projectId) setSelectedProjectId(formData.projectId);
+    resetFlow();
+    router.push("/dashboard/overview");
+  }, [formData.projectId, setSelectedProjectId, resetFlow, router]);
+
+  const viewIssues = useCallback(() => {
+    if (formData.projectId) setSelectedProjectId(formData.projectId);
+    resetFlow();
+    router.push("/dashboard/problems");
+  }, [formData.projectId, setSelectedProjectId, resetFlow, router]);
 
   return (
     <AddProjectContext.Provider
@@ -123,12 +174,16 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
         formData,
         sections,
         isSectionsLoading,
+        crawlJobId,
         startAddProject,
+        enterAnalysis,
         handleStep1Submit,
         handleStep2Submit,
         handleStep3Submit,
         backStep,
         exitAddProject,
+        viewProject,
+        viewIssues,
       }}
     >
       {children}
