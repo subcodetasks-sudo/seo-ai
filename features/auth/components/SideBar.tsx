@@ -3,7 +3,6 @@
 import {
   AlertTriangle,
   BarChart3,
-  Bell,
   Clock,
   FolderOpen,
   Home,
@@ -48,7 +47,6 @@ const NAV_ITEMS = [
   { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off, exact: false },
   { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3, exact: false },
   { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock, exact: false },
-  { href: "/dashboard/notifications", labelKey: "notifications", icon: Bell, exact: false },
 ] as const;
 
 type SidebarMotionItemProps = {
