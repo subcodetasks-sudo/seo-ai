@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   ChartContainer,
@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/chart";
 import { MOCK_HEALTH_SCORE_TREND } from "../queries/mock-data";
 
+const HEALTH_SCORE_COLOR = "#7C7BE6";
+
 const chartConfig = {
   value: {
     label: "Health Score",
-    color: "hsl(var(--primary-400))",
+    color: HEALTH_SCORE_COLOR,
   },
 };
 
@@ -26,7 +28,13 @@ export function HealthScoreTrendChart() {
         {t("healthTrend")}
       </h3>
       <ChartContainer config={chartConfig} className="aspect-[2/1] h-56 w-full">
-        <LineChart data={MOCK_HEALTH_SCORE_TREND} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+        <AreaChart data={MOCK_HEALTH_SCORE_TREND} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+          <defs>
+            <linearGradient id="healthScoreTrendFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={HEALTH_SCORE_COLOR} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={HEALTH_SCORE_COLOR} stopOpacity={0.05} />
+            </linearGradient>
+          </defs>
           <CartesianGrid vertical={false} strokeDasharray="3 3" />
           <XAxis
             dataKey="label"
@@ -39,17 +47,19 @@ export function HealthScoreTrendChart() {
             axisLine={false}
             tickMargin={8}
             domain={[0, 100]}
+            width={48}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
-          <Line
+          <Area
             type="monotone"
             dataKey="value"
-            stroke="var(--color-value)"
+            stroke={HEALTH_SCORE_COLOR}
             strokeWidth={2}
-            dot={{ fill: "var(--color-value)", r: 3 }}
-            activeDot={{ r: 5 }}
+            fill="url(#healthScoreTrendFill)"
+            dot={false}
+            activeDot={{ r: 4, fill: HEALTH_SCORE_COLOR }}
           />
-        </LineChart>
+        </AreaChart>
       </ChartContainer>
     </div>
   );

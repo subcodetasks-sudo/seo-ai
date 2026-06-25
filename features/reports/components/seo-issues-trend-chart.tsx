@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/chart";
 import type { ChartPoint } from "../types";
 
+const SEO_ISSUES_COLOR = "#F39C12";
+
 const chartConfig = {
   value: {
     label: "Issues",
-    color: "hsl(var(--warning-400))",
+    color: SEO_ISSUES_COLOR,
   },
 };
 
@@ -38,11 +40,11 @@ export function SeoIssuesTrendChart({ data }: SeoIssuesTrendChartProps) {
             axisLine={false}
             tickMargin={8}
           />
-          <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={[0, 8]} />
+          <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={[0, 8]} width={48} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Bar
             dataKey="value"
-            fill="var(--color-value)"
+            fill={SEO_ISSUES_COLOR}
             radius={[4, 4, 0, 0]}
           />
         </BarChart>

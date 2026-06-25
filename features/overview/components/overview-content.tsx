@@ -89,7 +89,7 @@ export function OverviewContent() {
 
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+      <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-6">
         {isLoading ? (
           <OverviewSkeleton />
         ) : isDashboardError || !dashboard ? (
@@ -113,7 +113,7 @@ export function OverviewContent() {
               brokenPagesCount={brokenPagesCount}
             />
 
-            <div className="grid gap-4 lg:grid-cols-2">
+            <div className="grid min-w-0 gap-4 *:min-w-0 lg:grid-cols-2">
               <HealthScoreTrendChart />
               <SeoIssuesTrendChart />
             </div>
