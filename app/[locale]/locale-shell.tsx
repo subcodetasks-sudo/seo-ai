@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { Header } from "@/components/Header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import SideBar from "@/features/auth/components/SideBar";
+import { FcmInitializer } from "@/features/notifications";
 import { usePathname } from "@/i18n/navigation";
 
 const SHELL_EXCLUDED_PREFIXES = [
@@ -32,12 +33,15 @@ export function LocaleShell({ children }: LocaleShellProps) {
   }
 
   return (
-    <SidebarProvider defaultOpen>
-      <SideBar />
-      <SidebarInset className="min-h-svh">
-        <Header />
-        {children}
-      </SidebarInset>
-    </SidebarProvider>
+    <>
+      <FcmInitializer />
+      <SidebarProvider defaultOpen>
+        <SideBar />
+        <SidebarInset className="min-h-svh">
+          <Header />
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
+    </>
   );
 }

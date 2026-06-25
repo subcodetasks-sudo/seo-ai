@@ -750,11 +750,8 @@
     "selectItem": "تحديد الإشعار",
     "selectedCount": "{count} محدد",
     "clearSelection": "إلغاء التحديد",
-    "filterAll": "الكل",
-    "filterUnread": "غير المقروءة",
     "emptyTitle": "لا توجد إشعارات بعد",
     "emptyDescription": "عند حدوث أي شيء في مشاريعك، سيظهر هنا.",
-    "emptyUnreadTitle": "لا إشعارات غير مقروءة",
-    "emptyUnreadDescription": "لقد اطّلعت على كل شيء. عمل رائع."
+    "viewAll": "عرض الكل"
   }
 }

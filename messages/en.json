@@ -750,11 +750,8 @@
     "selectItem": "Select notification",
     "selectedCount": "{count} selected",
     "clearSelection": "Clear",
-    "filterAll": "All",
-    "filterUnread": "Unread",
     "emptyTitle": "No notifications yet",
     "emptyDescription": "When something happens across your projects, you'll see it here.",
-    "emptyUnreadTitle": "No unread notifications",
-    "emptyUnreadDescription": "You've read everything. Nice work."
+    "viewAll": "View all"
   }
 }

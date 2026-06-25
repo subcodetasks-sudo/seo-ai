@@ -28,5 +28,3 @@ export interface UnreadCountResponse {
 
 // `null` marks every notification as read (server-side bulk action)
 export type MarkReadPayload = string[] | null;
-
-export type NotificationsFilter = "all" | "unread";

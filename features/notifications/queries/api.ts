@@ -19,3 +19,10 @@ export async function markNotificationsRead(notificationIds: MarkReadPayload): P
     body: JSON.stringify({ notification_ids: notificationIds }),
   });
 }
+
+export async function updateFcmToken(payload: { fcm_token: string }): Promise<void> {
+  await apiClient("notifications/fcm-token", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
