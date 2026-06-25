@@ -81,7 +81,7 @@ export function AiSuggestionsTable({
   }
 
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white overflow-hidden">
+    <div className="overflow-x-auto rounded-xl border border-neutral-200 bg-white">
       {/* Mobile: card layout */}
       <div className="flex flex-col divide-y divide-neutral-200 md:hidden">
         {items.map((item) => (
@@ -92,40 +92,40 @@ export function AiSuggestionsTable({
                 onCheckedChange={() => onToggleSelect(item.id)}
                 className="mt-0.5 shrink-0"
               />
-              <span className="text-label-sm text-neutral-600 break-all">{item.url}</span>
-            </div>
-            <div className="grid grid-cols-2 gap-3 ps-7">
-              <div className="flex flex-col gap-1">
-                <span className="text-label-xs text-neutral-400">{t("table.priority")}</span>
-                <span
-                  className={cn(
-                    "inline-flex w-fit rounded-full px-2.5 py-0.5 text-label-xs font-medium",
-                    levelStyles[item.priority],
-                  )}
-                >
-                  {t(`priority.${item.priority}`)}
-                </span>
+              <div className="flex min-w-0 flex-1 flex-col gap-3">
+                <span className="text-label-sm wrap-break-word text-neutral-600">{item.url}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex flex-col gap-1">
+                    <span className="text-label-xs text-neutral-400">{t("table.priority")}</span>
+                    <span
+                      className={cn(
+                        "inline-flex w-fit rounded-full px-2.5 py-0.5 text-label-xs font-medium",
+                        levelStyles[item.priority],
+                      )}
+                    >
+                      {t(`priority.${item.priority}`)}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-label-xs text-neutral-400">{t("table.type")}</span>
+                    <span className="text-label-sm font-medium text-secondary-500">
+                      {typeLabels[item.type] ?? item.type}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-label-xs text-neutral-400">{t("table.impact")}</span>
+                    <span
+                      className={cn(
+                        "inline-flex w-fit rounded-full px-2.5 py-0.5 text-label-xs font-medium",
+                        levelStyles[item.impact],
+                      )}
+                    >
+                      {t(`impact.${item.impact}`)}
+                    </span>
+                  </div>
+                </div>
+                <ActionButtons item={item} />
               </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-label-xs text-neutral-400">{t("table.type")}</span>
-                <span className="text-label-sm font-medium text-secondary-500">
-                  {typeLabels[item.type] ?? item.type}
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <span className="text-label-xs text-neutral-400">{t("table.impact")}</span>
-                <span
-                  className={cn(
-                    "inline-flex w-fit rounded-full px-2.5 py-0.5 text-label-xs font-medium",
-                    levelStyles[item.impact],
-                  )}
-                >
-                  {t(`impact.${item.impact}`)}
-                </span>
-              </div>
-            </div>
-            <div className="ps-7">
-              <ActionButtons item={item} />
             </div>
           </div>
         ))}
@@ -136,11 +136,13 @@ export function AiSuggestionsTable({
         <Table>
           <TableHeader>
             <TableRow className="border-neutral-200 bg-neutral-50">
-              <TableHead className="py-3 px-4 w-10">
-                <Checkbox
-                  checked={allSelected ? true : someSelected ? "indeterminate" : false}
-                  onCheckedChange={onToggleSelectAll}
-                />
+              <TableHead className="w-12 px-3! py-3">
+                <div className="flex items-center justify-center">
+                  <Checkbox
+                    checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                    onCheckedChange={onToggleSelectAll}
+                  />
+                </div>
               </TableHead>
               <TableHead className="text-label-sm text-start font-medium text-neutral-500 py-3 px-4">
                 {t("table.url")}
@@ -168,13 +170,15 @@ export function AiSuggestionsTable({
                   selectedIds.has(item.id) && "bg-primary-50/40",
                 )}
               >
-                <TableCell className="py-3 px-4">
-                  <Checkbox
-                    checked={selectedIds.has(item.id)}
-                    onCheckedChange={() => onToggleSelect(item.id)}
-                  />
+                <TableCell className="w-12 px-3! py-3">
+                  <div className="flex items-center justify-center">
+                    <Checkbox
+                      checked={selectedIds.has(item.id)}
+                      onCheckedChange={() => onToggleSelect(item.id)}
+                    />
+                  </div>
                 </TableCell>
-                <TableCell className="py-3 px-4 text-label-sm text-neutral-600 text-start max-w-xs truncate">
+                <TableCell className="max-w-xs truncate py-3 px-4 text-start text-label-sm text-neutral-600">
                   {item.url}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-center">
@@ -187,6 +191,9 @@ export function AiSuggestionsTable({
                     {t(`priority.${item.priority}`)}
                   </span>
                 </TableCell>
+                <TableCell className="py-3 px-4 text-center text-label-sm font-medium text-secondary-500">
+                  {typeLabels[item.type] ?? item.type}
+                </TableCell>
                 <TableCell className="py-3 px-4 text-center">
                   <span
                     className={cn(
@@ -196,9 +203,6 @@ export function AiSuggestionsTable({
                   >
                     {t(`impact.${item.impact}`)}
                   </span>
-                </TableCell>
-                <TableCell className="py-3 px-4 text-label-sm text-secondary-500 font-medium text-center">
-                  {typeLabels[item.type] ?? item.type}
                 </TableCell>
 
                 <TableCell className="py-3 px-4">

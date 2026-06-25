@@ -9,6 +9,12 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Link } from "@/i18n/navigation";
 import {
   Table,
@@ -77,43 +83,55 @@ export function BrokenPagesTable({ items, projectDomain }: BrokenPagesTableProps
   }
 
   const ActionButtons = ({ item }: { item: BrokenPage }) => (
-    <div className="flex items-center gap-2">
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        onClick={() => handleCopyUrl(item.url, item.id)}
-        className={`gap-1.5 px-3 h-8 border-neutral-200 text-label-xs ${
-          copiedId === item.id
-            ? "bg-success-50 text-success-600 border-success-200"
-            : "bg-white text-secondary-500 hover:bg-neutral-50"
-        }`}
-        title={t("copyUrl")}
-      >
-        <Copy className="size-3.5" aria-hidden="true" />
-      </Button>
-      <Button
-        type="button"
-        size="sm"
-        variant="outline"
-        onClick={() => handleOpenUrl(item.referrer_url, item.url)}
-        className="gap-1.5 px-3 h-8 border-neutral-200 bg-white text-secondary-500 hover:bg-neutral-50"
-        title={t("openUrl")}
-      >
-        <ExternalLink className="size-3.5" aria-hidden="true" />
-      </Button>
-      <Button
-        type="button"
-        size="sm"
-        asChild
-        className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm"
-      >
-        <Link href="/dashboard/404-problems/ai-fix">
-          <Sparkles className="size-3.5" aria-hidden="true" />
-          {t("fixWithAi")}
-        </Link>
-      </Button>
-    </div>
+    <TooltipProvider>
+      <div className="flex items-center gap-2">
+        <Tooltip delayDuration={300}>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              size="icon"
+              variant="outline"
+              onClick={() => handleCopyUrl(item.url, item.id)}
+              aria-label={t("copyUrl")}
+              className={`size-8 border-neutral-200 ${
+                copiedId === item.id
+                  ? "bg-success-50 text-success-600 border-success-200"
+                  : "bg-white text-secondary-500 hover:bg-neutral-50"
+              }`}
+            >
+              <Copy className="size-3.5" aria-hidden="true" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{t("copyUrl")}</TooltipContent>
+        </Tooltip>
+        <Tooltip delayDuration={300}>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              size="icon"
+              variant="outline"
+              onClick={() => handleOpenUrl(item.referrer_url, item.url)}
+              aria-label={t("openUrl")}
+              className="size-8 border-neutral-200 bg-white text-secondary-500 hover:bg-neutral-50"
+            >
+              <ExternalLink className="size-3.5" aria-hidden="true" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{t("openUrl")}</TooltipContent>
+        </Tooltip>
+        <Button
+          type="button"
+          size="sm"
+          asChild
+          className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm"
+        >
+          <Link href="/dashboard/404-problems/ai-fix">
+            <Sparkles className="size-3.5" aria-hidden="true" />
+            {t("fixWithAi")}
+          </Link>
+        </Button>
+      </div>
+    </TooltipProvider>
   );
 
   return (

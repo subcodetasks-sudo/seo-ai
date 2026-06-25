@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/chart";
 import type { ChartPoint } from "../types";
 
+const WEEKLY_CHANGES_COLOR = "#22C55E";
+
 const chartConfig = {
   value: {
     label: "Changes",
-    color: "hsl(var(--success-400))",
+    color: WEEKLY_CHANGES_COLOR,
   },
 };
 
@@ -38,11 +40,11 @@ export function WeeklyChangesChart({ data }: WeeklyChangesChartProps) {
             axisLine={false}
             tickMargin={8}
           />
-          <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={[0, 8]} />
+          <YAxis tickLine={false} axisLine={false} tickMargin={8} domain={[0, 8]} width={48} />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Bar
             dataKey="value"
-            fill="var(--color-value)"
+            fill={WEEKLY_CHANGES_COLOR}
             radius={[4, 4, 0, 0]}
           />
         </BarChart>

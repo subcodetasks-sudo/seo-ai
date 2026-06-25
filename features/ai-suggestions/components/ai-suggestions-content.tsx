@@ -222,9 +222,10 @@ export function AiSuggestionsContent() {
             <Button
               type="button"
               size="sm"
+              variant="outline"
               disabled={selectionCount === 0}
               onClick={handleBulkReject}
-              className="gap-1 bg-error-500 text-white hover:bg-error-600 disabled:opacity-40 text-label-sm font-medium"
+              className="gap-1 border-error-200 bg-error-50 text-error-700 hover:bg-error-100 disabled:opacity-40 text-label-sm font-medium"
             >
               {t("reject")}({selectionCount})
             </Button>
@@ -263,16 +264,18 @@ export function AiSuggestionsContent() {
         )}
 
         {total > 0 && (
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-label-sm text-neutral-500">
               {t("pagination.showing", { shown: items.length, total })}
             </p>
             {totalPages > 1 && (
-              <Pagination className="mx-0 w-auto justify-end">
+              <Pagination className="mx-0 w-full justify-center sm:w-auto sm:justify-end">
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
                       href="#"
+                      text={t("pagination.previous")}
+                      aria-label={t("pagination.previousPage")}
                       onClick={(e) => {
                         e.preventDefault();
                         if (page > 1) setPage(page - 1);
@@ -297,6 +300,8 @@ export function AiSuggestionsContent() {
                   <PaginationItem>
                     <PaginationNext
                       href="#"
+                      text={t("pagination.next")}
+                      aria-label={t("pagination.nextPage")}
                       onClick={(e) => {
                         e.preventDefault();
                         if (page < totalPages) setPage(page + 1);

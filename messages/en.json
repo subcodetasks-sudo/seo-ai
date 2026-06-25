@@ -23,6 +23,7 @@
     "aiSuggestions": "AI suggestions",
     "notFoundProblems": "404 problems",
     "reports": "Reports",
+    "googleAnalytics": "Google Analytics",
     "changelog": "Changelog",
     "userName": "Mohamed Ahmed",
     "userPlan": "Paid plan",
@@ -87,7 +88,10 @@
       "fieldValid": "Looks good",
       "validation": {
         "emailInvalid": "Please enter a valid email address",
-        "passwordMin": "Password must be at least 8 characters"
+        "passwordMin": "Password must be at least 8 characters",
+        "passwordLetterRequired": "Password must contain at least one letter",
+        "passwordDigitRequired": "Password must contain at least one number",
+        "passwordSymbolRequired": "Password must contain at least one symbol (e.g. @, #, $)"
       },
       "loginFailed": "Login failed."
     },
@@ -113,9 +117,11 @@
         "fullNameMin": "Full name must be at least 2 characters",
         "emailInvalid": "Please enter a valid email address",
         "passwordMin": "Password must be at least 8 characters",
+        "passwordLetterRequired": "Password must contain at least one letter",
+        "passwordDigitRequired": "Password must contain at least one number",
+        "passwordSymbolRequired": "Password must contain at least one symbol (e.g. @, #, $)",
         "confirmPasswordRequired": "Please confirm your password",
-        "passwordsMismatch": "Passwords do not match",
-        "passwordDigitRequired": "Password must contain at least one number"
+        "passwordsMismatch": "Passwords do not match"
       },
       "registrationFailed": "Registration failed."
     },
@@ -315,7 +321,11 @@
       "internal_link": "Internal Link"
     },
     "pagination": {
-      "showing": "Showing {shown} of {total} results"
+      "showing": "Showing {shown} of {total} results",
+      "previous": "Previous",
+      "next": "Next",
+      "previousPage": "Go to previous page",
+      "nextPage": "Go to next page"
     },
     "reviewPage": {
       "title": "Review Suggestion",
@@ -407,6 +417,168 @@
         "completed": "Completed",
         "running": "Running",
         "failed": "Failed"
+      }
+    }
+  },
+  "googleAnalytics": {
+    "noProject": "Select a project to connect Google Analytics",
+    "loading": "Loading...",
+    "title": "Connect Google Analytics",
+    "description": "Link your Google Analytics account to view traffic and visitor insights for {domain} directly in RankAI.",
+    "connectButton": "Connect with Google",
+    "secureNote": "You will be securely redirected to Google to authorize access.",
+    "logoAlt": "Google Analytics",
+    "tabs": {
+      "label": "Google Analytics sections",
+      "overview": "Overview",
+      "ecommerce": "E-commerce",
+      "conversions": "Conversions",
+      "events": "Events",
+      "audience": "Audience",
+      "pages": "Pages",
+      "traffic-sources": "Traffic sources"
+    },
+    "toolbar": {
+      "connected": "Connected",
+      "lastMonitored": "Last monitored: 5 minutes ago",
+      "period": "Last {days} days",
+      "refresh": "Refresh",
+      "disconnect": "Disconnect"
+    },
+    "charts": {
+      "trafficDistribution": "Traffic distribution",
+      "distribution": {
+        "organic": "Organic search",
+        "direct": "Direct",
+        "social": "Social",
+        "paid": "Paid search",
+        "referral": "Referral"
+      }
+    },
+    "audience": {
+      "countries": "Countries",
+      "country": {
+        "sa": "Saudi Arabia",
+        "ae": "United Arab Emirates",
+        "eg": "Egypt",
+        "kw": "Kuwait",
+        "bh": "Bahrain"
+      }
+    },
+    "trafficSources": {
+      "title": "Traffic sources",
+      "visitorsSuccess": "Visitors / Success",
+      "items": {
+        "organic": "Organic search",
+        "direct": "Direct",
+        "social": "Social",
+        "paid": "Paid search",
+        "referral": "Referral"
+      }
+    },
+    "ecommerceDashboard": {
+      "revenue": "Revenue",
+      "purchases": "Purchases",
+      "avgOrderValue": "Avg. order value",
+      "abandonedCarts": "Abandoned carts",
+      "currency": "SAR",
+      "revenuePath": "Revenue path",
+      "revenuePathSubtitle": "Last 15 days",
+      "topProducts": "Top selling products",
+      "table": {
+        "product": "Product",
+        "revenue": "Revenue",
+        "units": "Units",
+        "share": "Share"
+      },
+      "products": {
+        "enterprise": "Annual Enterprise package",
+        "pro": "Monthly Pro package",
+        "starter": "Annual Starter package",
+        "addons": "Custom add-ons"
+      }
+    },
+    "pagesDashboard": {
+      "title": "Top pages",
+      "sortByViews": "By views",
+      "sortByBounceRate": "By bounce rate",
+      "searchPlaceholder": "Search pages...",
+      "copyPath": "Copy page path",
+      "pagination": "Showing {start}-{end} of {total} pages",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "pageNumber": "Page {page}",
+      "table": {
+        "page": "Page",
+        "views": "Views",
+        "avgTime": "Avg. time",
+        "bounceRate": "Bounce rate"
+      },
+      "items": {
+        "home": "Home",
+        "aiSolutions": "AI solutions for business",
+        "pricing": "Pricing",
+        "seoGuide": "Complete SEO guide",
+        "about": "About us",
+        "contact": "Contact",
+        "features": "Features",
+        "caseStudies": "Case studies"
+      }
+    },
+    "metrics": {
+      "footer": "Total this period",
+      "overview": {
+        "totalUsers": "Total users",
+        "newUsers": "New users",
+        "activeUsers": "Active users",
+        "sessions": "Sessions",
+        "engagedSessions": "Engaged sessions",
+        "avgSessionDuration": "Avg. session duration",
+        "engagementRate": "Engagement rate",
+        "bounceRate": "Bounce rate"
+      },
+      "ecommerce": {
+        "revenue": "Revenue",
+        "transactions": "Transactions",
+        "avgOrderValue": "Avg. order value",
+        "itemsPurchased": "Items purchased",
+        "cartAbandonment": "Cart abandonment",
+        "purchaseConversion": "Purchase conversion"
+      },
+      "conversions": {
+        "orders": "Orders",
+        "conversionRate": "Conversion rate",
+        "conversionValue": "Conversion value",
+        "totalConversions": "Total conversions",
+        "registrations": "Registrations"
+      },
+      "events": {
+        "videoPlayback": "Video playback",
+        "totalUsers": "Total users",
+        "buttonClicks": "Button clicks",
+        "fileDownloads": "File downloads",
+        "customEvents": "Custom events",
+        "formSubmissions": "Form submissions"
+      },
+      "audience": {
+        "returningUsers": "Returning users",
+        "newVisitors": "New visitors",
+        "sessionsPerUser": "Sessions per user",
+        "avgEngagementTime": "Avg. engagement time"
+      },
+      "pages": {
+        "pageViews": "Page views",
+        "uniquePageViews": "Unique page views",
+        "avgTimeOnPage": "Avg. time on page",
+        "exitRate": "Exit rate"
+      },
+      "trafficSources": {
+        "organicSearch": "Organic search",
+        "direct": "Direct",
+        "referral": "Referral",
+        "social": "Social",
+        "paid": "Paid",
+        "email": "Email"
       }
     }
   },

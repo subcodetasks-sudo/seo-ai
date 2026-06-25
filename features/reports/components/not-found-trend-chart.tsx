@@ -10,10 +10,12 @@ import {
 } from "@/components/ui/chart";
 import type { ChartPoint } from "../types";
 
+const NOT_FOUND_COLOR = "#EF4444";
+
 const chartConfig = {
   value: {
     label: "404 Errors",
-    color: "hsl(var(--error-400))",
+    color: NOT_FOUND_COLOR,
   },
 };
 
@@ -43,15 +45,16 @@ export function NotFoundTrendChart({ data }: NotFoundTrendChartProps) {
             axisLine={false}
             tickMargin={8}
             domain={[0, 8]}
+            width={48}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Line
-            type="monotone"
+            type="linear"
             dataKey="value"
-            stroke="var(--color-value)"
+            stroke={NOT_FOUND_COLOR}
             strokeWidth={2}
-            dot={{ fill: "var(--color-value)", r: 4 }}
-            activeDot={{ r: 6 }}
+            dot={{ fill: NOT_FOUND_COLOR, r: 4 }}
+            activeDot={{ r: 6, fill: NOT_FOUND_COLOR }}
           />
         </LineChart>
       </ChartContainer>

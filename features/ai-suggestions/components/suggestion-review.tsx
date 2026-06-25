@@ -103,8 +103,7 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
 
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
-
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
         {/* Page header */}
         <div className="flex flex-col gap-3 text-start">
           <div>
@@ -112,14 +111,25 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
             <p className="text-label-md text-neutral-500">{suggestion.url}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className={cn("rounded-full px-3 py-1 text-label-xs font-medium", STATUS_STYLES[suggestion.status])}>
-              {t(`status.${suggestion.status}`)}
+            <span className="rounded-full bg-warning-50 px-3 py-1 text-label-xs font-medium text-warning-700">
+              {typeLabels[suggestion.type] ?? suggestion.type}
             </span>
-            <span className={cn("rounded-full px-3 py-1 text-label-xs font-medium", IMPACT_STYLES[suggestion.priority])}>
+            <span
+              className={cn(
+                "rounded-full px-3 py-1 text-label-xs font-medium",
+                IMPACT_STYLES[suggestion.priority],
+              )}
+            >
               {t(`reviewPage.impactLevel.${suggestion.priority}`)}
             </span>
-            <span className="rounded-full bg-secondary-500 px-3 py-1 text-label-xs font-medium text-white">
-              {typeLabels[suggestion.type] ?? suggestion.type}
+            <span
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-label-xs font-medium",
+                STATUS_STYLES[suggestion.status],
+              )}
+            >
+              <span className="size-1.5 shrink-0 rounded-full bg-current opacity-80" aria-hidden="true" />
+              {t(`status.${suggestion.status}`)}
             </span>
           </div>
         </div>
@@ -127,32 +137,50 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
         {/* Type-specific content */}
         <SuggestionDisplay suggestion={suggestion} />
 
-        {/* Keywords — non-redirect types only */}
-        {suggestion.type !== "redirect" && suggestion.keywords.length > 0 && (
-          <div className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-4">
-            <div className="flex items-center gap-2">
-              <Info className="size-4 shrink-0 text-neutral-400" aria-hidden="true" />
-              <span className="text-label-sm font-medium text-neutral-600">{t("reviewPage.keywords")}</span>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {suggestion.keywords.map((kw) => (
-                <span
-                  key={kw}
-                  className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-label-xs text-secondary-500"
-                >
-                  {kw}
-                </span>
-              ))}
-            </div>
+        {/* Info grid */}
+        {((suggestion.type !== "redirect" && suggestion.keywords.length > 0) || suggestion.explanation) && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {suggestion.type !== "redirect" && suggestion.keywords.length > 0 ? (
+              <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
+                <div className="flex items-center gap-1.5">
+                  <span className="size-2 shrink-0 rounded-full bg-primary-400" aria-hidden="true" />
+                  <span className="text-label-sm font-medium text-secondary-500">
+                    {t("reviewPage.keywords")}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {suggestion.keywords.map((kw) => (
+                    <span
+                      key={kw}
+                      className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-label-xs text-secondary-500"
+                    >
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+
+            {suggestion.explanation ? (
+              <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
+                <div className="flex items-center gap-2">
+                  <Info className="size-4 shrink-0 text-neutral-400" aria-hidden="true" />
+                  <span className="text-label-sm font-medium text-secondary-500">
+                    {t("reviewPage.whyGenerated")}
+                  </span>
+                </div>
+                <p className="text-label-sm leading-relaxed text-neutral-500">{suggestion.explanation}</p>
+              </div>
+            ) : null}
           </div>
         )}
 
         {/* Action bar */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="button"
             onClick={() => router.back()}
-            className="flex items-center gap-1.5 text-label-sm text-neutral-500 hover:text-secondary-500 transition-colors"
+            className="flex items-center gap-1.5 text-label-sm text-neutral-500 transition-colors hover:text-secondary-500"
           >
             {isRtl ? (
               <>
@@ -167,7 +195,15 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
             )}
           </button>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap flex-row-reverse items-center gap-2 sm:justify-end">
+            <Button
+              type="button"
+              onClick={handleApprove}
+              disabled={approveMutation.isPending || rejectMutation.isPending}
+              className="bg-primary-300 font-medium text-secondary-500 hover:bg-primary-400 disabled:opacity-50"
+            >
+              {t("approve")}
+            </Button>
             <Button
               type="button"
               variant="outline"
@@ -179,23 +215,15 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
             </Button>
             <Button
               type="button"
+              variant="outline"
               onClick={handleReject}
               disabled={rejectMutation.isPending || approveMutation.isPending}
-              className="border border-error-200 bg-error-50 text-error-600 hover:bg-error-100 disabled:opacity-50"
+              className="border-error-200 bg-error-50 text-error-700 hover:bg-error-100 disabled:opacity-50"
             >
               {t("reject")}
             </Button>
-            <Button
-              type="button"
-              onClick={handleApprove}
-              disabled={approveMutation.isPending || rejectMutation.isPending}
-              className="bg-primary-300 text-secondary-500 hover:bg-primary-400 font-medium disabled:opacity-50"
-            >
-              {t("approve")}
-            </Button>
           </div>
         </div>
-
       </div>
 
       {selectedProjectId && (

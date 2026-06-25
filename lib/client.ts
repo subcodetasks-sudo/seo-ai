@@ -49,17 +49,17 @@ export async function apiClient<T>(
       // Refresh failed — redirect to login (locale-aware). Guard against
       // redirecting when we're already on the login page, which would reload
       // the page and re-fire the failing request in an endless loop.
-      const { pathname } = window.location;
-      const locale = pathname.split("/")[1];
-      const prefix =
-        ["ar", "en"].includes(locale) && locale ? `/${locale}` : "/ar";
-      const loginPath = `${prefix}/login`;
+      // const { pathname } = window.location;
+      // const locale = pathname.split("/")[1];
+      // const prefix =
+      //   ["ar", "en"].includes(locale) && locale ? `/${locale}` : "/ar";
+      // const loginPath = `${prefix}/login`;
 
-      if (pathname !== loginPath) {
-        window.location.href = loginPath;
-      }
+      // if (pathname !== loginPath) {
+      //   window.location.href = loginPath;
+      // }
 
-      throw new Error("Session expired. Please log in again.");
+      // throw new Error("Session expired. Please log in again.");
     }
   }
 

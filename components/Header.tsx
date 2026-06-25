@@ -3,7 +3,7 @@
 import { Bell, Settings } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
-import { Fragment, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
 import LogoIcon from "@/components/LogoIcon";
@@ -52,6 +52,7 @@ const DASHBOARD_PAGE_LABEL_KEYS: Record<string, string> = {
   "ai-suggestions": "aiSuggestions",
   "404-problems": "notFoundProblems",
   reports: "reports",
+  "google-analytics": "googleAnalytics",
   changelog: "changelog",
   settings: "settings",
 };
@@ -66,7 +67,7 @@ function HeaderIconButton({ label, children, href, isActive }: HeaderIconButtonP
   );
 
   return (
-    <Tooltip>
+    <Tooltip delayDuration={300}>
       <TooltipTrigger asChild>
         {href ? (
           <Button
@@ -197,8 +198,19 @@ export function Header({ className }: HeaderProps) {
   const tSidebar = useTranslations("sidebar");
   const pathname = usePathname();
   const { side, isOpen, sidebar } = useSidebarMotion();
+  const [isScrolled, setIsScrolled] = useState(false);
   const isSettingsActive = pathname.startsWith("/dashboard/settings");
   const showHeaderLogo = !isOpen;
+
+  useEffect(() => {
+    function updateScrollState() {
+      setIsScrolled(window.scrollY > 0);
+    }
+
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+    return () => window.removeEventListener("scroll", updateScrollState);
+  }, []);
 
   const openSidebar = () => {
     if (!sidebar) return;
@@ -213,7 +225,8 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "flex items-center justify-between gap-4 border-b border-neutral-200 bg-white px-6 py-4 lg:px-10 h-18.75",
+        "sticky top-0 z-50 flex h-18.75 w-full shrink-0 items-center justify-between gap-2 border-b border-neutral-200 bg-white px-4 py-3 transition-shadow duration-200 sm:gap-4 sm:px-6 sm:py-4 lg:px-10",
+        isScrolled && "shadow-sm",
         className,
       )}
     >
@@ -256,7 +269,7 @@ export function Header({ className }: HeaderProps) {
       </div>
 
       <TooltipProvider>
-        <div className="flex shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <LanguageSelector />
           <HeaderIconButton
             label={t("settings")}
