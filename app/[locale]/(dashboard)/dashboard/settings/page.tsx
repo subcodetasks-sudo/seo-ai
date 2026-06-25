@@ -1,14 +1,14 @@
 import { setRequestLocale } from "next-intl/server";
 
-import { ReportsContent } from "@/features/reports";
+import { SettingsContent } from "@/features/settings";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
 };
 
-export default async function ReportsPage({ params }: PageProps) {
+export default async function SettingsPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <ReportsContent />;
+  return <SettingsContent />;
 }

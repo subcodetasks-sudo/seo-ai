@@ -1,0 +1,129 @@
+"use client";
+
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDirection } from "@/components/ui/direction";
+import { changelogQueryOptions } from "@/features/changelog";
+import { allProjectsQueryOptions, useSelectedProject } from "@/features/home";
+import { overviewKeys } from "../queries/query-keys";
+import {
+  overviewBrokenPagesCountQueryOptions,
+  overviewDashboardQueryOptions,
+} from "../queries/queries";
+import { HealthSummaryCard } from "./health-summary-card";
+import { HealthScoreTrendChart } from "./health-score-trend-chart";
+import { OverviewHeader } from "./overview-header";
+import { OverviewStatCards } from "./overview-stat-cards";
+import { RecentChangesList } from "./recent-changes-list";
+import { SeoIssuesTrendChart } from "./seo-issues-trend-chart";
+
+function OverviewSkeleton() {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="space-y-2">
+        <Skeleton className="h-8 w-48" />
+        <Skeleton className="h-4 w-64" />
+      </div>
+      <Skeleton className="h-48 w-full rounded-xl" />
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Skeleton className="h-32 rounded-xl" />
+        <Skeleton className="h-32 rounded-xl" />
+        <Skeleton className="h-32 rounded-xl" />
+      </div>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <Skeleton className="h-64 rounded-xl" />
+        <Skeleton className="h-64 rounded-xl" />
+      </div>
+      <Skeleton className="h-72 rounded-xl" />
+    </div>
+  );
+}
+
+export function OverviewContent() {
+  const t = useTranslations("overview");
+  const dir = useDirection();
+  const queryClient = useQueryClient();
+  const { selectedProjectId } = useSelectedProject();
+
+  const { data: projectsResponse } = useQuery(allProjectsQueryOptions());
+  const projects = projectsResponse?.data?.items ?? [];
+  const selectedProject = projects.find((project) => project.id === selectedProjectId);
+
+  const {
+    data: dashboard,
+    isLoading: isDashboardLoading,
+    isError: isDashboardError,
+  } = useQuery(overviewDashboardQueryOptions(selectedProjectId ?? ""));
+
+  const { data: brokenPagesCount = 0, isLoading: isBrokenPagesLoading } = useQuery(
+    overviewBrokenPagesCountQueryOptions(selectedProjectId ?? ""),
+  );
+
+  const { data: changelogEntries = [] } = useQuery({
+    ...changelogQueryOptions(selectedProjectId ?? "", 7),
+    enabled: !!selectedProjectId,
+  });
+
+  const recentChanges = changelogEntries.slice(0, 5);
+  const isLoading = isDashboardLoading || isBrokenPagesLoading;
+
+  function handleRescanSuccess() {
+    if (!selectedProjectId) return;
+    void queryClient.invalidateQueries({
+      queryKey: overviewKeys.dashboard(selectedProjectId),
+    });
+    void queryClient.invalidateQueries({
+      queryKey: overviewKeys.brokenPagesCount(selectedProjectId),
+    });
+  }
+
+  if (!selectedProjectId) {
+    return (
+      <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
+        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+        {isLoading ? (
+          <OverviewSkeleton />
+        ) : isDashboardError || !dashboard ? (
+          <div className="flex flex-col gap-6">
+            <OverviewHeader />
+            <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+          </div>
+        ) : (
+          <>
+            <OverviewHeader lastCrawlAt={dashboard.last_crawl_at} />
+
+            <HealthSummaryCard
+              projectId={selectedProjectId}
+              domain={selectedProject?.domain ?? selectedProject?.name ?? "—"}
+              dashboard={dashboard}
+              onRescanSuccess={handleRescanSuccess}
+            />
+
+            <OverviewStatCards
+              dashboard={dashboard}
+              brokenPagesCount={brokenPagesCount}
+            />
+
+            <div className="grid gap-4 lg:grid-cols-2">
+              <HealthScoreTrendChart />
+              <SeoIssuesTrendChart />
+            </div>
+
+            {recentChanges.length > 0 ? (
+              <RecentChangesList items={recentChanges} />
+            ) : null}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}

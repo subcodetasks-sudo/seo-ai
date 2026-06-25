@@ -27,7 +27,8 @@
     "userName": "محمد أحمد",
     "userPlan": "الخطة المدفوعة",
     "userInitials": "م أ",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "settings": "الإعدادات"
   },
   "plans": {
     "metadata": {
@@ -379,6 +380,36 @@
       }
     }
   },
+  "reports": {
+    "title": "التقارير",
+    "subtitle": "نظرة عامة على أداء السيو لـ {domain}",
+    "noProject": "اختر مشروعاً لعرض التقارير",
+    "empty": "لا يوجد سجل فحص في هذه الفترة",
+    "loading": "جاري التحميل...",
+    "createReport": "انشاء تقرير",
+    "period": "{days} يوماً",
+    "charts": {
+      "healthTrend": "اتجاه نقاط الصحة",
+      "issuesTrend": "اتجاه مشكلات السيو",
+      "notFoundTrend": "اتجاه أخطاء 404",
+      "weeklyChanges": "التغييرات المطبقة أسبوعياً"
+    },
+    "scanLog": {
+      "title": "سجل الفحص",
+      "table": {
+        "date": "التاريخ",
+        "pages": "الصفحات",
+        "issues": "المشكلات المكتشفة",
+        "duration": "المدة",
+        "status": "الحالة"
+      },
+      "status": {
+        "completed": "مكتمل",
+        "running": "قيد التشغيل",
+        "failed": "فشل"
+      }
+    }
+  },
   "changelog": {
     "title": "سجل التغييرات",
     "subtitle": "سجل تدقيق كامل لجميع تغييرات السيو المطابقة",
@@ -606,6 +637,106 @@
       "status": "الحالة",
       "verified": "موثّق",
       "unverified": "غير موثّق"
+    }
+  },
+  "overview": {
+    "title": "نظرة عامة",
+    "lastUpdate": "آخر تحديث: {date}",
+    "noProject": "اختر مشروعاً لعرض النظرة العامة",
+    "healthIndicator": "مؤشر الصحة",
+    "healthStatus": {
+      "excellent": "ممتاز",
+      "good": "جيد",
+      "fair": "مقبول",
+      "poor": "ضعيف"
+    },
+    "pages": "{count} صفحة",
+    "lastScan": "آخر فحص: {time}",
+    "rescan": "اعادة فحص",
+    "nextCrawl": "الفحص التالي خلال {hours} ساعة",
+    "nextCrawlUnknown": "الفحص التالي مجدول تلقائياً",
+    "stats": {
+      "suggestions": "اقتراحات",
+      "seoErrors": "أخطاء SEO",
+      "notFoundErrors": "أخطاء 404"
+    },
+    "charts": {
+      "healthTrend": "اتجاه مؤشر الصحة",
+      "issuesTrend": "اتجاه مشاكل SEO"
+    },
+    "recentChanges": "آخر التغييرات",
+    "viewAll": "عرض الكل",
+    "crawlCompleted": "اكتمل الفحص بنجاح"
+  },
+  "settings": {
+    "metadata": {
+      "title": "Rank AI — الإعدادات",
+      "description": "إدارة حسابك وتفضيلاتك."
+    },
+    "title": "الإعدادات",
+    "subtitle": "إدارة حسابك وتفضيلاتك",
+    "tabs": {
+      "profile": "الملف الشخصي",
+      "notifications": "الإشعارات",
+      "integrations": "التكاملات",
+      "billing": "الفواتير"
+    },
+    "profile": {
+      "personalInfo": "المعلومات الشخصية",
+      "email": "الايميل",
+      "fullName": "الاسم الكامل",
+      "saveChanges": "حفظ التغييرات"
+    },
+    "password": {
+      "title": "تغيير كلمة المرور",
+      "currentPassword": "كلمة المرور الحالية",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmPassword": "تأكيد كلمة المرور",
+      "saveChanges": "حفظ التغييرات",
+      "saved": "تم تحديث كلمة المرور بنجاح."
+    },
+    "notifications": {
+      "title": "تفضيلات الإشعارات",
+      "emailAlerts": "تنبيهات البريد الإلكتروني",
+      "emailAlertsDesc": "تلقي تنبيهات مهمة عبر البريد الإلكتروني",
+      "alerts404": "تنبيهات 404",
+      "alerts404Desc": "احصل على إشعارات عند العثور على روابط معطلة جديدة",
+      "aiSuggestions": "اقتراحات جديدة للذكاء الاصطناعي",
+      "aiSuggestionsDesc": "سيتم تنبيهك عند جاهزية الاقتراحات الجديدة للمراجعة",
+      "crawlCompleted": "اكتمل الزحف",
+      "crawlCompletedDesc": "إرسال إشعار عند انتهاء عملية الزحف المجدولة",
+      "weeklyReport": "تقرير أسبوعي عبر البريد الإلكتروني",
+      "weeklyReportDesc": "احصل على ملخص أسبوعي لتحسين محركات البحث كل يوم اثنين"
+    },
+    "integrations": {
+      "wordpress": "WordPress",
+      "wordpressDesc": "تطبيق تغييرات SEO مباشرة عبر الإضافة",
+      "connected": "مربوط",
+      "disconnect": "فصل",
+      "connect": "ربط"
+    },
+    "billing": {
+      "paidPlan": "الخطة المدفوعة",
+      "active": "نشط",
+      "perMonth": "/ شهر",
+      "usedScanPages": "صفحات الفحص المستخدمة",
+      "quotaUsed": "تم استخدام {percent}% من الحصة الشهرية.",
+      "nextInvoice": "الفاتورة القادمة: {date}",
+      "changePlan": "تغيير الخطة",
+      "invoiceHistory": "سجل الفواتير",
+      "pdf": "PDF",
+      "status": {
+        "paid": "مدفوع",
+        "pending": "قيد الانتظار"
+      }
+    },
+    "validation": {
+      "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
+      "fullNameMin": "يجب أن يكون الاسم الكامل حرفين على الأقل",
+      "currentPasswordMin": "يجب أن تكون كلمة المرور الحالية 8 أحرف على الأقل",
+      "newPasswordMin": "يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل",
+      "confirmPasswordMin": "يجب أن يكون تأكيد كلمة المرور 8 أحرف على الأقل",
+      "passwordsMismatch": "كلمات المرور غير متطابقة"
     }
   }
 }
