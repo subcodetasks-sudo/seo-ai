@@ -705,16 +705,16 @@
     },
     "notifications": {
       "title": "Notification preferences",
-      "emailAlerts": "Email alerts",
-      "emailAlertsDesc": "Receive important alerts via email",
-      "alerts404": "404 alerts detected",
-      "alerts404Desc": "Get notified when new broken links are found",
-      "aiSuggestions": "New AI suggestions",
-      "aiSuggestionsDesc": "You will be notified when new suggestions are ready for review",
-      "crawlCompleted": "Crawl completed",
-      "crawlCompletedDesc": "Send a notification when a scheduled crawl finishes",
-      "weeklyReport": "Weekly email report",
-      "weeklyReportDesc": "Get a weekly SEO summary every Monday"
+      "channelEmail": "Email",
+      "channelInApp": "In-app",
+      "crawlDone": "Crawl completed",
+      "crawlDoneDesc": "Get notified when a scheduled crawl finishes",
+      "criticalIssue": "Critical issue",
+      "criticalIssueDesc": "Get notified when a critical SEO issue is detected",
+      "new404": "New 404 detected",
+      "new404Desc": "Get notified when broken links are found on your site",
+      "planLimit": "Plan limit",
+      "planLimitDesc": "Get notified when you are approaching your plan's usage limits"
     },
     "integrations": {
       "wordpress": "WordPress",
@@ -736,7 +736,14 @@
       "status": {
         "paid": "Paid",
         "pending": "Pending"
-      }
+      },
+      "usageLimits": "Usage limits",
+      "billingMonth": "Billing period: {month}",
+      "pagesCrawled": "Pages crawled",
+      "aiPages": "AI pages",
+      "crawlsRun": "Crawls",
+      "unlimited": "Unlimited",
+      "usedOf": "{used} / {limit}"
     },
     "validation": {
       "emailInvalid": "Please enter a valid email address",

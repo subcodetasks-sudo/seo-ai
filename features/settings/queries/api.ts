@@ -54,3 +54,56 @@ export function changePassword(values: { old_password: string; new_password: str
     "Failed to change password",
   );
 }
+
+export type NotificationPrefs = {
+  crawl_done_email: boolean;
+  crawl_done_inapp: boolean;
+  critical_issue_email: boolean;
+  critical_issue_inapp: boolean;
+  new_404_email: boolean;
+  new_404_inapp: boolean;
+  plan_limit_email: boolean;
+  plan_limit_inapp: boolean;
+};
+
+type NotificationPrefsResponse = {
+  status: boolean;
+  message: string;
+  data: NotificationPrefs;
+};
+
+export function getNotificationPrefs() {
+  return apiClient<NotificationPrefsResponse>(
+    "users/me/notification-preferences",
+    { method: "GET" },
+    "Failed to fetch notification preferences",
+  );
+}
+
+export function updateNotificationPrefs(values: Partial<NotificationPrefs>) {
+  return apiClient<NotificationPrefsResponse>(
+    "users/me/notification-preferences",
+    { method: "PATCH", body: JSON.stringify(values) },
+    "Failed to update notification preferences",
+  );
+}
+
+export type UsageData = {
+  pages_crawled: number;
+  pages_crawled_limit: number;
+  ai_pages_used: number;
+  ai_pages_limit: number;
+  crawls_run: number;
+  crawls_limit: number;
+  month: string;
+};
+
+type UsageResponse = {
+  status: boolean;
+  message: string;
+  data: UsageData;
+};
+
+export function getUsage() {
+  return apiClient<UsageResponse>("users/me/usage", { method: "GET" }, "Failed to fetch usage");
+}

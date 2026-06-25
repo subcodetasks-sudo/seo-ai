@@ -705,16 +705,16 @@
     },
     "notifications": {
       "title": "تفضيلات الإشعارات",
-      "emailAlerts": "تنبيهات البريد الإلكتروني",
-      "emailAlertsDesc": "تلقي تنبيهات مهمة عبر البريد الإلكتروني",
-      "alerts404": "تنبيهات 404",
-      "alerts404Desc": "احصل على إشعارات عند العثور على روابط معطلة جديدة",
-      "aiSuggestions": "اقتراحات جديدة للذكاء الاصطناعي",
-      "aiSuggestionsDesc": "سيتم تنبيهك عند جاهزية الاقتراحات الجديدة للمراجعة",
-      "crawlCompleted": "اكتمل الزحف",
-      "crawlCompletedDesc": "إرسال إشعار عند انتهاء عملية الزحف المجدولة",
-      "weeklyReport": "تقرير أسبوعي عبر البريد الإلكتروني",
-      "weeklyReportDesc": "احصل على ملخص أسبوعي لتحسين محركات البحث كل يوم اثنين"
+      "channelEmail": "البريد الإلكتروني",
+      "channelInApp": "داخل التطبيق",
+      "crawlDone": "اكتمال الزحف",
+      "crawlDoneDesc": "الحصول على إشعار عند انتهاء عملية الزحف المجدولة",
+      "criticalIssue": "مشكلة حرجة",
+      "criticalIssueDesc": "الحصول على إشعار عند اكتشاف مشكلة SEO حرجة",
+      "new404": "اكتشاف خطأ 404 جديد",
+      "new404Desc": "الحصول على إشعار عند وجود روابط معطلة في موقعك",
+      "planLimit": "حد الخطة",
+      "planLimitDesc": "الحصول على إشعار عند اقترابك من حدود استخدام خطتك"
     },
     "integrations": {
       "wordpress": "WordPress",
@@ -736,7 +736,14 @@
       "status": {
         "paid": "مدفوع",
         "pending": "قيد الانتظار"
-      }
+      },
+      "usageLimits": "حدود الاستخدام",
+      "billingMonth": "فترة الفوترة: {month}",
+      "pagesCrawled": "الصفحات المفحوصة",
+      "aiPages": "صفحات الذكاء الاصطناعي",
+      "crawlsRun": "عمليات الفحص",
+      "unlimited": "غير محدود",
+      "usedOf": "{used} / {limit}"
     },
     "validation": {
       "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
