@@ -113,7 +113,7 @@ type LoginUser = {
   email?: string;
   display_name?: string;
   name?: string;
-  plan?: string;
+  plan?: string | { name?: string };
   avatar?: string;
 };
 
@@ -194,7 +194,10 @@ export function LoginForm() {
             email: userData.email,
             display_name: userData.display_name || userData.name,
             name: userData.display_name || userData.name,
-            plan: userData.plan,
+            plan:
+              typeof userData.plan === "string"
+                ? userData.plan
+                : userData.plan?.name,
             avatar: userData.avatar,
             initials,
           });

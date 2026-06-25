@@ -5,10 +5,10 @@ import { NotificationBell } from "@/features/notifications/components/Notificati
 import { useEffect, useState } from "react";
 import { onForegroundMessage } from "@/features/notifications/services/firebase-client";
 import { Button } from "@/components/ui/button";
+import { env } from "@/config/env";
 
 export default function NotificationsTestPage() {
-  // VAPID key from Firebase Console → Project Settings → Cloud Messaging → Web Push certificates
-  const VAPID_KEY = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY ?? "";
+  const VAPID_KEY = env.FIREBASE_VAPID_KEY ?? "";
 
   const { token, notificationPermission, requestPermission, isLoading } =
     useFcm(VAPID_KEY);

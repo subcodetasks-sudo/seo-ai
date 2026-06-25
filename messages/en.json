@@ -18,6 +18,7 @@
     "close": "Close sidebar",
     "store": "Store",
     "selectProject": "Select a project",
+    "projects": "Projects",
     "overview": "Overview",
     "problemList": "Problem list",
     "aiSuggestions": "AI suggestions",
@@ -27,9 +28,16 @@
     "changelog": "Changelog",
     "userName": "Mohamed Ahmed",
     "userPlan": "Paid plan",
+    "plans": {
+      "free": "Free",
+      "starter": "Starter",
+      "pro": "Pro",
+      "agency": "Agency"
+    },
     "userInitials": "MA",
     "logout": "Log out",
-    "settings": "Settings"
+    "settings": "Settings",
+    "notifications": "Notifications"
   },
   "plans": {
     "metadata": {
@@ -799,6 +807,14 @@
       "errors404": "404 errors",
       "open": "Open",
       "rescan": "Re-scan",
+      "rescanning": "Scanning...",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete project",
+      "deleteConfirmDesc": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+      "deleteConfirmAction": "Yes, delete",
+      "cancel": "Cancel",
+      "deleteSuccess": "Project deleted successfully",
+      "rescanSuccess": "Crawl started successfully",
       "addProject": "Add project",
       "platforms": {
         "wordpress": "wordpress",
@@ -857,7 +873,8 @@
       "personalInfo": "Personal information",
       "email": "Email",
       "fullName": "Full name",
-      "saveChanges": "Save changes"
+      "saveChanges": "Save changes",
+      "saved": "Profile updated successfully."
     },
     "password": {
       "title": "Change password",
@@ -869,16 +886,16 @@
     },
     "notifications": {
       "title": "Notification preferences",
-      "emailAlerts": "Email alerts",
-      "emailAlertsDesc": "Receive important alerts via email",
-      "alerts404": "404 alerts detected",
-      "alerts404Desc": "Get notified when new broken links are found",
-      "aiSuggestions": "New AI suggestions",
-      "aiSuggestionsDesc": "You will be notified when new suggestions are ready for review",
-      "crawlCompleted": "Crawl completed",
-      "crawlCompletedDesc": "Send a notification when a scheduled crawl finishes",
-      "weeklyReport": "Weekly email report",
-      "weeklyReportDesc": "Get a weekly SEO summary every Monday"
+      "channelEmail": "Email",
+      "channelInApp": "In-app",
+      "crawlDone": "Crawl completed",
+      "crawlDoneDesc": "Get notified when a scheduled crawl finishes",
+      "criticalIssue": "Critical issue",
+      "criticalIssueDesc": "Get notified when a critical SEO issue is detected",
+      "new404": "New 404 detected",
+      "new404Desc": "Get notified when broken links are found on your site",
+      "planLimit": "Plan limit",
+      "planLimitDesc": "Get notified when you are approaching your plan's usage limits"
     },
     "integrations": {
       "wordpress": "WordPress",
@@ -900,7 +917,14 @@
       "status": {
         "paid": "Paid",
         "pending": "Pending"
-      }
+      },
+      "usageLimits": "Usage limits",
+      "billingMonth": "Billing period: {month}",
+      "pagesCrawled": "Pages crawled",
+      "aiPages": "AI pages",
+      "crawlsRun": "Crawls",
+      "unlimited": "Unlimited",
+      "usedOf": "{used} / {limit}"
     },
     "validation": {
       "emailInvalid": "Please enter a valid email address",
@@ -910,5 +934,19 @@
       "confirmPasswordMin": "Confirm password must be at least 8 characters",
       "passwordsMismatch": "Passwords do not match"
     }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "unread": "{count, plural, one {# unread notification} other {# unread notifications}}",
+    "allCaughtUp": "You're all caught up",
+    "markAllRead": "Mark all as read",
+    "markRead": "Mark as read",
+    "selectAll": "Select all",
+    "selectItem": "Select notification",
+    "selectedCount": "{count} selected",
+    "clearSelection": "Clear",
+    "emptyTitle": "No notifications yet",
+    "emptyDescription": "When something happens across your projects, you'll see it here.",
+    "viewAll": "View all"
   }
 }

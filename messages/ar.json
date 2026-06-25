@@ -18,6 +18,7 @@
     "close": "إغلاق القائمة الجانبية",
     "store": "متجر",
     "selectProject": "اختر مشروعاً",
+    "projects": "المشاريع",
     "overview": "نظرة عامة",
     "problemList": "قائمة المشاكل",
     "aiSuggestions": "اقتراحات الـ AI",
@@ -27,9 +28,16 @@
     "changelog": "سجل التغييرات",
     "userName": "محمد أحمد",
     "userPlan": "الخطة المدفوعة",
+    "plans": {
+      "free": "مجاني",
+      "starter": "مبتدئ",
+      "pro": "احترافي",
+      "agency": "وكالة"
+    },
     "userInitials": "م أ",
     "logout": "تسجيل الخروج",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "notifications": "الإشعارات"
   },
   "plans": {
     "metadata": {
@@ -799,6 +807,14 @@
       "errors404": "خطاء 404",
       "open": "فتح",
       "rescan": "اعادة فحص",
+      "rescanning": "جاري الفحص...",
+      "delete": "حذف",
+      "deleteConfirmTitle": "حذف المشروع",
+      "deleteConfirmDesc": "هل أنت متأكد من حذف \"{name}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+      "deleteConfirmAction": "نعم، احذف",
+      "cancel": "إلغاء",
+      "deleteSuccess": "تم حذف المشروع بنجاح",
+      "rescanSuccess": "تم بدء الفحص بنجاح",
       "addProject": "اضافة مشروع",
       "platforms": {
         "wordpress": "wordpress",
@@ -857,7 +873,8 @@
       "personalInfo": "المعلومات الشخصية",
       "email": "الايميل",
       "fullName": "الاسم الكامل",
-      "saveChanges": "حفظ التغييرات"
+      "saveChanges": "حفظ التغييرات",
+      "saved": "تم تحديث الملف الشخصي بنجاح."
     },
     "password": {
       "title": "تغيير كلمة المرور",
@@ -869,16 +886,16 @@
     },
     "notifications": {
       "title": "تفضيلات الإشعارات",
-      "emailAlerts": "تنبيهات البريد الإلكتروني",
-      "emailAlertsDesc": "تلقي تنبيهات مهمة عبر البريد الإلكتروني",
-      "alerts404": "تنبيهات 404",
-      "alerts404Desc": "احصل على إشعارات عند العثور على روابط معطلة جديدة",
-      "aiSuggestions": "اقتراحات جديدة للذكاء الاصطناعي",
-      "aiSuggestionsDesc": "سيتم تنبيهك عند جاهزية الاقتراحات الجديدة للمراجعة",
-      "crawlCompleted": "اكتمل الزحف",
-      "crawlCompletedDesc": "إرسال إشعار عند انتهاء عملية الزحف المجدولة",
-      "weeklyReport": "تقرير أسبوعي عبر البريد الإلكتروني",
-      "weeklyReportDesc": "احصل على ملخص أسبوعي لتحسين محركات البحث كل يوم اثنين"
+      "channelEmail": "البريد الإلكتروني",
+      "channelInApp": "داخل التطبيق",
+      "crawlDone": "اكتمال الزحف",
+      "crawlDoneDesc": "الحصول على إشعار عند انتهاء عملية الزحف المجدولة",
+      "criticalIssue": "مشكلة حرجة",
+      "criticalIssueDesc": "الحصول على إشعار عند اكتشاف مشكلة SEO حرجة",
+      "new404": "اكتشاف خطأ 404 جديد",
+      "new404Desc": "الحصول على إشعار عند وجود روابط معطلة في موقعك",
+      "planLimit": "حد الخطة",
+      "planLimitDesc": "الحصول على إشعار عند اقترابك من حدود استخدام خطتك"
     },
     "integrations": {
       "wordpress": "WordPress",
@@ -900,7 +917,14 @@
       "status": {
         "paid": "مدفوع",
         "pending": "قيد الانتظار"
-      }
+      },
+      "usageLimits": "حدود الاستخدام",
+      "billingMonth": "فترة الفوترة: {month}",
+      "pagesCrawled": "الصفحات المفحوصة",
+      "aiPages": "صفحات الذكاء الاصطناعي",
+      "crawlsRun": "عمليات الفحص",
+      "unlimited": "غير محدود",
+      "usedOf": "{used} / {limit}"
     },
     "validation": {
       "emailInvalid": "يرجى إدخال بريد إلكتروني صالح",
@@ -910,5 +934,19 @@
       "confirmPasswordMin": "يجب أن يكون تأكيد كلمة المرور 8 أحرف على الأقل",
       "passwordsMismatch": "كلمات المرور غير متطابقة"
     }
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "unread": "{count, plural, zero {لا إشعارات غير مقروءة} one {إشعار واحد غير مقروء} two {إشعاران غير مقروءين} few {# إشعارات غير مقروءة} many {# إشعاراً غير مقروء} other {# إشعار غير مقروء}}",
+    "allCaughtUp": "لقد اطّلعت على كل شيء",
+    "markAllRead": "تعليم الكل كمقروء",
+    "markRead": "تعليم كمقروء",
+    "selectAll": "تحديد الكل",
+    "selectItem": "تحديد الإشعار",
+    "selectedCount": "{count} محدد",
+    "clearSelection": "إلغاء التحديد",
+    "emptyTitle": "لا توجد إشعارات بعد",
+    "emptyDescription": "عند حدوث أي شيء في مشاريعك، سيظهر هنا.",
+    "viewAll": "عرض الكل"
   }
 }

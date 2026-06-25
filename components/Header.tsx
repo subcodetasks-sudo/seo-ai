@@ -4,6 +4,9 @@ import { Bell, Settings } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { useQuery } from "@tanstack/react-query";
+
+import { unreadCountQueryOptions } from "@/features/notifications/queries/queries";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
 import LogoIcon from "@/components/LogoIcon";
@@ -55,6 +58,7 @@ const DASHBOARD_PAGE_LABEL_KEYS: Record<string, string> = {
   "google-analytics": "googleAnalytics",
   changelog: "changelog",
   settings: "settings",
+  notifications: "notifications",
 };
 
 const iconButtonClassName =
@@ -200,6 +204,7 @@ export function Header({ className }: HeaderProps) {
   const { side, isOpen, sidebar } = useSidebarMotion();
   const [isScrolled, setIsScrolled] = useState(false);
   const isSettingsActive = pathname.startsWith("/dashboard/settings");
+  const isNotificationsActive = pathname.startsWith("/dashboard/notifications");
   const showHeaderLogo = !isOpen;
 
   useEffect(() => {
@@ -211,6 +216,8 @@ export function Header({ className }: HeaderProps) {
     window.addEventListener("scroll", updateScrollState, { passive: true });
     return () => window.removeEventListener("scroll", updateScrollState);
   }, []);
+
+  const { data: unreadCount = 0 } = useQuery(unreadCountQueryOptions());
 
   const openSidebar = () => {
     if (!sidebar) return;
@@ -278,9 +285,20 @@ export function Header({ className }: HeaderProps) {
           >
             <Settings className="size-5" aria-hidden="true" />
           </HeaderIconButton>
-          <HeaderIconButton label={t("notifications")}>
-            <Bell className="size-5" aria-hidden="true" />
-          </HeaderIconButton>
+          <div className="relative">
+            <HeaderIconButton
+              label={t("notifications")}
+              href="/dashboard/notifications"
+              isActive={isNotificationsActive}
+            >
+              <Bell className="size-5" aria-hidden="true" />
+            </HeaderIconButton>
+            {unreadCount > 0 && (
+              <span className="pointer-events-none absolute -top-1 -inset-e-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary-300 px-1 text-[10px] font-bold leading-none text-secondary-500 ring-2 ring-white">
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
+            )}
+          </div>
         </div>
       </TooltipProvider>
     </header>

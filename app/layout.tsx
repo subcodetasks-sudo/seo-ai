@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
 
 import Providers from "@/app/providers";
-import { getLocaleDirection, routing } from "@/i18n/routing";
+import { routing } from "@/i18n/routing";
 import "./globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -22,21 +22,37 @@ export const metadata: Metadata = {
   description: "Rank AI is a platform for ranking and analyzing data.",
 };
 
+// Runs before the browser renders any body content — reads the locale from the
+// URL path and sets the correct `dir` and `lang` on <html> synchronously so
+// there is no RTL→LTR layout shift on English pages.
+const directionScript = `(function(){
+  var seg=(location.pathname.split('/')[1]||'').toLowerCase();
+  var rtl=['ar','fa','he','ur'];
+  var isRtl=rtl.indexOf(seg)!==-1;
+  document.documentElement.dir=isRtl?'rtl':'ltr';
+  if(seg)document.documentElement.lang=seg;
+})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = routing.defaultLocale;
-  const direction = getLocaleDirection(locale);
+  // Default to the app's default locale for the static shell; the inline
+  // script above corrects both attributes before first paint on the client.
+  const defaultLocale = routing.defaultLocale;
 
   return (
     <html
-      lang={locale}
-      dir={direction}
+      lang={defaultLocale}
+      dir="rtl"
       suppressHydrationWarning
       className={`${ibmPlexSans.variable} ${ibmPlexSansArabic.variable} h-full antialiased`}
     >
+      <head>
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script dangerouslySetInnerHTML={{ __html: directionScript }} />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <Providers>{children}</Providers>
       </body>

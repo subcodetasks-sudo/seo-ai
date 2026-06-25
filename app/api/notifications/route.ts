@@ -1,0 +1,28 @@
+import { NextRequest, NextResponse } from "next/server";
+import { serverClient } from "@/lib/server";
+
+function getAuthHeaders(req: NextRequest) {
+  const accessToken = req.cookies.get("access_token")?.value;
+  if (!accessToken) return null;
+  return { Authorization: `Bearer ${accessToken}` };
+}
+
+export async function GET(req: NextRequest) {
+  const authHeaders = getAuthHeaders(req);
+  if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const searchParams = req.nextUrl.searchParams.toString();
+  const endpoint = `notifications${searchParams ? `?${searchParams}` : ""}`;
+
+  try {
+    const data = await serverClient(
+      endpoint,
+      { method: "GET", headers: authHeaders },
+      "Failed to get notifications",
+    );
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ message }, { status: 400 });
+  }
+}

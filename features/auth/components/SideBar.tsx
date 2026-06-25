@@ -3,7 +3,9 @@
 import {
   AlertTriangle,
   BarChart3,
+  Bell,
   Clock,
+  FolderOpen,
   Home,
   Link2Off,
   List,
@@ -41,21 +43,24 @@ import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
 type NavItem =
-  | { href: string; labelKey: string; icon: LucideIcon }
-  | { href: string; labelKey: string; imageSrc: string };
+  | { href: string; labelKey: string; icon: LucideIcon; exact: boolean }
+  | { href: string; labelKey: string; imageSrc: string; exact: boolean };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/dashboard/overview", labelKey: "overview", icon: Home },
-  { href: "/dashboard/problems", labelKey: "problemList", icon: List },
-  { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle },
-  { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off },
-  { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3 },
+  { href: "/dashboard", labelKey: "projects", icon: FolderOpen, exact: true },
+  { href: "/dashboard/overview", labelKey: "overview", icon: Home, exact: true },
+  { href: "/dashboard/problems", labelKey: "problemList", icon: List, exact: false },
+  { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle, exact: false },
+  { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off, exact: false },
+  { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3, exact: false },
   {
     href: "/dashboard/google-analytics",
     labelKey: "googleAnalytics",
     imageSrc: "/imgs/google_analytics_logo.webp",
+    exact: false,
   },
-  { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock },
+  { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock, exact: false },
+  { href: "/dashboard/notifications", labelKey: "notifications", icon: Bell, exact: false },
 ];
 
 type SidebarMotionItemProps = {
@@ -75,8 +80,11 @@ function SidebarMotionItem({ children, className, side }: SidebarMotionItemProps
   );
 }
 
+const KNOWN_PLANS = new Set(["free", "starter", "pro", "agency"]);
+
 export default function SideBar() {
   const t = useTranslations("sidebar");
+  const tPlans = useTranslations("sidebar.plans");
   const pathname = usePathname();
   const router = useRouter();
   const { user, setUser } = useAuth();
@@ -210,9 +218,8 @@ export default function SideBar() {
 
         <nav className="flex flex-1 flex-col gap-1">
           {NAV_ITEMS.map((item) => {
-            const { href, labelKey } = item;
-            const isActive =
-              href === "/dashboard/overview" ? pathname === "/dashboard/overview" : pathname.startsWith(href);
+            const { href, labelKey, exact } = item;
+            const isActive = exact ? pathname === href : pathname.startsWith(href);
 
             return (
               <SidebarMotionItem key={href} side={side}>
@@ -258,7 +265,11 @@ export default function SideBar() {
                   {user?.display_name || t("userName")}
                 </p>
                 <p className="truncate text-sm text-secondary-200">
-                  {user?.plan || t("userPlan")}
+                  {user?.plan
+                    ? KNOWN_PLANS.has(user.plan)
+                      ? tPlans(user.plan as Parameters<typeof tPlans>[0])
+                      : user.plan
+                    : t("userPlan")}
                 </p>
               </div>
             </div>

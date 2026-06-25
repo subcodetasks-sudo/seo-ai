@@ -6,24 +6,34 @@ import {
   MessagePayload,
 } from "firebase/messaging";
 
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
-
-// Initialize Firebase only once
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+import { env } from "@/config/env";
 
 let messaging: Messaging | null = null;
 
-// Singleton pattern for Messaging, only in the browser
+function isFirebaseConfigured(): boolean {
+  return !!(
+    env.FIREBASE_API_KEY &&
+    env.FIREBASE_PROJECT_ID &&
+    env.FIREBASE_APP_ID &&
+    env.FIREBASE_MESSAGING_SENDER_ID
+  );
+}
+
+function getFirebaseApp() {
+  const firebaseConfig = {
+    apiKey: env.FIREBASE_API_KEY,
+    authDomain: env.FIREBASE_AUTH_DOMAIN,
+    projectId: env.FIREBASE_PROJECT_ID,
+    storageBucket: env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: env.FIREBASE_APP_ID,
+  };
+  return getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+}
+
 export const getFirebaseMessaging = (): Messaging | null => {
-  if (typeof window !== "undefined" && !messaging) {
-    messaging = getMessaging(app);
+  if (typeof window !== "undefined" && !messaging && isFirebaseConfigured()) {
+    messaging = getMessaging(getFirebaseApp());
   }
   return messaging;
 };

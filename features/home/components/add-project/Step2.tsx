@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useDirection } from "@/components/ui/direction";
 
-const PLUGIN_DOWNLOAD_URL = "#";
+const PLUGIN_DOWNLOAD_URL = "/ai-seo-platform.zip";
 const instructions = ["instruction1", "instruction2", "instruction3"] as const;
 
 interface Step2Props {

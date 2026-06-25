@@ -47,5 +47,4 @@ export type ProfileFormValues = {
 export type ChangePasswordFormValues = {
   current_password: string;
   new_password: string;
-  confirm_password: string;
 };
