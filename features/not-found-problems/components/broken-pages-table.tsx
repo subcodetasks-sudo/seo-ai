@@ -28,6 +28,7 @@ import type { BrokenPage } from "../types";
 
 type BrokenPagesTableProps = {
   items: BrokenPage[];
+  projectId: string;
   projectDomain: string;
 };
 
@@ -63,7 +64,7 @@ function constructFullUrl(
   return `${fullDomain}${path}`;
 }
 
-export function BrokenPagesTable({ items, projectDomain }: BrokenPagesTableProps) {
+export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPagesTableProps) {
   const t = useTranslations("notFoundProblems.table");
   const locale = useLocale();
   const dir = useDirection();
@@ -125,7 +126,7 @@ export function BrokenPagesTable({ items, projectDomain }: BrokenPagesTableProps
           asChild
           className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm"
         >
-          <Link href="/dashboard/404-problems/ai-fix">
+          <Link href={`/dashboard/404-problems/ai-fix?pageId=${item.id}&projectId=${projectId}`}>
             <Sparkles className="size-3.5" aria-hidden="true" />
             {t("fixWithAi")}
           </Link>

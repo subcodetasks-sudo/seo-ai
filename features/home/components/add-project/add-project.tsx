@@ -62,6 +62,8 @@ export function AddProject() {
             onBack={backStep}
             setupLink={formData.setupLink}
             setupToken={formData.setupToken}
+            platform={formData.platform}
+            projectId={formData.projectId}
           />
         )}
 

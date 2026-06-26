@@ -1,5 +1,6 @@
 "use client";
 
+import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 
 import {
@@ -10,6 +11,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { ChangelogEntry, ChangelogStatus } from "../types";
 
@@ -19,6 +26,53 @@ const statusStyles: Record<ChangelogStatus, string> = {
   failed: "bg-error-50 text-error-700 border border-error-200",
   reverted: "bg-neutral-100 text-neutral-600 border border-neutral-200",
 };
+
+function formatChangeType(type: string): string {
+  return type
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function formatDate(iso: string): string {
+  try {
+    return format(new Date(iso), "yyyy-MM-dd");
+  } catch {
+    return iso;
+  }
+}
+
+type StatusBadgeProps = {
+  status: ChangelogStatus;
+  errorMessage: string | null;
+  label: string;
+};
+
+function StatusBadge({ status, errorMessage, label }: StatusBadgeProps) {
+  const badge = (
+    <span
+      className={cn(
+        "inline-flex rounded-full px-2.5 py-0.5 text-label-xs font-medium",
+        statusStyles[status],
+      )}
+    >
+      {label}
+    </span>
+  );
+
+  if (status === "failed" && errorMessage) {
+    return (
+      <TooltipProvider>
+        <Tooltip delayDuration={200}>
+          <TooltipTrigger asChild>{badge}</TooltipTrigger>
+          <TooltipContent className="max-w-xs text-label-xs">{errorMessage}</TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return badge;
+}
 
 type ChangelogTableProps = {
   items: ChangelogEntry[];
@@ -34,23 +88,22 @@ export function ChangelogTable({ items }: ChangelogTableProps) {
         {items.map((entry) => (
           <div key={entry.id} className="flex flex-col gap-3 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-label-xs text-neutral-400">{entry.date}</span>
-              <span
-                className={cn(
-                  "rounded-full px-2.5 py-0.5 text-label-xs font-medium",
-                  statusStyles[entry.status],
-                )}
-              >
-                {t(`status.${entry.status}`)}
-              </span>
+              <span className="text-label-xs text-neutral-400">{formatDate(entry.applied_at)}</span>
+              <StatusBadge
+                status={entry.status}
+                errorMessage={entry.error_message}
+                label={t(`status.${entry.status}`)}
+              />
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-label-xs text-neutral-400">{t("table.url")}</span>
-              <span className="text-label-sm text-secondary-500 break-all">{entry.url}</span>
+              <span className="text-label-sm text-secondary-500 break-all">{entry.page_url}</span>
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-label-xs text-neutral-400">{t("table.field")}</span>
-              <span className="text-label-sm font-medium text-secondary-500">{entry.field}</span>
+              <span className="text-label-sm font-medium text-secondary-500">
+                {formatChangeType(entry.change_type)}
+              </span>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
@@ -95,29 +148,26 @@ export function ChangelogTable({ items }: ChangelogTableProps) {
             {items.map((entry) => (
               <TableRow key={entry.id} className="border-neutral-200">
                 <TableCell className="py-3 px-4 text-label-sm text-neutral-500 whitespace-nowrap">
-                  {entry.date}
+                  {formatDate(entry.applied_at)}
                 </TableCell>
-                <TableCell className="py-3 px-4 text-label-sm text-secondary-500 max-w-[140px] truncate">
-                  {entry.url}
+                <TableCell className="py-3 px-4 text-label-sm text-secondary-500 max-w-35 truncate">
+                  {entry.page_url}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-label-sm font-medium text-secondary-500 whitespace-nowrap">
-                  {entry.field}
+                  {formatChangeType(entry.change_type)}
                 </TableCell>
-                <TableCell className="py-3 px-4 text-label-sm text-neutral-500 max-w-[140px] truncate">
+                <TableCell className="py-3 px-4 text-label-sm text-neutral-500 max-w-35 truncate">
                   {entry.old_value || "—"}
                 </TableCell>
-                <TableCell className="py-3 px-4 text-label-sm text-secondary-500 max-w-[200px] truncate">
+                <TableCell className="py-3 px-4 text-label-sm text-secondary-500 max-w-50 truncate">
                   {entry.new_value}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-end">
-                  <span
-                    className={cn(
-                      "inline-flex rounded-full px-2.5 py-0.5 text-label-xs font-medium",
-                      statusStyles[entry.status],
-                    )}
-                  >
-                    {t(`status.${entry.status}`)}
-                  </span>
+                  <StatusBadge
+                    status={entry.status}
+                    errorMessage={entry.error_message}
+                    label={t(`status.${entry.status}`)}
+                  />
                 </TableCell>
               </TableRow>
             ))}

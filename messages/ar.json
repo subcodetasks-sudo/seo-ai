@@ -741,7 +741,21 @@
         "invalidToken": "يرجى إدخال رمز ربط صالح",
         "verifying": "جاري التحقق من ملكية الموقع...",
         "verificationSuccess": "تم التحقق من الملكية بنجاح!",
-        "verificationFailed": "فشل التحقق من الملكية. يرجى المحاولة مرة أخرى."
+        "verificationFailed": "فشل التحقق من الملكية. يرجى المحاولة مرة أخرى.",
+        "customTitle": "التحقق من ملكية الموقع",
+        "customSubtitle": "اختر طريقة التحقق لتأكيد ملكيتك لهذا الموقع",
+        "metaTagMethod": "وسم Meta",
+        "metaTagDesc": "أضف وسم HTML إلى صفحتك الرئيسية",
+        "htmlFileMethod": "ملف HTML",
+        "htmlFileDesc": "ارفع ملف التحقق إلى الجذر الرئيسي للموقع",
+        "dnsTxtMethod": "DNS TXT",
+        "dnsTxtDesc": "أضف سجل TXT إلى إعدادات DNS الخاصة بنطاقك",
+        "metaTagInstruction": "انسخ وسم Meta أدناه وأضفه داخل قسم head في صفحتك الرئيسية",
+        "htmlFileNameLabel": "اسم الملف",
+        "htmlFileContentLabel": "محتوى الملف",
+        "htmlFileInstruction": "ارفع هذا الملف إلى الجذر الرئيسي لموقعك",
+        "dnsNote": "قد تستغرق تغييرات DNS ما يصل إلى 24 ساعة حتى تنتشر",
+        "skip": "تخطي"
       },
       "step3": {
         "successTitle": "تم الاتصال بنجاح!",
@@ -765,6 +779,8 @@
         "completed": "مكتمل",
         "waiting": "انتظار",
         "pages": "{count} صفحة",
+        "pagesProgress": "{crawled} / {total} صفحة",
+        "errorLabel": "حدث خطأ",
         "steps": {
           "queued": {
             "title": "قيد الانتظار",
@@ -819,12 +835,15 @@
       "platforms": {
         "wordpress": "wordpress",
         "salla": "salla",
-        "custom": "custom"
+        "custom": "custom",
+        "zid": "zid"
       },
       "health": "الصحة",
       "status": "الحالة",
       "verified": "موثّق",
-      "unverified": "غير موثّق"
+      "unverified": "غير موثّق",
+      "archived": "مؤرشف",
+      "verifyToken": "التحقق من الرمز"
     }
   },
   "overview": {

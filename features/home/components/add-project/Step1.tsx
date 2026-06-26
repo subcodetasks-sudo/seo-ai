@@ -54,7 +54,7 @@ export default function Step1({ onNext }: Step1Props) {
         sitemap_url: null,
         url_filter: null,
       });
-      onNext(response.data);
+      onNext({ ...response.data, platform: data.projectType });
     } catch {
       // Errors surface via the global mutation handler.
     }

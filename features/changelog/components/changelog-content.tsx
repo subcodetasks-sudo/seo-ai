@@ -21,7 +21,6 @@ import type { ChangelogPeriod, GenerateReportFormValues } from "../types";
 import { ChangelogTable } from "./changelog-table";
 import { GenerateReportDialog } from "./generate-report-dialog";
 
-const PAGE_SIZE = 10;
 const PERIODS: ChangelogPeriod[] = [7, 30, 90];
 
 export function ChangelogContent() {
@@ -29,12 +28,12 @@ export function ChangelogContent() {
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
 
-  const [period, setPeriod] = useState<ChangelogPeriod>(7);
+  const [period, setPeriod] = useState<ChangelogPeriod>(30);
   const [page, setPage] = useState(1);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: entries = [], isLoading } = useQuery(
-    changelogQueryOptions(selectedProjectId ?? "", period),
+  const { data, isLoading } = useQuery(
+    changelogQueryOptions(selectedProjectId ?? "", period, page),
   );
 
   const { mutate: generateReport, isPending: isGenerating } = useGenerateReport(
@@ -42,9 +41,9 @@ export function ChangelogContent() {
     period,
   );
 
-  const total = entries.length;
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-  const paginatedItems = entries.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const items = data?.data.items ?? [];
+  const total = data?.data.total ?? 0;
+  const totalPages = data?.data.total_pages ?? 1;
 
   function handlePeriodChange(p: ChangelogPeriod) {
     setPeriod(p);
@@ -108,19 +107,19 @@ export function ChangelogContent() {
           <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
             <p className="text-label-md text-neutral-400">{t("loading")}</p>
           </div>
-        ) : paginatedItems.length === 0 ? (
+        ) : items.length === 0 ? (
           <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
             <p className="text-label-md text-neutral-500">{t("empty")}</p>
           </div>
         ) : (
-          <ChangelogTable items={paginatedItems} />
+          <ChangelogTable items={items} />
         )}
 
         {/* Pagination */}
         {total > 0 && (
           <div className="flex items-center justify-between">
             <p className="text-label-sm text-neutral-500">
-              {t("pagination.showing", { shown: paginatedItems.length, total })}
+              {t("pagination.showing", { shown: items.length, total })}
             </p>
             {totalPages > 1 && (
               <Pagination className="mx-0 w-auto justify-end">

@@ -2,9 +2,11 @@
 
 import {
   isServer,
+  MutationCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { ThemeProvider } from "next-themes";
 
 import { AuthProvider } from "@/features/auth/context/auth-context";
@@ -19,6 +21,11 @@ function makeQueryClient() {
         staleTime: 60 * 1000,
       },
     },
+    mutationCache: new MutationCache({
+      onError: (error) => {
+        toast.error(error instanceof Error ? error.message : "Something went wrong");
+      },
+    }),
   });
 }
 

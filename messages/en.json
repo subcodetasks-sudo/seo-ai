@@ -741,7 +741,21 @@
         "invalidToken": "Please enter a valid connection token",
         "verifying": "Verifying site ownership...",
         "verificationSuccess": "Ownership verified successfully!",
-        "verificationFailed": "Ownership verification failed. Please try again."
+        "verificationFailed": "Ownership verification failed. Please try again.",
+        "customTitle": "Verify Site Ownership",
+        "customSubtitle": "Choose a verification method to confirm you own this website",
+        "metaTagMethod": "Meta Tag",
+        "metaTagDesc": "Add an HTML meta tag to your homepage",
+        "htmlFileMethod": "HTML File",
+        "htmlFileDesc": "Upload a verification file to your website root",
+        "dnsTxtMethod": "DNS TXT",
+        "dnsTxtDesc": "Add a TXT record to your domain's DNS",
+        "metaTagInstruction": "Copy the meta tag below and paste it inside the head section of your homepage",
+        "htmlFileNameLabel": "Filename",
+        "htmlFileContentLabel": "File Content",
+        "htmlFileInstruction": "Upload this file to the root directory of your website",
+        "dnsNote": "DNS changes may take up to 24 hours to propagate",
+        "skip": "Skip"
       },
       "step3": {
         "successTitle": "Connected successfully!",
@@ -765,6 +779,8 @@
         "completed": "Completed",
         "waiting": "Waiting",
         "pages": "{count} pages",
+        "pagesProgress": "{crawled} / {total} pages",
+        "errorLabel": "An error occurred",
         "steps": {
           "queued": {
             "title": "Queued",
@@ -819,12 +835,15 @@
       "platforms": {
         "wordpress": "wordpress",
         "salla": "salla",
-        "custom": "custom"
+        "custom": "custom",
+        "zid": "zid"
       },
       "health": "Health",
       "status": "Status",
       "verified": "Verified",
-      "unverified": "Unverified"
+      "unverified": "Unverified",
+      "archived": "Archived",
+      "verifyToken": "Verify Token"
     }
   },
   "overview": {

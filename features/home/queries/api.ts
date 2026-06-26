@@ -6,6 +6,7 @@ import type {
   ProjectSectionsApiResponse,
   ProjectSectionsRequest,
   UpdateProjectRequest,
+  VerificationTokenResponse,
 } from "../types";
 
 export const createProject = (body: CreateProjectRequest) =>
@@ -47,7 +48,7 @@ export const getProjectDashboard = (project_id: string) =>
   });
 
 export const getVerificationToken = (project_id: string) =>
-  apiClient(`projects/${project_id}/verify/token`, {
+  apiClient<VerificationTokenResponse>(`projects/${project_id}/verify/token`, {
     method: "GET",
   });
 
@@ -82,7 +83,7 @@ export type CrawlJobResponse = {
   data: {
     crawl_job_id: string;
     project_id: string;
-    status: "queued" | "in_progress" | "done" | "failed";
+    status: "queued" | "running" | "in_progress" | "done" | "failed";
     pages_limit: number;
     pages_crawled?: number;
     pages_total_est?: number;

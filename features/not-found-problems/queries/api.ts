@@ -11,3 +11,17 @@ export function getBrokenPages(
     `projects/${projectId}/broken-pages?status=${status}&page=${page}&page_size=${pageSize}`,
   );
 }
+
+export function redirectBrokenPage(
+  projectId: string,
+  brokenPageId: string,
+  targetUrl: string,
+) {
+  return apiClient(
+    `projects/${projectId}/broken-pages/${brokenPageId}/redirect`,
+    {
+      method: "POST",
+      body: JSON.stringify({ target_url: targetUrl }),
+    },
+  );
+}

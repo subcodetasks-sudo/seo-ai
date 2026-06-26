@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useAddProject } from "./add-project-provider";
 import { AddProject } from "./add-project";
 
@@ -16,6 +16,7 @@ export function AddProjectModal() {
       }
     }}>
       <DialogContent className="w-full max-w-4xl border-neutral-200 bg-neutral-75 px-4 py-8 sm:px-6 sm:py-10">
+        <DialogTitle className="sr-only">Add Project</DialogTitle>
         <AddProject />
       </DialogContent>
     </Dialog>

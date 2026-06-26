@@ -18,6 +18,7 @@ export async function fetchIssueSummary({
     `projects/${projectId}/ai/issue-summary${query ? `?${query}` : ""}`,
   );
 }
+// app\api\projects\[project_id]\ai\issue-summary\route.ts
 
 type FetchCrawlPagesParams = {
   projectId: string;

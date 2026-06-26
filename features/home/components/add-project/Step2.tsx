@@ -7,23 +7,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useDirection } from "@/components/ui/direction";
+import { VerifyPanel } from "@/features/home/components/verify-panel";
 
 const PLUGIN_DOWNLOAD_URL = "/ai-seo-platform.zip";
-const instructions = ["instruction1", "instruction2", "instruction3"] as const;
+const pluginInstructions = ["instruction1", "instruction2", "instruction3"] as const;
 
 interface Step2Props {
   onNext: () => void;
   onBack: () => void;
   setupLink?: string;
   setupToken?: string;
+  platform?: "wordpress" | "salla" | "custom";
+  projectId?: string;
 }
 
-interface CopyFieldProps {
-  label: string;
-  value: string;
-}
-
-function CopyField({ label, value }: CopyFieldProps) {
+function CopyField({ label, value }: { label: string; value: string }) {
   const t = useTranslations("home.addProject.step2");
   const [copied, setCopied] = useState(false);
 
@@ -50,8 +48,8 @@ function CopyField({ label, value }: CopyFieldProps) {
           size="sm"
           onClick={handleCopy}
           className={cn(
-            "absolute start-1.5 top-1/2 h-9 -translate-y-1/2 gap-1.5 rounded-[8px] border-neutral-200 bg-white px-3 text-label-md font-medium text-secondary-500 hover:bg-neutral-50",
-            copied && "border-success-200 bg-success-50 text-success-600 hover:bg-success-50"
+            "absolute inset-s-1.5 top-1/2 h-9 -translate-y-1/2 gap-1.5 rounded-[8px] border-neutral-200 bg-white px-3 text-label-md font-medium text-secondary-500 hover:bg-neutral-50",
+            copied && "border-success-200 bg-success-50 text-success-600 hover:bg-success-50",
           )}
         >
           {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
@@ -62,12 +60,22 @@ function CopyField({ label, value }: CopyFieldProps) {
   );
 }
 
-export default function Step2({ onNext, onBack, setupLink, setupToken }: Step2Props) {
+function WordPressStep2({
+  onNext,
+  onBack,
+  setupLink,
+  setupToken,
+}: {
+  onNext: () => void;
+  onBack: () => void;
+  setupLink?: string;
+  setupToken?: string;
+}) {
   const dir = useDirection();
   const t = useTranslations("home.addProject.step2");
 
   return (
-    <div className="flex w-full max-w-[600px] flex-col items-center gap-6" dir={dir}>
+    <div className="flex w-full max-w-150 flex-col items-center gap-6" dir={dir}>
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-h1 font-bold text-secondary-500">{t("title")}</h1>
         <p className="text-label-md text-neutral-500">{t("subtitle")}</p>
@@ -75,12 +83,11 @@ export default function Step2({ onNext, onBack, setupLink, setupToken }: Step2Pr
 
       <div className="w-full rounded-[12px] border border-neutral-200 bg-white p-5">
         <ol className="flex flex-col gap-5">
-          {instructions.map((key, index) => (
+          {pluginInstructions.map((key, index) => (
             <li key={key} className="flex items-start gap-3 text-start">
               <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-neutral-100 text-label-sm font-semibold text-secondary-500">
                 {index + 1}
               </span>
-
               {key === "instruction1" ? (
                 <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <span className="text-body text-secondary-500">{t(key)}</span>
@@ -129,5 +136,27 @@ export default function Step2({ onNext, onBack, setupLink, setupToken }: Step2Pr
         </Button>
       </div>
     </div>
+  );
+}
+
+export default function Step2({ onNext, onBack, setupLink, setupToken, platform, projectId }: Step2Props) {
+  if (platform === "custom" && projectId) {
+    return (
+      <VerifyPanel
+        projectId={projectId}
+        onVerified={onNext}
+        onBack={onBack}
+        onSkip={onNext}
+      />
+    );
+  }
+
+  return (
+    <WordPressStep2
+      onNext={onNext}
+      onBack={onBack}
+      setupLink={setupLink}
+      setupToken={setupToken}
+    />
   );
 }

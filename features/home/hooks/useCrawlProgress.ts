@@ -26,6 +26,7 @@ function mapCrawlStatusToSteps(crawlData: CrawlJobResponse["data"]): Record<Anal
         queued: { status: "active" },
       };
 
+    case "running":
     case "in_progress":
       return {
         ...baseSteps,
@@ -33,6 +34,8 @@ function mapCrawlStatusToSteps(crawlData: CrawlJobResponse["data"]): Record<Anal
         crawling: {
           status: "active",
           pageCount: crawlData.pages_crawled,
+          pagesTotalEst: crawlData.pages_total_est ?? undefined,
+          progressPct: crawlData.progress_pct ?? undefined,
         },
       };
 
@@ -112,6 +115,7 @@ export function useCrawlProgress({
     loadingProps: {
       url,
       steps: crawlData ? mapCrawlStatusToSteps(crawlData) : undefined,
+      errorMessage: crawlData?.error_message ?? null,
     },
   };
 }

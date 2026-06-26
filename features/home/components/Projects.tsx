@@ -1,15 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import {
+  Archive,
   Clock,
   ExternalLink,
   Globe,
   Plus,
   RefreshCw,
+  ShieldCheck,
   Trash2,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 import {
   AlertDialog,
@@ -24,10 +28,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useAddProject } from "@/features/home/components/add-project/add-project-provider";
 import { useDeleteProject, useStartCrawl } from "@/features/home/queries/mutations";
+import { homeKeys } from "@/features/home/queries/query-keys";
 import type { ProjectListItem } from "@/features/home/types";
 import { cn } from "@/lib/utils";
+import { VerifyPanel } from "./verify-panel";
 
 type ProjectsProps = {
   projects: ProjectListItem[];
@@ -46,16 +53,41 @@ type ProjectStatProps = {
 function ProjectStat({ value, label, valueClassName }: ProjectStatProps) {
   return (
     <div className="flex min-w-16 flex-col items-center gap-1 text-center">
-      <span
-        className={cn(
-          "text-h4 font-semibold text-secondary-500",
-          valueClassName,
-        )}
-      >
+      <span className={cn("text-h4 font-semibold text-secondary-500", valueClassName)}>
         {value}
       </span>
       <span className="text-label-sm text-neutral-500">{label}</span>
     </div>
+  );
+}
+
+function VerifyProjectModal({ project }: { project: ProjectListItem }) {
+  const t = useTranslations("home.projects");
+  const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  function handleVerified() {
+    setOpen(false);
+    queryClient.invalidateQueries({ queryKey: homeKeys.projects() });
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-9 gap-2 border-primary-200 bg-primary-50 px-4 text-primary-600 hover:bg-primary-100 hover:text-primary-700"
+        >
+          <ShieldCheck className="size-4" aria-hidden="true" />
+          {t("verifyToken")}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl border-neutral-200 bg-neutral-75 p-6">
+        <DialogTitle className="sr-only">{t("verifyToken")}</DialogTitle>
+        <VerifyPanel projectId={project.id} onVerified={handleVerified} />
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -97,10 +129,18 @@ function ProjectCard({ project }: ProjectCardProps) {
   return (
     <article className="flex flex-col gap-5 rounded-xl border border-neutral-200 bg-white p-5 lg:flex-row lg:items-center lg:justify-between">
       <div className="min-w-0 flex-1 space-y-2">
-        <Badge className="border-primary-100 bg-primary-50 text-primary-500 capitalize">
-          <Globe className="size-3" aria-hidden="true" />
-          {t(`platforms.${project.platform}`)}
-        </Badge>
+        <div className="flex flex-wrap items-center gap-2">
+          <Badge className="border-primary-100 bg-primary-50 text-primary-500 capitalize">
+            <Globe className="size-3" aria-hidden="true" />
+            {t(`platforms.${project.platform}`)}
+          </Badge>
+          {project.is_archived && (
+            <Badge className="border-warning-100 bg-warning-50 text-warning-600 capitalize">
+              <Archive className="size-3" aria-hidden="true" />
+              {t("archived")}
+            </Badge>
+          )}
+        </div>
 
         <div className="space-y-1">
           <h3 className="text-h4 font-semibold text-secondary-500">{project.name}</h3>
@@ -127,7 +167,11 @@ function ProjectCard({ project }: ProjectCardProps) {
         />
       </div>
 
-      <div className="flex items-center gap-2 lg:shrink-0">
+      <div className="flex flex-wrap items-center gap-2 lg:shrink-0">
+        {!project.is_verified && project.platform === "custom" && (
+          <VerifyProjectModal project={project} />
+        )}
+
         <Button
           type="button"
           variant="outline"
@@ -217,17 +261,13 @@ export default function Projects({ projects }: ProjectsProps) {
         <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
           <p className="text-label-md text-secondary-400">
             {t("verified")} :{" "}
-            <span className="font-semibold text-success-500">
-              {verifiedCount}
-            </span>
+            <span className="font-semibold text-success-500">{verifiedCount}</span>
           </p>
         </div>
         <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
           <p className="text-label-md text-secondary-400">
             {t("unverified")} :{" "}
-            <span className="font-semibold text-warning-400">
-              {unverifiedCount}
-            </span>
+            <span className="font-semibold text-warning-400">{unverifiedCount}</span>
           </p>
         </div>
       </div>

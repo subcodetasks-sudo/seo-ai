@@ -70,6 +70,20 @@ export type TopIssue = {
 };
 
 
+export type VerificationToken = {
+  token: string;
+  meta_tag: string;
+  dns_txt: string;
+  html_file_url: string;
+  html_file_content: string;
+};
+
+export type VerificationTokenResponse = {
+  status: boolean;
+  message: string;
+  data: VerificationToken;
+};
+
 /* create/update project */
 export type CreateProjectRequest = {
   name: string;

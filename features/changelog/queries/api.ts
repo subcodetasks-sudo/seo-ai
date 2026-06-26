@@ -1,18 +1,21 @@
 import { apiClient } from "@/lib/client";
-import type { ChangelogEntry, ChangelogPeriod } from "../types";
+import type { ChangelogPeriod, ChangelogResponse, GenerateReportFormValues } from "../types";
+
+const PER_PAGE = 20;
 
 export async function fetchChangelog(
   projectId: string,
-  period: ChangelogPeriod,
-): Promise<ChangelogEntry[]> {
-  return apiClient<ChangelogEntry[]>(
-    `projects/${projectId}/changelog?period=${period}`,
+  days: ChangelogPeriod,
+  page: number,
+): Promise<ChangelogResponse> {
+  return apiClient<ChangelogResponse>(
+    `projects/${projectId}/changelog?page=${page}&per_page=${PER_PAGE}&days=${days}`,
   );
 }
 
 export async function generateReport(
   projectId: string,
-  payload: { title: string; email: string; period: ChangelogPeriod },
+  payload: GenerateReportFormValues & { period: ChangelogPeriod },
 ): Promise<void> {
   return apiClient(`projects/${projectId}/changelog/report`, {
     method: "POST",
