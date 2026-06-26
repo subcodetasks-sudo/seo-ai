@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { useDirection } from "@/components/ui/direction";
+import { Spinner } from "@/components/ui/spinner";
 import { GenerateReportDialog } from "@/features/changelog/components/generate-report-dialog";
 import { useGenerateReport } from "@/features/changelog/queries/mutations";
 import type { ChangelogPeriod, GenerateReportFormValues } from "@/features/changelog/types";
@@ -62,7 +63,7 @@ export function ReportsContent() {
 
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
-      <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-6">
+      <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-1 flex-col gap-6">
         <ReportsHeader
           domain={domain}
           period={period}
@@ -71,8 +72,8 @@ export function ReportsContent() {
         />
 
         {isLoading || !analytics ? (
-          <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
-            <p className="text-label-md text-neutral-400">{t("loading")}</p>
+          <div className="flex flex-1 items-center justify-center py-16">
+            <Spinner className="size-8 text-neutral-400" />
           </div>
         ) : (
           <>

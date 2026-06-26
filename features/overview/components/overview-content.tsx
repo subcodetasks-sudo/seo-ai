@@ -61,12 +61,12 @@ export function OverviewContent() {
     overviewBrokenPagesCountQueryOptions(selectedProjectId ?? ""),
   );
 
-  const { data: changelogEntries = [] } = useQuery({
-    ...changelogQueryOptions(selectedProjectId ?? "", 7),
+  const { data: changelogResponse } = useQuery({
+    ...changelogQueryOptions(selectedProjectId ?? "", 7, 1),
     enabled: !!selectedProjectId,
   });
 
-  const recentChanges = changelogEntries.slice(0, 5);
+  const recentChanges = (changelogResponse?.data?.items ?? []).slice(0, 5);
   const isLoading = isDashboardLoading || isBrokenPagesLoading;
 
   function handleRescanSuccess() {

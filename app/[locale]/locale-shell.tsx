@@ -35,11 +35,11 @@ export function LocaleShell({ children }: LocaleShellProps) {
   return (
     <>
       <FcmInitializer />
-      <SidebarProvider defaultOpen>
+      <SidebarProvider defaultOpen className="overflow-x-hidden">
         <SideBar />
-        <SidebarInset className="min-h-svh">
+        <SidebarInset className="min-h-svh overflow-x-hidden">
           <Header />
-          <div className="min-w-0 flex-1 overflow-x-hidden">{children}</div>
+          <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </>

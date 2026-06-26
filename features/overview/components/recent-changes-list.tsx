@@ -12,8 +12,8 @@ type RecentChangesListProps = {
   items: ChangelogEntry[];
 };
 
-function getChangeIcon(field: string) {
-  if (field.toLowerCase().includes("redirect")) {
+function getChangeIcon(changeType: string) {
+  if (changeType.toLowerCase().includes("redirect")) {
     return Sparkles;
   }
   return Check;
@@ -40,8 +40,8 @@ export function RecentChangesList({ items }: RecentChangesListProps) {
 
       <ul className="flex flex-col divide-y divide-neutral-100">
         {items.map((entry) => {
-          const Icon = getChangeIcon(entry.field);
-          const relativeDate = formatDistanceToNow(new Date(entry.date), {
+          const Icon = getChangeIcon(entry.change_type);
+          const relativeDate = formatDistanceToNow(new Date(entry.applied_at), {
             addSuffix: true,
             locale: dateLocale,
           });
@@ -57,9 +57,9 @@ export function RecentChangesList({ items }: RecentChangesListProps) {
                 </div>
                 <div className="min-w-0 text-start">
                   <p className="truncate text-label-md font-medium text-secondary-500">
-                    {entry.field}
+                    {entry.change_type.replace(/_/g, " ")}
                   </p>
-                  <p className="truncate text-label-sm text-neutral-400">{entry.url}</p>
+                  <p className="truncate text-label-sm text-neutral-400">{entry.page_url}</p>
                 </div>
               </div>
               <span className="shrink-0 text-label-sm text-neutral-400">{relativeDate}</span>

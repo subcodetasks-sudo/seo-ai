@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 import { useDirection } from "@/components/ui/direction";
 import {
   Pagination,
@@ -66,7 +67,7 @@ export function ChangelogContent() {
 
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+      <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -104,11 +105,11 @@ export function ChangelogContent() {
 
         {/* Table */}
         {isLoading ? (
-          <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
-            <p className="text-label-md text-neutral-400">{t("loading")}</p>
+          <div className="flex flex-1 items-center justify-center py-16">
+            <Spinner className="size-8 text-neutral-400" />
           </div>
         ) : items.length === 0 ? (
-          <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
+          <div className="flex flex-1 items-center justify-center py-16">
             <p className="text-label-md text-neutral-500">{t("empty")}</p>
           </div>
         ) : (
