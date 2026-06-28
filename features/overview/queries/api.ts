@@ -4,7 +4,7 @@ import type { ProjectDashboardApiResponse } from "../types";
 
 export async function getOverviewDashboard(projectId: string) {
   const response = await apiClient<ProjectDashboardApiResponse>(
-    `projects/${projectId}/dashboard`,
+    `projects/${projectId}/overview`,
     { method: "GET" },
   );
 

@@ -1,6 +1,6 @@
 import type { ProjectDashboard } from "@/features/home/types";
 
-export type { ProjectDashboard, TopIssue } from "@/features/home/types";
+export type { ProjectDashboard, TopIssue, LastChange } from "@/features/home/types";
 
 export type ChartPoint = {
   label: string;

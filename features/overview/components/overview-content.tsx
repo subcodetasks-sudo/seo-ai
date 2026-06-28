@@ -5,13 +5,9 @@ import { useTranslations } from "next-intl";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDirection } from "@/components/ui/direction";
-import { changelogQueryOptions } from "@/features/changelog";
 import { allProjectsQueryOptions, useSelectedProject } from "@/features/home";
 import { overviewKeys } from "../queries/query-keys";
-import {
-  overviewBrokenPagesCountQueryOptions,
-  overviewDashboardQueryOptions,
-} from "../queries/queries";
+import { overviewDashboardQueryOptions } from "../queries/queries";
 import { HealthSummaryCard } from "./health-summary-card";
 import { HealthScoreTrendChart } from "./health-score-trend-chart";
 import { OverviewHeader } from "./overview-header";
@@ -57,25 +53,10 @@ export function OverviewContent() {
     isError: isDashboardError,
   } = useQuery(overviewDashboardQueryOptions(selectedProjectId ?? ""));
 
-  const { data: brokenPagesCount = 0, isLoading: isBrokenPagesLoading } = useQuery(
-    overviewBrokenPagesCountQueryOptions(selectedProjectId ?? ""),
-  );
-
-  const { data: changelogResponse } = useQuery({
-    ...changelogQueryOptions(selectedProjectId ?? "", 7, 1),
-    enabled: !!selectedProjectId,
-  });
-
-  const recentChanges = (changelogResponse?.data?.items ?? []).slice(0, 5);
-  const isLoading = isDashboardLoading || isBrokenPagesLoading;
-
   function handleRescanSuccess() {
     if (!selectedProjectId) return;
     void queryClient.invalidateQueries({
       queryKey: overviewKeys.dashboard(selectedProjectId),
-    });
-    void queryClient.invalidateQueries({
-      queryKey: overviewKeys.brokenPagesCount(selectedProjectId),
     });
   }
 
@@ -90,7 +71,7 @@ export function OverviewContent() {
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
       <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-6">
-        {isLoading ? (
+        {isDashboardLoading ? (
           <OverviewSkeleton />
         ) : isDashboardError || !dashboard ? (
           <div className="flex flex-col gap-6">
@@ -110,7 +91,7 @@ export function OverviewContent() {
 
             <OverviewStatCards
               dashboard={dashboard}
-              brokenPagesCount={brokenPagesCount}
+              brokenPagesCount={dashboard.total_404_pages}
             />
 
             <div className="grid min-w-0 gap-4 *:min-w-0 lg:grid-cols-2">
@@ -118,8 +99,8 @@ export function OverviewContent() {
               <SeoIssuesTrendChart />
             </div>
 
-            {recentChanges.length > 0 ? (
-              <RecentChangesList items={recentChanges} />
+            {dashboard.last_changes.length > 0 ? (
+              <RecentChangesList items={dashboard.last_changes} />
             ) : null}
           </>
         )}

@@ -50,6 +50,19 @@ export type Project = {
 };
 
 /* get project dashboard */
+export type LastChange = {
+  page_url: string;
+  change_type: string;
+  applied_at: string;
+  status: string;
+};
+
+export type TopIssue = {
+  type: string;
+  count: number;
+  severity: string;
+};
+
 export type ProjectDashboard = {
   health_score: number;
   last_crawl_at: string;
@@ -58,15 +71,16 @@ export type ProjectDashboard = {
   issues_high: number;
   issues_medium: number;
   issues_low: number;
+  total_issues: number;
+  total_404_pages: number;
   trend_vs_prev: unknown;
   pending_suggestions: number;
   top_issues: TopIssue[];
-};
-
-export type TopIssue = {
-  type: string;
-  count: number;
-  severity: string;
+  ga_sessions: number | null;
+  ga_users: number | null;
+  ga_bounce_rate: number | null;
+  ga_avg_session_duration: number | null;
+  last_changes: LastChange[];
 };
 
 

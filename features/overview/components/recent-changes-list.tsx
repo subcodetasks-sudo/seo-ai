@@ -1,22 +1,26 @@
 "use client";
 
-import { Check, Sparkles } from "lucide-react";
+import { Check, Sparkles, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { formatDistanceToNow } from "date-fns";
 import { arSA, enUS } from "date-fns/locale";
 
 import { Link } from "@/i18n/navigation";
-import type { ChangelogEntry } from "@/features/changelog";
+import type { LastChange } from "../types";
 
 type RecentChangesListProps = {
-  items: ChangelogEntry[];
+  items: LastChange[];
 };
 
-function getChangeIcon(changeType: string) {
-  if (changeType.toLowerCase().includes("redirect")) {
-    return Sparkles;
-  }
+function getChangeIcon(changeType: string, status: string) {
+  if (status === "failed") return X;
+  if (changeType.toLowerCase().includes("redirect")) return Sparkles;
   return Check;
+}
+
+function getIconClassName(status: string) {
+  if (status === "failed") return "bg-error-50 text-error-500";
+  return "bg-success-50 text-success-500";
 }
 
 export function RecentChangesList({ items }: RecentChangesListProps) {
@@ -39,8 +43,9 @@ export function RecentChangesList({ items }: RecentChangesListProps) {
       </div>
 
       <ul className="flex flex-col divide-y divide-neutral-100">
-        {items.map((entry) => {
-          const Icon = getChangeIcon(entry.change_type);
+        {items.map((entry, index) => {
+          const Icon = getChangeIcon(entry.change_type, entry.status);
+          const iconClass = getIconClassName(entry.status);
           const relativeDate = formatDistanceToNow(new Date(entry.applied_at), {
             addSuffix: true,
             locale: dateLocale,
@@ -48,11 +53,13 @@ export function RecentChangesList({ items }: RecentChangesListProps) {
 
           return (
             <li
-              key={entry.id}
+              key={`${entry.page_url}-${entry.change_type}-${index}`}
               className="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0"
             >
               <div className="flex min-w-0 items-center gap-3">
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-success-50 text-success-500">
+                <div
+                  className={`flex size-8 shrink-0 items-center justify-center rounded-full ${iconClass}`}
+                >
                   <Icon className="size-4" aria-hidden="true" />
                 </div>
                 <div className="min-w-0 text-start">
