@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ArrowRight, ExternalLink, Sparkles, TriangleAlert } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
@@ -18,18 +17,18 @@ import {
 } from "@/components/ui/pagination";
 import { Link } from "@/i18n/navigation";
 import { useSelectedProject } from "@/features/home";
-import { crawlPagesQueryOptions } from "../queries/queries";
+import { issueSummaryQueryOptions } from "../queries/queries";
 import { useGenerateSuggestionsForLinks } from "../queries/mutations";
 
 const PAGE_SIZE = 20;
 
 type ProblemDetailProps = {
-  crawlId: string;
   type: string;
   severity?: string;
+  suggestionType: string | null;
 };
 
-export function ProblemDetail({ crawlId, type, severity }: ProblemDetailProps) {
+export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailProps) {
   const t = useTranslations("problems");
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
@@ -38,29 +37,24 @@ export function ProblemDetail({ crawlId, type, severity }: ProblemDetailProps) {
   const generateMutation = useGenerateSuggestionsForLinks();
 
   const { data, isLoading, isError } = useQuery(
-    crawlPagesQueryOptions({
-      projectId: selectedProjectId ?? "",
-      crawlId,
-      page,
-      pageSize: PAGE_SIZE,
-      severity,
-      issueType: type,
-    }),
+    issueSummaryQueryOptions({ projectId: selectedProjectId ?? "" }),
   );
 
+  const item = data?.items.find((i) => i.type === type);
+  const allUrls = item?.affected_urls ?? [];
+  const total = allUrls.length;
+  const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+  const pageUrls = allUrls.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   const title = t.has(`problemTypes.${type}`) ? t(`problemTypes.${type}`) : type;
-  const items = data?.items ?? [];
-  const total = data?.total ?? 0;
-  const totalPages = data?.total_pages ?? 1;
 
   function handleFixAll() {
-    if (!selectedProjectId || items.length === 0 || generateMutation.isPending) return;
-    const pageUrls = items.map((item) => item.url);
+    if (!selectedProjectId || pageUrls.length === 0 || !suggestionType || generateMutation.isPending) return;
     generateMutation.mutate(
-      { projectId: selectedProjectId, suggestionType: type, pageUrls },
+      { projectId: selectedProjectId, suggestionType, pageUrls },
       {
-        onSuccess: () => toast.success(t("detail.fixSuccess", { count: pageUrls.length })),
-        onError: () => toast.error(t("detail.fixError")),
+        onSuccess: () => {},
+        onError: () => {},
       },
     );
   }
@@ -114,25 +108,25 @@ export function ProblemDetail({ crawlId, type, severity }: ProblemDetailProps) {
             <p className="py-6 text-center text-label-md text-neutral-500">{t("loading")}</p>
           ) : isError ? (
             <p className="py-6 text-center text-label-md text-error-500">{t("error")}</p>
-          ) : items.length === 0 ? (
+          ) : pageUrls.length === 0 ? (
             <p className="py-6 text-center text-label-md text-neutral-500">
               {t("detail.noLinks")}
             </p>
           ) : (
             <ul className="flex flex-col divide-y divide-neutral-100">
-              {items.map((item) => (
-                <li key={item.id} className="flex items-center justify-between gap-3 py-3">
+              {pageUrls.map((url) => (
+                <li key={url} className="flex items-center justify-between gap-3 py-3">
                   <a
-                    href={item.url}
+                    href={url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="shrink-0 text-neutral-400 hover:text-neutral-600"
-                    aria-label={item.url}
+                    aria-label={url}
                   >
                     <ExternalLink className="size-4" aria-hidden="true" />
                   </a>
                   <span className="truncate text-label-sm text-error-500" dir="ltr">
-                    {item.url}
+                    {url}
                   </span>
                 </li>
               ))}
@@ -142,7 +136,7 @@ export function ProblemDetail({ crawlId, type, severity }: ProblemDetailProps) {
           {total > 0 && (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-label-sm text-neutral-500">
-                {t("detail.showingLinks", { shown: items.length, total })}
+                {t("detail.showingLinks", { shown: pageUrls.length, total })}
               </p>
               {totalPages > 1 && (
                 <Pagination className="mx-0 w-auto justify-end">
@@ -194,7 +188,7 @@ export function ProblemDetail({ crawlId, type, severity }: ProblemDetailProps) {
             type="button"
             size="lg"
             onClick={handleFixAll}
-            disabled={items.length === 0 || generateMutation.isPending}
+            disabled={pageUrls.length === 0 || !suggestionType || generateMutation.isPending}
             className="gap-2 bg-primary-500 text-white hover:bg-primary-500/90 disabled:opacity-50 text-label-md font-medium"
           >
             <Sparkles className="size-4" aria-hidden="true" />

@@ -174,12 +174,9 @@ export default function SideBar() {
           {projects.length > 0 && selectedProject ? (
             <Select value={selectedProject.id} onValueChange={setSelectedProjectId}>
               <SelectTrigger className="h-auto! w-full items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2.5 hover:border-neutral-300 transition-colors">
-                <div className="flex min-w-0 flex-1 flex-col items-start gap-0.5">
+                <div className="flex min-w-0 flex-1 flex-col items-start">
                   <p className="truncate text-sm font-semibold text-secondary-500">
                     {selectedProject.name}
-                  </p>
-                  <p className="truncate text-xs text-secondary-300" dir="ltr">
-                    {selectedProject.domain}
                   </p>
                 </div>
               </SelectTrigger>
@@ -194,12 +191,9 @@ export default function SideBar() {
                     value={project.id}
                     className="rounded-md px-3 py-2.5 pe-8 data-[state=checked]:bg-success-75"
                   >
-                    <div className="flex min-w-0 flex-col items-start gap-0.5">
+                    <div className="flex min-w-0 flex-col items-start">
                       <p className="truncate text-sm font-medium text-secondary-500">
                         {project.name}
-                      </p>
-                      <p className="truncate text-xs text-secondary-300" dir="ltr">
-                        {project.domain}
                       </p>
                     </div>
                   </SelectItem>

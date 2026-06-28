@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, EyeOff, Lightbulb, TriangleAlert } from "lucide-react";
+import { ChevronRight, Lightbulb, TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/table";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import { useSelectedProject } from "@/features/home";
+import { useGenerateSuggestionsForLinks } from "../queries/mutations";
 import type { IssueSummaryItem } from "../types";
 
 type ProblemsTableProps = {
@@ -30,6 +32,8 @@ const severityStyles: Record<string, string> = {
 
 export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
   const t = useTranslations("problems");
+  const { selectedProjectId } = useSelectedProject();
+  const generateMutation = useGenerateSuggestionsForLinks();
 
   function getProblemLabel(type: string) {
     const key = `problemTypes.${type}`;
@@ -37,21 +41,37 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
   }
 
   function viewPagesHref(item: IssueSummaryItem) {
-    return `/dashboard/problems/${crawlJobId}?type=${item.type}&severity=${item.severity}`;
+    const params = new URLSearchParams({ type: item.type, severity: item.severity });
+    if (item.suggestion_type) params.set("suggestion_type", item.suggestion_type);
+    return `/dashboard/problems/${crawlJobId}?${params.toString()}`;
+  }
+
+  function handleSuggestFix(item: IssueSummaryItem) {
+    if (!selectedProjectId || !item.suggestion_type || generateMutation.isPending) return;
+    generateMutation.mutate({
+      projectId: selectedProjectId,
+      suggestionType: item.suggestion_type,
+      pageUrls: item.affected_urls,
+    });
   }
 
   function ActionButtons({ item }: { item: IssueSummaryItem }) {
+    const isFixing = generateMutation.isPending;
     return (
       <div className="flex items-center gap-2">
-        <Button
-          type="button"
-          size="sm"
-          className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm font-medium"
-        >
-          <Lightbulb className="size-3.5" aria-hidden="true" />
-          {t("table.suggestFix")}
-        </Button>
-        <Button
+        {item.suggestion_type && (
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => handleSuggestFix(item)}
+            disabled={isFixing}
+            className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm font-medium disabled:opacity-50"
+          >
+            <Lightbulb className="size-3.5" aria-hidden="true" />
+            {t("table.suggestFix")}
+          </Button>
+        )}
+        {/* <Button
           type="button"
           size="sm"
           variant="ghost"
@@ -59,7 +79,7 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
         >
           <EyeOff className="size-3.5" aria-hidden="true" />
           {t("table.ignore")}
-        </Button>
+        </Button> */}
         <Button
           asChild
           size="sm"

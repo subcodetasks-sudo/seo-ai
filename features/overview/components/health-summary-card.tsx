@@ -16,7 +16,7 @@ type HealthSummaryCardProps = {
   projectId: string;
   domain: string;
   dashboard: ProjectDashboard;
-  onRescanSuccess?: () => void;
+  onRescanSuccess?: (crawlJobId: string) => void;
 };
 
 export function HealthSummaryCard({
@@ -43,7 +43,7 @@ export function HealthSummaryCard({
 
   function handleRescan() {
     startCrawl(projectId, {
-      onSuccess: () => onRescanSuccess?.(),
+      onSuccess: (response) => onRescanSuccess?.(response.data.crawl_job_id),
     });
   }
 

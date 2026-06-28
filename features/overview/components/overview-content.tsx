@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDirection } from "@/components/ui/direction";
+import { useRouter } from "@/i18n/navigation";
 import { allProjectsQueryOptions, useSelectedProject } from "@/features/home";
+import ProjectAnalysis from "@/features/home/components/project-analysis/ProjectAnalysis";
 import { overviewKeys } from "../queries/query-keys";
 import { overviewDashboardQueryOptions } from "../queries/queries";
 import { HealthSummaryCard } from "./health-summary-card";
@@ -40,8 +43,10 @@ function OverviewSkeleton() {
 export function OverviewContent() {
   const t = useTranslations("overview");
   const dir = useDirection();
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { selectedProjectId } = useSelectedProject();
+  const [activeCrawlId, setActiveCrawlId] = useState<string | null>(null);
 
   const { data: projectsResponse } = useQuery(allProjectsQueryOptions());
   const projects = projectsResponse?.data?.items ?? [];
@@ -53,17 +58,40 @@ export function OverviewContent() {
     isError: isDashboardError,
   } = useQuery(overviewDashboardQueryOptions(selectedProjectId ?? ""));
 
-  function handleRescanSuccess() {
-    if (!selectedProjectId) return;
-    void queryClient.invalidateQueries({
-      queryKey: overviewKeys.dashboard(selectedProjectId),
-    });
+  function handleRescanSuccess(crawlJobId: string) {
+    setActiveCrawlId(crawlJobId);
+  }
+
+  function handleCrawlDone() {
+    setActiveCrawlId(null);
+    if (selectedProjectId) {
+      void queryClient.invalidateQueries({
+        queryKey: overviewKeys.dashboard(selectedProjectId),
+      });
+    }
   }
 
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
         <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+      </div>
+    );
+  }
+
+  if (activeCrawlId) {
+    return (
+      <div dir={dir} className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
+        <ProjectAnalysis
+          projectId={selectedProjectId}
+          crawlJobId={activeCrawlId}
+          url={selectedProject?.domain ?? ""}
+          onViewIssues={() => {
+            handleCrawlDone();
+            router.push("/dashboard/problems");
+          }}
+          onViewProject={handleCrawlDone}
+        />
       </div>
     );
   }

@@ -6,6 +6,8 @@ export type IssueSummaryItem = {
   severity: ProblemSeverity;
   count: number;
   affected_pages: number;
+  suggestion_type: string | null;
+  affected_urls: string[];
 };
 
 export type IssueSummaryResponse = {

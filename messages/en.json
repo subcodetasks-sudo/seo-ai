@@ -251,6 +251,8 @@
       "detectedAt": "Detection Date",
       "action": "Action",
       "fixWithAi": "Fix with AI",
+      "fixing": "Fixing…",
+      "fixSuccess": "AI fix requested successfully",
       "noReferrer": "—",
       "copyUrl": "Copy full URL",
       "openUrl": "Open in new tab"

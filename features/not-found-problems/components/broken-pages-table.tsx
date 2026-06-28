@@ -7,6 +7,9 @@ import { Copy, ExternalLink, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
 import {
@@ -15,7 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Link } from "@/i18n/navigation";
+// import { Link } from "@/i18n/navigation";
 import {
   Table,
   TableBody,
@@ -24,6 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { generateSuggestion } from "@/features/problems/queries/api";
 import type { BrokenPage } from "../types";
 
 type BrokenPagesTableProps = {
@@ -70,6 +74,19 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
   const dir = useDirection();
   const dateLocale = locale === "ar" ? ar : enUS;
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [fixingIds, setFixingIds] = useState<Set<string>>(new Set());
+
+  const { mutate: fixWithAi } = useMutation({
+    mutationFn: ({ pageUrl }: { pageUrl: string }) =>
+      generateSuggestion(projectId, "redirect", pageUrl),
+    onSuccess: (_, { pageUrl }) => {
+      setFixingIds((prev) => { const next = new Set(prev); next.delete(pageUrl); return next; });
+      toast.success(t("fixSuccess"));
+    },
+    onError: (_, { pageUrl }) => {
+      setFixingIds((prev) => { const next = new Set(prev); next.delete(pageUrl); return next; });
+    },
+  });
 
   function handleCopyUrl(url: string, itemId: string) {
     const fullUrl = constructFullUrl(projectDomain, null, url);
@@ -120,16 +137,22 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
           </TooltipTrigger>
           <TooltipContent side="bottom">{t("openUrl")}</TooltipContent>
         </Tooltip>
+        {/* <Link href={`/dashboard/404-problems/ai-fix?pageId=${item.id}&projectId=${projectId}`}>
+          {t("fixWithAi")}
+        </Link> */}
         <Button
           type="button"
           size="sm"
-          asChild
-          className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm"
+          disabled={fixingIds.has(constructFullUrl(projectDomain, null, item.url))}
+          onClick={() => {
+            const pageUrl = constructFullUrl(projectDomain, null, item.url);
+            setFixingIds((prev) => new Set(prev).add(pageUrl));
+            fixWithAi({ pageUrl });
+          }}
+          className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm disabled:opacity-50"
         >
-          <Link href={`/dashboard/404-problems/ai-fix?pageId=${item.id}&projectId=${projectId}`}>
-            <Sparkles className="size-3.5" aria-hidden="true" />
-            {t("fixWithAi")}
-          </Link>
+          <Sparkles className="size-3.5" aria-hidden="true" />
+          {fixingIds.has(constructFullUrl(projectDomain, null, item.url)) ? t("fixing") : t("fixWithAi")}
         </Button>
       </div>
     </TooltipProvider>
