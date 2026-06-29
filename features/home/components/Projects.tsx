@@ -196,7 +196,7 @@ function ProjectCard({ project }: ProjectCardProps) {
 
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button
+            {/* <Button
               type="button"
               variant="outline"
               size="icon"
@@ -205,7 +205,7 @@ function ProjectCard({ project }: ProjectCardProps) {
               aria-label={t("delete")}
             >
               <Trash2 className="size-4" aria-hidden="true" />
-            </Button>
+            </Button> */}
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Settings } from "lucide-react";
+import { Bell, Menu, Settings } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
@@ -9,7 +9,6 @@ import { useQuery } from "@tanstack/react-query";
 import { unreadCountQueryOptions } from "@/features/notifications/queries/queries";
 
 import { LanguageSelector } from "@/components/LanguageSelector";
-import LogoIcon from "@/components/LogoIcon";
 import { Button } from "@/components/ui/button";
 import {
   Breadcrumb,
@@ -264,7 +263,7 @@ export function Header({ className }: HeaderProps) {
                     aria-label={tSidebar("open")}
                     className="size-10 rounded-lg hover:bg-neutral-50"
                   >
-                    <LogoIcon />
+                    <Menu size={30} />
                   </Button>
                 </motion.div>
               </motion.div>

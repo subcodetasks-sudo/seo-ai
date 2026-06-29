@@ -139,10 +139,10 @@ export default function SideBar() {
     <UiSidebar
       side={side}
       collapsible="offcanvas"
-      className="border-neutral-200 bg-white"
+      className="border-neutral-200"
     >
       <motion.div
-        className="flex h-full flex-col px-5 py-6"
+        className="flex h-full flex-col px-5 py-6 bg-white border-e border-neutral-200"
         initial={false}
         animate={isOpen ? "visible" : "hidden"}
         variants={getSidebarContainerVariants()}
