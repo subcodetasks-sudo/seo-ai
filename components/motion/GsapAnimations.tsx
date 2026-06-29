@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -51,6 +52,8 @@ function createLogoSvg(name: string) {
 }
 
 export function GsapAnimations() {
+  const t = useTranslations("landing");
+
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -308,7 +311,7 @@ export function GsapAnimations() {
         slides.forEach((_, i) => {
           const dot = document.createElement("button");
           dot.className = "w-2.5 h-2.5 rounded-full transition-all";
-          dot.setAttribute("aria-label", `شريحة ${i + 1}`);
+          dot.setAttribute("aria-label", t("a11y.slide", { n: i + 1 }));
           dot.addEventListener("click", () => go(i, true));
           dot.addEventListener("pointerenter", () => go(i, true));
           dotsWrap.appendChild(dot);
@@ -317,7 +320,7 @@ export function GsapAnimations() {
         const updatePortrait = () => {
           const slide = slides[idx];
           const initial = slide.dataset.portraitInitial || "";
-          const color = slide.dataset.portraitColor || "#a0cd39";
+          const color = slide.dataset.portraitColor || "var(--primary-300)";
           if (portraitInitial) portraitInitial.textContent = initial;
           if (portraitWrap) {
             portraitWrap.style.backgroundColor = color;
@@ -333,7 +336,7 @@ export function GsapAnimations() {
         const render = () => {
           slides.forEach((slide, i) => slide.classList.toggle("active", i === idx));
           dots.forEach((dot, i) => {
-            dot.style.backgroundColor = i === idx ? "#a0cd39" : "#d8ddd1";
+            dot.style.backgroundColor = i === idx ? "var(--primary-300)" : "var(--neutral-300)";
             dot.style.width = i === idx ? "22px" : "10px";
           });
           updatePortrait();
@@ -534,7 +537,7 @@ export function GsapAnimations() {
       ctx.revert();
       document.body.classList.remove("reveal-ready");
     };
-  }, []);
+  }, [t]);
 
   return null;
 }

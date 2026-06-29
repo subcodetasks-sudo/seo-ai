@@ -12,19 +12,19 @@ import type { ChartPoint } from "../types";
 
 const NOT_FOUND_COLOR = "#EF4444";
 
-const chartConfig = {
-  value: {
-    label: "404 Errors",
-    color: NOT_FOUND_COLOR,
-  },
-};
-
 type NotFoundTrendChartProps = {
   data: ChartPoint[];
 };
 
 export function NotFoundTrendChart({ data }: NotFoundTrendChartProps) {
   const t = useTranslations("reports.charts");
+
+  const chartConfig = {
+    value: {
+      label: t("notFoundLabel"),
+      color: NOT_FOUND_COLOR,
+    },
+  };
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">

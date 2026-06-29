@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 export interface Plan {
   id: string;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export function PricingCards({ plans, title }: Props) {
+  const t = useTranslations('landing');
   const [isAnnual, setIsAnnual] = useState(false);
   const [featuredIndex, setFeaturedIndex] = useState(
     Math.min(1, plans.length - 1),
@@ -43,25 +45,24 @@ export function PricingCards({ plans, title }: Props) {
     <section
       id='pricing'
       className='pricing-section bg-pattern relative overflow-hidden py-16 lg:py-24'
-      dir='rtl'
     >
       <div className='glow pricing-glow h-[560px] w-[560px] -bottom-40 left-1/2 opacity-60'></div>
 
       <div className='layer-content mx-auto max-w-7xl px-5 lg:px-8'>
         <div className='mx-auto max-w-2xl text-center' data-anim='fade-up'>
-          <div className='eyebrow mb-5'>الأسعار</div>
+          <div className='eyebrow mb-5'>{t('pricing.eyebrow')}</div>
           <h2 className='text-3xl font-extrabold leading-[1.25] text-ink sm:text-4xl lg:text-[2.7rem]'>
             {title}
           </h2>
-          <p className='mt-4 text-lg text-[#4a5a4c]'>
-            ابدأ مجاناً، وارتقِ متى احتجت. بدون عقود ملزمة.
+          <p className='mt-4 text-lg text-ink-soft'>
+            {t('pricing.subtitle')}
           </p>
 
           <div className='pricing-toggle-wrap mt-7 inline-flex items-center justify-center'>
             <span
-              className={`text-base font-extrabold ${isAnnual ? 'text-[#9aa49a]' : 'text-ink'}`}
+              className={`text-base font-extrabold ${isAnnual ? 'text-neutral-400' : 'text-ink'}`}
             >
-              شهري
+              {t('pricing.monthly')}
             </span>
             <button
               type='button'
@@ -73,17 +74,17 @@ export function PricingCards({ plans, title }: Props) {
               <span className='toggle-thumb'></span>
             </button>
             <span
-              className={`annual-label inline-flex items-center gap-3 text-base font-bold ${isAnnual ? 'text-ink' : 'text-[#9aa49a]'}`}
+              className={`annual-label inline-flex items-center gap-3 text-base font-bold ${isAnnual ? 'text-ink' : 'text-neutral-400'}`}
             >
-              <span>سنوي</span>
+              <span>{t('pricing.yearly')}</span>
               <span className='discount-badge rounded-full bg-primary/15 px-2.5 py-1 text-xs font-bold text-primary-700'>
-                وفّر 20%
+                {t('pricing.saveBadge')}
               </span>
             </span>
           </div>
 
-          <p className='mt-4 text-sm font-bold text-[#9aa49a]'>
-            انقر على أي باقة لعرض تفاصيلها في المنتصف
+          <p className='mt-4 text-sm font-bold text-neutral-400'>
+            {t('pricing.clickHint')}
           </p>
         </div>
 
@@ -101,8 +102,8 @@ export function PricingCards({ plans, title }: Props) {
                 data-anim='fade-up'
               >
                 {isFeatured && (
-                  <div className='absolute -top-3.5 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#14210a] px-4 py-1.5 text-xs font-extrabold text-primary shadow-sm'>
-                    الأكثر شيوعاً ✦
+                  <div className='absolute -top-3.5 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full bg-ink px-4 py-1.5 text-xs font-extrabold text-primary shadow-sm'>
+                    {t('pricing.mostPopular')}
                   </div>
                 )}
                 <article
@@ -118,7 +119,7 @@ export function PricingCards({ plans, title }: Props) {
                   }}
                   className={`pricing-card-v2 group relative flex flex-1 flex-col overflow-hidden text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                     isFeatured
-                      ? 'pricing-card-v2-featured cursor-pointer p-8 shadow-[0_30px_70px_-25px_rgba(20,33,10,0.35)] ring-1 ring-[#14210a]/10 lg:p-10'
+                      ? 'pricing-card-v2-featured cursor-pointer p-8 shadow-[0_30px_70px_-25px_rgba(20,33,10,0.35)] ring-1 ring-ink/10 lg:p-10'
                       : 'cursor-pointer bg-white p-7 hover:-translate-y-1 hover:shadow-xl'
                   }`}
                 >
@@ -129,13 +130,13 @@ export function PricingCards({ plans, title }: Props) {
 
                   <div className='pricing-card-v2__head'>
                     <h3
-                      className={`text-2xl font-extrabold ${isFeatured ? 'text-[#14210a]' : 'text-ink'}`}
+                      className={`text-2xl font-extrabold ${isFeatured ? 'text-ink' : 'text-ink'}`}
                     >
                       {plan.name}
                     </h3>
                     {plan.description && (
                       <p
-                        className={`mt-1 text-base font-semibold ${isFeatured ? 'text-[#2a4510]/65' : 'text-[#9aa49a]'}`}
+                        className={`mt-1 text-base font-semibold ${isFeatured ? 'text-primary-900/65' : 'text-neutral-400'}`}
                       >
                         {plan.description}
                       </p>
@@ -147,14 +148,14 @@ export function PricingCards({ plans, title }: Props) {
                     dir='rtl'
                   >
                     <span
-                      className={`${isFeatured ? 'text-[4.8rem]' : 'text-[3.6rem]'} font-black leading-none ${isFeatured ? 'text-[#14210a]' : 'text-ink'}`}
+                      className={`${isFeatured ? 'text-[4.8rem]' : 'text-[3.6rem]'} font-black leading-none text-ink`}
                     >
                       {isAnnual ? plan.annual : plan.monthly}
                     </span>
                     <span
-                      className={`mb-3 text-2xl font-extrabold ${isFeatured ? 'text-[#2a4510]/55' : 'text-[#a0aaa0]'}`}
+                      className={`mb-3 text-2xl font-extrabold ${isFeatured ? 'text-primary-900/55' : 'text-neutral-400'}`}
                     >
-                      ر.س / <span>{isAnnual ? 'سنوياً' : 'شهرياً'}</span>
+                      {t('pricing.currency')} <span>{isAnnual ? t('pricing.perYear') : t('pricing.perMonth')}</span>
                     </span>
                   </div>
 
@@ -165,7 +166,7 @@ export function PricingCards({ plans, title }: Props) {
                   </span>
 
                   <ul
-                    className={`mt-9 space-y-4 text-lg font-semibold leading-7 ${isFeatured ? 'text-[#14210a]/80' : 'text-[#526056]'}`}
+                    className={`mt-9 space-y-4 text-lg font-semibold leading-7 ${isFeatured ? 'text-ink/80' : 'text-ink-soft'}`}
                   >
                     {plan.features.map((feature, fi) => (
                       <li className='flex items-center gap-3' key={fi}>

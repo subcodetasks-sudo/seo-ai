@@ -56,6 +56,12 @@
   --color-primary-800: var(--primary-800);
   --color-primary-900: var(--primary-900);
   --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-muted: var(--ink-muted);
+
+  /* Landing surface / line tokens */
+  --color-primary-surface: var(--primary-surface);
+  --color-primary-line: var(--primary-line);
 
   /* Secondary palette (S) */
   --color-secondary-50: var(--secondary-50);
@@ -146,6 +152,12 @@
   --primary-800: #4a6120;
   --primary-900: #3f521f;
   --ink: #131a14;
+  --ink-soft: #3d4a3f;
+  --ink-muted: #6b7669;
+
+  /* ── Landing surface / line tokens ── */
+  --primary-surface: #f8faf4;
+  --primary-line: #ecefe7;
 
   /* ── Secondary palette ── */
   --secondary-50: #eeeeef;

@@ -1,23 +1,35 @@
+import { apiClient } from "@/lib/client";
 import type { ReportsAnalytics, ReportsPeriod, ScanLogEntry } from "../types";
-import { reportsAnalyticsSchema, scanLogResponseSchema } from "../schemas/reports.schema";
-import { MOCK_ANALYTICS_BY_PERIOD, MOCK_SCAN_LOG } from "./mock-data";
+import { reportsTrendsResponseSchema, scanLogResponseSchema } from "../schemas/reports.schema";
 
-// TODO: replace mock when backend exposes GET projects/{id}/reports?period={n}
 export async function getReportsAnalytics(
   projectId: string,
   period: ReportsPeriod,
 ): Promise<ReportsAnalytics> {
-  void projectId;
-  const data = MOCK_ANALYTICS_BY_PERIOD[period];
-  return reportsAnalyticsSchema.parse(data);
+  const response = await apiClient(
+    `projects/${projectId}/reports/trends?days=${period}`,
+    {},
+    "Failed to fetch reports trends",
+  );
+  const { data } = reportsTrendsResponseSchema.parse(response);
+  const toChartPoints = (arr: { date: string; value: number }[]) =>
+    arr.map(({ date, value }) => ({ label: date, value }));
+  return {
+    healthScoreTrend: toChartPoints(data.health_score_trend),
+    seoIssuesTrend: toChartPoints(data.issues_trend),
+    notFoundTrend: toChartPoints(data.broken_pages_trend),
+    weeklyChanges: toChartPoints(data.applied_changes_weekly),
+  };
 }
 
-// TODO: replace mock when backend exposes GET projects/{id}/crawls for scan log
 export async function getScanLog(
   projectId: string,
-  period: ReportsPeriod,
+  _period: ReportsPeriod,
 ): Promise<ScanLogEntry[]> {
-  void projectId;
-  void period;
-  return scanLogResponseSchema.parse(MOCK_SCAN_LOG);
+  const response = await apiClient(
+    `projects/${projectId}/reports/scan-log?page=1&per_page=10`,
+    {},
+    "Failed to fetch scan log",
+  );
+  return scanLogResponseSchema.parse(response).data.items;
 }

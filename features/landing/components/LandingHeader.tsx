@@ -30,7 +30,7 @@ export function LandingHeader() {
         <a href='#hero' className='flex items-center shrink-0'>
           <Image
             src='/logo.webp'
-            alt='هويّة'
+            alt={t('a11y.logoAlt')}
             width={180}
             height={120}
             className='h-10 w-auto'
@@ -49,7 +49,7 @@ export function LandingHeader() {
             id='language-toggle'
             type='button'
             className='language-toggle'
-            aria-label='Change language'
+            aria-label={t('a11y.changeLanguage')}
             aria-pressed={locale === 'en'}
             data-lang={locale}
             onClick={toggleLanguage}
@@ -62,7 +62,7 @@ export function LandingHeader() {
           <button
             id='menu-toggle'
             aria-label={t('navbar.menu')}
-            className='lg:hidden w-11 h-11 rounded-full border border-[#ecefe7] bg-white flex items-center justify-center'
+            className='lg:hidden w-11 h-11 rounded-full border border-primary-line bg-white flex items-center justify-center'
           >
             <svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round'>
               <line x1='3' y1='6' x2='21' y2='6' />
@@ -72,7 +72,7 @@ export function LandingHeader() {
           </button>
         </div>
       </div>
-      <div id='mobile-menu' className='mobile-menu lg:hidden bg-white border-t border-[#ecefe7]'>
+      <div id='mobile-menu' className='mobile-menu lg:hidden bg-white border-t border-primary-line'>
         <nav className='px-5 py-4 flex flex-col gap-1'>
           {navItems.map((item) => (
             <a key={item.href} href={item.href} className='py-3 text-ink/80 font-semibold'>

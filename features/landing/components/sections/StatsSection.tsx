@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import { apiFetch } from '@/lib/landing-api';
 import type { Statistics } from '@/features/landing/types/landing-api';
 
@@ -12,6 +13,7 @@ function parseStatValue(value: string): { target: number; suffix: string } {
 }
 
 export async function StatsSection() {
+  const t = await getTranslations('landing');
   const stats = await apiFetch<Statistics>('/api/v1/statistics?lang=ar');
   const cards = stats?.cards?.items ?? [];
 
@@ -34,11 +36,11 @@ export async function StatsSection() {
 
       <div className='layer-content mx-auto max-w-7xl px-5 lg:px-8'>
         <div className='max-w-2xl mx-auto text-center mb-14' data-anim='fade-up'>
-          <div className='eyebrow mb-6'>{stats?.title ?? 'الأرقام والإحصائيات'}</div>
+          <div className='eyebrow mb-6'>{stats?.title ?? t('stats.defaultEyebrow')}</div>
           <h2 className='text-3xl sm:text-4xl lg:text-[2.7rem] font-extrabold leading-[1.25] text-ink'>
             {stats?.description
               ? stats.description.replace(/<[^>]*>/g, '').trim()
-              : 'أرقام تتحدّث عن نتائج حقيقية'}
+              : t('stats.defaultTitle')}
           </h2>
         </div>
 
@@ -49,7 +51,7 @@ export async function StatsSection() {
           >
             <Image
               src='/digital_print.png'
-              alt='إحصائيات'
+              alt={t('a11y.statisticsAlt')}
               width={260}
               height={260}
               className='absolute -translate-x-1/2 object-cover opacity-20'
@@ -57,37 +59,37 @@ export async function StatsSection() {
             />
             <div className='swirl-watermark inset-0 bg-center' style={{ opacity: '0.12' }}></div>
             <div className='relative z-20'>
-              <div className='text-sm font-extrabold text-[#274011]/80'>
-                {c0?.label ?? 'مواقع تمت خدمتها'}
+              <div className='text-sm font-extrabold text-primary-900/80'>
+                {c0?.label ?? t('stats.defaultLabel0')}
               </div>
             </div>
             <div className='relative z-20'>
-              <div className='text-6xl lg:text-7xl font-extrabold text-[#1d3208] leading-none'>
+              <div className='text-6xl lg:text-7xl font-extrabold text-ink leading-none'>
                 <span data-counter data-target={p0.target}>0</span>
                 <span>{p0.suffix}</span>
               </div>
-              <p className='mt-4 text-[#274011]/85 font-semibold max-w-xs'>
-                متاجر ومواقع عربية تثق في هويّة لتحسين حضورها على محركات البحث.
+              <p className='mt-4 text-primary-900/85 font-semibold max-w-xs'>
+                {t('stats.defaultBody')}
               </p>
             </div>
           </div>
 
           <div className='hover-lift surface pattern-card lg:col-span-2 p-7 flex flex-col justify-center' data-anim='fade-up'>
-            <div className='text-sm font-extrabold text-[#9aa49a] mb-2'>
-              {c1?.label ?? 'صفحات تم تحليلها'}
+            <div className='text-sm font-extrabold text-neutral-400 mb-2'>
+              {c1?.label ?? t('stats.defaultLabel1')}
             </div>
             <div className='text-4xl lg:text-5xl font-extrabold text-ink leading-none'>
               <span data-counter data-target={p1.target}>0</span>
               <span className='text-primary-600'>{p1.suffix}</span>
             </div>
-            <div className='mt-3 h-2 rounded-full bg-[#eef2e6] overflow-hidden'>
+            <div className='mt-3 h-2 rounded-full bg-primary-line overflow-hidden'>
               <div className='h-full w-[78%] bg-primary rounded-full'></div>
             </div>
           </div>
 
           <div className='hover-lift surface pattern-card p-7 flex flex-col justify-center' data-anim='fade-up'>
-            <div className='text-sm font-extrabold text-[#9aa49a] mb-2'>
-              {c2?.label ?? 'تحسينات تم تنفيذها'}
+            <div className='text-sm font-extrabold text-neutral-400 mb-2'>
+              {c2?.label ?? t('stats.defaultLabel2')}
             </div>
             <div className='text-4xl font-extrabold text-ink leading-none'>
               <span data-counter data-target={p2.target}>0</span>
@@ -96,8 +98,8 @@ export async function StatsSection() {
           </div>
 
           <div className='hover-lift surface pattern-card p-7 flex flex-col justify-center' data-anim='fade-up'>
-            <div className='text-sm font-extrabold text-[#9aa49a] mb-2'>
-              {c3?.label ?? 'متوسط زيادة الأداء'}
+            <div className='text-sm font-extrabold text-neutral-400 mb-2'>
+              {c3?.label ?? t('stats.defaultLabel3')}
             </div>
             <div className='text-4xl font-extrabold text-primary-700 leading-none'>
               {p3.suffix === '%' ? '+' : ''}

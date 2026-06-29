@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server';
 import { apiFetch } from '@/lib/landing-api';
 import type { Hero, HeroPartner } from '@/features/landing/types/landing-api';
 
@@ -63,6 +64,7 @@ function PartnerItem({ partner }: { partner: HeroPartner | string }) {
 }
 
 export async function TrustedSection() {
+  const t = await getTranslations('landing');
   const heroes = await apiFetch<Hero[]>('/api/v1/heroes?lang=ar');
   const apiPartners = heroes?.[0]?.partners ?? [];
 
@@ -74,14 +76,14 @@ export async function TrustedSection() {
   return (
     <section
       id='trusted'
-      className='bg-pattern relative overflow-hidden py-14 lg:py-16 border-y border-[#f0f3ea]'
+      className='bg-pattern relative overflow-hidden py-14 lg:py-16 border-y border-primary-line'
     >
       <div className='layer-content'>
         <p
-          className='trusted-title text-center text-sm sm:text-base font-bold text-[#9aa49a] mb-9 px-5'
+          className='trusted-title text-center text-sm sm:text-base font-bold text-neutral-400 mb-9 px-5'
           data-anim='fade-up'
         >
-          موثوق به ومتكامل مع أبرز منصات المتاجر وأنظمة إدارة المحتوى
+          {t('trusted.subtitle')}
         </p>
         <div className='marquee mb-4'>
           <div className='marquee-track marquee-ltr' data-marquee>

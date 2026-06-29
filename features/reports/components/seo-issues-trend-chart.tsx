@@ -12,19 +12,19 @@ import type { ChartPoint } from "../types";
 
 const SEO_ISSUES_COLOR = "#F39C12";
 
-const chartConfig = {
-  value: {
-    label: "Issues",
-    color: SEO_ISSUES_COLOR,
-  },
-};
-
 type SeoIssuesTrendChartProps = {
   data: ChartPoint[];
 };
 
 export function SeoIssuesTrendChart({ data }: SeoIssuesTrendChartProps) {
   const t = useTranslations("reports.charts");
+
+  const chartConfig = {
+    value: {
+      label: t("issuesLabel"),
+      color: SEO_ISSUES_COLOR,
+    },
+  };
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">

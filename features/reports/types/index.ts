@@ -12,13 +12,14 @@ export type ReportsAnalytics = {
   weeklyChanges: ChartPoint[];
 };
 
-export type ScanLogStatus = "completed" | "running" | "failed";
+export type ScanLogStatus = "completed" | "done" | "running" | "failed";
 
 export type ScanLogEntry = {
   id: string;
-  date: string;
-  pages: number;
-  issues: number;
-  durationSeconds: number;
   status: ScanLogStatus;
+  trigger: string;
+  pages_crawled: number;
+  created_at: string;
+  finished_at: string;
+  health_score: number | null;
 };

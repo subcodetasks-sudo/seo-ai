@@ -412,21 +412,30 @@
       "healthTrend": "Health Score Trend",
       "issuesTrend": "SEO Issues Trend",
       "notFoundTrend": "404 Errors Trend",
-      "weeklyChanges": "Weekly Applied Changes"
+      "weeklyChanges": "Weekly Applied Changes",
+      "healthScoreLabel": "Health Score",
+      "issuesLabel": "Issues",
+      "notFoundLabel": "404 Errors",
+      "weeklyChangesLabel": "Changes"
     },
     "scanLog": {
       "title": "Scan Log",
       "table": {
         "date": "Date",
         "pages": "Pages",
-        "issues": "Discovered Issues",
+        "trigger": "Trigger",
         "duration": "Duration",
         "status": "Status"
       },
       "status": {
         "completed": "Completed",
+        "done": "Completed",
         "running": "Running",
         "failed": "Failed"
+      },
+      "trigger": {
+        "manual": "Manual",
+        "scheduled": "Scheduled"
       }
     }
   },
@@ -983,7 +992,189 @@
       "menu": "Menu"
     },
     "hero": {
-      "watch": "Watch how it works"
+      "eyebrow": "AI-Powered SEO Optimization",
+      "cta": "Start for free",
+      "watch": "Watch how it works",
+      "closeVideo": "Close video",
+      "features": [
+        "No technical expertise needed",
+        "24/7 continuous monitoring",
+        "Integration with your platform"
+      ],
+      "integrationsLabel": "Integrates with:",
+      "dashboardTitle": "Howyah Dashboard",
+      "seoHealth": "SEO Health",
+      "excellent": "Excellent ↑",
+      "pagesCrawled": "Pages crawled",
+      "issuesFixed": "Issues fixed",
+      "aiSuggestion": "AI Suggestion",
+      "badgeNew": "New",
+      "accept": "Accept",
+      "edit": "Edit",
+      "organicVisits": "Organic visits",
+      "autoApplied": "Auto applied",
+      "improvementsToday": "12 improvements today",
+      "defaultTitle": "Improve your Google ranking",
+      "defaultDesc": "Howyah platform scans your entire site, discovers SEO issues, and generates AI-ready improvements — review and approve them to apply directly to your site without needing an SEO expert.",
+      "sampleSuggestion": "Suggested title: «Howyah Store — Best Products at Competitive Prices | Fast Shipping»"
+    },
+    "trusted": {
+      "subtitle": "Trusted by and integrated with the top e-commerce platforms and CMS systems"
+    },
+    "usecases": {
+      "eyebrow": "Platform Use Cases",
+      "eyebrows": [
+        "Feature 01 — Site Scan",
+        "Feature 02 — Artificial Intelligence",
+        "Feature 03 — Human Control",
+        "Feature 04 — Monitoring & Reports"
+      ],
+      "links": [
+        "Discover how scanning works",
+        "View AI suggestions",
+        "Learn more",
+        "Explore reports"
+      ],
+      "defaultLink": "Learn more",
+      "feature0DefaultDesc": "The system automatically scans all site pages and discovers technical, content, and SEO issues.",
+      "feature1DefaultTitle": "Smart suggestions ready to apply",
+      "feature1DefaultDesc": "AI generates titles, meta descriptions, structured schemas, and FAQs to improve your site's search visibility.",
+      "feature2DefaultTitle": "You decide what gets applied",
+      "feature2DefaultDesc": "Review all suggested recommendations and edit or approve them before they go live on your site.",
+      "feature3DefaultTitle": "Continuous monitoring and improvement",
+      "feature3DefaultDesc": "Track your site's performance and discover broken pages and new SEO issues through advanced reports and dashboards.",
+      "scanBadge": "Live scan",
+      "scanProgress": "Scan progress",
+      "pagesCrawled": "Pages crawled",
+      "issuesFound": "Issues found",
+      "seoHealth": "SEO Health",
+      "scanSpeed": "Scan speed",
+      "aiPanel": "AI Suggestions Panel",
+      "metaTitle": "Meta Title",
+      "metaDesc": "Meta Description",
+      "before": "Before",
+      "after": "After",
+      "schemaReady": "Ready",
+      "generatedNow": "Generated now",
+      "reviewChanges": "Review Changes",
+      "pendingApproval": "Pending your approval",
+      "proposedChange": "Proposed change on page title",
+      "approveApply": "Approve and apply",
+      "editBtn": "Edit",
+      "reject": "Reject",
+      "finalDecision": "Final decision",
+      "alwaysYours": "Always yours",
+      "monitoringDashboard": "Monitoring Dashboard",
+      "last6Months": "Last 6 months",
+      "seoHealthProgress": "SEO Health progress",
+      "brokenPages": "Broken pages",
+      "trackedIssues": "Tracked issues",
+      "newAlert": "New alert",
+      "sampleOldTitle": "Home Page",
+      "sampleNewTitle": "Howyah Store — Original Athletic Shoes at the Best Prices | Fast Shipping",
+      "sampleOldDesc": "No description",
+      "sampleNewDesc": "Shop the latest original athletic shoes with fast delivery and quality guarantee from Howyah Store.",
+      "schemaBadge": "Structured Schema — Product",
+      "generatedCount": "156 smart suggestions",
+      "sampleOldPageTitle": "Our Products",
+      "sampleNewPageTitle": "Athletic Shoes Collection 2026 | Howyah Store",
+      "performanceGain": "+63% performance",
+      "alertText": "New 404 page detected — check it out"
+    },
+    "about": {
+      "eyebrow": "Who We Are",
+      "cta": "Learn more about us",
+      "foundedYear": "Year Founded",
+      "teamExperts": "Team experts",
+      "countriesServed": "Countries served",
+      "defaultTitle": "We build smart tools that help businesses grow online with confidence",
+      "defaultDesc": "At <strong>Howyah</strong> we believe SEO should be simple and reliable for everyone.",
+      "defaultQuote": "«We turn SEO complexity into simple, safe, and automated steps.»"
+    },
+    "stats": {
+      "defaultEyebrow": "Numbers & Statistics",
+      "defaultTitle": "Numbers that speak for real results",
+      "defaultLabel0": "Sites served",
+      "defaultLabel1": "Pages analyzed",
+      "defaultLabel2": "Improvements applied",
+      "defaultLabel3": "Average performance increase",
+      "defaultBody": "Arabic stores and websites that trust Howyah to improve their search engine presence."
+    },
+    "pricing": {
+      "eyebrow": "Pricing",
+      "subtitle": "Start for free, and scale when you need. No binding contracts.",
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "saveBadge": "Save 20%",
+      "clickHint": "Click any plan to see its details in the center",
+      "mostPopular": "Most Popular ✦",
+      "currency": "SAR /",
+      "perMonth": "monthly",
+      "perYear": "yearly",
+      "plan0Name": "Enterprise",
+      "plan0Desc": "For large teams and multiple sites",
+      "plan0Action": "Contact sales",
+      "plan0Features": [
+        "Unlimited pages",
+        "Multiple sites + team permissions",
+        "Full historical reports",
+        "Dedicated account manager",
+        "24/7 priority support"
+      ],
+      "plan1Name": "Professional",
+      "plan1Desc": "For growing stores and sites",
+      "plan1Action": "Start now",
+      "plan1Features": [
+        "Scan up to 5,000 pages",
+        "Advanced reports and continuous monitoring",
+        "Unlimited AI suggestions"
+      ],
+      "plan2Name": "Starter",
+      "plan2Desc": "For a single small site",
+      "plan2Action": "Start for free",
+      "plan2Features": [
+        "Scan up to 100 pages",
+        "Basic SEO health report",
+        "20 AI suggestions per month"
+      ],
+      "defaultTitle": "Plans that match your business size",
+      "defaultPlanName": "Package {n}"
+    },
+    "testimonials": {
+      "prev": "Previous",
+      "next": "Next",
+      "slide": "Slide {n}"
+    },
+    "faq": {
+      "eyebrow": "Frequently Asked Questions",
+      "title": "Everything you want to know about Howyah",
+      "helpCenter": "Help Center",
+      "sampleQuestion": "How does Howyah help me improve my site's ranking?",
+      "sampleAnswer": "We scan your entire site and generate ready-to-apply SEO improvements using AI with a single click.",
+      "support247": "24/7 support",
+      "avgResponse": "< 2 min",
+      "avgResponseLabel": "Average response"
+    },
+    "footer": {
+      "cta": "Ready to boost your site to the top of search results?",
+      "subtitle": "Join thousands of Arabic stores and websites that grow with Howyah. Start for free today.",
+      "ctaButton": "Start now",
+      "certified": "Certified by the Ministry of Commerce and Investment",
+      "certifiedAlt": "Certified by the Ministry of Commerce and Investment",
+      "phonesTitle": "Mobile / WhatsApp",
+      "officesTitle": "Our Offices",
+      "copyright": "© 2024 All rights reserved — Howyah Company",
+      "office0Name": "Turkey Office",
+      "office0Address": "Al-Fatih, opposite Historia Mall",
+      "office1Name": "Sultanate of Oman Office",
+      "office1Address": "Barka, Market Street"
+    },
+    "a11y": {
+      "logoAlt": "Howyah",
+      "changeLanguage": "Change language",
+      "closeVideo": "Close video",
+      "slide": "Slide {n}",
+      "statisticsAlt": "Statistics"
     }
   }
 }

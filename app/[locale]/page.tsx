@@ -1,4 +1,5 @@
 import "../landing.css";
+import { getLocaleDirection } from "@/i18n/routing";
 import { LandingHeader } from "@/features/landing/components/LandingHeader";
 import { HeroSection } from "@/features/landing/components/sections/HeroSection";
 import { TrustedSection } from "@/features/landing/components/sections/TrustedSection";
@@ -11,9 +12,14 @@ import { FaqSection } from "@/features/landing/components/sections/FaqSection";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { GsapAnimations } from "@/components/motion/GsapAnimations";
 
-export default function LandingPage() {
+export default async function LandingPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
   return (
-    <div id="landing-root" dir="rtl">
+    <div id="landing-root" dir={getLocaleDirection(locale)}>
       <LandingHeader />
       <main>
         <HeroSection />

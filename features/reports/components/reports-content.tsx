@@ -77,12 +77,25 @@ export function ReportsContent() {
           </div>
         ) : (
           <>
-            <div className="grid min-w-0 gap-4 *:min-w-0 lg:grid-cols-2">
-              <HealthScoreTrendChart data={analytics.healthScoreTrend} />
-              <SeoIssuesTrendChart data={analytics.seoIssuesTrend} />
-              <NotFoundTrendChart data={analytics.notFoundTrend} />
-              <WeeklyChangesChart data={analytics.weeklyChanges} />
-            </div>
+            {(analytics.healthScoreTrend.length > 0 ||
+              analytics.seoIssuesTrend.length > 0 ||
+              analytics.notFoundTrend.length > 0 ||
+              analytics.weeklyChanges.length > 0) && (
+              <div className="grid min-w-0 gap-4 *:min-w-0 lg:grid-cols-2">
+                {analytics.healthScoreTrend.length > 0 && (
+                  <HealthScoreTrendChart data={analytics.healthScoreTrend} />
+                )}
+                {analytics.seoIssuesTrend.length > 0 && (
+                  <SeoIssuesTrendChart data={analytics.seoIssuesTrend} />
+                )}
+                {analytics.notFoundTrend.length > 0 && (
+                  <NotFoundTrendChart data={analytics.notFoundTrend} />
+                )}
+                {analytics.weeklyChanges.length > 0 && (
+                  <WeeklyChangesChart data={analytics.weeklyChanges} />
+                )}
+              </div>
+            )}
 
             {scanLog.length === 0 ? (
               <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">

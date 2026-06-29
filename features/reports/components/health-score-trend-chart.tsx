@@ -12,19 +12,19 @@ import type { ChartPoint } from "../types";
 
 const HEALTH_SCORE_COLOR = "#7C7BE6";
 
-const chartConfig = {
-  value: {
-    label: "Health Score",
-    color: HEALTH_SCORE_COLOR,
-  },
-};
-
 type HealthScoreTrendChartProps = {
   data: ChartPoint[];
 };
 
 export function HealthScoreTrendChart({ data }: HealthScoreTrendChartProps) {
   const t = useTranslations("reports.charts");
+
+  const chartConfig = {
+    value: {
+      label: t("healthScoreLabel"),
+      color: HEALTH_SCORE_COLOR,
+    },
+  };
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">

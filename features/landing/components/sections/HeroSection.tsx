@@ -14,10 +14,10 @@ export function HeroSection() {
   const { data: heroes } = useQuery(heroQueryOptions);
   const hero = heroes?.[0];
 
-  const title = hero?.title ? stripHtml(hero.title) : 'حسّن ترتيب موقعك على جوجل';
+  const title = hero?.title ? stripHtml(hero.title) : t('hero.defaultTitle');
   const description = hero?.description
     ? stripHtml(hero.description)
-    : 'منصة هويّة تفحص موقعك بالكامل، تكتشف مشاكل تحسين محركات البحث، وتولّد تحسينات جاهزة بالذكاء الاصطناعي — تراجعها وتعتمدها لتُطبَّق مباشرة على موقعك دون الحاجة لخبير SEO.';
+    : t('hero.defaultDesc');
   const partners = hero?.partners ?? [];
 
   return (
@@ -32,7 +32,7 @@ export function HeroSection() {
         <div className='max-w-xl'>
           <div className='eyebrow mb-6' data-anim='fade-up'>
             <span className='w-2 h-2 rounded-full bg-primary'></span>
-            تحسين SEO بالذكاء الاصطناعي
+            {t('hero.eyebrow')}
           </div>
 
           <h1
@@ -43,7 +43,7 @@ export function HeroSection() {
           </h1>
 
           <p
-            className='mt-6 text-lg text-[#4a5a4c] leading-relaxed'
+            className='mt-6 text-lg text-ink-soft leading-relaxed'
             data-anim='fade-up'
           >
             {description}
@@ -57,7 +57,7 @@ export function HeroSection() {
               href='#pricing'
               className='btn btn-primary px-8 py-4 text-lg cta-pulse'
             >
-              ابدأ مجاناً
+              {t('hero.cta')}
             </a>
             <button
               type="button"
@@ -80,7 +80,7 @@ export function HeroSection() {
                 <button
                   type="button"
                   className="inline-video-player__close"
-                  aria-label="Close video"
+                  aria-label={t('a11y.closeVideo')}
                   onClick={() => setIsVideoOpen(false)}
                 >
                   ×
@@ -96,12 +96,12 @@ export function HeroSection() {
           )}
 
           <div
-            className='mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-[#5b6760]'
+            className='mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-ink-muted'
             data-anim='fade-up'
           >
-            {['لا حاجة لخبرة تقنية', 'مراقبة مستمرة 24/7', 'تكامل مع منصتك'].map((label) => (
+            {(t.raw('hero.features') as string[]).map((label) => (
               <span key={label} className='flex items-center gap-2'>
-                <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#759c25' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
+                <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='var(--primary-700)' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
                   <polyline points='20 6 9 17 4 12' />
                 </svg>
                 {label}
@@ -113,12 +113,12 @@ export function HeroSection() {
             className='mt-7 flex flex-wrap items-center gap-2.5'
             data-anim='fade-up'
           >
-            <span className='text-xs font-bold text-[#9aa49a]'>يتكامل مع:</span>
+            <span className='text-xs font-bold text-neutral-400'>{t('hero.integrationsLabel')}</span>
             {partners.length > 0
               ? partners.map((p) => (
                   <span
                     key={p.name}
-                    className='px-3 py-1.5 rounded-full bg-white border border-[#ecefe7] text-xs font-bold text-[#4a5a4c]'
+                    className='px-3 py-1.5 rounded-full bg-white border border-primary-line text-xs font-bold text-ink-soft'
                   >
                     {p.name}
                   </span>
@@ -126,7 +126,7 @@ export function HeroSection() {
               : ['WordPress', 'Shopify', 'سلة', 'زد'].map((name) => (
                   <span
                     key={name}
-                    className='px-3 py-1.5 rounded-full bg-white border border-[#ecefe7] text-xs font-bold text-[#4a5a4c]'
+                    className='px-3 py-1.5 rounded-full bg-white border border-primary-line text-xs font-bold text-ink-soft'
                   >
                     {name}
                   </span>
@@ -143,11 +143,11 @@ export function HeroSection() {
                 <span className='w-3 h-3 rounded-full bg-[#ffbd2e]'></span>
                 <span className='w-3 h-3 rounded-full bg-primary'></span>
               </div>
-              <div className='text-xs font-bold text-[#9aa49a]'>لوحة تحكم هويّة</div>
+              <div className='text-xs font-bold text-neutral-400'>{t('hero.dashboardTitle')}</div>
             </div>
 
             <div className='grid grid-cols-5 gap-4'>
-              <div className='col-span-2 rounded-2xl bg-[#f8faf4] border border-[#ecefe7] p-4 flex flex-col items-center justify-center'>
+              <div className='col-span-2 rounded-2xl bg-primary-surface border border-primary-line p-4 flex flex-col items-center justify-center'>
                 <div className='relative w-[110px] h-[110px]'>
                   <svg viewBox='0 0 120 120' className='w-full h-full -rotate-90'>
                     <circle className='ring-track' cx='60' cy='60' r='50' fill='none' strokeWidth='11' />
@@ -162,46 +162,46 @@ export function HeroSection() {
                   </svg>
                   <div className='absolute inset-0 flex flex-col items-center justify-center'>
                     <span className='text-2xl font-extrabold text-ink' data-counter data-target='88'>0</span>
-                    <span className='text-[10px] font-bold text-[#9aa49a]'>صحة SEO</span>
+                    <span className='text-[10px] font-bold text-neutral-400'>{t('hero.seoHealth')}</span>
                   </div>
                 </div>
-                <div className='mt-2 text-xs font-bold text-primary-700'>ممتاز ↑</div>
+                <div className='mt-2 text-xs font-bold text-primary-700'>{t('hero.excellent')}</div>
               </div>
 
               <div className='col-span-3 grid grid-rows-2 gap-4'>
-                <div className='rounded-2xl bg-white border border-[#ecefe7] p-3.5'>
-                  <div className='text-[11px] font-bold text-[#9aa49a] mb-1'>صفحات تم فحصها</div>
+                <div className='rounded-2xl bg-white border border-primary-line p-3.5'>
+                  <div className='text-[11px] font-bold text-neutral-400 mb-1'>{t('hero.pagesCrawled')}</div>
                   <div className='text-xl font-extrabold text-ink' data-counter data-target='1284'>0</div>
-                  <div className='mt-2 h-1.5 rounded-full bg-[#eef2e6] overflow-hidden'>
+                  <div className='mt-2 h-1.5 rounded-full bg-primary-line overflow-hidden'>
                     <div className='h-full w-[82%] bg-primary rounded-full'></div>
                   </div>
                 </div>
-                <div className='rounded-2xl bg-white border border-[#ecefe7] p-3.5'>
-                  <div className='text-[11px] font-bold text-[#9aa49a] mb-1'>مشاكل تم إصلاحها</div>
+                <div className='rounded-2xl bg-white border border-primary-line p-3.5'>
+                  <div className='text-[11px] font-bold text-neutral-400 mb-1'>{t('hero.issuesFixed')}</div>
                   <div className='text-xl font-extrabold text-ink' data-counter data-target='342'>0</div>
-                  <div className='mt-2 h-1.5 rounded-full bg-[#eef2e6] overflow-hidden'>
+                  <div className='mt-2 h-1.5 rounded-full bg-primary-line overflow-hidden'>
                     <div className='h-full w-[64%] bg-primary rounded-full'></div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className='mt-4 rounded-2xl bg-[#f8faf4] border border-[#ecefe7] p-4'>
+            <div className='mt-4 rounded-2xl bg-primary-surface border border-primary-line p-4'>
               <div className='flex items-center gap-2 mb-3'>
                 <span className='w-6 h-6 rounded-lg bg-primary/20 flex items-center justify-center'>
-                  <svg width='14' height='14' viewBox='0 0 24 24' fill='#5c7a20'>
+                  <svg width='14' height='14' viewBox='0 0 24 24' fill='var(--primary-700)'>
                     <path d='M12 2l2.4 5.6L20 9l-5.6 2.4L12 17l-2.4-5.6L4 9l5.6-1.4z' />
                   </svg>
                 </span>
-                <span className='text-xs font-extrabold text-ink'>اقتراح بالذكاء الاصطناعي</span>
-                <span className='mr-auto text-[10px] font-bold text-primary-700 bg-primary/15 px-2 py-1 rounded-full'>جديد</span>
+                <span className='text-xs font-extrabold text-ink'>{t('hero.aiSuggestion')}</span>
+                <span className='mr-auto text-[10px] font-bold text-primary-700 bg-primary/15 px-2 py-1 rounded-full'>{t('hero.badgeNew')}</span>
               </div>
-              <div className='text-[13px] font-semibold text-[#4a5a4c] leading-relaxed'>
-                عنوان مقترح: «متجر هويّة — أفضل المنتجات بأسعار تنافسية | شحن سريع»
+              <div className='text-[13px] font-semibold text-ink-soft leading-relaxed'>
+                {t('hero.sampleSuggestion')}
               </div>
               <div className='mt-3 flex gap-2'>
-                <button className='text-[11px] font-bold bg-primary text-[#14210a] px-3 py-1.5 rounded-full'>اعتماد</button>
-                <button className='text-[11px] font-bold bg-white border border-[#ecefe7] text-[#4a5a4c] px-3 py-1.5 rounded-full'>تعديل</button>
+                <button className='text-[11px] font-bold bg-primary text-ink px-3 py-1.5 rounded-full'>{t('hero.accept')}</button>
+                <button className='text-[11px] font-bold bg-white border border-primary-line text-ink-soft px-3 py-1.5 rounded-full'>{t('hero.edit')}</button>
               </div>
             </div>
           </div>
@@ -209,12 +209,12 @@ export function HeroSection() {
           <div className='floaty float-card absolute -top-6 -left-4 sm:-left-8 p-3.5 hidden sm:block' data-float='1'>
             <div className='flex items-center gap-2.5'>
               <span className='w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center'>
-                <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#5c7a20' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
+                <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='var(--primary-700)' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
                   <path d='M3 3v18h18' /><path d='M7 14l4-4 3 3 5-6' />
                 </svg>
               </span>
               <div>
-                <div className='text-[10px] font-bold text-[#9aa49a]'>زيارات عضوية</div>
+                <div className='text-[10px] font-bold text-neutral-400'>{t('hero.organicVisits')}</div>
                 <div className='text-sm font-extrabold text-ink'>+47%</div>
               </div>
             </div>
@@ -223,13 +223,13 @@ export function HeroSection() {
           <div className='floaty float-card absolute -bottom-6 -right-3 sm:-right-7 p-3.5 hidden sm:block' data-float='2'>
             <div className='flex items-center gap-2.5'>
               <span className='w-9 h-9 rounded-xl bg-primary/15 flex items-center justify-center'>
-                <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='#5c7a20' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
+                <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='var(--primary-700)' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
                   <path d='M22 11.08V12a10 10 0 11-5.93-9.14' /><polyline points='22 4 12 14.01 9 11.01' />
                 </svg>
               </span>
               <div>
-                <div className='text-[10px] font-bold text-[#9aa49a]'>تم تطبيقه تلقائياً</div>
-                <div className='text-sm font-extrabold text-ink'>١٢ تحسيناً اليوم</div>
+                <div className='text-[10px] font-bold text-neutral-400'>{t('hero.autoApplied')}</div>
+                <div className='text-sm font-extrabold text-ink'>{t('hero.improvementsToday')}</div>
               </div>
             </div>
           </div>

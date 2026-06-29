@@ -1,39 +1,7 @@
+import { getTranslations } from 'next-intl/server';
 import { apiFetch, stripHtml } from '@/lib/landing-api';
 import type { Pricing } from '@/features/landing/types/landing-api';
 import { PricingCards, type Plan } from './PricingCards';
-
-const FALLBACK_PLANS: Plan[] = [
-  {
-    id: 'f0',
-    name: 'المؤسسات',
-    description: 'للفرق الكبيرة وعدة مواقع',
-    monthly: '499',
-    annual: '399',
-    action: 'تواصل مع المبيعات',
-    barClass: 'from-[#caa24a] via-[#5d7a2c] to-[#14210a]',
-    features: ['صفحات غير محدودة', 'مواقع متعددة + صلاحيات فرق', 'تقارير تاريخية كاملة', 'مدير حساب مخصص', 'دعم أولوية على مدار الساعة'],
-  },
-  {
-    id: 'f1',
-    name: 'الاحترافي',
-    description: 'للمتاجر والمواقع النامية',
-    monthly: '199',
-    annual: '159',
-    action: 'ابدأ الآن',
-    barClass: 'from-[#9ed25a] to-[#3f6e1f]',
-    features: ['فحص حتى 5000 صفحة', 'تقارير متقدمة ومراقبة مستمرة', 'اقتراحات ذكاء اصطناعي غير محدودة'],
-  },
-  {
-    id: 'f2',
-    name: 'المبتدئ',
-    description: 'لموقع واحد صغير',
-    monthly: '0',
-    annual: '0',
-    action: 'ابدأ مجاناً',
-    barClass: 'from-[#dbe7c8] to-[#a9c787]',
-    features: ['فحص حتى 100 صفحة', 'تقرير صحة SEO أساسي', '20 اقتراح بالذكاء الاصطناعي شهرياً'],
-  },
-];
 
 const BAR_CLASSES = [
   'from-[#caa24a] via-[#5d7a2c] to-[#14210a]',
@@ -42,8 +10,43 @@ const BAR_CLASSES = [
 ];
 
 export async function PricingSection() {
+  const t = await getTranslations('landing');
+
+  const FALLBACK_PLANS: Plan[] = [
+    {
+      id: 'f0',
+      name: t('pricing.plan0Name'),
+      description: t('pricing.plan0Desc'),
+      monthly: '499',
+      annual: '399',
+      action: t('pricing.plan0Action'),
+      barClass: 'from-[#caa24a] via-[#5d7a2c] to-[#14210a]',
+      features: t.raw('pricing.plan0Features') as string[],
+    },
+    {
+      id: 'f1',
+      name: t('pricing.plan1Name'),
+      description: t('pricing.plan1Desc'),
+      monthly: '199',
+      annual: '159',
+      action: t('pricing.plan1Action'),
+      barClass: 'from-[#9ed25a] to-[#3f6e1f]',
+      features: t.raw('pricing.plan1Features') as string[],
+    },
+    {
+      id: 'f2',
+      name: t('pricing.plan2Name'),
+      description: t('pricing.plan2Desc'),
+      monthly: '0',
+      annual: '0',
+      action: t('pricing.plan2Action'),
+      barClass: 'from-[#dbe7c8] to-[#a9c787]',
+      features: t.raw('pricing.plan2Features') as string[],
+    },
+  ];
+
   let plans: Plan[] = FALLBACK_PLANS;
-  let title = 'باقات تناسب حجم أعمالك';
+  let title = t('pricing.defaultTitle');
 
   try {
     const raw = await apiFetch<Pricing | Pricing[]>('/api/v1/pricing?lang=ar');
@@ -65,14 +68,14 @@ export async function PricingSection() {
 
         return {
           id: String(i),
-          name: stripHtml(item?.title) || `الباقة ${i + 1}`,
+          name: stripHtml(item?.title) || t('pricing.defaultPlanName', { n: i + 1 }),
           description: stripHtml(item?.description),
           monthly: priceStr,
           annual,
           features: Array.isArray(item?.features)
             ? item.features.map((f: string) => stripHtml(f)).filter(Boolean)
             : [],
-          action: stripHtml(item?.button_text) || (annualNum === 0 ? 'ابدأ مجاناً' : 'ابدأ الآن'),
+          action: stripHtml(item?.button_text) || (annualNum === 0 ? t('pricing.plan2Action') : t('pricing.plan1Action')),
           barClass: BAR_CLASSES[i % BAR_CLASSES.length],
         };
       });

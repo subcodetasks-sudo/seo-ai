@@ -1,9 +1,17 @@
+import { getTranslations } from 'next-intl/server';
 import { apiFetch } from '@/lib/landing-api';
 import type { TestimonialsData } from '@/features/landing/types/landing-api';
 
-const PORTRAIT_COLORS = ['#a0cd39', '#8ab72e', '#bedc6f', '#c5d87a', '#9ed25a'];
+const PORTRAIT_COLORS = [
+  'var(--primary-300)',
+  'var(--primary-600)',
+  'var(--primary-200)',
+  'var(--primary-300)',
+  'var(--primary-400)',
+];
 
 export async function TestimonialsSection() {
+  const t = await getTranslations('landing');
   const data = await apiFetch<TestimonialsData>('/api/v1/testimonials/content');
   const testimonials = data?.testimonials ?? [];
 
@@ -43,7 +51,7 @@ export async function TestimonialsSection() {
                     y='92'
                     textAnchor='middle'
                     dominantBaseline='middle'
-                    fill='#5c7a20'
+                    fill='var(--primary-700)'
                     fontSize='46'
                     fontWeight='900'
                   >
@@ -55,7 +63,7 @@ export async function TestimonialsSection() {
           </div>
 
           <div data-anim='fade-up'>
-            <svg className='w-16 h-16 text-[#eef2e6]' viewBox='0 0 24 24' fill='currentColor' aria-hidden='true'>
+            <svg className='w-16 h-16 text-primary-line' viewBox='0 0 24 24' fill='currentColor' aria-hidden='true'>
               <path d='M9.5 6C6.5 7.5 5 10.5 5 14v4h6v-6H8c0-2 .7-3.6 2.5-4.5L9.5 6zm9 0C15.5 7.5 14 10.5 14 14v4h6v-6h-3c0-2 .7-3.6 2.5-4.5L18.5 6z' />
             </svg>
 
@@ -79,7 +87,7 @@ export async function TestimonialsSection() {
                       </div>
                       <div>
                         <div className='font-extrabold text-ink'>{testimonial.content.name}</div>
-                        <div className='text-sm text-[#9aa49a]'>{testimonial.content.job_title}</div>
+                        <div className='text-sm text-neutral-400'>{testimonial.content.job_title}</div>
                       </div>
                     </div>
                   </div>
@@ -88,12 +96,12 @@ export async function TestimonialsSection() {
             </div>
 
             <div className='mt-9 flex items-center gap-3'>
-              <button id='t-prev' className='t-control' aria-label='السابق'>
+              <button id='t-prev' className='t-control' aria-label={t('testimonials.prev')}>
                 <svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
                   <polyline points='15 18 9 12 15 6' />
                 </svg>
               </button>
-              <button id='t-next' className='t-control' aria-label='التالي'>
+              <button id='t-next' className='t-control' aria-label={t('testimonials.next')}>
                 <svg width='22' height='22' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round'>
                   <polyline points='9 18 15 12 9 6' />
                 </svg>

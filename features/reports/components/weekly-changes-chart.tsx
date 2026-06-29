@@ -12,19 +12,19 @@ import type { ChartPoint } from "../types";
 
 const WEEKLY_CHANGES_COLOR = "#22C55E";
 
-const chartConfig = {
-  value: {
-    label: "Changes",
-    color: WEEKLY_CHANGES_COLOR,
-  },
-};
-
 type WeeklyChangesChartProps = {
   data: ChartPoint[];
 };
 
 export function WeeklyChangesChart({ data }: WeeklyChangesChartProps) {
   const t = useTranslations("reports.charts");
+
+  const chartConfig = {
+    value: {
+      label: t("weeklyChangesLabel"),
+      color: WEEKLY_CHANGES_COLOR,
+    },
+  };
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">

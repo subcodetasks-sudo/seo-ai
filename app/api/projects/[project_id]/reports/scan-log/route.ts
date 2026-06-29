@@ -1,0 +1,34 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import { serverClient } from "@/lib/server";
+
+type RouteContext = {
+  params: Promise<{ project_id: string }>;
+};
+
+function getAuthHeaders(req: NextRequest) {
+  const accessToken = req.cookies.get("access_token")?.value;
+  if (!accessToken) return null;
+  return { Authorization: `Bearer ${accessToken}` };
+}
+
+export async function GET(req: NextRequest, context: RouteContext) {
+  const authHeaders = getAuthHeaders(req);
+  if (!authHeaders) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+
+  const { project_id } = await context.params;
+  const searchParams = req.nextUrl.searchParams.toString();
+  const endpoint = `projects/${project_id}/reports/scan-log${searchParams ? `?${searchParams}` : ""}`;
+
+  try {
+    const data = await serverClient(
+      endpoint,
+      { method: "GET", headers: authHeaders },
+      "Failed to fetch scan log",
+    );
+    return NextResponse.json(data);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ message }, { status: 400 });
+  }
+}

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import { apiFetch } from '@/lib/landing-api';
 import type { Settings } from '@/features/landing/types/landing-api';
 
@@ -15,6 +16,8 @@ const LOCATION_ICON = (
 );
 
 export async function LandingFooter() {
+  const t = await getTranslations('landing');
+
   let settings: Settings | null = null;
   try {
     settings = await apiFetch<Settings>('/api/v1/auth/settings');
@@ -25,13 +28,13 @@ export async function LandingFooter() {
   const cta = settings?.footer_cta;
   const phones = settings?.contact?.phones ?? ['(+90) 536 031 67 75', '(+968) 4555 9520', '(+968) 1971 9525'];
   const offices = settings?.offices ?? [
-    { name: 'مكتب تركيا', address: 'الفاتح مقابل مول هستوريا' },
-    { name: 'مكتب سلطنة عُمان', address: 'بركاء شارع السوق' },
+    { name: t('footer.office0Name'), address: t('footer.office0Address') },
+    { name: t('footer.office1Name'), address: t('footer.office1Address') },
   ];
-  const copyright = settings?.copyright ?? '© 2024 جميع الحقوق محفوظة — شركة هويّة';
+  const copyright = settings?.copyright ?? t('footer.copyright');
 
   return (
-    <footer className='relative overflow-hidden bg-[#0f140f] text-white'>
+    <footer className='relative overflow-hidden bg-ink text-white'>
       <div className='swirl-watermark -left-20 -top-20 h-[520px] w-[520px]' style={{ opacity: '0.04' }} />
 
       <div className='relative border-b border-white/10'>
@@ -42,41 +45,41 @@ export async function LandingFooter() {
           data-anim='fade-up'
         >
           <h2 className='text-2xl font-extrabold leading-[1.4] sm:text-4xl lg:text-5xl'>
-            {cta?.title ?? 'جاهز لترفع موقعك إلى صدارة نتائج البحث؟'}
+            {cta?.title ?? t('footer.cta')}
           </h2>
           <p className='mx-auto mt-4 max-w-2xl text-base text-white/70 sm:text-lg'>
-            {cta?.description ?? 'انضم إلى آلاف المتاجر والمواقع العربية التي تنمو مع هويّة. ابدأ مجاناً اليوم.'}
+            {cta?.description ?? t('footer.subtitle')}
           </p>
           <a
             href={cta?.button_url ?? '#pricing'}
             className='btn btn-primary cta-pulse mt-8 w-full px-8 py-4 text-base sm:mt-9 sm:w-auto sm:px-10 sm:text-lg'
           >
-            {cta?.button_text ?? 'ابدأ الآن'}
+            {cta?.button_text ?? t('footer.ctaButton')}
           </a>
         </div>
       </div>
 
       <div className='relative border-t border-white/10'>
-        <div className='mx-auto max-w-7xl px-4 py-10 sm:px-5 lg:px-8' dir='rtl'>
+        <div className='mx-auto max-w-7xl px-4 py-10 sm:px-5 lg:px-8'>
           <div className='grid grid-cols-1 gap-10 text-center md:grid-cols-3 md:text-start lg:gap-12'>
             <div className='order-1 flex flex-col items-center text-center md:order-2'>
               <div className='inline-flex rounded-2xl bg-white p-3'>
                 <Image
                   src='/ministry-commerce-certification 1.png'
-                  alt='موثق لدى وزارة التجارة والاستثمار'
+                  alt={t('footer.certifiedAlt')}
                   width={200}
                   height={100}
                   className='h-12 w-auto sm:h-16'
                 />
               </div>
               <p className='mt-3 text-sm font-semibold text-white/65'>
-                موثق بوزارة التجارة والاستثمار
+                {t('footer.certified')}
               </p>
             </div>
 
             <div className='order-2 text-center md:order-3 md:text-left' dir='ltr'>
               <h5 className='mb-4 text-base font-extrabold text-white' dir='rtl'>
-                جوالـ / واتسـاب
+                {t('footer.phonesTitle')}
               </h5>
               <div className='space-y-3 text-sm text-white/65'>
                 {phones.map((phone, i) => (
@@ -89,7 +92,7 @@ export async function LandingFooter() {
             </div>
 
             <div className='order-3 text-center md:order-1 md:text-right'>
-              <h5 className='mb-4 text-base font-extrabold text-white'>مكاتبنا</h5>
+              <h5 className='mb-4 text-base font-extrabold text-white'>{t('footer.officesTitle')}</h5>
               <div className='space-y-3 text-sm text-white/65'>
                 {offices.map((office, i) => (
                   <p key={i} className='flex items-start justify-center gap-2.5 md:justify-start'>
