@@ -12,7 +12,7 @@ export type ReportsAnalytics = {
   weeklyChanges: ChartPoint[];
 };
 
-export type ScanLogStatus = "completed" | "done" | "running" | "failed";
+export type ScanLogStatus = "completed" | "running" | "failed" | "done";
 
 export type ScanLogEntry = {
   id: string;
