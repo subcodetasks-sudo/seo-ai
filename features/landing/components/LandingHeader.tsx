@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/navigation';
+import Link from 'next/link';
 
 const navItems = [
   { href: '#about', key: 'navbar.about' },
@@ -56,9 +57,9 @@ export function LandingHeader() {
           >
             <span>{t('navbar.languageToggle')}</span>
           </button>
-          <a href='#pricing' className='btn btn-primary px-6 py-3 hidden sm:inline-flex'>
+          <Link href={"/login"} className='btn btn-primary px-6 py-3 hidden sm:inline-flex'>
             {t('navbar.cta')}
-          </a>
+          </Link>
           <button
             id='menu-toggle'
             aria-label={t('navbar.menu')}
@@ -79,9 +80,9 @@ export function LandingHeader() {
               {t(item.key)}
             </a>
           ))}
-          <a href='#pricing' className='btn btn-primary px-6 py-3 mt-2'>
+          <Link href={"/login"} className='btn btn-primary px-6 py-3 mt-2'>
             {t('navbar.cta')}
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

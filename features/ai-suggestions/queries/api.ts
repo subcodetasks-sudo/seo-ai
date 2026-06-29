@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/client";
-import type { ApiSuggestion, ApiSuggestionsResponse } from "../types";
+import type { ApiSuggestion, ApiSuggestionsResponse, BackendResponse } from "../types";
 
 type FetchSuggestionsParams = {
   projectId: string;
@@ -23,18 +23,20 @@ export async function fetchAiSuggestions({
   if (type && type !== "all") params.set("type", type);
   if (status && status !== "all") params.set("status", status);
 
-  return apiClient<ApiSuggestionsResponse>(
+  const response = await apiClient<BackendResponse<ApiSuggestionsResponse>>(
     `projects/${projectId}/ai/suggestions?${params.toString()}`,
   );
+  return response.data;
 }
 
 export async function fetchSuggestionDetail(
   projectId: string,
   suggestionId: string,
 ): Promise<ApiSuggestion> {
-  return apiClient<ApiSuggestion>(
+  const response = await apiClient<BackendResponse<ApiSuggestion>>(
     `projects/${projectId}/ai/suggestions/${suggestionId}`,
   );
+  return response.data;
 }
 
 export async function approveSuggestionBatch(projectId: string, ids: string[]): Promise<void> {
@@ -61,11 +63,12 @@ export async function editSuggestion(
   suggestionId: string,
   suggestedValue: Record<string, unknown>,
 ): Promise<ApiSuggestion> {
-  return apiClient<ApiSuggestion>(
+  const response = await apiClient<BackendResponse<ApiSuggestion>>(
     `projects/${projectId}/ai/suggestions/${suggestionId}`,
     {
       method: "PATCH",
       body: JSON.stringify({ suggested_value: suggestedValue }),
     },
   );
+  return response.data;
 }

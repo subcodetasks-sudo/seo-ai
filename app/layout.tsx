@@ -4,7 +4,7 @@ import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
 import Providers from "@/app/providers";
 import { routing } from "@/i18n/routing";
 import "./globals.css";
-import Script from "next/script";
+
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -50,7 +50,7 @@ export default function RootLayout({
       className={`${ibmPlexSans.variable} ${ibmPlexSansArabic.variable} h-full antialiased`}
     >
       <head>
-        <Script src={directionScript} />
+        <script dangerouslySetInnerHTML={{ __html: directionScript }} />
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <Providers>{children}</Providers>

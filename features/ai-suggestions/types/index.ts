@@ -113,18 +113,21 @@ export interface ApiSuggestion {
   suggestion_type: string;
   current_value: Record<string, unknown>;
   suggested_value: Record<string, unknown>;
-  modifications: unknown;
+  modifications: Record<string, unknown> | null;
   display_value: Record<string, unknown>;
   keywords_used: string[];
   ai_model: string;
   prompt_version: string;
   confidence_score: number;
   status: string;
-  reviewed_by: unknown;
+  reviewed_by: string | null;
   is_human_edited: boolean;
-  reviewed_at: unknown;
-  applied_at: unknown;
-  error_message: unknown;
+  reviewed_at: string | null;
+  applied_at: string | null;
+  error_message: string | null;
+  error_code: string | null;
+  generation_id: string | null;
+  job_id: string | null;
   raw_ai_output: string;
   created_at: string;
 }
@@ -134,6 +137,12 @@ export interface ApiSuggestionsResponse {
   total: number;
   page: number;
   per_page: number;
+}
+
+export interface BackendResponse<T> {
+  status: boolean;
+  message: string;
+  data: T;
 }
 
 // --- UI types ---
