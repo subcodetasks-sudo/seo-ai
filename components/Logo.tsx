@@ -10,12 +10,12 @@ const Logo = () => {
     <Image
       src="/imgs/logo.webp"
       alt={t("brand")}
-      width={40}
+      width={200}
       height={40}
-      className="size-10 shrink-0"
+      className="shrink-0"
       priority
     />
-    <span className="text-lg font-semibold text-secondary-500">{t("brand")}</span>
+    {/* <span className="text-lg font-semibold text-secondary-500">{t("brand")}</span> */}
   </div>
   )
 }

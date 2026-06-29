@@ -4,6 +4,7 @@ import { IBM_Plex_Sans, IBM_Plex_Sans_Arabic } from "next/font/google";
 import Providers from "@/app/providers";
 import { routing } from "@/i18n/routing";
 import "./globals.css";
+import Script from "next/script";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -26,11 +27,10 @@ export const metadata: Metadata = {
 // URL path and sets the correct `dir` and `lang` on <html> synchronously so
 // there is no RTL→LTR layout shift on English pages.
 const directionScript = `(function(){
-  var seg=(location.pathname.split('/')[1]||'').toLowerCase();
-  var rtl=['ar','fa','he','ur'];
-  var isRtl=rtl.indexOf(seg)!==-1;
-  document.documentElement.dir=isRtl?'rtl':'ltr';
-  if(seg)document.documentElement.lang=seg;
+  var m=document.cookie.match(/NEXT_LOCALE=(\\w+)/);
+  var locale=m?m[1]:'ar';
+  document.documentElement.dir=locale==='ar'?'rtl':'ltr';
+  document.documentElement.lang=locale;
 })();`;
 
 export default function RootLayout({
@@ -50,8 +50,7 @@ export default function RootLayout({
       className={`${ibmPlexSans.variable} ${ibmPlexSansArabic.variable} h-full antialiased`}
     >
       <head>
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script dangerouslySetInnerHTML={{ __html: directionScript }} />
+        <Script src={directionScript} />
       </head>
       <body className="min-h-full flex flex-col font-sans">
         <Providers>{children}</Providers>

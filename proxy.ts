@@ -6,59 +6,54 @@ import { routing } from "./i18n/routing";
 const intlMiddleware = createMiddleware(routing);
 
 const REFRESH_TOKEN_COOKIE = "refresh_token";
-const AUTH_PATH_PATTERN =
-  /\/(login|register|reset-password)(?=\/|$)/;
+const AUTH_PATH_PATTERN = /\/(login|register|reset-password)(?=\/|$)/;
 
-function getLocaleFromPathname(pathname: string) {
-  const firstSegment = pathname.split("/")[1];
+// function getLocaleFromPathname(pathname: string) {
+//   const firstSegment = pathname.split("/")[1];
 
-  return routing.locales.includes(
-    firstSegment as (typeof routing.locales)[number]
-  )
-    ? firstSegment
-    : null;
-}
+//   return routing.locales.includes(
+//     firstSegment as (typeof routing.locales)[number]
+//   )
+//     ? firstSegment
+//     : null;
+// }
 
-function stripLocalePrefix(pathname: string) {
-  const locale = getLocaleFromPathname(pathname);
+// function stripLocalePrefix(pathname: string) {
+//   const locale = getLocaleFromPathname(pathname);
 
-  if (!locale) {
-    return pathname;
-  }
+//   if (!locale) {
+//     return pathname;
+//   }
 
-  const stripped = pathname.slice(locale.length + 1);
+//   const stripped = pathname.slice(locale.length + 1);
 
-  return stripped.length > 0 ? stripped : "/";
-}
+//   return stripped.length > 0 ? stripped : "/";
+// }
 
 function hasRefreshToken(request: NextRequest) {
   return !!request.cookies.get(REFRESH_TOKEN_COOKIE)?.value;
 }
 
-function buildLocalizedPath(pathname: string, targetPath: string) {
-  const locale = getLocaleFromPathname(pathname);
+// function buildLocalizedPath(pathname: string, targetPath: string) {
+//   const locale = getLocaleFromPathname(pathname);
 
-  if (!locale || locale === routing.defaultLocale) {
-    return targetPath;
-  }
+//   if (!locale || locale === routing.defaultLocale) {
+//     return targetPath;
+//   }
 
-  return `/${locale}${targetPath}`;
-}
+//   return `/${locale}${targetPath}`;
+// }
 
 export default function middleware(request: NextRequest) {
-  const pathname = stripLocalePrefix(request.nextUrl.pathname);
+  const pathname = request.nextUrl.pathname;
   const isAuthenticated = hasRefreshToken(request);
 
   if (!isAuthenticated && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(
-      new URL(buildLocalizedPath(request.nextUrl.pathname, "/login"), request.url)
-    );
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   if (isAuthenticated && AUTH_PATH_PATTERN.test(pathname)) {
-    return NextResponse.redirect(
-      new URL(buildLocalizedPath(request.nextUrl.pathname, "/dashboard"), request.url)
-    );
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return intlMiddleware(request);
