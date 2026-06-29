@@ -969,5 +969,21 @@
     "emptyTitle": "No notifications yet",
     "emptyDescription": "When something happens across your projects, you'll see it here.",
     "viewAll": "View all"
+  },
+  "landing": {
+    "navbar": {
+      "about": "About",
+      "usecases": "Use cases",
+      "stats": "Stats",
+      "pricing": "Pricing",
+      "testimonials": "Testimonials",
+      "faq": "FAQ",
+      "cta": "Start now",
+      "languageToggle": "العربية",
+      "menu": "Menu"
+    },
+    "hero": {
+      "watch": "Watch how it works"
+    }
   }
 }

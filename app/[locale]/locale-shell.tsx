@@ -9,6 +9,7 @@ import { FcmInitializer } from "@/features/notifications";
 import { usePathname } from "@/i18n/navigation";
 
 const SHELL_EXCLUDED_PREFIXES = [
+  "/",
   "/login",
   "/register",
   "/reset-password",
