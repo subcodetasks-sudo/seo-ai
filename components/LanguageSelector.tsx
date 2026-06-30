@@ -12,7 +12,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { useLocaleSwitch } from "@/i18n/use-locale-switch";
 import type { Locale } from "@/i18n/routing";
 
 const LOCALE_OPTIONS: {
@@ -54,15 +54,9 @@ function LocaleOptionLabel({
 export function LanguageSelector() {
   const t = useTranslations("common.header");
   const locale = useLocale() as Locale;
-  const router = useRouter();
-  const pathname = usePathname();
+  const switchLocale = useLocaleSwitch();
   const activeOption =
     LOCALE_OPTIONS.find((option) => option.value === locale) ?? LOCALE_OPTIONS[0];
-
-  function handleLocaleChange(nextLocale: string) {
-    router.replace(pathname, { locale: nextLocale as Locale });
-    router.refresh();
-  }
 
   return (
     <DropdownMenu modal={false}>
@@ -88,7 +82,7 @@ export function LanguageSelector() {
         className="min-w-(--radix-dropdown-menu-trigger-width)"
         onCloseAutoFocus={(event) => event.preventDefault()}
       >
-        <DropdownMenuRadioGroup value={locale} onValueChange={handleLocaleChange}>
+        <DropdownMenuRadioGroup value={locale} onValueChange={(v) => switchLocale(v as Locale)}>
           {LOCALE_OPTIONS.map((option) => (
             <DropdownMenuRadioItem key={option.value} value={option.value}>
               <LocaleOptionLabel

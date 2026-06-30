@@ -2,8 +2,8 @@
 
 import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
-import { useRouter, usePathname } from '@/i18n/navigation';
 import Link from 'next/link';
+import { useLocaleSwitch } from '@/i18n/use-locale-switch';
 
 const navItems = [
   { href: '#about', key: 'navbar.about' },
@@ -17,13 +17,7 @@ const navItems = [
 export function LandingHeader() {
   const t = useTranslations("landing");
   const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  const toggleLanguage = () => {
-    const nextLocale = locale === 'ar' ? 'en' : 'ar';
-    router.replace(pathname, { locale: nextLocale });
-  };
+  const switchLocale = useLocaleSwitch();
 
   return (
     <header id='site-header' className='site-header fixed top-0 inset-x-0 z-50'>
@@ -53,7 +47,7 @@ export function LandingHeader() {
             aria-label={t('a11y.changeLanguage')}
             aria-pressed={locale === 'en'}
             data-lang={locale}
-            onClick={toggleLanguage}
+            onClick={() => switchLocale()}
           >
             <span>{t('navbar.languageToggle')}</span>
           </button>
