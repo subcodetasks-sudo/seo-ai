@@ -1,4 +1,5 @@
 import "../landing.css";
+import { connection } from "next/server";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { getLocaleDirection } from "@/i18n/routing";
 import { LandingHeader } from "@/features/landing/components/LandingHeader";
@@ -28,6 +29,7 @@ export default async function LandingPage({
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  await connection();
   const { locale } = await params;
 
   const queryClient = new QueryClient();
