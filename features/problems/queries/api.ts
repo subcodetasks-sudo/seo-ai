@@ -1,5 +1,5 @@
 import { apiClient } from "@/lib/client";
-import type { CrawlPagesResponse, IssueSummaryResponse } from "../types";
+import type { CrawlPagesResponse, IssueSummaryApiResponse } from "../types";
 
 type FetchIssueSummaryParams = {
   projectId: string;
@@ -9,12 +9,12 @@ type FetchIssueSummaryParams = {
 export async function fetchIssueSummary({
   projectId,
   severity,
-}: FetchIssueSummaryParams): Promise<IssueSummaryResponse> {
+}: FetchIssueSummaryParams): Promise<IssueSummaryApiResponse> {
   const params = new URLSearchParams();
   if (severity && severity !== "all") params.set("severity", severity);
   const query = params.toString();
 
-  return apiClient<IssueSummaryResponse>(
+  return apiClient<IssueSummaryApiResponse>(
     `projects/${projectId}/ai/issue-summary${query ? `?${query}` : ""}`,
   );
 }

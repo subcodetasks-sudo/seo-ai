@@ -12,6 +12,7 @@ export function issueSummaryQueryOptions({ projectId, severity }: IssueSummaryPa
   return queryOptions({
     queryKey: problemsKeys.issueSummary(projectId, severity),
     queryFn: () => fetchIssueSummary({ projectId, severity }),
+    select: (response) => response.data,
     enabled: Boolean(projectId),
     staleTime: 1000 * 60 * 2,
   });

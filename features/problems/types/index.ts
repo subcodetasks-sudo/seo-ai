@@ -17,6 +17,12 @@ export type IssueSummaryResponse = {
   items: IssueSummaryItem[];
 };
 
+export type IssueSummaryApiResponse = {
+  status: boolean;
+  message: string;
+  data: IssueSummaryResponse;
+};
+
 export type PageIssue = {
   type: string;
   severity: ProblemSeverity;

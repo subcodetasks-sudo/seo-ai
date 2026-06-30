@@ -17,5 +17,5 @@ export function createPasswordSchema(messages: PasswordSchemaMessages) {
     .min(8, messages.passwordMin)
     .regex(LETTER_REGEX, messages.passwordLetterRequired)
     .regex(DIGIT_REGEX, messages.passwordDigitRequired)
-    .regex(SYMBOL_REGEX, messages.passwordSymbolRequired);
+    // .regex(SYMBOL_REGEX, messages.passwordSymbolRequired);
 }
