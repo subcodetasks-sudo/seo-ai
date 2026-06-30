@@ -23,7 +23,6 @@ export function LandingHeader() {
   const toggleLanguage = () => {
     const nextLocale = locale === 'ar' ? 'en' : 'ar';
     router.replace(pathname, { locale: nextLocale });
-    router.refresh();
   };
 
   return (

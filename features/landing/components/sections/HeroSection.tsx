@@ -2,16 +2,17 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { heroQueryOptions } from "@/features/landing/queries/hero";
 import { stripHtml } from "@/lib/landing-api";
 
 export function HeroSection() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const t = useTranslations("landing");
+  const locale = useLocale();
   const videoSrc = "https://www.youtube.com/embed/VIDEO_ID";
 
-  const { data: heroes } = useQuery(heroQueryOptions);
+  const { data: heroes } = useQuery(heroQueryOptions(locale));
   const hero = heroes?.[0];
 
   const title = hero?.title ? stripHtml(hero.title) : t('hero.defaultTitle');

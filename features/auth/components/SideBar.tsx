@@ -10,6 +10,7 @@ import {
   List,
   LogOut,
   PanelRightClose,
+  Sparkles,
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -58,6 +59,8 @@ const NAV_ITEMS: NavItem[] = [
     imageSrc: "/imgs/google_analytics_logo.webp",
     exact: false,
   },
+  
+  { href: "/dashboard/ai-insights", labelKey: "aiInsights", icon: Sparkles, exact: false },
   { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock, exact: false },
 ] as const;
 
@@ -142,12 +145,12 @@ export default function SideBar() {
       className="border-neutral-200"
     >
       <motion.div
-        className="flex h-full flex-col px-5 py-6 bg-white border-e border-neutral-200"
+        className="flex h-full flex-col px-5 py-4 bg-white border-e border-neutral-200"
         initial={false}
         animate={isOpen ? "visible" : "hidden"}
         variants={getSidebarContainerVariants()}
       >
-        <div className="mb-6 flex items-center justify-between gap-3">
+        <div className="mb-3 flex items-center justify-between gap-3">
           <motion.div
             variants={getSidebarLogoVariants(side)}
             className="min-w-0"
