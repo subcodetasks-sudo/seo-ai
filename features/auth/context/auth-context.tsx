@@ -45,6 +45,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    if (!window.location.pathname.includes("/dashboard")) {
+      setIsLoading(false);
+      return;
+    }
+
     // Fetch fresh data from /me to keep sidebar up-to-date
     fetch("/api/users/me")
       .then((r) => (r.ok ? r.json() : Promise.reject()))
