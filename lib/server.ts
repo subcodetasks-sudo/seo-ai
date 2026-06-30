@@ -1,4 +1,5 @@
 import { env } from "@/config/env";
+import { getLocale } from "next-intl/server";
 
 /** Safe, non-revealing message shown to users when something fails internally. */
 export const GENERIC_ERROR = "Something went wrong. Please try again later.";
@@ -15,6 +16,7 @@ export async function serverClient<T>(
   }
 
   const url = `${env.API_URL}${env.API_PREFIX}${endpoint}`;
+  const locale = await getLocale();
 
   let res: Response;
   try {
@@ -22,6 +24,7 @@ export async function serverClient<T>(
       ...options,
       headers: {
         "Content-Type": "application/json",
+        "X-Language": locale,
         ...options.headers,
       },
     });
