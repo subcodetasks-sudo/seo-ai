@@ -4,18 +4,21 @@ export type ProjectListItem = {
   domain: string;
   platform: "wordpress" | "salla" | "custom";
   sitemap_url: string | null;
-  url_filter: string | null;
+  url_filter: string[];
   verification_token: string;
   verification_method: string | null;
   is_verified: boolean;
   verified_at: string | null;
-  health_score: number | null;
-  last_crawl_at: string | null;
+  health_score: number;
+  last_crawl_at: string;
+  pages_crawled: number;
+  total_issues: number;
+  total_404_pages: number;
   is_archived: boolean;
   preferred_language: string;
   created_at: string;
-  setup_token: string | null;
-  setup_link: string | null;
+  setup_token: string;
+  setup_link: string;
   setup_token_used: boolean;
 };
 
@@ -82,7 +85,6 @@ export type ProjectDashboard = {
   ga_avg_session_duration: number | null;
   last_changes: LastChange[];
 };
-
 
 export type VerificationToken = {
   token: string;

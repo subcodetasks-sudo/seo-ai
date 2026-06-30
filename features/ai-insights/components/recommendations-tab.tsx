@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -10,13 +9,20 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { aiSuggestionsQueryOptions } from "@/features/ai-suggestions/queries/queries";
 import { useApproveSuggestion } from "@/features/ai-suggestions/queries/mutations";
-import type { IssueSummary, IssueSummaryRecommendation } from "../types";
+import type { AiInsightsTab, IssueSummary, IssueSummaryRecommendation } from "../types";
 
 const PRIORITY_STYLES: Record<string, string> = {
-  urgent: "bg-error-100 text-error-700",
-  high: "bg-warning-100 text-warning-700",
-  medium: "bg-primary-100 text-primary-700",
+  high: "bg-error-100 text-error-700",
+  medium: "bg-warning-100 text-warning-700",
   low: "bg-neutral-100 text-neutral-500",
+};
+
+const PRIORITY_ORDER: Array<"high" | "medium" | "low"> = ["high", "medium", "low"];
+
+const TRACKING_STATUS_STYLES: Record<string, string> = {
+  completed: "bg-success-100 text-success-700",
+  in_progress: "bg-primary-100 text-primary-700",
+  not_started: "bg-neutral-100 text-neutral-500",
 };
 
 type RecommendationCardProps = {
@@ -32,18 +38,27 @@ function RecommendationCard({ rec, onAction, actionPending }: RecommendationCard
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-5">
       <div className="flex items-start justify-between gap-3">
-        <span
-          className={cn(
-            "shrink-0 rounded-full px-2.5 py-0.5 text-label-xs font-semibold",
-            priorityStyle,
-          )}
-        >
-          {t(`priority.${rec.priority}`)}
-        </span>
-        {typeof rec.confidence === "number" && (
-          <span className="text-label-xs text-neutral-400">
-            {rec.confidence}% {t("confidence")}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className={cn("shrink-0 rounded-full px-2.5 py-0.5 text-label-xs font-semibold", priorityStyle)}>
+            {t(`priority.${rec.priority}`)}
           </span>
+          {rec.category && (
+            <span className="shrink-0 rounded-full bg-neutral-100 px-2.5 py-0.5 text-label-xs text-neutral-500">
+              {rec.category}
+            </span>
+          )}
+        </div>
+        {onAction && (
+          <Button
+            type="button"
+            size="sm"
+            disabled={actionPending}
+            onClick={() => onAction(rec.id)}
+            className="shrink-0 gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm font-medium"
+          >
+            {t("implement")}
+            <ArrowRight className="size-3.5" aria-hidden="true" />
+          </Button>
         )}
       </div>
 
@@ -52,26 +67,42 @@ function RecommendationCard({ rec, onAction, actionPending }: RecommendationCard
         <p className="text-label-sm text-neutral-500">{rec.description}</p>
       </div>
 
-      {rec.expected_impact && (
-        <p className="rounded-lg bg-neutral-50 px-3 py-2 text-label-xs text-neutral-600">
-          {t("expectedImpact")}: {rec.expected_impact}
+      {rec.why && (
+        <p className="rounded-lg border border-success-200 bg-success-50 px-3 py-2 text-label-xs text-success-700">
+          <span className="font-semibold">{t("why")}:</span> {rec.why}
         </p>
       )}
 
-      {onAction && (
-        <div className="flex justify-end">
-          <Button
-            type="button"
-            size="sm"
-            disabled={actionPending}
-            onClick={() => onAction(rec.id)}
-            className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm font-medium"
-          >
-            {t("implement")}
-            <ArrowRight className="size-3.5" aria-hidden="true" />
-          </Button>
+      <div className="grid grid-cols-2 gap-3 border-t border-neutral-100 pt-3 sm:grid-cols-5">
+        <div className="flex flex-col gap-0.5">
+          <p className="text-label-xs text-neutral-400">{t("priorityLabel")}</p>
+          <p className="text-label-sm font-medium text-secondary-500">{t(`priority.${rec.priority}`)}</p>
         </div>
-      )}
+        {rec.effort && (
+          <div className="flex flex-col gap-0.5">
+            <p className="text-label-xs text-neutral-400">{t("estimatedDifficulty")}</p>
+            <p className="text-label-sm font-medium text-secondary-500">{t(`difficulty.${rec.effort}`)}</p>
+          </div>
+        )}
+        {rec.expected_impact && (
+          <div className="flex flex-col gap-0.5">
+            <p className="text-label-xs text-neutral-400">{t("expectedImpact")}</p>
+            <p className="text-label-sm font-medium text-success-600">{rec.expected_impact}</p>
+          </div>
+        )}
+        {rec.estimatedTime && (
+          <div className="flex flex-col gap-0.5">
+            <p className="text-label-xs text-neutral-400">{t("estimatedTime")}</p>
+            <p className="text-label-sm font-medium text-secondary-500">{rec.estimatedTime}</p>
+          </div>
+        )}
+        {rec.affectedPage && (
+          <div className="flex flex-col gap-0.5">
+            <p className="text-label-xs text-neutral-400">{t("affectedPage")}</p>
+            <p className="text-label-sm font-medium text-secondary-500">{rec.affectedPage}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -136,12 +167,7 @@ function SuggestionsAsRecommendations({ projectId }: SuggestionsAsRecommendation
             id: item.id,
             title: item.type,
             description: item.url,
-            priority:
-              item.priority === "high"
-                ? "urgent"
-                : item.priority === "medium"
-                  ? "high"
-                  : "medium",
+            priority: item.priority,
           }}
           onAction={handleApprove}
           actionPending={approveMutation.isPending}
@@ -156,6 +182,7 @@ type RecommendationsTabProps = {
   isLoading: boolean;
   isError: boolean;
   projectId: string;
+  onNavigateTab?: (tab: AiInsightsTab) => void;
 };
 
 export function RecommendationsTab({
@@ -163,13 +190,12 @@ export function RecommendationsTab({
   isLoading,
   isError,
   projectId,
+  onNavigateTab,
 }: RecommendationsTabProps) {
   const t = useTranslations("aiInsights.recommendations");
-  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const aiRecs = data?.recommendations ?? [];
-  const rootCauses = data?.root_cause_analysis ?? [];
-  const confidenceRate = data?.confidence_rate;
+  const tracking = data?.recommendation_tracking ?? [];
 
   if (isLoading) {
     return (
@@ -187,25 +213,38 @@ export function RecommendationsTab({
     );
   }
 
-  void expandedId;
-  void setExpandedId;
-
   const hasAiRecs = aiRecs.length > 0;
+  const groups = PRIORITY_ORDER.map((priority) => ({
+    priority,
+    items: aiRecs.filter((rec) => rec.priority === priority),
+  })).filter((group) => group.items.length > 0);
 
   return (
     <div className="flex flex-col gap-6">
-      {/* AI-generated strategic recommendations */}
+      {/* AI-generated strategic recommendations, grouped by priority */}
       {hasAiRecs ? (
-        <div className="flex flex-col gap-4">
-          <h2 className="text-label-md font-semibold text-secondary-500">
-            {t("keyRecommendations")}
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {aiRecs.map((rec) => (
-              <RecommendationCard key={rec.id} rec={rec} />
-            ))}
+        groups.map((group) => (
+          <div key={group.priority} className="flex flex-col gap-4">
+            <div className="flex items-center gap-2">
+              <h2 className="text-label-md font-semibold text-secondary-500">
+                {t(`priorityGroup.${group.priority}`)}
+              </h2>
+              <span
+                className={cn(
+                  "rounded-full px-2 py-0.5 text-label-xs font-semibold",
+                  PRIORITY_STYLES[group.priority],
+                )}
+              >
+                {t("recommendationsCount", { count: group.items.length })}
+              </span>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {group.items.map((rec) => (
+                <RecommendationCard key={rec.id} rec={rec} />
+              ))}
+            </div>
           </div>
-        </div>
+        ))
       ) : (
         <div className="flex flex-col gap-4">
           <h2 className="text-label-md font-semibold text-secondary-500">
@@ -215,71 +254,65 @@ export function RecommendationsTab({
         </div>
       )}
 
-      {/* Root Cause Analysis */}
-      {rootCauses.length > 0 && (
+      {/* Recommendation tracking */}
+      {tracking.length > 0 && (
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
-          <h2 className="mb-4 text-label-md font-semibold text-secondary-500">
-            {t("rootCauseAnalysis")}
-          </h2>
-          <ul className="flex flex-col gap-3">
-            {rootCauses.map((rc, idx) => (
-              <li
-                key={idx}
-                className="flex items-start justify-between gap-3 rounded-lg border border-neutral-100 bg-neutral-50 px-4 py-3"
-              >
+          <h2 className="mb-4 text-label-md font-semibold text-secondary-500">{t("tracking.title")}</h2>
+          <ul className="flex flex-col divide-y divide-neutral-100">
+            {tracking.map((item) => (
+              <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                 <div className="flex flex-col gap-0.5">
-                  <p className="text-label-sm font-medium text-secondary-500">{rc.issue}</p>
-                  <p className="text-label-xs text-neutral-500">{rc.cause}</p>
+                  <p className="text-label-sm font-medium text-secondary-500">{item.title}</p>
+                  <p className="text-label-xs text-neutral-400">{item.category}</p>
                 </div>
-                {rc.priority && (
-                  <span
-                    className={cn(
-                      "shrink-0 rounded-full px-2 py-0.5 text-label-xs font-medium",
-                      PRIORITY_STYLES[rc.priority] ?? PRIORITY_STYLES.low,
-                    )}
-                  >
-                    {t(`priority.${rc.priority}`)}
-                  </span>
-                )}
+
+                {item.status === "completed" && typeof item.before === "number" && typeof item.after === "number" ? (
+                  <div className="flex items-center gap-2 text-label-xs">
+                    <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-neutral-500">{item.before}%</span>
+                    <ArrowRight className="size-3.5 text-neutral-400 rtl:rotate-180" aria-hidden="true" />
+                    <span className="rounded-full bg-success-100 px-2 py-0.5 font-semibold text-success-700">
+                      {item.after}%
+                    </span>
+                  </div>
+                ) : item.status === "in_progress" && typeof item.progress === "number" ? (
+                  <div className="flex w-32 items-center gap-2">
+                    <div className="relative h-2 flex-1 overflow-hidden rounded-full bg-neutral-100">
+                      <div
+                        className="absolute inset-y-0 start-0 rounded-full bg-primary-400"
+                        style={{ width: `${item.progress}%` }}
+                      />
+                    </div>
+                    <span className="text-label-xs font-medium text-secondary-500">{item.progress}%</span>
+                  </div>
+                ) : null}
+
+                <span
+                  className={cn(
+                    "shrink-0 rounded-full px-2 py-0.5 text-label-xs font-semibold",
+                    TRACKING_STATUS_STYLES[item.status],
+                  )}
+                >
+                  {t(`tracking.status.${item.status}`)}
+                </span>
+
+                <div className="flex items-center gap-2 text-label-xs text-neutral-400">
+                  <span>{item.assignee}</span>
+                  <span>{item.date}</span>
+                </div>
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      {/* Confidence Rate */}
-      {typeof confidenceRate === "number" && (
-        <div className="rounded-xl border border-neutral-200 bg-white p-5">
-          <h2 className="mb-3 text-label-md font-semibold text-secondary-500">
-            {t("confidenceRate")}
-          </h2>
-          <div className="flex items-center gap-3">
-            <div className="relative h-2.5 flex-1 overflow-hidden rounded-full bg-neutral-100">
-              <div
-                className="absolute inset-y-0 start-0 rounded-full bg-primary-400 transition-all"
-                style={{ width: `${confidenceRate}%` }}
-              />
-            </div>
-            <span className="shrink-0 text-label-sm font-semibold text-secondary-500">
-              {confidenceRate}%
-            </span>
-          </div>
-        </div>
-      )}
-
-      {/* Follow-up CTA */}
-      <div className="flex items-center justify-between rounded-xl border border-primary-200 bg-primary-50 p-5">
-        <p className="text-label-sm font-medium text-secondary-500">{t("followUp")}</p>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="gap-1.5 border-secondary-500 text-secondary-500 hover:bg-secondary-50 text-label-sm"
-        >
-          {t("viewAll")}
-          <ArrowRight className="size-3.5" aria-hidden="true" />
-        </Button>
-      </div>
+      <Button
+        type="button"
+        onClick={() => onNavigateTab?.("performance")}
+        className="w-fit gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm font-medium"
+      >
+        <ArrowLeft className="size-3.5 rtl:rotate-180" aria-hidden="true" />
+        {t("goToPerformance")}
+      </Button>
     </div>
   );
 }

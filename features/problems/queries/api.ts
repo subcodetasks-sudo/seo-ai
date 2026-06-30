@@ -59,3 +59,14 @@ export async function generateSuggestion(
     body: JSON.stringify({ suggestion_type: suggestionType, page_url: pageUrl }),
   });
 }
+
+export async function ignoreIssue(
+  projectId: string,
+  issueType: string,
+  pageUrl: string,
+): Promise<void> {
+  return apiClient(`projects/${projectId}/issues/ignore`, {
+    method: "POST",
+    body: JSON.stringify({ page_url: pageUrl, issue_type: issueType }),
+  });
+}

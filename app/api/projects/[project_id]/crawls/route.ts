@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverClient } from "@/lib/server";
+import { toErrorResponse } from "@/lib/errors";
 
 type RouteContext = {
   params: Promise<{ project_id: string }>;
@@ -24,8 +25,7 @@ export async function POST(req: NextRequest, context: RouteContext) {
     );
     return NextResponse.json(data);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ message }, { status: 400 });
+    return NextResponse.json(toErrorResponse(error), { status: 400 });
   }
 }
 
@@ -45,7 +45,6 @@ export async function GET(req: NextRequest, context: RouteContext) {
     );
     return NextResponse.json(data);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ message }, { status: 400 });
+    return NextResponse.json(toErrorResponse(error), { status: 400 });
   }
 }

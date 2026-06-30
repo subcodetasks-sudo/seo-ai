@@ -1,4 +1,5 @@
 import { env } from "@/config/env";
+import { ApiError } from "@/lib/errors";
 import { getLocale } from "next-intl/server";
 
 /** Safe, non-revealing message shown to users when something fails internally. */
@@ -34,7 +35,11 @@ export async function serverClient<T>(
     throw new Error(GENERIC_ERROR);
   }
 
-  let data: { status?: boolean; message?: string } & Record<string, unknown>;
+  let data: {
+    status?: boolean;
+    message?: string;
+    errors?: Record<string, string[]>;
+  } & Record<string, unknown>;
   try {
     data = await res.json();
   } catch (error) {
@@ -47,7 +52,7 @@ export async function serverClient<T>(
   // Backend business errors carry a safe, user-facing message.
   // Check both HTTP status and the body's status field — backends vary in which they set.
   if (!res.ok || data.status === false) {
-    throw new Error(data?.message || alternativeErrorMessage);
+    throw new ApiError(data?.message || alternativeErrorMessage, data?.errors);
   }
 
   return data as T;

@@ -10,6 +10,7 @@ import { issueSummaryQueryOptions } from "../queries/queries";
 import type { AiInsightsPeriod, AiInsightsTab } from "../types";
 import { AiInsightsHeader } from "./ai-insights-header";
 import { AiInsightsTabs } from "./ai-insights-tabs";
+import { AnalysisTab } from "./analysis-tab";
 import { OverviewTab } from "./overview-tab";
 import { PerformanceTab } from "./performance-tab";
 import { RecommendationsTab } from "./recommendations-tab";
@@ -26,6 +27,7 @@ export function AiInsightsContent() {
     data: summary,
     isLoading,
     isError,
+    refetch,
   } = useQuery(issueSummaryQueryOptions(selectedProjectId ?? "", period));
 
   if (!selectedProjectId) {
@@ -39,12 +41,15 @@ export function AiInsightsContent() {
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
       <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6">
-        <AiInsightsHeader period={period} onPeriodChange={setPeriod} />
+        <AiInsightsHeader period={period} onPeriodChange={setPeriod} onReanalyze={refetch} />
         <AiInsightsTabs activeTab={tab} onTabChange={setTab} />
 
         <div role="tabpanel">
           {tab === "overview" && (
-            <OverviewTab data={summary} isLoading={isLoading} isError={isError} />
+            <OverviewTab data={summary} isLoading={isLoading} isError={isError} onNavigateTab={setTab} />
+          )}
+          {tab === "analysis" && (
+            <AnalysisTab data={summary} isLoading={isLoading} isError={isError} onNavigateTab={setTab} />
           )}
           {tab === "recommendations" && (
             <RecommendationsTab
@@ -52,10 +57,11 @@ export function AiInsightsContent() {
               isLoading={isLoading}
               isError={isError}
               projectId={selectedProjectId}
+              onNavigateTab={setTab}
             />
           )}
           {tab === "performance" && (
-            <PerformanceTab projectId={selectedProjectId} period={period} />
+            <PerformanceTab data={summary} isLoading={isLoading} isError={isError} onNavigateTab={setTab} />
           )}
         </div>
       </div>

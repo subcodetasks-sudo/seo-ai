@@ -1,4 +1,5 @@
 import { serverClient } from "@/lib/server";
+import { toErrorResponse } from "@/lib/errors";
 import { NextRequest, NextResponse } from "next/server";
 
 type RefreshResponseData = {
@@ -61,11 +62,9 @@ export async function POST(req: NextRequest) {
 
     return response;
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-
     // Refresh failed — clear cookies so middleware/client treat the user as
     // logged out instead of bouncing them back into an authenticated route.
-    return clearAuthCookies(NextResponse.json({ message }, { status: 401 }));
+    return clearAuthCookies(NextResponse.json(toErrorResponse(error), { status: 401 }));
   }
 }
 

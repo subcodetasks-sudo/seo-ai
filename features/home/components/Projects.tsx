@@ -2,13 +2,19 @@
 
 import { useState } from "react";
 import {
+  AlertTriangle,
   Archive,
   Clock,
   ExternalLink,
+  FileText,
+  Gauge,
   Globe,
+  Link2Off,
+  type LucideIcon,
   Plus,
   RefreshCw,
   ShieldCheck,
+  ShieldX,
   Trash2,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -45,18 +51,23 @@ type ProjectCardProps = {
 };
 
 type ProjectStatProps = {
+  icon: LucideIcon;
   value: string;
   label: string;
   valueClassName?: string;
+  iconClassName?: string;
 };
 
-function ProjectStat({ value, label, valueClassName }: ProjectStatProps) {
+function ProjectStat({ icon: Icon, value, label, valueClassName, iconClassName }: ProjectStatProps) {
   return (
-    <div className="flex min-w-16 flex-col items-center gap-1 text-center">
-      <span className={cn("text-h4 font-semibold text-secondary-500", valueClassName)}>
-        {value}
-      </span>
-      <span className="text-label-sm text-neutral-500">{label}</span>
+    <div className="flex items-center gap-2.5 rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2.5">
+      <Icon className={cn("size-4 shrink-0 text-neutral-400", iconClassName)} aria-hidden="true" />
+      <div className="flex min-w-0 flex-col">
+        <span className={cn("text-h4 font-semibold leading-tight text-secondary-500", valueClassName)}>
+          {value}
+        </span>
+        <span className="truncate text-label-sm text-neutral-500">{label}</span>
+      </div>
     </div>
   );
 }
@@ -107,6 +118,10 @@ function ProjectCard({ project }: ProjectCardProps) {
   }).format(new Date(scanDate));
 
   const healthScore = project.health_score !== null ? `${project.health_score}` : "—";
+  const numberFormatter = new Intl.NumberFormat(locale);
+  const pagesCrawled = numberFormatter.format(project.pages_crawled);
+  const totalIssues = numberFormatter.format(project.total_issues);
+  const total404Pages = numberFormatter.format(project.total_404_pages);
 
   function handleDelete() {
     deleteProject(project.id, {
@@ -127,47 +142,98 @@ function ProjectCard({ project }: ProjectCardProps) {
   }
 
   return (
-    <article className="flex flex-col gap-5 rounded-xl border border-neutral-200 bg-white p-5 lg:flex-row lg:items-center lg:justify-between">
-      <div className="min-w-0 flex-1 space-y-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge className="border-primary-100 bg-primary-50 text-primary-500 capitalize">
-            <Globe className="size-3" aria-hidden="true" />
-            {t(`platforms.${project.platform}`)}
-          </Badge>
-          {project.is_archived && (
-            <Badge className="border-warning-100 bg-warning-50 text-warning-600 capitalize">
-              <Archive className="size-3" aria-hidden="true" />
-              {t("archived")}
+    <article className="flex flex-col gap-5 rounded-xl border border-neutral-200 bg-white p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge className="border-primary-100 bg-primary-50 text-primary-500 capitalize">
+              <Globe className="size-3" aria-hidden="true" />
+              {t(`platforms.${project.platform}`)}
             </Badge>
-          )}
+            {project.is_archived && (
+              <Badge className="border-warning-100 bg-warning-50 text-warning-600 capitalize">
+                <Archive className="size-3" aria-hidden="true" />
+                {t("archived")}
+              </Badge>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <h3 className="text-h4 font-semibold text-secondary-500">{project.name}</h3>
+            <p className="truncate text-label-md text-neutral-500">{project.domain}</p>
+          </div>
+
+          <p className="flex items-center gap-1.5 text-label-sm text-neutral-400">
+            <Clock className="size-3.5 shrink-0" aria-hidden="true" />
+            {t("lastScan", { date: formattedDate })}
+          </p>
         </div>
 
-        <div className="space-y-1">
-          <h3 className="text-h4 font-semibold text-secondary-500">{project.name}</h3>
-          <p className="truncate text-label-md text-neutral-500">{project.domain}</p>
-        </div>
-
-        <p className="flex items-center gap-1.5 text-label-sm text-neutral-400">
-          <Clock className="size-3.5 shrink-0" aria-hidden="true" />
-          {t("lastScan", { date: formattedDate })}
-        </p>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              disabled={isDeleting}
+              className="h-9 w-9 shrink-0 border-neutral-200 text-neutral-400 hover:border-error-200 hover:bg-error-50 hover:text-error-600"
+              aria-label={t("delete")}
+            >
+              <Trash2 className="size-4" aria-hidden="true" />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t("deleteConfirmTitle")}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t("deleteConfirmDesc", { name: project.name })}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-error-600 text-white hover:bg-error-700"
+              >
+                {t("deleteConfirmAction")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
-      <div className="flex items-center justify-center gap-4 lg:px-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         <ProjectStat
+          icon={Gauge}
           value={healthScore}
           label={t("health")}
           valueClassName={project.health_score !== null ? "text-secondary-500" : "text-neutral-400"}
         />
-        <div className="h-10 w-px bg-neutral-200" aria-hidden="true" />
         <ProjectStat
+          icon={project.is_verified ? ShieldCheck : ShieldX}
           value={project.is_verified ? t("verified") : t("unverified")}
           label={t("status")}
           valueClassName={project.is_verified ? "text-success-500" : "text-warning-400"}
+          iconClassName={project.is_verified ? "text-success-500" : "text-warning-400"}
+        />
+        <ProjectStat icon={FileText} value={pagesCrawled} label={t("pages")} />
+        <ProjectStat
+          icon={AlertTriangle}
+          value={totalIssues}
+          label={t("errors")}
+          valueClassName={project.total_issues > 0 ? "text-warning-500" : "text-secondary-500"}
+          iconClassName={project.total_issues > 0 ? "text-warning-500" : "text-neutral-400"}
+        />
+        <ProjectStat
+          icon={Link2Off}
+          value={total404Pages}
+          label={t("errors404")}
+          valueClassName={project.total_404_pages > 0 ? "text-error-500" : "text-secondary-500"}
+          iconClassName={project.total_404_pages > 0 ? "text-error-500" : "text-neutral-400"}
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 lg:shrink-0">
+      <div className="flex flex-wrap items-center gap-2 border-t border-neutral-100 pt-4">
         {!project.is_verified && project.platform === "custom" && (
           <VerifyProjectModal project={project} />
         )}
@@ -193,38 +259,6 @@ function ProjectCard({ project }: ProjectCardProps) {
           <RefreshCw className={cn("size-4", isRescanning && "animate-spin")} aria-hidden="true" />
           {isRescanning ? t("rescanning") : t("rescan")}
         </Button>
-
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            {/* <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              disabled={isDeleting}
-              className="h-9 w-9 border-neutral-200 text-neutral-400 hover:border-error-200 hover:bg-error-50 hover:text-error-600"
-              aria-label={t("delete")}
-            >
-              <Trash2 className="size-4" aria-hidden="true" />
-            </Button> */}
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{t("deleteConfirmTitle")}</AlertDialogTitle>
-              <AlertDialogDescription>
-                {t("deleteConfirmDesc", { name: project.name })}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleDelete}
-                className="bg-error-600 text-white hover:bg-error-700"
-              >
-                {t("deleteConfirmAction")}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </div>
     </article>
   );

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { serverClient } from "@/lib/server";
+import { toErrorResponse } from "@/lib/errors";
 
 function getAuthHeaders(req: NextRequest) {
   const accessToken = req.cookies.get("access_token")?.value;
@@ -21,8 +22,7 @@ export async function GET(req: NextRequest) {
     );
     return NextResponse.json(data);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ message }, { status: 400 });
+    return NextResponse.json(toErrorResponse(error), { status: 400 });
   }
 }
 
@@ -41,7 +41,6 @@ export async function PATCH(req: NextRequest) {
     );
     return NextResponse.json(data);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    return NextResponse.json({ message }, { status: 400 });
+    return NextResponse.json(toErrorResponse(error), { status: 400 });
   }
 }

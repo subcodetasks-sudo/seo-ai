@@ -661,6 +661,7 @@
       "action": "Action",
       "suggestFix": "Suggest Fix",
       "ignore": "Ignore",
+      "ignoring": "Ignoring…",
       "viewPages": "View Pages",
       "pageCount": "{count} pages"
     },
@@ -890,56 +891,136 @@
   "aiInsights": {
     "title": "AI Insights",
     "subtitle": "Analyze your site performance with AI-powered analysis",
-    "badge": "AI Insights",
     "noProject": "Select a project to view AI insights",
     "period": "Last {days} days",
+    "reanalyze": "Re-analyze",
     "tabs": {
       "label": "AI Insights sections",
       "overview": "Overview",
+      "analysis": "Analysis",
       "recommendations": "Recommendations",
       "performance": "Performance & Log"
     },
     "overview": {
       "executiveSummary": "Executive Summary",
+      "updatedAgo": "Updated {time} ago",
       "keyMetrics": "Key Metrics",
+      "keyMetricsSubtitle": "Last {days} days",
       "performanceScore": "Business Performance Score",
+      "overallHealth": "Overall health",
       "outOf100": "out of 100",
-      "rootCauseAnalysis": "Root Cause Analysis",
+      "weaknesses": "Weaknesses",
+      "strengths": "Strengths",
+      "confidenceScore": "Confidence score",
+      "growthTrend": "Growth trend",
+      "confidenceLevel": "{value}% analysis confidence",
+      "criticalInsights": "Top Critical Insights",
+      "viewFullAnalysis": "View full analysis",
       "error": "Failed to load AI insights"
+    },
+    "analysis": {
+      "smartInsights": "Smart Insights",
+      "insightsFound": "{count} insights found",
+      "severity": {
+        "medium": "Medium",
+        "critical": "Critical",
+        "positive": "Positive"
+      },
+      "rootCauseAnalysis": "Root Cause Analysis",
+      "possibleCauses": "{count} possible causes",
+      "affectedPages": "Affected pages",
+      "confidenceLevel": "Confidence level",
+      "confidence": {
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      },
+      "growthOpportunities": "Growth Opportunities",
+      "untappedOpportunities": "Untapped opportunities",
+      "growthOpportunity": "Growth opportunity",
+      "potential": {
+        "high": "High potential",
+        "medium": "Medium potential"
+      },
+      "expectedImpact": "Expected impact",
+      "difficulty": {
+        "low": "Easy",
+        "medium": "Medium",
+        "high": "Hard"
+      },
+      "goToRecommendations": "Go to Recommendations",
+      "error": "Failed to load analysis"
     },
     "recommendations": {
       "keyRecommendations": "Key Recommendations",
-      "rootCauseAnalysis": "Root Cause Analysis",
-      "confidenceRate": "Confidence Rate",
-      "followUp": "Track recommendations progress",
-      "viewAll": "View all",
-      "implement": "Implement",
-      "confidence": "confidence",
+      "implement": "Start implementing",
+      "why": "Why?",
+      "priorityLabel": "Priority",
+      "estimatedDifficulty": "Estimated difficulty",
       "expectedImpact": "Expected impact",
+      "estimatedTime": "Estimated time",
+      "affectedPage": "Affected page",
+      "priorityGroup": {
+        "high": "High priority",
+        "medium": "Medium priority",
+        "low": "Low priority"
+      },
+      "recommendationsCount": "{count, plural, one{# recommendation} other{# recommendations}}",
+      "difficulty": {
+        "low": "Easy",
+        "medium": "Medium",
+        "high": "Hard"
+      },
+      "tracking": {
+        "title": "Recommendation Tracking",
+        "status": {
+          "completed": "Completed",
+          "in_progress": "In progress",
+          "not_started": "Not started"
+        }
+      },
+      "goToPerformance": "Go to Performance & Log",
       "empty": "No recommendations found",
       "error": "Failed to load recommendations",
       "priority": {
-        "urgent": "Urgent",
         "high": "High",
         "medium": "Medium",
         "low": "Low"
       }
     },
     "performance": {
-      "timeTrends": "Time Trends",
-      "issuesTrend": "SEO Issues Trend",
-      "healthScore": "Health Score",
-      "totalIssues": "Total Issues",
-      "appliedChanges": "Applied Changes",
-      "scansTotal": "Total Scans",
-      "pages": "pages",
+      "periods": {
+        "day": "Yesterday",
+        "week": "Last week",
+        "month": "Last month",
+        "quarter": "Last quarter",
+        "year": "Last year"
+      },
+      "historicalTrends": "Historical Trends",
+      "growthTimeline": "Growth Timeline",
+      "timelineTag": {
+        "result": "Result",
+        "event": "Event",
+        "recommendation": "Recommendation",
+        "seo": "SEO",
+        "update": "Update",
+        "campaign": "Campaign"
+      },
+      "performanceComparison": "Performance Comparison",
+      "comparisonStatus": {
+        "stable": "Stable",
+        "improved": "Improved",
+        "declined": "Declined"
+      },
       "aiLearningLog": "AI Learning Log",
-      "scanStatus": {
-        "completed": "Completed",
-        "done": "Completed",
-        "running": "Running",
-        "failed": "Failed"
-      }
+      "conversionLift": "Conversion lift",
+      "revenueLift": "Revenue lift",
+      "successfulRecs": "Successful recs",
+      "appliedRecs": "Applied recs",
+      "generatedRecs": "Generated recs",
+      "successRate": "Success rate",
+      "backToOverview": "Back to Overview",
+      "error": "Failed to load performance data"
     }
   },
   "settings": {

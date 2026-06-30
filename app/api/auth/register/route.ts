@@ -1,4 +1,5 @@
 import { serverClient } from "@/lib/server";
+import { toErrorResponse } from "@/lib/errors";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -14,8 +15,6 @@ export async function POST(req: Request) {
 
     return Response.json(data);
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-
-    return new Response(JSON.stringify({ message }), { status: 400 });
+    return new Response(JSON.stringify(toErrorResponse(error)), { status: 400 });
   }
 }

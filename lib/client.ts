@@ -1,3 +1,5 @@
+import { ApiError } from "@/lib/errors";
+
 let refreshing: Promise<void> | null = null;
 
 export async function apiClient<T>(
@@ -41,7 +43,7 @@ export async function apiClient<T>(
       const retryResult = await retryResponse.json();
 
       if (!retryResponse.ok || retryResult.status === false) {
-        throw new Error(retryResult.message || alternativeErrorMessage);
+        throw new ApiError(retryResult.message || alternativeErrorMessage, retryResult.errors);
       }
 
       return retryResult;
@@ -64,7 +66,7 @@ export async function apiClient<T>(
   }
 
   if (!response.ok || result.status === false) {
-    throw new Error(result.message || alternativeErrorMessage);
+    throw new ApiError(result.message || alternativeErrorMessage, result.errors);
   }
 
   return result;

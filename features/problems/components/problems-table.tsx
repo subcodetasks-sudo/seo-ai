@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, Lightbulb, TriangleAlert } from "lucide-react";
+import { ChevronRight, EyeOff, Lightbulb, TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { useSelectedProject } from "@/features/home";
-import { useGenerateSuggestionsForLinks } from "../queries/mutations";
+import { useGenerateSuggestionsForLinks, useIgnoreIssueForLinks } from "../queries/mutations";
 import type { IssueSummaryItem } from "../types";
 
 type ProblemsTableProps = {
@@ -34,6 +34,7 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
   const t = useTranslations("problems");
   const { selectedProjectId } = useSelectedProject();
   const generateMutation = useGenerateSuggestionsForLinks();
+  const ignoreMutation = useIgnoreIssueForLinks();
 
   function getProblemLabel(type: string) {
     const key = `problemTypes.${type}`;
@@ -55,8 +56,18 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
     });
   }
 
+  function handleIgnore(item: IssueSummaryItem) {
+    if (!selectedProjectId || item.affected_urls.length === 0 || ignoreMutation.isPending) return;
+    ignoreMutation.mutate({
+      projectId: selectedProjectId,
+      issueType: item.type,
+      pageUrls: item.affected_urls,
+    });
+  }
+
   function ActionButtons({ item }: { item: IssueSummaryItem }) {
     const isFixing = generateMutation.isPending;
+    const isIgnoring = ignoreMutation.isPending;
     return (
       <div className="flex items-center gap-2">
         {item.suggestion_type && (
@@ -71,15 +82,17 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
             {t("table.suggestFix")}
           </Button>
         )}
-        {/* <Button
+        <Button
           type="button"
           size="sm"
           variant="ghost"
-          className="gap-1.5 text-neutral-500 hover:text-neutral-700 text-label-sm"
+          onClick={() => handleIgnore(item)}
+          disabled={isIgnoring}
+          className="gap-1.5 text-neutral-500 hover:text-neutral-700 text-label-sm disabled:opacity-50"
         >
           <EyeOff className="size-3.5" aria-hidden="true" />
-          {t("table.ignore")}
-        </Button> */}
+          {isIgnoring ? t("table.ignoring") : t("table.ignore")}
+        </Button>
         <Button
           asChild
           size="sm"

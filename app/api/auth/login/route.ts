@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { serverClient } from "@/lib/server";
+import { toErrorResponse } from "@/lib/errors";
 
 type LoginResponseData = {
   access_token?: string;
@@ -51,7 +52,6 @@ export async function POST(req: Request) {
 
     return response;
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Login failed";
-    return NextResponse.json({ status: false, message }, { status: 400 });
+    return NextResponse.json({ status: false, ...toErrorResponse(error) }, { status: 400 });
   }
 }

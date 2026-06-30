@@ -661,6 +661,7 @@
       "action": "الإجراء",
       "suggestFix": "اقتراح حل",
       "ignore": "تجاهل",
+      "ignoring": "جارٍ التجاهل…",
       "viewPages": "عرض الصفحات",
       "pageCount": "{count} صفحة"
     },
@@ -890,56 +891,136 @@
   "aiInsights": {
     "title": "رؤى الذكاء الاصطناعي",
     "subtitle": "حلّل أداء موقعك بتحليل مدعوم بالذكاء الاصطناعي",
-    "badge": "رؤى الذكاء الاصطناعي",
     "noProject": "اختر مشروعاً لعرض رؤى الذكاء الاصطناعي",
     "period": "آخر {days} يوم",
+    "reanalyze": "إعادة التحليل",
     "tabs": {
       "label": "أقسام رؤى الذكاء الاصطناعي",
-      "overview": "النظرة الشاملة",
+      "overview": "النظرة التنفيذية",
+      "analysis": "التحليل",
       "recommendations": "التوصيات",
       "performance": "الأداء والسجل"
     },
     "overview": {
       "executiveSummary": "الملخص التنفيذي",
+      "updatedAgo": "محدّث منذ {time}",
       "keyMetrics": "أبرز المؤشرات",
+      "keyMetricsSubtitle": "آخر {days} يوماً",
       "performanceScore": "مؤشر أداء العمل",
+      "overallHealth": "الصحة العامة",
       "outOf100": "من 100",
-      "rootCauseAnalysis": "تحليل الأسباب الجذرية",
+      "weaknesses": "نقاط الضعف",
+      "strengths": "نقاط القوة",
+      "confidenceScore": "درجة الثقة",
+      "growthTrend": "اتجاه النمو",
+      "confidenceLevel": "مستوى ثقة التحليل {value}%",
+      "criticalInsights": "أهم الرؤى الحرجة",
+      "viewFullAnalysis": "اعرض التحليل الكامل",
       "error": "فشل تحميل رؤى الذكاء الاصطناعي"
+    },
+    "analysis": {
+      "smartInsights": "الرؤى الذكية",
+      "insightsFound": "{count} رؤى مكتشفة",
+      "severity": {
+        "medium": "متوسطة",
+        "critical": "حرجة",
+        "positive": "إيجابية"
+      },
+      "rootCauseAnalysis": "تحليل الأسباب الجذرية",
+      "possibleCauses": "{count} أسباب محتملة",
+      "affectedPages": "الصفحات المتأثرة",
+      "confidenceLevel": "مستوى الثقة",
+      "confidence": {
+        "high": "مرتفع",
+        "medium": "متوسط",
+        "low": "منخفض"
+      },
+      "growthOpportunities": "فرص النمو",
+      "untappedOpportunities": "فرص غير مستغلة",
+      "growthOpportunity": "فرصة نمو",
+      "potential": {
+        "high": "إمكانية مرتفعة",
+        "medium": "إمكانية متوسطة"
+      },
+      "expectedImpact": "الأثر المتوقع",
+      "difficulty": {
+        "low": "سهلة",
+        "medium": "متوسطة",
+        "high": "صعبة"
+      },
+      "goToRecommendations": "انتقل إلى التوصيات",
+      "error": "فشل تحميل التحليل"
     },
     "recommendations": {
       "keyRecommendations": "أبرز التوصيات",
-      "rootCauseAnalysis": "تحليل الأسباب الجذرية",
-      "confidenceRate": "معدل الثقة",
-      "followUp": "متابعة التوصيات",
-      "viewAll": "اكتب رد للكامل",
-      "implement": "تنفيذها",
-      "confidence": "ثقة",
-      "expectedImpact": "التأثير المتوقع",
+      "implement": "ابدأ التنفيذ",
+      "why": "لماذا؟",
+      "priorityLabel": "الأولوية",
+      "estimatedDifficulty": "الصعوبة المقدرة",
+      "expectedImpact": "الأثر المتوقع",
+      "estimatedTime": "الوقت المقدر",
+      "affectedPage": "الصفحة المتأثرة",
+      "priorityGroup": {
+        "high": "أولوية عالية",
+        "medium": "أولوية متوسطة",
+        "low": "أولوية منخفضة"
+      },
+      "recommendationsCount": "{count, plural, one{توصية واحدة} two{توصيتان} other{# توصيات}}",
+      "difficulty": {
+        "low": "سهلة",
+        "medium": "متوسطة",
+        "high": "صعبة"
+      },
+      "tracking": {
+        "title": "متابعة التوصيات",
+        "status": {
+          "completed": "مكتملة",
+          "in_progress": "قيد التنفيذ",
+          "not_started": "لم تبدأ"
+        }
+      },
+      "goToPerformance": "اذهب إلى الأداء والسجل",
       "empty": "لا توجد توصيات",
       "error": "فشل تحميل التوصيات",
       "priority": {
-        "urgent": "فورية",
-        "high": "عاجل",
+        "high": "عالية",
         "medium": "متوسطة",
         "low": "منخفضة"
       }
     },
     "performance": {
-      "timeTrends": "الاتجاهات الزمنية",
-      "issuesTrend": "اتجاه مشاكل SEO",
-      "healthScore": "مؤشر الصحة",
-      "totalIssues": "إجمالي المشاكل",
-      "appliedChanges": "التغييرات المطبقة",
-      "scansTotal": "إجمالي الفحوصات",
-      "pages": "صفحة",
-      "aiLearningLog": "سجل تعلم الذكاء الاصطناعي",
-      "scanStatus": {
-        "completed": "مكتمل",
-        "done": "مكتمل",
-        "running": "جاري",
-        "failed": "فشل"
-      }
+      "periods": {
+        "day": "أمس",
+        "week": "آخر أسبوع",
+        "month": "آخر شهر",
+        "quarter": "آخر ربع",
+        "year": "آخر سنة"
+      },
+      "historicalTrends": "الاتجاهات التاريخية",
+      "growthTimeline": "الجدول الزمني للنمو",
+      "timelineTag": {
+        "result": "نتيجة",
+        "event": "حدث",
+        "recommendation": "توصية",
+        "seo": "SEO",
+        "update": "تحديث",
+        "campaign": "حملة"
+      },
+      "performanceComparison": "مقارنة الأداء",
+      "comparisonStatus": {
+        "stable": "مستقر",
+        "improved": "تحسّن",
+        "declined": "تراجع"
+      },
+      "aiLearningLog": "سجل تعلّم الذكاء الاصطناعي",
+      "conversionLift": "ارتفاع التحويل",
+      "revenueLift": "ارتفاع الإيرادات",
+      "successfulRecs": "توصيات ناجحة",
+      "appliedRecs": "توصيات مطبّقة",
+      "generatedRecs": "توصيات مُولّدة",
+      "successRate": "معدل النجاح",
+      "backToOverview": "العودة إلى النظرة التنفيذية",
+      "error": "فشل تحميل بيانات الأداء"
     }
   },
   "settings": {
