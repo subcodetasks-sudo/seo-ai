@@ -887,6 +887,61 @@
     "viewAll": "عرض الكل",
     "crawlCompleted": "اكتمل الفحص بنجاح"
   },
+  "aiInsights": {
+    "title": "رؤى الذكاء الاصطناعي",
+    "subtitle": "حلّل أداء موقعك بتحليل مدعوم بالذكاء الاصطناعي",
+    "badge": "رؤى الذكاء الاصطناعي",
+    "noProject": "اختر مشروعاً لعرض رؤى الذكاء الاصطناعي",
+    "period": "آخر {days} يوم",
+    "tabs": {
+      "label": "أقسام رؤى الذكاء الاصطناعي",
+      "overview": "النظرة الشاملة",
+      "recommendations": "التوصيات",
+      "performance": "الأداء والسجل"
+    },
+    "overview": {
+      "executiveSummary": "الملخص التنفيذي",
+      "keyMetrics": "أبرز المؤشرات",
+      "performanceScore": "مؤشر أداء العمل",
+      "outOf100": "من 100",
+      "rootCauseAnalysis": "تحليل الأسباب الجذرية",
+      "error": "فشل تحميل رؤى الذكاء الاصطناعي"
+    },
+    "recommendations": {
+      "keyRecommendations": "أبرز التوصيات",
+      "rootCauseAnalysis": "تحليل الأسباب الجذرية",
+      "confidenceRate": "معدل الثقة",
+      "followUp": "متابعة التوصيات",
+      "viewAll": "اكتب رد للكامل",
+      "implement": "تنفيذها",
+      "confidence": "ثقة",
+      "expectedImpact": "التأثير المتوقع",
+      "empty": "لا توجد توصيات",
+      "error": "فشل تحميل التوصيات",
+      "priority": {
+        "urgent": "فورية",
+        "high": "عاجل",
+        "medium": "متوسطة",
+        "low": "منخفضة"
+      }
+    },
+    "performance": {
+      "timeTrends": "الاتجاهات الزمنية",
+      "issuesTrend": "اتجاه مشاكل SEO",
+      "healthScore": "مؤشر الصحة",
+      "totalIssues": "إجمالي المشاكل",
+      "appliedChanges": "التغييرات المطبقة",
+      "scansTotal": "إجمالي الفحوصات",
+      "pages": "صفحة",
+      "aiLearningLog": "سجل تعلم الذكاء الاصطناعي",
+      "scanStatus": {
+        "completed": "مكتمل",
+        "done": "مكتمل",
+        "running": "جاري",
+        "failed": "فشل"
+      }
+    }
+  },
   "settings": {
     "metadata": {
       "title": "Rank AI — الإعدادات",
@@ -1089,7 +1144,7 @@
       "teamExperts": "خبير في الفريق",
       "countriesServed": "دول نخدمها",
       "defaultTitle": "نصنع أدوات ذكية تساعد الأعمال على النمو عبر الإنترنت بثقة",
-      "defaultDesc": "في <strong>هويّة</strong> نؤمن أن تحسين محركات البحث يجب أن يكون بسيطاً وموثوقاً للجميع.",
+      "defaultDesc": "في هويّة نؤمن أن تحسين محركات البحث يجب أن يكون بسيطاً وموثوقاً للجميع.",
       "defaultQuote": "«نحوّل تعقيد الـ SEO إلى خطوات بسيطة، آمنة، ومؤتمتة.»"
     },
     "stats": {
@@ -1162,6 +1217,8 @@
       "ctaButton": "ابدأ الآن",
       "certified": "موثق بوزارة التجارة والاستثمار",
       "certifiedAlt": "موثق لدى وزارة التجارة والاستثمار",
+      "platformTitle": "المنصة",
+      "companyTitle": "الشركة",
       "phonesTitle": "جوالـ / واتسـاب",
       "officesTitle": "مكاتبنا",
       "copyright": "© 2024 جميع الحقوق محفوظة — شركة هويّة",

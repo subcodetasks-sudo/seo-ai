@@ -1,13 +1,20 @@
-import { getTranslations } from 'next-intl/server';
-import { apiFetch } from '@/lib/landing-api';
-import type { Faq } from '@/features/landing/types/landing-api';
+"use client"
+import parse from 'html-react-parser';
+import { useLocale, useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
+import { faqsQueryOptions } from '../../queries/queries';
+import { Faq } from '../../types/landing-api';
 
-export async function FaqSection() {
-  const t = await getTranslations('landing');
-  const faqs = await apiFetch<Faq[]>('/api/v1/faqs?lang=ar');
-  const items = faqs?.[0]?.items ?? [];
-  const stats = faqs?.[0]?.statistics;
+export function FaqSection() {
+  const t = useTranslations('landing');
+  const local = useLocale();
+  const { data: faqsArr } = useQuery(faqsQueryOptions(local));
 
+
+
+  const faqs: Faq | null= faqsArr?.[0] ?? null;
+  const items = faqsArr?.[0]?.items ?? [];
+  const stats = faqsArr?.[0]?.statistics;
   return (
     <section id='faq' className='bg-pattern relative overflow-hidden py-14 lg:py-20'>
       <div className='glow w-[420px] h-[420px] bottom-0 left-1/4 opacity-45'></div>
@@ -16,7 +23,7 @@ export async function FaqSection() {
         <div className='text-center mb-10' data-anim='fade-up'>
           <div className='eyebrow mb-5'>{t('faq.eyebrow')}</div>
           <h2 className='text-3xl sm:text-4xl lg:text-[2.7rem] font-extrabold leading-[1.25] text-ink'>
-            {t('faq.title')}
+            {faqs?.title ? parse(faqs?.title) : t('faq.title')}
           </h2>
         </div>
 
@@ -53,17 +60,17 @@ export async function FaqSection() {
                     <div className='mt-1 text-xs font-bold text-neutral-400'>{item.label}</div>
                   </div>
                 )) ?? (
-                  <>
-                    <div className='rounded-2xl border border-primary-line bg-white p-4 text-center'>
-                      <div className='text-2xl font-extrabold text-primary-700'>24/7</div>
-                      <div className='mt-1 text-xs font-bold text-neutral-400'>{t('faq.support247')}</div>
-                    </div>
-                    <div className='rounded-2xl border border-primary-line bg-white p-4 text-center'>
-                      <div className='text-2xl font-extrabold text-ink'>{t('faq.avgResponse')}</div>
-                      <div className='mt-1 text-xs font-bold text-neutral-400'>{t('faq.avgResponseLabel')}</div>
-                    </div>
-                  </>
-                )}
+                    <>
+                      <div className='rounded-2xl border border-primary-line bg-white p-4 text-center'>
+                        <div className='text-2xl font-extrabold text-primary-700'>24/7</div>
+                        <div className='mt-1 text-xs font-bold text-neutral-400'>{t('faq.support247')}</div>
+                      </div>
+                      <div className='rounded-2xl border border-primary-line bg-white p-4 text-center'>
+                        <div className='text-2xl font-extrabold text-ink'>{t('faq.avgResponse')}</div>
+                        <div className='mt-1 text-xs font-bold text-neutral-400'>{t('faq.avgResponseLabel')}</div>
+                      </div>
+                    </>
+                  )}
               </div>
             </div>
           </div>

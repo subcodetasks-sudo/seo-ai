@@ -887,6 +887,61 @@
     "viewAll": "View All",
     "crawlCompleted": "Crawl completed successfully"
   },
+  "aiInsights": {
+    "title": "AI Insights",
+    "subtitle": "Analyze your site performance with AI-powered analysis",
+    "badge": "AI Insights",
+    "noProject": "Select a project to view AI insights",
+    "period": "Last {days} days",
+    "tabs": {
+      "label": "AI Insights sections",
+      "overview": "Overview",
+      "recommendations": "Recommendations",
+      "performance": "Performance & Log"
+    },
+    "overview": {
+      "executiveSummary": "Executive Summary",
+      "keyMetrics": "Key Metrics",
+      "performanceScore": "Business Performance Score",
+      "outOf100": "out of 100",
+      "rootCauseAnalysis": "Root Cause Analysis",
+      "error": "Failed to load AI insights"
+    },
+    "recommendations": {
+      "keyRecommendations": "Key Recommendations",
+      "rootCauseAnalysis": "Root Cause Analysis",
+      "confidenceRate": "Confidence Rate",
+      "followUp": "Track recommendations progress",
+      "viewAll": "View all",
+      "implement": "Implement",
+      "confidence": "confidence",
+      "expectedImpact": "Expected impact",
+      "empty": "No recommendations found",
+      "error": "Failed to load recommendations",
+      "priority": {
+        "urgent": "Urgent",
+        "high": "High",
+        "medium": "Medium",
+        "low": "Low"
+      }
+    },
+    "performance": {
+      "timeTrends": "Time Trends",
+      "issuesTrend": "SEO Issues Trend",
+      "healthScore": "Health Score",
+      "totalIssues": "Total Issues",
+      "appliedChanges": "Applied Changes",
+      "scansTotal": "Total Scans",
+      "pages": "pages",
+      "aiLearningLog": "AI Learning Log",
+      "scanStatus": {
+        "completed": "Completed",
+        "done": "Completed",
+        "running": "Running",
+        "failed": "Failed"
+      }
+    }
+  },
   "settings": {
     "metadata": {
       "title": "Rank AI — Settings",
@@ -1089,7 +1144,7 @@
       "teamExperts": "Team experts",
       "countriesServed": "Countries served",
       "defaultTitle": "We build smart tools that help businesses grow online with confidence",
-      "defaultDesc": "At <strong>Howyah</strong> we believe SEO should be simple and reliable for everyone.",
+      "defaultDesc": "At Howyah we believe SEO should be simple and reliable for everyone.",
       "defaultQuote": "«We turn SEO complexity into simple, safe, and automated steps.»"
     },
     "stats": {
@@ -1162,6 +1217,8 @@
       "ctaButton": "Start now",
       "certified": "Certified by the Ministry of Commerce and Investment",
       "certifiedAlt": "Certified by the Ministry of Commerce and Investment",
+      "platformTitle": "Platform",
+      "companyTitle": "Company",
       "phonesTitle": "Mobile / WhatsApp",
       "officesTitle": "Our Offices",
       "copyright": "© 2024 All rights reserved — Howyah Company",

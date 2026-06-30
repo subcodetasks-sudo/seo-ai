@@ -1,20 +1,25 @@
+"use client";
+import parse from 'html-react-parser';
 import Image from 'next/image';
-import { getTranslations } from 'next-intl/server';
-import { apiFetch } from '@/lib/landing-api';
-import type { Statistics } from '@/features/landing/types/landing-api';
+import { useLocale, useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
+import { statisticsQueryOptions } from '../../queries/queries';
 
-function parseStatValue(value: string): { target: number; suffix: string } {
-  const match = value.match(/^([\d,]+)(.*)/);
-  if (!match) return { target: 0, suffix: value };
+function parseStatValue(value: string): { prefix: string; target: number; suffix: string } {
+  const match = value.trim().match(/^([+]?)([\d,]+)([%]?)$/);
+  if (!match) return { prefix: '', target: 0, suffix: value };
   return {
-    target: parseInt(match[1].replace(/,/g, ''), 10),
-    suffix: match[2].trim(),
+    prefix: match[1],
+    target: parseInt(match[2].replace(/,/g, ''), 10),
+    suffix: match[3],
   };
 }
 
-export async function StatsSection() {
-  const t = await getTranslations('landing');
-  const stats = await apiFetch<Statistics>('/api/v1/statistics?lang=ar');
+export function StatsSection() {
+  const t = useTranslations('landing');
+  const local = useLocale();
+  const { data: stats } = useQuery(statisticsQueryOptions(local));
+
   const cards = stats?.cards?.items ?? [];
 
   const c0 = cards[0];
@@ -22,10 +27,10 @@ export async function StatsSection() {
   const c2 = cards[2];
   const c3 = cards[3];
 
-  const p0 = c0 ? parseStatValue(c0.value) : { target: 12500, suffix: '+' };
-  const p1 = c1 ? parseStatValue(c1.value) : { target: 8400000, suffix: '+' };
-  const p2 = c2 ? parseStatValue(c2.value) : { target: 2300000, suffix: '+' };
-  const p3 = c3 ? parseStatValue(c3.value) : { target: 63, suffix: '%' };
+  const p0 = parseStatValue(c0?.value ?? '+12,500');
+  const p1 = parseStatValue(c1?.value ?? '+8,400,000');
+  const p2 = parseStatValue(c2?.value ?? '+63%');
+  const p3 = parseStatValue(c3?.value ?? '+2,300,000');
 
   return (
     <section
@@ -36,11 +41,9 @@ export async function StatsSection() {
 
       <div className='layer-content mx-auto max-w-7xl px-5 lg:px-8'>
         <div className='max-w-2xl mx-auto text-center mb-14' data-anim='fade-up'>
-          <div className='eyebrow mb-6'>{stats?.title ?? t('stats.defaultEyebrow')}</div>
+          <div className='eyebrow mb-6'>{stats?.content ?? t('stats.defaultEyebrow')}</div>
           <h2 className='text-3xl sm:text-4xl lg:text-[2.7rem] font-extrabold leading-[1.25] text-ink'>
-            {stats?.description
-              ? stats.description.replace(/<[^>]*>/g, '').trim()
-              : t('stats.defaultTitle')}
+            {stats?.title ? parse(stats.title) : t('stats.defaultTitle')}
           </h2>
         </div>
 
@@ -60,25 +63,27 @@ export async function StatsSection() {
             <div className='swirl-watermark inset-0 bg-center' style={{ opacity: '0.12' }}></div>
             <div className='relative z-20'>
               <div className='text-sm font-extrabold text-primary-900/80'>
-                {c0?.label ?? t('stats.defaultLabel0')}
+                {c0?.title ?? t('stats.defaultLabel0')}
               </div>
             </div>
             <div className='relative z-20'>
               <div className='text-6xl lg:text-7xl font-extrabold text-ink leading-none'>
+                <span>{p0.prefix}</span>
                 <span data-counter data-target={p0.target}>0</span>
                 <span>{p0.suffix}</span>
               </div>
               <p className='mt-4 text-primary-900/85 font-semibold max-w-xs'>
-                {t('stats.defaultBody')}
+                {c0?.description ?? t('stats.defaultBody')}
               </p>
             </div>
           </div>
 
           <div className='hover-lift surface pattern-card lg:col-span-2 p-7 flex flex-col justify-center' data-anim='fade-up'>
             <div className='text-sm font-extrabold text-neutral-400 mb-2'>
-              {c1?.label ?? t('stats.defaultLabel1')}
+              {c1?.title ?? t('stats.defaultLabel1')}
             </div>
             <div className='text-4xl lg:text-5xl font-extrabold text-ink leading-none'>
+              <span>{p1.prefix}</span>
               <span data-counter data-target={p1.target}>0</span>
               <span className='text-primary-600'>{p1.suffix}</span>
             </div>
@@ -89,9 +94,10 @@ export async function StatsSection() {
 
           <div className='hover-lift surface pattern-card p-7 flex flex-col justify-center' data-anim='fade-up'>
             <div className='text-sm font-extrabold text-neutral-400 mb-2'>
-              {c2?.label ?? t('stats.defaultLabel2')}
+              {c2?.title ?? t('stats.defaultLabel2')}
             </div>
             <div className='text-4xl font-extrabold text-ink leading-none'>
+              <span>{p2.prefix}</span>
               <span data-counter data-target={p2.target}>0</span>
               <span className='text-primary-600'>{p2.suffix}</span>
             </div>
@@ -99,12 +105,12 @@ export async function StatsSection() {
 
           <div className='hover-lift surface pattern-card p-7 flex flex-col justify-center' data-anim='fade-up'>
             <div className='text-sm font-extrabold text-neutral-400 mb-2'>
-              {c3?.label ?? t('stats.defaultLabel3')}
+              {c3?.title ?? t('stats.defaultLabel3')}
             </div>
             <div className='text-4xl font-extrabold text-primary-700 leading-none'>
-              {p3.suffix === '%' ? '+' : ''}
+              <span>{p3.prefix}</span>
               <span data-counter data-target={p3.target}>0</span>
-              <span>{p3.suffix === '%' ? '%' : p3.suffix}</span>
+              <span>{p3.suffix}</span>
             </div>
           </div>
         </div>

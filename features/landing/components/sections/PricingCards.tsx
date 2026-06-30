@@ -1,5 +1,5 @@
 'use client';
-
+import parse from 'html-react-parser';
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
@@ -16,30 +16,33 @@ export interface Plan {
 
 interface Props {
   plans: Plan[];
-  title: string;
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
 }
 
-export function PricingCards({ plans, title }: Props) {
+const PLAN_BAR_CLASSES = [
+  'from-[#caa24a] via-[#5d7a2c] to-[#14210a]',
+  'from-[#9ed25a] to-[#3f6e1f]',
+  'from-[#dbe7c8] to-[#a9c787]',
+];
+
+export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
   const t = useTranslations('landing');
   const [isAnnual, setIsAnnual] = useState(false);
-  const [featuredIndex, setFeaturedIndex] = useState(
-    Math.min(1, plans.length - 1),
-  );
 
-  const featuredId = plans[featuredIndex]?.id ?? plans[0]?.id;
+  // null = auto-select; when data loads Math.min(1, length-1) picks the middle plan
+  const [userSelected, setUserSelected] = useState<number | null>(null);
+  const featuredIndex =
+    userSelected !== null ? userSelected : Math.min(1, plans.length - 1);
 
+  const featuredId = plans[featuredIndex]?.id;
   const others = plans.filter((p) => p.id !== featuredId);
   const featured = plans.find((p) => p.id === featuredId) ?? plans[0];
   const ordered =
-    others.length >= 2
-      ? [others[0], featured, others[1]]
-      : plans;
+    others.length >= 2 ? [others[0], featured, others[1]] : plans;
 
-  const PLAN_BAR_CLASSES = [
-    'from-[#caa24a] via-[#5d7a2c] to-[#14210a]',
-    'from-[#9ed25a] to-[#3f6e1f]',
-    'from-[#dbe7c8] to-[#a9c787]',
-  ];
+  if (!plans.length) return null;
 
   return (
     <section
@@ -50,18 +53,16 @@ export function PricingCards({ plans, title }: Props) {
 
       <div className='layer-content mx-auto max-w-7xl px-5 lg:px-8'>
         <div className='mx-auto max-w-2xl text-center' data-anim='fade-up'>
-          <div className='eyebrow mb-5'>{t('pricing.eyebrow')}</div>
+          <div className='eyebrow mb-5'>{eyebrow ?? t('pricing.eyebrow')}</div>
           <h2 className='text-3xl font-extrabold leading-[1.25] text-ink sm:text-4xl lg:text-[2.7rem]'>
-            {title}
+            {title ? parse(title) : t('pricing.defaultTitle')}
           </h2>
-          <p className='mt-4 text-lg text-ink-soft'>
-            {t('pricing.subtitle')}
-          </p>
+          <div className='mt-4 text-lg text-ink-soft'>
+            {subtitle ? parse(subtitle) : t('pricing.subtitle')}
+          </div>
 
           <div className='pricing-toggle-wrap mt-7 inline-flex items-center justify-center'>
-            <span
-              className={`text-base font-extrabold ${isAnnual ? 'text-neutral-400' : 'text-ink'}`}
-            >
+            <span className={`text-base font-extrabold ${isAnnual ? 'text-neutral-400' : 'text-ink'}`}>
               {t('pricing.monthly')}
             </span>
             <button
@@ -73,9 +74,7 @@ export function PricingCards({ plans, title }: Props) {
             >
               <span className='toggle-thumb'></span>
             </button>
-            <span
-              className={`annual-label inline-flex items-center gap-3 text-base font-bold ${isAnnual ? 'text-ink' : 'text-neutral-400'}`}
-            >
+            <span className={`annual-label inline-flex items-center gap-3 text-base font-bold ${isAnnual ? 'text-ink' : 'text-neutral-400'}`}>
               <span>{t('pricing.yearly')}</span>
               <span className='discount-badge rounded-full bg-primary/15 px-2.5 py-1 text-xs font-bold text-primary-700'>
                 {t('pricing.saveBadge')}
@@ -90,10 +89,10 @@ export function PricingCards({ plans, title }: Props) {
 
         <div className='pricing-grid mt-12 grid items-stretch gap-6 lg:grid-cols-[0.92fr_1.24fr_0.92fr] lg:gap-5'>
           {ordered.map((plan, slotIndex) => {
+            if (!plan) return null;
             const isFeatured = plan.id === featuredId;
             const planIndex = plans.findIndex((p) => p.id === plan.id);
-            const barClass =
-              plan.barClass || PLAN_BAR_CLASSES[slotIndex % PLAN_BAR_CLASSES.length];
+            const barClass = plan.barClass || PLAN_BAR_CLASSES[slotIndex % PLAN_BAR_CLASSES.length];
 
             return (
               <div
@@ -110,11 +109,11 @@ export function PricingCards({ plans, title }: Props) {
                   role='button'
                   tabIndex={0}
                   aria-pressed={isFeatured}
-                  onClick={() => setFeaturedIndex(planIndex)}
+                  onClick={() => setUserSelected(planIndex)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setFeaturedIndex(planIndex);
+                      setUserSelected(planIndex);
                     }
                   }}
                   className={`pricing-card-v2 group relative flex flex-1 flex-col overflow-hidden text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
@@ -129,49 +128,33 @@ export function PricingCards({ plans, title }: Props) {
                   ></span>
 
                   <div className='pricing-card-v2__head'>
-                    <h3
-                      className={`text-2xl font-extrabold ${isFeatured ? 'text-ink' : 'text-ink'}`}
-                    >
-                      {plan.name}
-                    </h3>
+                    <h3 className='text-2xl font-extrabold text-ink'>{plan.name}</h3>
                     {plan.description && (
-                      <p
-                        className={`mt-1 text-base font-semibold ${isFeatured ? 'text-primary-900/65' : 'text-neutral-400'}`}
-                      >
-                        {plan.description}
-                      </p>
+                      <div className={`mt-1 text-base font-semibold ${isFeatured ? 'text-primary-900/65' : 'text-neutral-400'}`}>
+                        {parse(plan.description)}
+                      </div>
                     )}
                   </div>
 
-                  <div
-                    className='mt-9 flex items-end justify-center gap-2 text-center'
-                    dir='rtl'
-                  >
-                    <span
-                      className={`${isFeatured ? 'text-[4.8rem]' : 'text-[3.6rem]'} font-black leading-none text-ink`}
-                    >
+                  <div className='mt-9 flex items-end justify-center gap-2 text-center' dir='rtl'>
+                    <span className={`${isFeatured ? 'text-[4.8rem]' : 'text-[3.6rem]'} font-black leading-none text-ink`}>
                       {isAnnual ? plan.annual : plan.monthly}
                     </span>
-                    <span
-                      className={`mb-3 text-2xl font-extrabold ${isFeatured ? 'text-primary-900/55' : 'text-neutral-400'}`}
-                    >
-                      {t('pricing.currency')} <span>{isAnnual ? t('pricing.perYear') : t('pricing.perMonth')}</span>
+                    <span className={`mb-3 text-2xl font-extrabold ${isFeatured ? 'text-primary-900/55' : 'text-neutral-400'}`}>
+                      {t('pricing.currency')}{' '}
+                      <span>{isAnnual ? t('pricing.perYear') : t('pricing.perMonth')}</span>
                     </span>
                   </div>
 
-                  <span
-                    className={`btn mt-9 w-full transition-transform duration-200 group-hover:scale-[1.02] ${isFeatured ? 'pricing-main-cta-featured py-5 text-xl' : 'btn-ghost py-4 text-lg'}`}
-                  >
+                  <span className={`btn mt-9 w-full transition-transform duration-200 group-hover:scale-[1.02] ${isFeatured ? 'pricing-main-cta-featured py-5 text-xl' : 'btn-ghost py-4 text-lg'}`}>
                     {plan.action}
                   </span>
 
-                  <ul
-                    className={`mt-9 space-y-4 text-lg font-semibold leading-7 ${isFeatured ? 'text-ink/80' : 'text-ink-soft'}`}
-                  >
+                  <ul className={`mt-9 space-y-4 text-lg font-semibold leading-7 ${isFeatured ? 'text-ink/80' : 'text-ink-soft'}`}>
                     {plan.features.map((feature, fi) => (
                       <li className='flex items-center gap-3' key={fi}>
                         <span className='check pricing-check'></span>
-                        <span>{feature}</span>
+                        <span>{parse(feature)}</span>
                       </li>
                     ))}
                   </ul>

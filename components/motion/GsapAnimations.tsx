@@ -534,6 +534,9 @@ export function GsapAnimations() {
 
     return () => {
       cleanups.forEach((cleanup) => cleanup());
+      root.querySelectorAll<HTMLElement>("[data-counted]").forEach((el) => {
+        delete el.dataset.counted;
+      });
       ctx.revert();
       document.body.classList.remove("reveal-ready");
     };

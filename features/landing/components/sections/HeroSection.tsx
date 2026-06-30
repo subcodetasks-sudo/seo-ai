@@ -1,25 +1,37 @@
 "use client";
 
 import { useState } from "react";
+import parse from "html-react-parser";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale, useTranslations } from "next-intl";
-import { heroQueryOptions } from "@/features/landing/queries/hero";
-import { stripHtml } from "@/lib/landing-api";
+import { heroQueryOptions } from "@/features/landing/queries/queries";
+
+function toEmbedUrl(url: string | undefined): string {
+  if (!url) return "";
+  const match = url.match(/[?&]v=([^&]+)/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : url;
+}
 
 export function HeroSection() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   const t = useTranslations("landing");
   const locale = useLocale();
-  const videoSrc = "https://www.youtube.com/embed/VIDEO_ID";
 
   const { data: heroes } = useQuery(heroQueryOptions(locale));
   const hero = heroes?.[0];
 
-  const title = hero?.title ? stripHtml(hero.title) : t('hero.defaultTitle');
-  const description = hero?.description
-    ? stripHtml(hero.description)
-    : t('hero.defaultDesc');
+  const overview = hero?.seo_health?.overview ?? [];
+  const getStat = (label: string) => overview.find((o) => o.label === label)?.value;
+
+  const organicVisits = getStat("Organic Visits (%)") ?? "47";
+  const pagesCrawled = parseInt(getStat("Pages Checked") ?? "1284", 10);
+  const issuesFixed = parseInt(getStat("Issues Fixed") ?? "342", 10);
+  const seoScore = parseInt(getStat("SEO Health Score") ?? "88", 10);
+  const healthStatus = getStat("Health Status") ?? t("hero.excellent");
+  const suggestion = hero?.seo_health?.suggestion?.content ?? t("hero.sampleSuggestion");
+  const autoAppliedCount = hero?.seo_health?.auto_applied?.count ?? 12;
   const partners = hero?.partners ?? [];
+  const videoSrc = toEmbedUrl(hero?.youtube_url);
 
   return (
     <section
@@ -33,22 +45,22 @@ export function HeroSection() {
         <div className='max-w-xl'>
           <div className='eyebrow mb-6' data-anim='fade-up'>
             <span className='w-2 h-2 rounded-full bg-primary'></span>
-            {t('hero.eyebrow')}
+            {t("hero.eyebrow")}
           </div>
 
           <h1
             className='text-4xl sm:text-5xl lg:text-[3.4rem] font-extrabold leading-[1.18] text-ink'
             data-anim='fade-up'
           >
-            {title}
+            {hero?.title ? parse(hero.title) : t("hero.defaultTitle")}
           </h1>
 
-          <p
+          <div
             className='mt-6 text-lg text-ink-soft leading-relaxed'
             data-anim='fade-up'
           >
-            {description}
-          </p>
+            {hero?.description ? parse(hero.description) : t("hero.defaultDesc")}
+          </div>
 
           <div
             className='hero-actions mt-9 flex flex-wrap items-center gap-4'
@@ -58,30 +70,32 @@ export function HeroSection() {
               href='#pricing'
               className='btn btn-primary px-8 py-4 text-lg cta-pulse'
             >
-              {t('hero.cta')}
+              {t("hero.cta")}
             </a>
-            <button
-              type="button"
-              className="btn btn-ghost px-7 py-4 text-lg"
-              aria-expanded={isVideoOpen}
-              aria-controls="hero-video-player"
-              onClick={() => setIsVideoOpen((open) => !open)}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="text-primary-600">
-                <path d="M8 5v14l11-7z" />
-              </svg>
-              <span>{t("hero.watch")}</span>
-            </button>
+            {videoSrc && (
+              <button
+                type='button'
+                className='btn btn-ghost px-7 py-4 text-lg'
+                aria-expanded={isVideoOpen}
+                aria-controls='hero-video-player'
+                onClick={() => setIsVideoOpen((open) => !open)}
+              >
+                <svg width='20' height='20' viewBox='0 0 24 24' fill='currentColor' className='text-primary-600'>
+                  <path d='M8 5v14l11-7z' />
+                </svg>
+                <span>{t("hero.watch")}</span>
+              </button>
+            )}
           </div>
 
-          {isVideoOpen && (
-            <div id="hero-video-player" className="inline-video-player">
-              <div className="inline-video-player__header">
+          {isVideoOpen && videoSrc && (
+            <div id='hero-video-player' className='inline-video-player'>
+              <div className='inline-video-player__header'>
                 <span>{t("hero.watch")}</span>
                 <button
-                  type="button"
-                  className="inline-video-player__close"
-                  aria-label={t('a11y.closeVideo')}
+                  type='button'
+                  className='inline-video-player__close'
+                  aria-label={t("a11y.closeVideo")}
                   onClick={() => setIsVideoOpen(false)}
                 >
                   ×
@@ -89,8 +103,8 @@ export function HeroSection() {
               </div>
               <iframe
                 src={`${videoSrc}?autoplay=1&rel=0`}
-                title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                title='YouTube video player'
+                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
                 allowFullScreen
               />
             </div>
@@ -100,7 +114,7 @@ export function HeroSection() {
             className='mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 text-sm text-ink-muted'
             data-anim='fade-up'
           >
-            {(t.raw('hero.features') as string[]).map((label) => (
+            {(t.raw("hero.features") as string[]).map((label) => (
               <span key={label} className='flex items-center gap-2'>
                 <svg width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='var(--primary-700)' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'>
                   <polyline points='20 6 9 17 4 12' />
@@ -114,7 +128,7 @@ export function HeroSection() {
             className='mt-7 flex flex-wrap items-center gap-2.5'
             data-anim='fade-up'
           >
-            <span className='text-xs font-bold text-neutral-400'>{t('hero.integrationsLabel')}</span>
+            <span className='text-xs font-bold text-neutral-400'>{t("hero.integrationsLabel")}</span>
             {partners.length > 0
               ? partners.map((p) => (
                   <span
@@ -124,7 +138,7 @@ export function HeroSection() {
                     {p.name}
                   </span>
                 ))
-              : ['WordPress', 'Shopify', 'سلة', 'زد'].map((name) => (
+              : ["WordPress", "Shopify", "سلة", "زد"].map((name) => (
                   <span
                     key={name}
                     className='px-3 py-1.5 rounded-full bg-white border border-primary-line text-xs font-bold text-ink-soft'
@@ -144,7 +158,7 @@ export function HeroSection() {
                 <span className='w-3 h-3 rounded-full bg-[#ffbd2e]'></span>
                 <span className='w-3 h-3 rounded-full bg-primary'></span>
               </div>
-              <div className='text-xs font-bold text-neutral-400'>{t('hero.dashboardTitle')}</div>
+              <div className='text-xs font-bold text-neutral-400'>{t("hero.dashboardTitle")}</div>
             </div>
 
             <div className='grid grid-cols-5 gap-4'>
@@ -158,28 +172,28 @@ export function HeroSection() {
                       cx='60' cy='60' r='50'
                       fill='none' strokeWidth='11'
                       strokeDasharray='314' strokeDashoffset='314'
-                      data-offset='38'
+                      data-offset={Math.round((1 - seoScore / 100) * 314)}
                     />
                   </svg>
                   <div className='absolute inset-0 flex flex-col items-center justify-center'>
-                    <span className='text-2xl font-extrabold text-ink' data-counter data-target='88'>0</span>
-                    <span className='text-[10px] font-bold text-neutral-400'>{t('hero.seoHealth')}</span>
+                    <span className='text-2xl font-extrabold text-ink' data-counter data-target={seoScore}>0</span>
+                    <span className='text-[10px] font-bold text-neutral-400'>{t("hero.seoHealth")}</span>
                   </div>
                 </div>
-                <div className='mt-2 text-xs font-bold text-primary-700'>{t('hero.excellent')}</div>
+                <div className='mt-2 text-xs font-bold text-primary-700'>{healthStatus}</div>
               </div>
 
               <div className='col-span-3 grid grid-rows-2 gap-4'>
                 <div className='rounded-2xl bg-white border border-primary-line p-3.5'>
-                  <div className='text-[11px] font-bold text-neutral-400 mb-1'>{t('hero.pagesCrawled')}</div>
-                  <div className='text-xl font-extrabold text-ink' data-counter data-target='1284'>0</div>
+                  <div className='text-[11px] font-bold text-neutral-400 mb-1'>{t("hero.pagesCrawled")}</div>
+                  <div className='text-xl font-extrabold text-ink' data-counter data-target={pagesCrawled}>0</div>
                   <div className='mt-2 h-1.5 rounded-full bg-primary-line overflow-hidden'>
                     <div className='h-full w-[82%] bg-primary rounded-full'></div>
                   </div>
                 </div>
                 <div className='rounded-2xl bg-white border border-primary-line p-3.5'>
-                  <div className='text-[11px] font-bold text-neutral-400 mb-1'>{t('hero.issuesFixed')}</div>
-                  <div className='text-xl font-extrabold text-ink' data-counter data-target='342'>0</div>
+                  <div className='text-[11px] font-bold text-neutral-400 mb-1'>{t("hero.issuesFixed")}</div>
+                  <div className='text-xl font-extrabold text-ink' data-counter data-target={issuesFixed}>0</div>
                   <div className='mt-2 h-1.5 rounded-full bg-primary-line overflow-hidden'>
                     <div className='h-full w-[64%] bg-primary rounded-full'></div>
                   </div>
@@ -194,15 +208,15 @@ export function HeroSection() {
                     <path d='M12 2l2.4 5.6L20 9l-5.6 2.4L12 17l-2.4-5.6L4 9l5.6-1.4z' />
                   </svg>
                 </span>
-                <span className='text-xs font-extrabold text-ink'>{t('hero.aiSuggestion')}</span>
-                <span className='mr-auto text-[10px] font-bold text-primary-700 bg-primary/15 px-2 py-1 rounded-full'>{t('hero.badgeNew')}</span>
+                <span className='text-xs font-extrabold text-ink'>{t("hero.aiSuggestion")}</span>
+                <span className='mr-auto text-[10px] font-bold text-primary-700 bg-primary/15 px-2 py-1 rounded-full'>{t("hero.badgeNew")}</span>
               </div>
               <div className='text-[13px] font-semibold text-ink-soft leading-relaxed'>
-                {t('hero.sampleSuggestion')}
+                {suggestion}
               </div>
               <div className='mt-3 flex gap-2'>
-                <button className='text-[11px] font-bold bg-primary text-ink px-3 py-1.5 rounded-full'>{t('hero.accept')}</button>
-                <button className='text-[11px] font-bold bg-white border border-primary-line text-ink-soft px-3 py-1.5 rounded-full'>{t('hero.edit')}</button>
+                <button className='text-[11px] font-bold bg-primary text-ink px-3 py-1.5 rounded-full'>{t("hero.accept")}</button>
+                <button className='text-[11px] font-bold bg-white border border-primary-line text-ink-soft px-3 py-1.5 rounded-full'>{t("hero.edit")}</button>
               </div>
             </div>
           </div>
@@ -215,8 +229,8 @@ export function HeroSection() {
                 </svg>
               </span>
               <div>
-                <div className='text-[10px] font-bold text-neutral-400'>{t('hero.organicVisits')}</div>
-                <div className='text-sm font-extrabold text-ink'>+47%</div>
+                <div className='text-[10px] font-bold text-neutral-400'>{t("hero.organicVisits")}</div>
+                <div className='text-sm font-extrabold text-ink'>+{organicVisits}%</div>
               </div>
             </div>
           </div>
@@ -229,8 +243,10 @@ export function HeroSection() {
                 </svg>
               </span>
               <div>
-                <div className='text-[10px] font-bold text-neutral-400'>{t('hero.autoApplied')}</div>
-                <div className='text-sm font-extrabold text-ink'>{t('hero.improvementsToday')}</div>
+                <div className='text-[10px] font-bold text-neutral-400'>{t("hero.autoApplied")}</div>
+                <div className='text-sm font-extrabold text-ink'>
+                  {autoAppliedCount} {t("hero.improvementsToday")}
+                </div>
               </div>
             </div>
           </div>

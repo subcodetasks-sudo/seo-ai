@@ -1,11 +1,26 @@
-import { getTranslations } from 'next-intl/server';
-import { apiFetch, stripHtml } from '@/lib/landing-api';
-import type { ToolUsage } from '@/features/landing/types/landing-api';
+"use client";
 
-export async function UseCasesSection() {
-  const t = await getTranslations('landing');
-  const toolUsages = await apiFetch<ToolUsage[]>('/api/v1/tool-usages?lang=ar');
-  const features = toolUsages?.[0]?.features ?? [];
+import { useQuery } from "@tanstack/react-query";
+import { useLocale, useTranslations } from "next-intl";
+import parse from "html-react-parser";
+
+import { toolUsageQueryOptions } from "@/features/landing/queries/queries";
+import type { ToolUsageSection } from "@/features/landing/types/landing-api";
+
+function getField(sections: ToolUsageSection[], sectionName: string, fieldLabel: string): string | number | undefined {
+  return sections
+    .find((s) => s.name === sectionName)
+    ?.fields.find((f) => f.label === fieldLabel)
+    ?.value;
+}
+
+export function UseCasesSection() {
+  const t = useTranslations('landing');
+  const locale = useLocale();
+
+  const { data: toolUsages } = useQuery(toolUsageQueryOptions(locale));
+  const item = toolUsages?.[0];
+  const features = item?.features ?? [];
 
   const FEATURE_EYEBROWS = t.raw('usecases.eyebrows') as string[];
   const FEATURE_LINK_LABELS = t.raw('usecases.links') as string[];
@@ -13,18 +28,40 @@ export async function UseCasesSection() {
     { href: '#pricing', label: FEATURE_LINK_LABELS[0] },
     { href: '#pricing', label: FEATURE_LINK_LABELS[1] },
     { href: '#pricing', label: FEATURE_LINK_LABELS[2] },
-    { href: '#stats',   label: FEATURE_LINK_LABELS[3] },
+    { href: '#stats', label: FEATURE_LINK_LABELS[3] },
   ];
 
-  const sectionTitle = toolUsages?.[0]?.title ? stripHtml(toolUsages[0].title) : 'جولة داخل المنصة — من الفحص إلى النتائج';
-  const sectionDesc = toolUsages?.[0]?.description ? stripHtml(toolUsages[0].description) : 'أربع قدرات أساسية تعمل معاً لتمنح موقعك حضوراً أقوى في محركات البحث، مع إبقائك دائماً في موضع التحكّم.';
+  const sectionTitle = item?.title ? parse(item.title) : 'جولة داخل المنصة — من الفحص إلى النتائج';
+  const sectionDesc = item?.description ? parse(item.description) : 'أربع قدرات أساسية تعمل معاً لتمنح موقعك حضوراً أقوى في محركات البحث، مع إبقائك دائماً في موضع التحكّم.';
 
-  const f = (i: number) => ({
-    eyebrow: FEATURE_EYEBROWS[i] ?? `${t('usecases.eyebrow')} 0${i + 1}`,
-    title:   features[i]?.title       ? stripHtml(features[i].title)       : '',
-    desc:    features[i]?.description ? stripHtml(features[i].description) : '',
-    link:    FEATURE_LINKS[i] ?? { href: '#pricing', label: t('usecases.defaultLink') },
-  });
+  const f = (i: number) => {
+    const feat = features[i];
+    const sections = feat?.sections ?? [];
+    const eyebrowFromApi = getField(sections, 'Feature Label', 'Feature Label');
+    const buttonText = getField(sections, 'Button', 'Button Text');
+    const buttonUrl = getField(sections, 'Button', 'Button URL');
+    return {
+      eyebrow: eyebrowFromApi ?? FEATURE_EYEBROWS[i] ?? `${t('usecases.eyebrow')} 0${i + 1}`,
+      title: feat?.title ? parse(feat.title) : null,
+      desc: feat?.description ? parse(feat.description) : null,
+      sections,
+      link: {
+        href: typeof buttonUrl === 'string' ? buttonUrl : (FEATURE_LINKS[i]?.href ?? '#pricing'),
+        label: typeof buttonText === 'string' ? buttonText : (FEATURE_LINKS[i]?.label ?? ''),
+      },
+    };
+  };
+
+  // Feature 0 — card data from sections
+  const f0 = f(0);
+  const f0Sections = features[0]?.sections ?? [];
+  const auditStatus = getField(f0Sections, 'Audit', 'Audit Status') ?? t('usecases.scanBadge');
+  const auditSpeed = getField(f0Sections, 'Audit', 'Audit Speed') ?? '٢٤٠ صفحة/دقيقة';
+  const auditProgress = Number(getField(f0Sections, 'Audit', 'Progress') ?? 76);
+  const auditCurrentUrl = getField(f0Sections, 'Audit', 'Current Scan URL') ?? '/products/category/shoes';
+  const pagesCrawled = getField(f0Sections, 'Statistics', 'Pages Audited') ?? 1284;
+  const issuesFound = getField(f0Sections, 'Statistics', 'Issues Found') ?? 37;
+  const healthScore = getField(f0Sections, 'Statistics', 'SEO Health Score') ?? 88;
 
   return (
     <section
@@ -43,9 +80,9 @@ export async function UseCasesSection() {
           <h2 className='text-3xl sm:text-4xl lg:text-[2.7rem] font-extrabold leading-[1.25] text-ink'>
             {sectionTitle}
           </h2>
-          <p className='mt-5 text-lg text-ink-soft leading-relaxed'>
+          <div className='mt-5 text-lg text-ink-soft leading-relaxed'>
             {sectionDesc}
-          </p>
+          </div>
         </div>
 
         <div
@@ -106,22 +143,24 @@ export async function UseCasesSection() {
               <circle r='2.6' fill='#ffffff' />
             </g>
           </svg>
+
+          {/* Feature 0 — Website Audit */}
           <div className='feature-block relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-16'>
             <div className='lg:w-1/2' data-anim='slide' data-from='right'>
-              <div className='eyebrow mb-5'>{f(0).eyebrow}</div>
-              {f(0).title && (
+              <div className='eyebrow mb-5'>{f0.eyebrow}</div>
+              {f0.title && (
                 <h3 className='text-2xl sm:text-3xl lg:text-[2.2rem] font-extrabold leading-[1.3] text-ink'>
-                  {f(0).title}
+                  {f0.title}
                 </h3>
               )}
-              <p className='mt-5 text-lg text-ink-soft leading-relaxed'>
-                {f(0).desc || t('usecases.feature0DefaultDesc')}
-              </p>
+              <div className='mt-5 text-lg text-ink-soft leading-relaxed'>
+                {f0.desc ?? t('usecases.feature0DefaultDesc')}
+              </div>
               <a
-                href={f(0).link.href}
+                href={f0.link.href}
                 className='group inline-flex items-center gap-2 mt-7 text-primary-700 font-extrabold text-lg border-b-2 border-primary pb-1'
               >
-                {f(0).link.label}
+                {f0.link.label}
                 <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round' className='transition-transform group-hover:-translate-x-1'>
                   <line x1='19' y1='12' x2='5' y2='12' />
                   <polyline points='12 19 5 12 12 5' />
@@ -138,30 +177,30 @@ export async function UseCasesSection() {
                     <span className='w-3 h-3 rounded-full bg-primary'></span>
                   </div>
                   <span className='text-xs font-bold text-primary-700 bg-primary/15 px-3 py-1.5 rounded-full flex items-center gap-1.5'>
-                    <span className='w-1.5 h-1.5 rounded-full bg-primary'></span> {t('usecases.scanBadge')}
+                    <span className='w-1.5 h-1.5 rounded-full bg-primary'></span> {String(auditStatus)}
                   </span>
                 </div>
                 <div className='rounded-2xl bg-primary-surface border border-primary-line p-5'>
                   <div className='flex items-center justify-between mb-2.5'>
                     <span className='text-sm font-extrabold text-ink'>{t('usecases.scanProgress')}</span>
-                    <span className='text-sm font-extrabold text-primary-700'>76%</span>
+                    <span className='text-sm font-extrabold text-primary-700'>{auditProgress}%</span>
                   </div>
                   <div className='h-2.5 rounded-full bg-primary-line overflow-hidden'>
-                    <div className='crawl-bar h-full bg-primary rounded-full' style={{ width: '76%' }}></div>
+                    <div className='crawl-bar h-full bg-primary rounded-full' style={{ width: `${auditProgress}%` }}></div>
                   </div>
-                  <div className='mt-2 text-xs font-bold text-neutral-400'>يفحص الآن: /products/category/shoes</div>
+                  <div className='mt-2 text-xs font-bold text-neutral-400'>{String(auditCurrentUrl)}</div>
                 </div>
                 <div className='mt-4 grid grid-cols-3 gap-3'>
                   <div className='rounded-2xl bg-white border border-primary-line p-4 text-center'>
-                    <div className='text-2xl font-extrabold text-ink' data-counter data-target='1284'>0</div>
+                    <div className='text-2xl font-extrabold text-ink'>{pagesCrawled}</div>
                     <div className='text-[10px] font-bold text-neutral-400 mt-1'>{t('usecases.pagesCrawled')}</div>
                   </div>
                   <div className='rounded-2xl bg-white border border-primary-line p-4 text-center'>
-                    <div className='text-2xl font-extrabold text-[#b8851c]' data-counter data-target='37'>0</div>
+                    <div className='text-2xl font-extrabold text-[#b8851c]'>{issuesFound}</div>
                     <div className='text-[10px] font-bold text-neutral-400 mt-1'>{t('usecases.issuesFound')}</div>
                   </div>
                   <div className='rounded-2xl bg-primary/12 border border-primary/30 p-4 text-center'>
-                    <div className='text-2xl font-extrabold text-primary-700' data-counter data-target='88'>0</div>
+                    <div className='text-2xl font-extrabold text-primary-700'>{healthScore}</div>
                     <div className='text-[10px] font-bold text-primary-700 mt-1'>{t('usecases.seoHealth')}</div>
                   </div>
                 </div>
@@ -175,21 +214,23 @@ export async function UseCasesSection() {
                   </span>
                   <div>
                     <div className='text-[10px] font-bold text-neutral-400'>{t('usecases.scanSpeed')}</div>
-                    <div className='text-sm font-extrabold text-ink'>٢٤٠ صفحة/دقيقة</div>
+                    <div className='text-sm font-extrabold text-ink'>{String(auditSpeed)}</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Feature 1 — AI Panel */}
           <div className='feature-block relative z-10 flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-16'>
             <div className='lg:w-1/2' data-anim='slide' data-from='left'>
               <div className='eyebrow mb-5'>{f(1).eyebrow}</div>
               <h3 className='text-2xl sm:text-3xl lg:text-[2.2rem] font-extrabold leading-[1.3] text-ink'>
-                {f(1).title || t('usecases.feature1DefaultTitle')}
+                {f(1).title ?? t('usecases.feature1DefaultTitle')}
               </h3>
-              <p className='mt-5 text-lg text-ink-soft leading-relaxed'>
-                {f(1).desc || t('usecases.feature1DefaultDesc')}
-              </p>
+              <div className='mt-5 text-lg text-ink-soft leading-relaxed'>
+                {f(1).desc ?? t('usecases.feature1DefaultDesc')}
+              </div>
               <a href={f(1).link.href} className='group inline-flex items-center gap-2 mt-7 text-primary-700 font-extrabold text-lg border-b-2 border-primary pb-1'>
                 {f(1).link.label}
                 <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round' className='transition-transform group-hover:-translate-x-1'>
@@ -250,15 +291,17 @@ export async function UseCasesSection() {
               </div>
             </div>
           </div>
+
+          {/* Feature 2 — Review & Approve */}
           <div className='feature-block relative z-10 flex flex-col lg:flex-row items-center gap-12 lg:gap-16'>
             <div className='lg:w-1/2' data-anim='slide' data-from='right'>
               <div className='eyebrow mb-5'>{f(2).eyebrow}</div>
               <h3 className='text-2xl sm:text-3xl lg:text-[2.2rem] font-extrabold leading-[1.3] text-ink'>
-                {f(2).title || t('usecases.feature2DefaultTitle')}
+                {f(2).title ?? t('usecases.feature2DefaultTitle')}
               </h3>
-              <p className='mt-5 text-lg text-ink-soft leading-relaxed'>
-                {f(2).desc || t('usecases.feature2DefaultDesc')}
-              </p>
+              <div className='mt-5 text-lg text-ink-soft leading-relaxed'>
+                {f(2).desc ?? t('usecases.feature2DefaultDesc')}
+              </div>
               <a href={f(2).link.href} className='group inline-flex items-center gap-2 mt-7 text-primary-700 font-extrabold text-lg border-b-2 border-primary pb-1'>
                 {f(2).link.label}
                 <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round' className='transition-transform group-hover:-translate-x-1'>
@@ -318,15 +361,17 @@ export async function UseCasesSection() {
               </div>
             </div>
           </div>
+
+          {/* Feature 3 — Monitoring Dashboard */}
           <div className='feature-block relative z-10 flex flex-col lg:flex-row-reverse items-center gap-12 lg:gap-16'>
             <div className='lg:w-1/2' data-anim='slide' data-from='left'>
               <div className='eyebrow mb-5'>{f(3).eyebrow}</div>
               <h3 className='text-2xl sm:text-3xl lg:text-[2.2rem] font-extrabold leading-[1.3] text-ink'>
-                {f(3).title || t('usecases.feature3DefaultTitle')}
+                {f(3).title ?? t('usecases.feature3DefaultTitle')}
               </h3>
-              <p className='mt-5 text-lg text-ink-soft leading-relaxed'>
-                {f(3).desc || t('usecases.feature3DefaultDesc')}
-              </p>
+              <div className='mt-5 text-lg text-ink-soft leading-relaxed'>
+                {f(3).desc ?? t('usecases.feature3DefaultDesc')}
+              </div>
               <a href={f(3).link.href} className='group inline-flex items-center gap-2 mt-7 text-primary-700 font-extrabold text-lg border-b-2 border-primary pb-1'>
                 {f(3).link.label}
                 <svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round' className='transition-transform group-hover:-translate-x-1'>
@@ -363,7 +408,7 @@ export async function UseCasesSection() {
                   <div className='flex items-center gap-3 rounded-xl bg-white border border-primary-line px-4 py-3'>
                     <span className='w-9 h-9 rounded-xl bg-[#fdecea] flex items-center justify-center text-[#c0392b] font-extrabold text-xs'>404</span>
                     <div>
-                      <div className='text-base font-extrabold text-ink' data-counter data-target='3'>0</div>
+                      <div className='text-base font-extrabold text-ink'>3</div>
                       <div className='text-[10px] font-bold text-neutral-400'>{t('usecases.brokenPages')}</div>
                     </div>
                   </div>
@@ -374,7 +419,7 @@ export async function UseCasesSection() {
                       </svg>
                     </span>
                     <div>
-                      <div className='text-base font-extrabold text-ink' data-counter data-target='128'>0</div>
+                      <div className='text-base font-extrabold text-ink'>128</div>
                       <div className='text-[10px] font-bold text-neutral-400'>{t('usecases.trackedIssues')}</div>
                     </div>
                   </div>
@@ -395,6 +440,7 @@ export async function UseCasesSection() {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>

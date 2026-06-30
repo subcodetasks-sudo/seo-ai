@@ -1,12 +1,14 @@
-import { getTranslations } from 'next-intl/server';
-import { apiFetch, stripHtml } from '@/lib/landing-api';
-import type { AboutUs } from '@/features/landing/types/landing-api';
+"use client"
+import { useLocale, useTranslations } from 'next-intl';
+import { useQuery } from '@tanstack/react-query';
+import { aboutUsQueryOptions } from '../../queries/queries';
+import parse from 'html-react-parser';
 
-export async function AboutSection() {
-  const t = await getTranslations('landing');
-  const about = await apiFetch<AboutUs>('/api/v1/about-us?lang=ar');
-  const highlights = about?.highlights?.items ?? [];
-
+export function AboutSection() {
+  const t = useTranslations('landing');
+  const locale = useLocale();
+  const { data: about } = useQuery(aboutUsQueryOptions(locale));
+  const highlights = about?.highlights.items || [];
   return (
     <section
       id='about'
@@ -18,14 +20,15 @@ export async function AboutSection() {
         <div data-anim='fade-up'>
           <div className='eyebrow mb-6'>{t('about.eyebrow')}</div>
           <h2 className='text-3xl sm:text-4xl lg:text-[2.7rem] font-extrabold leading-[1.25] text-ink'>
-            {about?.title ? stripHtml(about.title) : t('about.defaultTitle')}
+            {about?.title ? parse(about.title) : t('about.defaultTitle')}
           </h2>
           <div
             className='mt-5 text-lg text-ink-soft leading-relaxed'
-            dangerouslySetInnerHTML={{
-              __html: about?.description ?? t('about.defaultDesc'),
-            }}
-          />
+          >
+            {
+              about?.description ? parse(about.description) : parse(t('about.defaultDesc'))
+            }
+          </div>
           <a
             href='#testimonials'
             className='btn btn-ghost px-7 py-4 mt-8 text-lg'
@@ -46,18 +49,18 @@ export async function AboutSection() {
               style={{ opacity: '0.06' }}
             ></div>
             <div className='relative'>
-              <p className='mt-6 text-xl font-bold text-ink leading-relaxed'>
-                {about?.content
-                  ? `«${stripHtml(about.content)}»`
+              <div className='mt-6 text-xl font-bold text-ink leading-relaxed'>
+                {about?.highlights.title
+                  ? parse(about?.highlights.title)
                   : t('about.defaultQuote')}
-              </p>
+              </div>
 
               {highlights.length > 0 ? (
                 <div className={`mt-8 grid gap-4 grid-cols-${Math.min(highlights.length, 3)}`}>
                   {highlights.slice(0, 3).map((item, i) => (
                     <div key={i} className='rounded-2xl bg-primary-surface border border-primary-line p-4'>
-                      <div className='text-sm font-extrabold text-primary-700 leading-snug'>{item.title}</div>
-                      <div className='text-[11px] font-bold text-neutral-400 mt-1 leading-relaxed'>{item.description}</div>
+                      <div className='text-sm font-extrabold text-primary-700 leading-snug'>{parse(item.number)}</div>
+                      <div className='text-[11px] font-bold text-neutral-400 mt-1 leading-relaxed'>{parse(item.text)}</div>
                     </div>
                   ))}
                 </div>

@@ -13,24 +13,52 @@ export interface HeroImage {
 export interface HeroPartner {
   name: string;
   url: string;
-  logo: string;
+  logo: string | null;
   alt: string;
+}
+
+export interface HeroStatistic {
+  number: string;
+  label: string;
+}
+
+export interface HeroSeoHealthItem {
+  label: string;
+  value: string;
+}
+
+export interface HeroSeoHealthSuggestion {
+  title: string;
+  content: string;
+  approved: boolean;
+}
+
+export interface HeroSeoHealth {
+  overview: HeroSeoHealthItem[];
+  suggestion: HeroSeoHealthSuggestion;
+  auto_applied: { count: number; last_applied_at: string };
+  updated_at: string;
 }
 
 export interface Hero {
   id: number;
   title: string;
   description: string;
+  content: string;
   seo: HeroSeo;
   images: HeroImage[];
   partners: HeroPartner[];
+  youtube_url: string;
+  statistics: HeroStatistic[];
+  ytkamal: string[];
+  seo_health: HeroSeoHealth;
   sort_order: number;
 }
 
 // ── About Us ──────────────────────────────────────────────────────
 export interface AboutHighlightItem {
-  title: string;
-  description: string;
+  number: string;
+  text: string;
 }
 
 export interface AboutHighlights {
@@ -75,8 +103,10 @@ export interface Pricing {
 
 // ── Statistics ────────────────────────────────────────────────────
 export interface StatCard {
+  title: string;
   value: string;
-  label: string;
+  description: string | null;
+  style: 'featured' | 'progress' | 'default';
 }
 
 export interface StatCards {
@@ -88,19 +118,31 @@ export interface StatCards {
 export interface Statistics {
   id: number;
   title: string;
-  description: string;
-  content: string | null;
+  description: string | null;
+  content: string;
   sort_order: number;
   cards: StatCards;
 }
 
 // ── Tool Usage ────────────────────────────────────────────────────
+export interface ToolUsageField {
+  label: string;
+  type: "text" | "number" | "url";
+  value: string | number;
+}
+
+export interface ToolUsageSection {
+  name: string;
+  fields: ToolUsageField[];
+}
+
 export interface ToolUsageFeature {
   id: number;
   slug: string;
+  content: string;
   title: string;
   description: string;
-  sections: unknown[];
+  sections: ToolUsageSection[];
 }
 
 export interface ToolUsage {
@@ -147,10 +189,19 @@ export interface TestimonialContent {
   content: string;
 }
 
+export interface TestimonialSeo {
+  meta_title: string;
+  meta_description: string;
+}
+
 export interface Testimonial {
   id: number;
   content: TestimonialContent;
+  image: string | null;
+  image_alt: string | null;
   rate: number;
+  sort_order: number;
+  seo: TestimonialSeo;
 }
 
 export interface TestimonialsData {
@@ -162,7 +213,7 @@ export interface TestimonialsData {
 
 // ── Settings ──────────────────────────────────────────────────────
 export interface SettingsBrand {
-  logo: string;
+  logo: string | null;
   about: string;
 }
 
@@ -172,10 +223,8 @@ export interface SettingsContact {
 }
 
 export interface SettingsOffice {
-  name?: string;
-  address?: string;
-  country?: string;
-  location?: string;
+  title: string;
+  address: string;
 }
 
 export interface SettingsSocial {
@@ -189,7 +238,18 @@ export interface SettingsFooterCta {
   title: string;
   description: string;
   button_text: string;
-  button_url: string;
+  platform_url: string;
+}
+
+export interface SettingsFooterLink {
+  label: string;
+  url: string;
+}
+
+export interface SettingsFooterLinks {
+  platform: SettingsFooterLink[];
+  company: SettingsFooterLink[];
+  legal: SettingsFooterLink[];
 }
 
 export interface Settings {
@@ -203,6 +263,6 @@ export interface Settings {
   offices: SettingsOffice[];
   social: SettingsSocial;
   copyright: string;
-  footer_links: { platform: unknown[]; company: unknown[]; legal: unknown[] };
+  footer_links: SettingsFooterLinks;
   footer_cta: SettingsFooterCta;
 }
