@@ -16,7 +16,6 @@ function mapCrawlStatusToSteps(crawlData: CrawlJobResponse["data"]): Record<Anal
     queued: { status: "pending" },
     crawling: { status: "pending" },
     analysis: { status: "pending" },
-    aiSuggestions: { status: "pending" },
   };
 
   switch (crawlData.status) {
@@ -44,7 +43,6 @@ function mapCrawlStatusToSteps(crawlData: CrawlJobResponse["data"]): Record<Anal
         queued: { status: "completed" },
         crawling: { status: "completed", pageCount: crawlData.pages_crawled },
         analysis: { status: "completed" },
-        aiSuggestions: { status: "completed" },
       };
 
     case "failed":
