@@ -1,12 +1,18 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import EmptyProjects from "@/features/home/components/empty-projects";
 import Projects from "@/features/home/components/Projects";
 import { AddProject } from "@/features/home/components/add-project/add-project";
 import { useAllProjects, useAddProject } from "@/features/home";
 
 export function DashboardContent() {
-  const { data, isLoading, error } = useAllProjects();
+  const t = useTranslations("home");
+  const tCommon = useTranslations("common.state");
+  const { data, isLoading, error, refetch } = useAllProjects();
   const { step } = useAddProject();
 
   if (step !== null) {
@@ -15,20 +21,20 @@ export function DashboardContent() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <div className="text-center">
-          <p>Loading projects...</p>
-        </div>
+      <div className="flex flex-1 bg-neutral-75 px-6 py-8 lg:px-10">
+        <LoadingState />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <div className="text-center">
-          <p>Error loading projects</p>
-        </div>
+      <div className="flex flex-1 bg-neutral-75 px-6 py-8 lg:px-10">
+        <ErrorState
+          title={t("loadError")}
+          retryLabel={tCommon("retry")}
+          onRetry={() => refetch()}
+        />
       </div>
     );
   }

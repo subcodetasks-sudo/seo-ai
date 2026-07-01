@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import ErrorState from "@/components/error-state";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,7 @@ type AnalysisTabProps = {
   data: IssueSummary | undefined;
   isLoading: boolean;
   isError: boolean;
+  onRetry?: () => void;
   onNavigateTab?: (tab: AiInsightsTab) => void;
 };
 
@@ -50,8 +52,9 @@ const POTENTIAL_STYLES: Record<string, string> = {
   medium: "bg-warning-50 text-warning-700",
 };
 
-export function AnalysisTab({ data, isLoading, isError, onNavigateTab }: AnalysisTabProps) {
+export function AnalysisTab({ data, isLoading, isError, onRetry, onNavigateTab }: AnalysisTabProps) {
   const t = useTranslations("aiInsights.analysis");
+  const tCommon = useTranslations("common.state");
   const [expandedIssue, setExpandedIssue] = useState<string | null>(null);
 
   const smartInsights = data?.smart_insights ?? [];
@@ -61,11 +64,7 @@ export function AnalysisTab({ data, isLoading, isError, onNavigateTab }: Analysi
   if (isLoading) return <AnalysisSkeleton />;
 
   if (isError || !data) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <p className="text-label-md text-neutral-500">{t("error")}</p>
-      </div>
-    );
+    return <ErrorState title={t("error")} retryLabel={tCommon("retry")} onRetry={onRetry} fullPage={false} />;
   }
 
   return (

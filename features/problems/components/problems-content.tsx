@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import EmptyState from "@/components/empty-state";
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import { useDirection } from "@/components/ui/direction";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Pagination,
   PaginationContent,
@@ -26,12 +28,13 @@ const FILTER_TABS: ProblemFilter[] = ["all", "critical", "high", "medium", "low"
 
 export function ProblemsContent() {
   const t = useTranslations("problems");
+  const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
   const [filter, setFilter] = useState<ProblemFilter>("all");
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     issueSummaryQueryOptions({ projectId: selectedProjectId ?? "" }),
   );
 
@@ -91,17 +94,15 @@ export function ProblemsContent() {
         </Tabs>
 
         {isLoading ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <Spinner className="size-8 text-neutral-400" />
-          </div>
+          <LoadingState />
         ) : isError ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <p className="text-label-md text-error-500">{t("error")}</p>
-          </div>
+          <ErrorState
+            title={t("error")}
+            retryLabel={tCommon("retry")}
+            onRetry={() => refetch()}
+          />
         ) : paginatedItems.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <p className="text-label-md text-neutral-500">{t("empty")}</p>
-          </div>
+          <EmptyState title={t("empty")} />
         ) : (
           <ProblemsTable items={paginatedItems} crawlJobId={crawlJobId} />
         )}

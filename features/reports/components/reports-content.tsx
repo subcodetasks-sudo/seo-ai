@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import EmptyState from "@/components/empty-state";
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import { useDirection } from "@/components/ui/direction";
-import { Spinner } from "@/components/ui/spinner";
 import { GenerateReportDialog } from "@/features/changelog/components/generate-report-dialog";
 import { useGenerateReport } from "@/features/changelog/queries/mutations";
 import type { ChangelogPeriod, GenerateReportFormValues } from "@/features/changelog/types";
@@ -21,6 +23,7 @@ import { WeeklyChangesChart } from "./weekly-changes-chart";
 
 export function ReportsContent() {
   const t = useTranslations("reports");
+  const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
 
@@ -32,9 +35,12 @@ export function ReportsContent() {
   const selectedProject = projects.find((project) => project.id === selectedProjectId);
   const domain = selectedProject?.domain ?? selectedProject?.name ?? "—";
 
-  const { data: analytics, isLoading: isAnalyticsLoading } = useQuery(
-    reportsAnalyticsQueryOptions(selectedProjectId ?? "", period),
-  );
+  const {
+    data: analytics,
+    isLoading: isAnalyticsLoading,
+    isError: isAnalyticsError,
+    refetch: refetchAnalytics,
+  } = useQuery(reportsAnalyticsQueryOptions(selectedProjectId ?? "", period));
 
   const { data: scanLog = [], isLoading: isScanLogLoading } = useQuery(
     scanLogQueryOptions(selectedProjectId ?? "", period),
@@ -71,10 +77,14 @@ export function ReportsContent() {
           onCreateReport={() => setDialogOpen(true)}
         />
 
-        {isLoading || !analytics ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <Spinner className="size-8 text-neutral-400" />
-          </div>
+        {isLoading ? (
+          <LoadingState />
+        ) : isAnalyticsError || !analytics ? (
+          <ErrorState
+            title={t("error")}
+            retryLabel={tCommon("retry")}
+            onRetry={() => refetchAnalytics()}
+          />
         ) : (
           <>
             {(analytics.healthScoreTrend.length > 0 ||
@@ -98,9 +108,7 @@ export function ReportsContent() {
             )}
 
             {scanLog.length === 0 ? (
-              <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
-                <p className="text-label-md text-neutral-500">{t("empty")}</p>
-              </div>
+              <EmptyState title={t("empty")} fullPage={false} className="rounded-xl border border-neutral-200 bg-white p-8" />
             ) : (
               <ScanLogTable items={scanLog} />
             )}

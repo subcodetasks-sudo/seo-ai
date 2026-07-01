@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Bell, CheckCheck, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import EmptyState from "@/components/empty-state";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDirection } from "@/components/ui/direction";
@@ -120,19 +121,13 @@ export function NotificationsContent() {
           {isLoading ? (
             <NotificationsSkeleton />
           ) : notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
-              <span className="flex size-12 items-center justify-center rounded-full bg-neutral-100">
-                <Bell className="size-6 text-neutral-400" aria-hidden="true" />
-              </span>
-              <div className="flex max-w-xs flex-col gap-1">
-                <p className="text-body font-semibold text-secondary-500">
-                  {t("emptyTitle")}
-                </p>
-                <p className="text-label-md text-neutral-500">
-                  {t("emptyDescription")}
-                </p>
-              </div>
-            </div>
+            <EmptyState
+              icon={Bell}
+              title={t("emptyTitle")}
+              description={t("emptyDescription")}
+              fullPage={false}
+              className="py-16"
+            />
           ) : (
             <div className="flex flex-col divide-y divide-neutral-200">
               {notifications.map((notification) => (

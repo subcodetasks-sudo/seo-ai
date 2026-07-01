@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import EmptyState from "@/components/empty-state";
+import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { useDirection } from "@/components/ui/direction";
 import {
   Pagination,
@@ -105,13 +106,9 @@ export function ChangelogContent() {
 
         {/* Table */}
         {isLoading ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <Spinner className="size-8 text-neutral-400" />
-          </div>
+          <LoadingState />
         ) : items.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <p className="text-label-md text-neutral-500">{t("empty")}</p>
-          </div>
+          <EmptyState title={t("empty")} />
         ) : (
           <ChangelogTable items={items} />
         )}

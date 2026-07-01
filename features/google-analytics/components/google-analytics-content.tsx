@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import LoadingState from "@/components/loading-state";
 import { useDirection } from "@/components/ui/direction";
 import { allProjectsQueryOptions, useSelectedProject } from "@/features/home";
 
@@ -46,8 +47,8 @@ export function GoogleAnalyticsContent() {
         {isConnected ? (
           <Suspense
             fallback={
-              <div className="rounded-xl border border-neutral-200 bg-white p-8 text-center">
-                <p className="text-label-md text-neutral-400">{t("loading")}</p>
+              <div className="rounded-xl border border-neutral-200 bg-white p-8">
+                <LoadingState fullPage={false} />
               </div>
             }
           >

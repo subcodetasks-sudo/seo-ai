@@ -5,6 +5,8 @@ import { ArrowLeft, ArrowRight, Info, SquarePen } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -45,12 +47,13 @@ type SuggestionReviewProps = {
 
 export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
   const t = useTranslations("aiSuggestions");
+  const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const router = useRouter();
   const isRtl = dir === "rtl";
   const { selectedProjectId } = useSelectedProject();
 
-  const { data: suggestion, isLoading, isError } = useQuery(
+  const { data: suggestion, isLoading, isError, refetch } = useQuery(
     aiSuggestionDetailQueryOptions(selectedProjectId ?? "", suggestionId),
   );
 
@@ -81,16 +84,20 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
-        <p className="text-label-md text-neutral-500">{t("loading")}</p>
+      <div className="flex flex-1 flex-col bg-neutral-75 px-6 py-8">
+        <LoadingState />
       </div>
     );
   }
 
   if (isError || !suggestion) {
     return (
-      <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
-        <p className="text-label-md text-neutral-500">{t("reviewPage.notFound")}</p>
+      <div className="flex flex-1 flex-col bg-neutral-75 px-6 py-8">
+        <ErrorState
+          title={t("reviewPage.notFound")}
+          retryLabel={tCommon("retry")}
+          onRetry={() => refetch()}
+        />
       </div>
     );
   }

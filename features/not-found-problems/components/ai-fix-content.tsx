@@ -8,10 +8,11 @@ import { useSearchParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
 
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "@/i18n/navigation";
 import { cn, getDisplayPathname } from "@/lib/utils";
 import { generateSuggestion } from "@/features/problems/queries/api";
@@ -38,6 +39,7 @@ function InfoCard({ label, value, valueClassName }: InfoCardProps) {
 
 export function AiFixContent() {
   const t = useTranslations("notFoundProblems.aifix");
+  const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const locale = useLocale();
   const dateLocale = locale === "ar" ? ar : enUS;
@@ -96,16 +98,20 @@ export function AiFixContent() {
 
   if (detailQuery.isLoading) {
     return (
-      <div dir={dir} className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
-        <Spinner className="size-8 text-neutral-400" />
+      <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8">
+        <LoadingState />
       </div>
     );
   }
 
   if (detailQuery.isError || !page) {
     return (
-      <div dir={dir} className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
-        <p className="text-label-md text-error-500">{t("loadError")}</p>
+      <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8">
+        <ErrorState
+          title={t("loadError")}
+          retryLabel={tCommon("retry")}
+          onRetry={() => detailQuery.refetch()}
+        />
       </div>
     );
   }

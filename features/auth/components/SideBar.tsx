@@ -22,6 +22,7 @@ import Logo from "@/components/Logo";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sidebar as UiSidebar, useSidebar } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select,
   SelectContent,
@@ -88,12 +89,12 @@ export default function SideBar() {
   const tPlans = useTranslations("sidebar.plans");
   const pathname = usePathname();
   const router = useRouter();
-  const { user, setUser } = useAuth();
+  const { user, setUser, isLoading: isAuthLoading } = useAuth();
   const queryClient = useQueryClient();
   const { setOpen, isMobile, setOpenMobile } = useSidebar();
   const { side, isOpen } = useSidebarMotion();
   const { mutate: logout } = useLogout();
-  const { data: projectsData } = useAllProjects();
+  const { data: projectsData, isLoading: isProjectsLoading } = useAllProjects();
   const { selectedProjectId, setSelectedProjectId, clearSelectedProject } = useSelectedProject();
 
   const projects = React.useMemo(
@@ -174,7 +175,9 @@ export default function SideBar() {
           </SidebarMotionItem>
         </div>
         <SidebarMotionItem side={side} className="mb-6">
-          {projects.length > 0 && selectedProject ? (
+          {isProjectsLoading ? (
+            <Skeleton className="h-13.5 w-full rounded-lg" />
+          ) : projects.length > 0 && selectedProject ? (
             <Select value={selectedProject.id} onValueChange={setSelectedProjectId}>
               <SelectTrigger className="h-auto! w-full items-center gap-2 rounded-lg border border-neutral-200 bg-white px-3 py-2.5 hover:border-neutral-300 transition-colors">
                 <div className="flex min-w-0 flex-1 flex-col items-start">
@@ -249,25 +252,35 @@ export default function SideBar() {
 
         <SidebarMotionItem side={side} className="mt-6">
           <div className="border-t border-neutral-200 pt-5">
-            <div className="mb-3 flex items-center gap-3">
-              <Avatar size="lg">
-                <AvatarFallback className="bg-primary-75 text-sm font-semibold text-secondary-500">
-                  {user?.initials || t("userInitials")}
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0">
-                <p className="truncate font-semibold text-secondary-500">
-                  {user?.display_name || t("userName")}
-                </p>
-                <p className="truncate text-sm text-secondary-200">
-                  {user?.plan
-                    ? KNOWN_PLANS.has(user.plan)
-                      ? tPlans(user.plan as Parameters<typeof tPlans>[0])
-                      : user.plan
-                    : t("userPlan")}
-                </p>
+            {isAuthLoading && !user ? (
+              <div className="mb-3 flex items-center gap-3">
+                <Skeleton className="size-10 shrink-0 rounded-full" />
+                <div className="min-w-0 flex-1 space-y-1.5">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-3 w-16" />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="mb-3 flex items-center gap-3">
+                <Avatar size="lg">
+                  <AvatarFallback className="bg-primary-75 text-sm font-semibold text-secondary-500">
+                    {user?.initials || t("userInitials")}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="truncate font-semibold text-secondary-500">
+                    {user?.display_name || t("userName")}
+                  </p>
+                  <p className="truncate text-sm text-secondary-200">
+                    {user?.plan
+                      ? KNOWN_PLANS.has(user.plan)
+                        ? tPlans(user.plan as Parameters<typeof tPlans>[0])
+                        : user.plan
+                      : t("userPlan")}
+                  </p>
+                </div>
+              </div>
+            )}
             <Button
               type="button"
               variant="outline"

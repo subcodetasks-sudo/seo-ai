@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import EmptyState from "@/components/empty-state";
+import ErrorState from "@/components/error-state";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -123,9 +125,10 @@ type SuggestionsAsRecommendationsProps = {
 
 function SuggestionsAsRecommendations({ projectId }: SuggestionsAsRecommendationsProps) {
   const t = useTranslations("aiInsights.recommendations");
+  const tCommon = useTranslations("common.state");
   const approveMutation = useApproveSuggestion();
 
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     aiSuggestionsQueryOptions({
       projectId,
       page: 1,
@@ -144,18 +147,18 @@ function SuggestionsAsRecommendations({ projectId }: SuggestionsAsRecommendation
 
   if (isError) {
     return (
-      <div className="flex items-center justify-center py-8">
-        <p className="text-label-md text-neutral-500">{t("error")}</p>
-      </div>
+      <ErrorState
+        title={t("error")}
+        retryLabel={tCommon("retry")}
+        onRetry={() => refetch()}
+        fullPage={false}
+        className="py-8"
+      />
     );
   }
 
   if (items.length === 0) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <p className="text-label-md text-neutral-500">{t("empty")}</p>
-      </div>
-    );
+    return <EmptyState title={t("empty")} fullPage={false} className="py-16" />;
   }
 
   return (
@@ -181,6 +184,7 @@ type RecommendationsTabProps = {
   data: IssueSummary | undefined;
   isLoading: boolean;
   isError: boolean;
+  onRetry?: () => void;
   projectId: string;
   onNavigateTab?: (tab: AiInsightsTab) => void;
 };
@@ -189,10 +193,12 @@ export function RecommendationsTab({
   data,
   isLoading,
   isError,
+  onRetry,
   projectId,
   onNavigateTab,
 }: RecommendationsTabProps) {
   const t = useTranslations("aiInsights.recommendations");
+  const tCommon = useTranslations("common.state");
 
   const aiRecs = data?.recommendations ?? [];
   const tracking = data?.recommendation_tracking ?? [];
@@ -206,11 +212,7 @@ export function RecommendationsTab({
   }
 
   if (isError) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <p className="text-label-md text-neutral-500">{t("error")}</p>
-      </div>
-    );
+    return <ErrorState title={t("error")} retryLabel={tCommon("retry")} onRetry={onRetry} fullPage={false} />;
   }
 
   const hasAiRecs = aiRecs.length > 0;

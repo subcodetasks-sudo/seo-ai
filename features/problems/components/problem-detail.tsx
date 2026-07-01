@@ -5,6 +5,9 @@ import { ArrowRight, ExternalLink, Sparkles, TriangleAlert } from "lucide-react"
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import EmptyState from "@/components/empty-state";
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
 import {
@@ -31,13 +34,14 @@ type ProblemDetailProps = {
 
 export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailProps) {
   const t = useTranslations("problems");
+  const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
   const [page, setPage] = useState(1);
 
   const generateMutation = useGenerateSuggestionsForLinks();
 
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     issueSummaryQueryOptions({ projectId: selectedProjectId ?? "" }),
   );
 
@@ -115,13 +119,17 @@ export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailP
           </h2>
 
           {isLoading ? (
-            <p className="py-6 text-center text-label-md text-neutral-500">{t("loading")}</p>
+            <LoadingState fullPage={false} className="py-6" />
           ) : isError ? (
-            <p className="py-6 text-center text-label-md text-error-500">{t("error")}</p>
+            <ErrorState
+              title={t("error")}
+              retryLabel={tCommon("retry")}
+              onRetry={() => refetch()}
+              fullPage={false}
+              className="py-6"
+            />
           ) : pageUrls.length === 0 ? (
-            <p className="py-6 text-center text-label-md text-neutral-500">
-              {t("detail.noLinks")}
-            </p>
+            <EmptyState title={t("detail.noLinks")} fullPage={false} className="py-6" />
           ) : (
             <ul className="flex flex-col divide-y divide-neutral-100">
               {pageUrls.map((url) => (

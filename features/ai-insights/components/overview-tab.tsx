@@ -6,6 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 
+import ErrorState from "@/components/error-state";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,7 @@ type OverviewTabProps = {
   data: IssueSummary | undefined;
   isLoading: boolean;
   isError: boolean;
+  onRetry?: () => void;
   onNavigateTab?: (tab: AiInsightsTab) => void;
 };
 
@@ -80,18 +82,15 @@ function Sparkline({ data, isUp }: { data: { label: string; value: number }[]; i
   );
 }
 
-export function OverviewTab({ data, isLoading, isError, onNavigateTab }: OverviewTabProps) {
+export function OverviewTab({ data, isLoading, isError, onRetry, onNavigateTab }: OverviewTabProps) {
   const t = useTranslations("aiInsights.overview");
+  const tCommon = useTranslations("common.state");
   const locale = useLocale();
 
   if (isLoading) return <OverviewSkeleton />;
 
   if (isError || !data) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <p className="text-label-md text-neutral-500">{t("error")}</p>
-      </div>
-    );
+    return <ErrorState title={t("error")} retryLabel={tCommon("retry")} onRetry={onRetry} fullPage={false} />;
   }
 
   const trends = data.trends ?? [];

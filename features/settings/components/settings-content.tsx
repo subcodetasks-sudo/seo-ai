@@ -2,6 +2,7 @@
 
 import { Suspense } from "react";
 
+import LoadingState from "@/components/loading-state";
 import { useDirection } from "@/components/ui/direction";
 
 import { useSettingsTab } from "../hooks/use-settings-tab";
@@ -47,7 +48,7 @@ export function SettingsContent() {
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
         <SettingsHeader />
-        <Suspense fallback={null}>
+        <Suspense fallback={<LoadingState fullPage={false} />}>
           <SettingsTabPanels />
         </Suspense>
       </div>

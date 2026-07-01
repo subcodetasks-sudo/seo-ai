@@ -11,6 +11,13 @@
       "notifications": "Notifications",
       "dashboard": "Dashboard",
       "home": "Home"
+    },
+    "state": {
+      "loading": "Loading…",
+      "errorTitle": "Something went wrong",
+      "errorDescription": "We couldn't load this page. Please try again.",
+      "retry": "Try again",
+      "emptyTitle": "No results found"
     }
   },
   "sidebar": {
@@ -449,6 +456,7 @@
     "noProject": "Select a project to view reports",
     "empty": "No scan history found for this period",
     "loading": "Loading...",
+    "error": "Failed to load report analytics",
     "createReport": "Create Report",
     "period": "{days} days",
     "charts": {
@@ -751,6 +759,7 @@
     }
   },
   "home": {
+    "loadError": "Failed to load projects",
     "emptyProjects": {
       "title": "No projects yet",
       "subtitle": "Add your first website to start analyzing and improving SEO. Setup takes just a few minutes.",
@@ -908,6 +917,7 @@
     "title": "Overview",
     "lastUpdate": "Last update: {date}",
     "noProject": "Select a project to view the overview",
+    "error": "Failed to load overview data",
     "healthIndicator": "Health Indicator",
     "healthStatus": {
       "excellent": "Excellent",

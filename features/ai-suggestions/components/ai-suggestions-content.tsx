@@ -16,8 +16,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import EmptyState from "@/components/empty-state";
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { useDirection } from "@/components/ui/direction";
 import {
   Pagination,
@@ -74,6 +76,7 @@ const SUGGESTION_STATUSES: SuggestionStatus[] = [
 
 export function AiSuggestionsContent() {
   const t = useTranslations("aiSuggestions");
+  const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
 
@@ -91,7 +94,7 @@ export function AiSuggestionsContent() {
   const approveAllMutation = useApproveAllSuggestions();
   const rejectAllMutation = useRejectAllSuggestions();
 
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading, isError, refetch } = useQuery(
     aiSuggestionsQueryOptions({
       projectId: selectedProjectId ?? "",
       page,
@@ -383,17 +386,15 @@ export function AiSuggestionsContent() {
         </div>
 
         {isLoading ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <Spinner className="size-8 text-neutral-400" />
-          </div>
+          <LoadingState />
         ) : isError ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <p className="text-label-md text-error-500">{t("error")}</p>
-          </div>
+          <ErrorState
+            title={t("error")}
+            retryLabel={tCommon("retry")}
+            onRetry={() => refetch()}
+          />
         ) : items.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center py-16">
-            <p className="text-label-md text-neutral-500">{t("empty")}</p>
-          </div>
+          <EmptyState title={t("empty")} />
         ) : (
           <AiSuggestionsTable
             items={items}

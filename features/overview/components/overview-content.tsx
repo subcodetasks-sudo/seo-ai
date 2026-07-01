@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import ErrorState from "@/components/error-state";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDirection } from "@/components/ui/direction";
 import { useRouter } from "@/i18n/navigation";
@@ -42,6 +43,7 @@ function OverviewSkeleton() {
 
 export function OverviewContent() {
   const t = useTranslations("overview");
+  const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -56,6 +58,7 @@ export function OverviewContent() {
     data: dashboard,
     isLoading: isDashboardLoading,
     isError: isDashboardError,
+    refetch: refetchDashboard,
   } = useQuery(overviewDashboardQueryOptions(selectedProjectId ?? ""));
 
   function handleRescanSuccess(crawlJobId: string) {
@@ -104,7 +107,11 @@ export function OverviewContent() {
         ) : isDashboardError || !dashboard ? (
           <div className="flex flex-col gap-6">
             <OverviewHeader />
-            <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+            <ErrorState
+              title={t("error")}
+              retryLabel={tCommon("retry")}
+              onRetry={() => refetchDashboard()}
+            />
           </div>
         ) : (
           <>

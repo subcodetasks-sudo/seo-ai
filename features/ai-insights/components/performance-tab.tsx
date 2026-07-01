@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
+import ErrorState from "@/components/error-state";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -74,21 +75,19 @@ type PerformanceTabProps = {
   data: IssueSummary | undefined;
   isLoading: boolean;
   isError: boolean;
+  onRetry?: () => void;
   onNavigateTab?: (tab: AiInsightsTab) => void;
 };
 
-export function PerformanceTab({ data, isLoading, isError, onNavigateTab }: PerformanceTabProps) {
+export function PerformanceTab({ data, isLoading, isError, onRetry, onNavigateTab }: PerformanceTabProps) {
   const t = useTranslations("aiInsights.performance");
+  const tCommon = useTranslations("common.state");
   const [periodTab, setPeriodTab] = useState<PeriodTab>("month");
 
   if (isLoading) return <PerformanceSkeleton />;
 
   if (isError || !data) {
-    return (
-      <div className="flex items-center justify-center py-16">
-        <p className="text-label-md text-neutral-500">{t("error")}</p>
-      </div>
-    );
+    return <ErrorState title={t("error")} retryLabel={tCommon("retry")} onRetry={onRetry} fullPage={false} />;
   }
 
   const history = data.performance_history;

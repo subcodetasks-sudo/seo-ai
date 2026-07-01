@@ -46,22 +46,23 @@ export function AiInsightsContent() {
 
         <div role="tabpanel">
           {tab === "overview" && (
-            <OverviewTab data={summary} isLoading={isLoading} isError={isError} onNavigateTab={setTab} />
+            <OverviewTab data={summary} isLoading={isLoading} isError={isError} onRetry={refetch} onNavigateTab={setTab} />
           )}
           {tab === "analysis" && (
-            <AnalysisTab data={summary} isLoading={isLoading} isError={isError} onNavigateTab={setTab} />
+            <AnalysisTab data={summary} isLoading={isLoading} isError={isError} onRetry={refetch} onNavigateTab={setTab} />
           )}
           {tab === "recommendations" && (
             <RecommendationsTab
               data={summary}
               isLoading={isLoading}
               isError={isError}
+              onRetry={refetch}
               projectId={selectedProjectId}
               onNavigateTab={setTab}
             />
           )}
           {tab === "performance" && (
-            <PerformanceTab data={summary} isLoading={isLoading} isError={isError} onNavigateTab={setTab} />
+            <PerformanceTab data={summary} isLoading={isLoading} isError={isError} onRetry={refetch} onNavigateTab={setTab} />
           )}
         </div>
       </div>
