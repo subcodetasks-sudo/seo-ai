@@ -1,38 +1,4 @@
-import type { Integration, Invoice, NotificationPreference, Subscription } from "../types";
-
-export const MOCK_SUBSCRIPTION: Subscription = {
-  planName: "Pro",
-  planLabelKey: "paidPlan",
-  priceMonthly: 149,
-  usedPages: 80,
-  totalPages: 100,
-  nextInvoiceDate: "2025-10-31",
-  status: "active",
-};
-
-export const MOCK_INVOICES: Invoice[] = [
-  {
-    id: "inv-1",
-    date: "2026-04-01",
-    planLabelKey: "paidPlan",
-    amount: 149,
-    status: "paid",
-  },
-  {
-    id: "inv-2",
-    date: "2026-03-01",
-    planLabelKey: "paidPlan",
-    amount: 149,
-    status: "paid",
-  },
-  {
-    id: "inv-3",
-    date: "2026-02-01",
-    planLabelKey: "paidPlan",
-    amount: 149,
-    status: "paid",
-  },
-];
+import type { Integration, NotificationPreference } from "../types";
 
 export const MOCK_NOTIFICATION_PREFS: NotificationPreference[] = [
   {

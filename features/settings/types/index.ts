@@ -7,24 +7,6 @@ export const SETTINGS_TABS: SettingsTab[] = [
   "billing",
 ];
 
-export type Subscription = {
-  planName: string;
-  planLabelKey: string;
-  priceMonthly: number;
-  usedPages: number;
-  totalPages: number;
-  nextInvoiceDate: string;
-  status: "active" | "inactive";
-};
-
-export type Invoice = {
-  id: string;
-  date: string;
-  planLabelKey: string;
-  amount: number;
-  status: "paid" | "pending";
-};
-
 export type NotificationPreference = {
   id: string;
   labelKey: string;
