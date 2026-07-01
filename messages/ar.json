@@ -758,6 +758,61 @@
       "fixError": "تعذّر توليد إصلاحات الذكاء الاصطناعي"
     }
   },
+  "crawlHistory": {
+    "noProject": "اختر مشروعاً لعرض سجل الزحف",
+    "title": "سجل الزحف",
+    "subtitle": "تم تسجيل {count} عملية زحف",
+    "empty": "لا توجد عمليات زحف بعد",
+    "error": "تعذّر تحميل سجل الزحف",
+    "seeResults": "عرض النتائج",
+    "backToProjects": "العودة إلى المشاريع",
+    "startedAt": "بدأ {time}",
+    "progress": "اكتمل {percent}٪",
+    "pagesCrawled": "صفحات تم زحفها",
+    "pagesEstimated": "الصفحات المتوقعة",
+    "duration": "المدة",
+    "durationSeconds": "{count} ث",
+    "status": {
+      "queued": "قيد الانتظار",
+      "running": "قيد التشغيل",
+      "in_progress": "قيد التنفيذ",
+      "done": "مكتمل",
+      "failed": "فشل"
+    },
+    "trigger": {
+      "manual": "يدوي",
+      "scheduled": "مجدول"
+    },
+    "pages": {
+      "noProject": "اختر مشروعاً لعرض الصفحات",
+      "title": "الصفحات المزحوفة",
+      "subtitle": "تم زحف {count} صفحة",
+      "empty": "لا توجد صفحات",
+      "error": "تعذّر تحميل الصفحات",
+      "backToList": "العودة لسجل الزحف",
+      "metrics": {
+        "pages": "إجمالي الصفحات",
+        "basic": "الصفحات الأساسية",
+        "internal": "الصفحات الداخلية",
+        "issues": "إجمالي المشاكل"
+      }
+    },
+    "pageCard": {
+      "redirect": "إعادة توجيه",
+      "score": "النتيجة {score}",
+      "issues": "المشاكل",
+      "internalLinks": "الروابط الداخلية",
+      "externalLinks": "الروابط الخارجية",
+      "viewLinks": "عرض الروابط"
+    },
+    "linksSheet": {
+      "title": "روابط الصفحة",
+      "internal": "داخلية",
+      "external": "خارجية",
+      "empty": "لا توجد روابط",
+      "search": "بحث في الروابط…"
+    }
+  },
   "home": {
     "loadError": "تعذّر تحميل المشاريع",
     "emptyProjects": {
@@ -873,7 +928,9 @@
         "metrics": {
           "aiSuggestions": "اقتراح AI",
           "issues": "مشكلة مكتشفة",
-          "pages": "صفحة محللة"
+          "pages": "صفحة محللة",
+          "basic": "صفحة أساسية",
+          "internal": "صفحة داخلية"
         },
         "viewIssues": "عرض المشاكل",
         "viewProject": "عرض المشروع"
@@ -889,6 +946,7 @@
       "errors": "خطاء",
       "errors404": "خطاء 404",
       "open": "فتح",
+      "crawlHistory": "سجل الزحف",
       "rescan": "اعادة فحص",
       "rescanning": "جاري الفحص...",
       "delete": "حذف",

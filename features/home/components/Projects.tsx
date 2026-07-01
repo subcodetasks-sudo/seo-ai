@@ -9,6 +9,7 @@ import {
   FileText,
   Gauge,
   Globe,
+  History,
   Link2Off,
   type LucideIcon,
   Plus,
@@ -35,7 +36,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useRouter } from "@/i18n/navigation";
 import { useAddProject } from "@/features/home/components/add-project/add-project-provider";
+import { useSelectedProject } from "@/features/home/context/selected-project-context";
 import { useDeleteProject, useStartCrawl } from "@/features/home/queries/mutations";
 import { homeKeys } from "@/features/home/queries/query-keys";
 import type { ProjectListItem } from "@/features/home/types";
@@ -105,7 +108,9 @@ function VerifyProjectModal({ project }: { project: ProjectListItem }) {
 function ProjectCard({ project }: ProjectCardProps) {
   const t = useTranslations("home.projects");
   const locale = useLocale();
+  const router = useRouter();
   const { enterAnalysis } = useAddProject();
+  const { setSelectedProjectId } = useSelectedProject();
 
   const { mutate: deleteProject, isPending: isDeleting } = useDeleteProject();
   const { mutate: startCrawl, isPending: isRescanning } = useStartCrawl();
@@ -139,6 +144,11 @@ function ProjectCard({ project }: ProjectCardProps) {
         });
       },
     });
+  }
+
+  function handleViewCrawlHistory() {
+    setSelectedProjectId(project.id);
+    router.push("/dashboard/crawl-history");
   }
 
   return (
@@ -237,6 +247,16 @@ function ProjectCard({ project }: ProjectCardProps) {
         {!project.is_verified && project.platform === "custom" && (
           <VerifyProjectModal project={project} />
         )}
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleViewCrawlHistory}
+          className="h-9 gap-2 border-neutral-200 bg-white px-4 text-secondary-500 hover:border-secondary-200 hover:bg-secondary-50 hover:text-secondary-600"
+        >
+          <History className="size-4" aria-hidden="true" />
+          {t("crawlHistory")}
+        </Button>
 
         <Button
           type="button"

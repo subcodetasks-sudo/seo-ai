@@ -1,29 +1,21 @@
 import { apiClient } from "@/lib/client";
+import type { CrawlListResponse, CrawlPagesResponse } from "../types";
 
-export const startCrawl = (project_id: string) =>
-  apiClient(`projects/${project_id}/crawls`, {
-    method: "POST",
-  });
-
-export const listCrawls = (
-  project_id: string,
-  page: number,
-  page_size: number,
-) =>
-  apiClient(
-    `projects/${project_id}/crawls?page=${page}&page_size=${page_size}`,
+export function listCrawls(projectId: string, page: number, pageSize: number) {
+  return apiClient<CrawlListResponse>(
+    `projects/${projectId}/crawls?page=${page}&page_size=${pageSize}`,
     { method: "GET" },
   );
+}
 
-export const getCrawlStatus = (project_id: string, crawl_id: string) =>
-  apiClient(`projects/${project_id}/crawls/${crawl_id}`, {
-    method: "GET",
-  });
-
-export const getCrawlPages = (project_id: string, crawl_id: string, page: number, page_size: number) =>
-  apiClient(
-    `projects/${project_id}/crawls/${crawl_id}/pages?page=${page}&page_size=${page_size}`,
-    {
-      method: "GET",
-    },
+export function getCrawlPages(
+  projectId: string,
+  crawlId: string,
+  page: number,
+  pageSize: number,
+) {
+  return apiClient<CrawlPagesResponse>(
+    `projects/${projectId}/crawls/${crawlId}/pages?page=${page}&page_size=${pageSize}`,
+    { method: "GET" },
   );
+}

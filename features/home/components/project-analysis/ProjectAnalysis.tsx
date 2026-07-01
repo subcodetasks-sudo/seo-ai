@@ -19,12 +19,19 @@ export default function ProjectAnalysis({
   onViewIssues,
   onViewProject,
 }: ProjectAnalysisProps) {
-  const { isDone, loadingProps, totalPages, totalIssues, isMetricsLoading } =
-    useCrawlProgress({
-      projectId,
-      crawlId: crawlJobId,
-      url,
-    });
+  const {
+    isDone,
+    loadingProps,
+    totalPages,
+    totalIssues,
+    totalBasic,
+    totalInternal,
+    isMetricsLoading,
+  } = useCrawlProgress({
+    projectId,
+    crawlId: crawlJobId,
+    url,
+  });
 
   if (isDone) {
     return (
@@ -32,6 +39,8 @@ export default function ProjectAnalysis({
         url={url}
         pagesCount={totalPages}
         issuesCount={totalIssues}
+        basicPagesCount={totalBasic}
+        internalPagesCount={totalInternal}
         isMetricsLoading={isMetricsLoading}
         onViewIssues={onViewIssues}
         onViewProject={onViewProject}

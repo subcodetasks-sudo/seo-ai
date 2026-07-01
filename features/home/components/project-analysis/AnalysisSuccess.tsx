@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, FileText, FolderOpen, Globe, Sparkles, TriangleAlert } from "lucide-react";
+import { ArrowRight, Check, FileStack, FileText, FolderOpen, Globe, Link2, Sparkles, TriangleAlert } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -15,6 +15,8 @@ export type AnalysisSuccessProps = {
   // aiSuggestionsCount: number;
   issuesCount: number;
   pagesCount: number;
+  basicPagesCount: number;
+  internalPagesCount: number;
   isMetricsLoading?: boolean;
   onViewIssues?: () => void;
   onViewProject?: () => void;
@@ -66,6 +68,8 @@ export default function AnalysisSuccess({
   // aiSuggestionsCount,
   issuesCount,
   pagesCount,
+  basicPagesCount,
+  internalPagesCount,
   isMetricsLoading,
   onViewIssues,
   onViewProject,
@@ -93,6 +97,20 @@ export default function AnalysisSuccess({
       value: compactFormatter.format(pagesCount),
       label: t("metrics.pages"),
       iconClassName: "text-secondary-400",
+      isLoading: isMetricsLoading,
+    },
+    {
+      icon: FileStack,
+      value: compactFormatter.format(basicPagesCount),
+      label: t("metrics.basic"),
+      iconClassName: "text-neutral-500",
+      isLoading: isMetricsLoading,
+    },
+    {
+      icon: Link2,
+      value: compactFormatter.format(internalPagesCount),
+      label: t("metrics.internal"),
+      iconClassName: "text-primary-500",
       isLoading: isMetricsLoading,
     },
     // {

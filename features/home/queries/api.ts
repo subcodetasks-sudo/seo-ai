@@ -108,6 +108,6 @@ export const getCrawlStatus = (project_id: string, crawl_id: string) =>
 
 export const getCrawlPages = (project_id: string, crawl_id: string) =>
   apiClient<CrawlPagesResponse>(
-    `projects/${project_id}/crawls/${crawl_id}/pages?page=1&page_size=50`,
+    `projects/${project_id}/crawls/${crawl_id}/pages?page=1&page_size=1`,
     { method: "GET" },
   );

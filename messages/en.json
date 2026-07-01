@@ -758,6 +758,61 @@
       "fixError": "Failed to generate AI fixes"
     }
   },
+  "crawlHistory": {
+    "noProject": "Select a project to view crawl history",
+    "title": "Crawl history",
+    "subtitle": "{count} crawls recorded",
+    "empty": "No crawls yet",
+    "error": "Failed to load crawl history",
+    "seeResults": "See results",
+    "backToProjects": "Back to projects",
+    "startedAt": "Started {time}",
+    "progress": "{percent}% complete",
+    "pagesCrawled": "Pages crawled",
+    "pagesEstimated": "Estimated pages",
+    "duration": "Duration",
+    "durationSeconds": "{count}s",
+    "status": {
+      "queued": "Queued",
+      "running": "Running",
+      "in_progress": "In progress",
+      "done": "Done",
+      "failed": "Failed"
+    },
+    "trigger": {
+      "manual": "Manual",
+      "scheduled": "Scheduled"
+    },
+    "pages": {
+      "noProject": "Select a project to view pages",
+      "title": "Crawled pages",
+      "subtitle": "{count} pages crawled",
+      "empty": "No pages found",
+      "error": "Failed to load pages",
+      "backToList": "Back to crawl history",
+      "metrics": {
+        "pages": "Total pages",
+        "basic": "Basic pages",
+        "internal": "Internal pages",
+        "issues": "Total issues"
+      }
+    },
+    "pageCard": {
+      "redirect": "Redirect",
+      "score": "Score {score}",
+      "issues": "Issues",
+      "internalLinks": "Internal links",
+      "externalLinks": "External links",
+      "viewLinks": "View links"
+    },
+    "linksSheet": {
+      "title": "Page links",
+      "internal": "Internal",
+      "external": "External",
+      "empty": "No links found",
+      "search": "Search links…"
+    }
+  },
   "home": {
     "loadError": "Failed to load projects",
     "emptyProjects": {
@@ -873,7 +928,9 @@
         "metrics": {
           "aiSuggestions": "AI suggestions",
           "issues": "Discovered issues",
-          "pages": "Analyzed pages"
+          "pages": "Analyzed pages",
+          "basic": "Basic pages",
+          "internal": "Internal pages"
         },
         "viewIssues": "View issues",
         "viewProject": "View project"
@@ -889,6 +946,7 @@
       "errors": "Errors",
       "errors404": "404 errors",
       "open": "Open",
+      "crawlHistory": "Crawl history",
       "rescan": "Re-scan",
       "rescanning": "Scanning...",
       "delete": "Delete",

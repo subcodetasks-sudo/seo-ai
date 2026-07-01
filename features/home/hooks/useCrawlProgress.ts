@@ -72,6 +72,8 @@ interface UseCrawlProgressResult {
   loadingProps: AnalysisLoadingProps;
   totalPages: number;
   totalIssues: number;
+  totalBasic: number;
+  totalInternal: number;
   isMetricsLoading: boolean;
 }
 
@@ -124,6 +126,8 @@ export function useCrawlProgress({
     },
     totalPages: pagesData?.data.total_pages ?? 0,
     totalIssues: pagesData?.data.total_issues ?? 0,
+    totalBasic: pagesData?.data.total_basic ?? 0,
+    totalInternal: pagesData?.data.total_internal ?? 0,
     isMetricsLoading: isDone && isPagesPending,
   };
 }

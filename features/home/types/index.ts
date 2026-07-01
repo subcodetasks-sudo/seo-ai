@@ -147,6 +147,8 @@ export type ProjectSectionsApiResponse = {
 export type CrawlPagesSummary = {
   total_pages: number;
   total_issues: number;
+  total_basic: number;
+  total_internal: number;
 };
 
 export type CrawlPagesResponse = {
