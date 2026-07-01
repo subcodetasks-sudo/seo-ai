@@ -7,12 +7,18 @@ type GenerateForLinksVars = {
   projectId: string;
   suggestionType: string;
   pageUrls: string[];
+  pageType?: string | null;
+  imageUrl?: string | null;
 };
 
 export function useGenerateSuggestionsForLinks() {
   return useMutation({
-    mutationFn: ({ projectId, suggestionType, pageUrls }: GenerateForLinksVars) =>
-      Promise.all(pageUrls.map((url) => generateSuggestion(projectId, suggestionType, url))),
+    mutationFn: ({ projectId, suggestionType, pageUrls, pageType, imageUrl }: GenerateForLinksVars) =>
+      Promise.all(
+        pageUrls.map((pageUrl) =>
+          generateSuggestion({ projectId, suggestionType, pageUrl, pageType, imageUrl }),
+        ),
+      ),
   });
 }
 

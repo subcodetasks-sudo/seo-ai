@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/pagination";
 import { Link } from "@/i18n/navigation";
 import { useSelectedProject } from "@/features/home";
+import { decodeUrlForDisplay } from "@/lib/utils";
 import { issueSummaryQueryOptions } from "../queries/queries";
 import { useGenerateSuggestionsForLinks } from "../queries/mutations";
 
@@ -48,10 +49,19 @@ export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailP
 
   const title = t.has(`problemTypes.${type}`) ? t(`problemTypes.${type}`) : type;
 
+  const canSuggestFix =
+    !!suggestionType && !(suggestionType === "schema" && !item?.page_types);
+
   function handleFixAll() {
-    if (!selectedProjectId || pageUrls.length === 0 || !suggestionType || generateMutation.isPending) return;
+    if (!selectedProjectId || pageUrls.length === 0 || !canSuggestFix || generateMutation.isPending) return;
     generateMutation.mutate(
-      { projectId: selectedProjectId, suggestionType, pageUrls },
+      {
+        projectId: selectedProjectId,
+        suggestionType: suggestionType as string,
+        pageUrls,
+        pageType: item?.page_types,
+        imageUrl: item?.image_url,
+      },
       {
         onSuccess: () => {},
         onError: () => {},
@@ -125,8 +135,8 @@ export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailP
                   >
                     <ExternalLink className="size-4" aria-hidden="true" />
                   </a>
-                  <span className="truncate text-label-sm text-error-500" dir="ltr">
-                    {url}
+                  <span className="truncate text-label-sm text-error-500">
+                    <bdi dir="ltr">{decodeUrlForDisplay(url)}</bdi>
                   </span>
                 </li>
               ))}
@@ -184,16 +194,18 @@ export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailP
 
         {/* Footer actions */}
         <div className="flex items-center justify-between gap-4">
-          <Button
-            type="button"
-            size="lg"
-            onClick={handleFixAll}
-            disabled={pageUrls.length === 0 || !suggestionType || generateMutation.isPending}
-            className="gap-2 bg-primary-500 text-white hover:bg-primary-500/90 disabled:opacity-50 text-label-md font-medium"
-          >
-            <Sparkles className="size-4" aria-hidden="true" />
-            {generateMutation.isPending ? t("detail.fixing") : t("detail.fixAllAi")}
-          </Button>
+          {canSuggestFix && (
+            <Button
+              type="button"
+              size="lg"
+              onClick={handleFixAll}
+              disabled={pageUrls.length === 0 || generateMutation.isPending}
+              className="gap-2 bg-primary-500 text-white hover:bg-primary-500/90 disabled:opacity-50 text-label-md font-medium"
+            >
+              <Sparkles className="size-4" aria-hidden="true" />
+              {generateMutation.isPending ? t("detail.fixing") : t("detail.fixAllAi")}
+            </Button>
+          )}
           <Link
             href="/dashboard/problems"
             className="inline-flex items-center gap-1.5 text-label-sm text-neutral-500 hover:text-neutral-700"

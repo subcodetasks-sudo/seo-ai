@@ -260,8 +260,6 @@
       "detectedAt": "تاريخ الاكتشاف",
       "action": "الإجراء",
       "fixWithAi": "إصلاح بالذكاء الاصطناعي",
-      "fixing": "جارٍ الإصلاح…",
-      "fixSuccess": "تم طلب إصلاح الذكاء الاصطناعي بنجاح",
       "noReferrer": "—",
       "copyUrl": "نسخ الرابط الكامل",
       "openUrl": "فتح في تبويب جديد"
@@ -271,21 +269,34 @@
     },
     "aifix": {
       "title": "خطاء 404",
-      "referrer": "Referrer",
-      "brokenUrl": "Broken URL",
+      "referrer": "المصدر",
+      "brokenUrl": "الرابط المعطل",
       "status": "الحالة",
-      "detectedAt": "محدد",
-      "daysAgo": "منذ {count} أيام",
-      "unresolved": "غير محلول",
-      "aiSuggestion": "AI Redirect Suggestion",
-      "suggestedUrl": "Suggested Redirect URL",
+      "detectedAt": "تاريخ الاكتشاف",
+      "statusValues": {
+        "new": "غير محلول",
+        "resolved": "محلول",
+        "ignored": "مُتجاهل"
+      },
+      "noReferrer": "—",
+      "aiSuggestion": "اقتراح إعادة التوجيه بالذكاء الاصطناعي",
+      "suggestedUrl": "رابط إعادة التوجيه المقترح",
       "reason": "السبب",
-      "reasonText": "يتطابق اسم الرابط الإلكتروني بشكل كبير مع قائمة المنتجات النشطة. تم تغيير اسم المنتج السابق خلال تحديث الكتالوج لعام 2024.",
+      "suggestionStatus": {
+        "pending": "قيد الانتظار",
+        "approved": "تمت الموافقة",
+        "rejected": "مرفوض"
+      },
+      "noSuggestion": "لا يوجد اقتراح ذكاء اصطناعي لهذه الصفحة بعد.",
+      "generate": "توليد اقتراح بالذكاء الاصطناعي",
+      "generating": "جارٍ التوليد…",
       "approve": "موافقة",
       "enterManually": "ادخل يدوياً",
       "manualPlaceholder": "أدخل رابط إعادة التوجيه",
       "apply": "تطبيق",
-      "back": "العودة"
+      "back": "العودة",
+      "missingPage": "المشروع أو الصفحة غير محددين",
+      "loadError": "فشل تحميل تفاصيل الصفحة المعطلة"
     }
   },
   "aiSuggestions": {
@@ -380,6 +391,7 @@
       "edit": "تعديل",
       "editTitle": "تعديل الاقتراح",
       "editPendingOnly": "لا يمكن تعديل الاقتراح إلا إذا كانت حالته 'قيد الانتظار'.",
+      "actionPendingOnly": "لا يمكن مراجعة الاقتراح إلا إذا كانت حالته 'قيد الانتظار'.",
       "save": "حفظ",
       "saving": "جاري الحفظ...",
       "cancel": "إلغاء",
@@ -813,7 +825,8 @@
         "showingResults": "عرض {shown} من {total} نتائج",
         "scan": "فحص",
         "cancel": "إلغاء",
-        "sectionsRequired": "يرجى اختيار قسم واحد على الأقل"
+        "sectionsRequired": "يرجى اختيار قسم واحد على الأقل",
+        "loadingSections": "جارٍ تحميل الأقسام..."
       }
     },
     "projectAnalysis": {

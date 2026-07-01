@@ -28,7 +28,7 @@ export function FlatEditForm({ suggestion, projectId, onClose }: FlatEditFormPro
     defaultValues: config.getInitial(suggestion.rawSuggestedValue),
   });
   const values = useWatch({ control });
-  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, onClose);
+  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, suggestion.type, onClose);
 
   function onSubmit(formValues: Record<string, string>) {
     submit(config.build(formValues, suggestion.rawSuggestedValue));

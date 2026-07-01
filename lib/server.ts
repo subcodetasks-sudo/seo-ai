@@ -5,6 +5,17 @@ import { getLocale } from "next-intl/server";
 /** Safe, non-revealing message shown to users when something fails internally. */
 export const GENERIC_ERROR = "Something went wrong. Please try again later.";
 
+/**
+ * Single source of truth for the locale header sent on every backend
+ * request. Reuse this for any direct `fetch` to the backend that can't go
+ * through `serverClient` (e.g. non-JSON responses) instead of re-deriving
+ * the locale.
+ */
+export async function getLanguageHeader(): Promise<{ "X-Language": string }> {
+  const locale = await getLocale();
+  return { "X-Language": locale };
+}
+
 export async function serverClient<T>(
   endpoint: string,
   options: RequestInit = {},
@@ -17,7 +28,6 @@ export async function serverClient<T>(
   }
 
   const url = `${env.API_URL}${env.API_PREFIX}${endpoint}`;
-  const locale = await getLocale();
 
   let res: Response;
   try {
@@ -25,7 +35,7 @@ export async function serverClient<T>(
       ...options,
       headers: {
         "Content-Type": "application/json",
-        "X-Language": locale,
+        ...(await getLanguageHeader()),
         ...options.headers,
       },
     });

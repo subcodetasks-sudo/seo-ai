@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { BrokenPageStatus } from "../types";
-import { getBrokenPages } from "./api";
+import { getBrokenPageDetail, getBrokenPages } from "./api";
 import { notFoundProblemsKeys } from "./query-keys";
 
 export function brokenPagesQueryOptions(
@@ -13,5 +13,13 @@ export function brokenPagesQueryOptions(
     queryKey: notFoundProblemsKeys.list(projectId, status, page),
     queryFn: () => getBrokenPages(projectId, status, page, pageSize),
     enabled: !!projectId,
+  });
+}
+
+export function brokenPageDetailQueryOptions(projectId: string, pageId: string) {
+  return queryOptions({
+    queryKey: notFoundProblemsKeys.detail(projectId, pageId),
+    queryFn: () => getBrokenPageDetail(projectId, pageId),
+    enabled: !!projectId && !!pageId,
   });
 }

@@ -25,7 +25,7 @@ export const step2Schema = z.object({
 export type Step2FormData = z.infer<typeof step2Schema>;
 
 export const step3Schema = z.object({
-  selectedSections: z.set(z.string()).min(1, "Select at least one section"),
+  selectedSections: z.set(z.string()),
 });
 
 export type Step3FormData = z.infer<typeof step3Schema>;

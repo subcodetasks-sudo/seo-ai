@@ -47,12 +47,20 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
     return `/dashboard/problems/${crawlJobId}?${params.toString()}`;
   }
 
+  function canSuggestFix(item: IssueSummaryItem) {
+    if (!item.suggestion_type) return false;
+    if (item.suggestion_type === "schema" && !item.page_types) return false;
+    return true;
+  }
+
   function handleSuggestFix(item: IssueSummaryItem) {
-    if (!selectedProjectId || !item.suggestion_type || generateMutation.isPending) return;
+    if (!selectedProjectId || !canSuggestFix(item) || generateMutation.isPending) return;
     generateMutation.mutate({
       projectId: selectedProjectId,
-      suggestionType: item.suggestion_type,
+      suggestionType: item.suggestion_type as string,
       pageUrls: item.affected_urls,
+      pageType: item.page_types,
+      imageUrl: item.image_url,
     });
   }
 
@@ -70,7 +78,7 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
     const isIgnoring = ignoreMutation.isPending;
     return (
       <div className="flex items-center gap-2">
-        {item.suggestion_type && (
+        {canSuggestFix(item) && (
           <Button
             type="button"
             size="sm"

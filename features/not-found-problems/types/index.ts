@@ -22,3 +22,23 @@ export type BrokenPagesResponse = {
     items: BrokenPage[];
   };
 };
+
+export type RedirectSuggestionStatus = "pending" | "approved" | "rejected";
+
+export type RedirectSuggestion = {
+  suggestion_id: string;
+  status: RedirectSuggestionStatus;
+  target_url: string;
+  confidence: number;
+  reason: string;
+};
+
+export type BrokenPageDetail = BrokenPage & {
+  redirect_suggestion: RedirectSuggestion | null;
+};
+
+export type BrokenPageDetailResponse = {
+  status: boolean;
+  message: string;
+  data: BrokenPageDetail;
+};

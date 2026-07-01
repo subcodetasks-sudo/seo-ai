@@ -38,7 +38,7 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
           <RegisterProgress currentStep={2} />
           <OtpCode
             email={userEmail}
-            successHref="/plans"
+            successHref="/login"
             successToastKey="accountCreated"
           />
         </div>

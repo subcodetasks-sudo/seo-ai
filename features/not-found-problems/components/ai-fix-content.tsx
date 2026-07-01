@@ -1,28 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { CircleCheck, ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useMutation } from "@tanstack/react-query";
+import { useLocale, useTranslations } from "next-intl";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
+import { ar, enUS } from "date-fns/locale";
 
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
+import { cn, getDisplayPathname } from "@/lib/utils";
+import { generateSuggestion } from "@/features/problems/queries/api";
 import { redirectBrokenPage } from "../queries/api";
-
-const MOCK_DATA = {
-  referrer: "collections/womens/",
-  brokenUrl: "products/rose-elixir-discontinued/",
-  detectedAt: "3",
-  suggestedRedirectUrl: "/products/rose-garden-elixir",
-} as const;
+import { brokenPageDetailQueryOptions } from "../queries/queries";
+import { notFoundProblemsKeys } from "../queries/query-keys";
 
 type InfoCardProps = {
   label: string;
-  value: string;
+  value: ReactNode;
   valueClassName?: string;
 };
 
@@ -40,24 +39,44 @@ function InfoCard({ label, value, valueClassName }: InfoCardProps) {
 export function AiFixContent() {
   const t = useTranslations("notFoundProblems.aifix");
   const dir = useDirection();
+  const locale = useLocale();
+  const dateLocale = locale === "ar" ? ar : enUS;
   const router = useRouter();
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
   const [manualUrl, setManualUrl] = useState("");
   const isRtl = dir === "rtl";
 
   const projectId = searchParams.get("projectId") ?? "";
   const pageId = searchParams.get("pageId") ?? "";
 
+  const detailQuery = useQuery(brokenPageDetailQueryOptions(projectId, pageId));
+  const page = detailQuery.data?.data;
+  const suggestion = page?.redirect_suggestion ?? null;
+  const isSuggestionPending = suggestion?.status === "pending";
+
   const redirectMutation = useMutation({
-    mutationFn: (targetUrl: string) =>
-      redirectBrokenPage(projectId, pageId, targetUrl),
+    mutationFn: (targetUrl: string) => redirectBrokenPage(projectId, pageId, targetUrl),
     onSuccess: () => {
       router.back();
     },
   });
 
+  const generateMutation = useMutation({
+    mutationFn: () =>
+      generateSuggestion({ projectId, suggestionType: "redirect", pageUrl: page!.url }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: notFoundProblemsKeys.detail(projectId, pageId) });
+    },
+  });
+
   function handleApprove() {
-    redirectMutation.mutate(MOCK_DATA.suggestedRedirectUrl);
+    if (!suggestion || !isSuggestionPending) return;
+    redirectMutation.mutate(suggestion.target_url);
+  }
+
+  function handleGenerate() {
+    generateMutation.mutate();
   }
 
   function handleApply() {
@@ -67,6 +86,30 @@ export function AiFixContent() {
 
   const isPending = redirectMutation.isPending;
 
+  if (!projectId || !pageId) {
+    return (
+      <div dir={dir} className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
+        <p className="text-label-md text-neutral-500">{t("missingPage")}</p>
+      </div>
+    );
+  }
+
+  if (detailQuery.isLoading) {
+    return (
+      <div dir={dir} className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
+        <Spinner className="size-8 text-neutral-400" />
+      </div>
+    );
+  }
+
+  if (detailQuery.isError || !page) {
+    return (
+      <div dir={dir} className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
+        <p className="text-label-md text-error-500">{t("loadError")}</p>
+      </div>
+    );
+  }
+
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
@@ -75,49 +118,94 @@ export function AiFixContent() {
 
         {/* Row 1: Referrer + Broken URL */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <InfoCard label={t("referrer")} value={MOCK_DATA.referrer} />
+          <InfoCard
+            label={t("referrer")}
+            value={
+              page.referrer_url ? (
+                <bdi dir="ltr">{getDisplayPathname(page.referrer_url)}</bdi>
+              ) : (
+                t("noReferrer")
+              )
+            }
+          />
           <InfoCard
             label={t("brokenUrl")}
-            value={MOCK_DATA.brokenUrl}
+            value={<bdi dir="ltr">{getDisplayPathname(page.url)}</bdi>}
             valueClassName="text-error-500"
           />
         </div>
 
         {/* Row 2: Status + Detected At */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <InfoCard label={t("status")} value={t("unresolved")} />
-          <InfoCard label={t("detectedAt")} value={t("daysAgo", { count: MOCK_DATA.detectedAt })} />
+          <InfoCard label={t("status")} value={t(`statusValues.${page.status}`)} />
+          <InfoCard
+            label={t("detectedAt")}
+            value={formatDistanceToNow(new Date(page.first_detected_at), {
+              addSuffix: true,
+              locale: dateLocale,
+            })}
+          />
         </div>
 
         {/* AI Redirect Suggestion */}
         <div className="flex flex-col gap-3 rounded-xl border border-neutral-200 bg-white p-4">
-          <div className="flex items-center justify-start gap-2">
-            <Sparkles className="size-4 text-primary-400" aria-hidden="true" />
-            <span className="text-label-md font-semibold text-secondary-500">{t("aiSuggestion")}</span>
-          </div>
-
-          <div className="flex flex-col gap-2 rounded-lg bg-neutral-100 p-3">
-            <span className="text-label-xs text-neutral-400 text-start">{t("suggestedUrl")}</span>
-            <span className="font-mono text-label-md font-semibold text-secondary-500 text-start">
-              {MOCK_DATA.suggestedRedirectUrl}
-            </span>
-            <div className="flex flex-col gap-1">
-              <span className="text-label-sm font-semibold text-error-500 text-start">{t("reason")}</span>
-              <p className="text-label-sm text-secondary-400 text-start leading-relaxed">
-                {t("reasonText")}
-              </p>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center justify-start gap-2">
+              <Sparkles className="size-4 text-primary-400" aria-hidden="true" />
+              <span className="text-label-md font-semibold text-secondary-500">{t("aiSuggestion")}</span>
             </div>
+            {suggestion && (
+              <span
+                className={cn(
+                  "rounded-full px-2.5 py-0.5 text-label-xs font-medium",
+                  suggestion.status === "approved" && "bg-success-50 text-success-700",
+                  suggestion.status === "rejected" && "bg-error-50 text-error-700",
+                  suggestion.status === "pending" && "bg-warning-50 text-warning-700",
+                )}
+              >
+                {t(`suggestionStatus.${suggestion.status}`)}
+              </span>
+            )}
           </div>
 
-          <Button
-            type="button"
-            onClick={handleApprove}
-            disabled={isPending || !projectId || !pageId}
-            className="w-full gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-400 h-11"
-          >
-            <CircleCheck className="size-4" aria-hidden="true" />
-            {t("approve")}
-          </Button>
+          {suggestion ? (
+            <div className="flex flex-col gap-2 rounded-lg bg-neutral-100 p-3">
+              <span className="text-label-xs text-neutral-400 text-start">{t("suggestedUrl")}</span>
+              <span className="font-mono text-label-md font-semibold text-secondary-500 text-start">
+                {suggestion.target_url}
+              </span>
+              <div className="flex flex-col gap-1">
+                <span className="text-label-sm font-semibold text-error-500 text-start">{t("reason")}</span>
+                <p className="text-label-sm text-secondary-400 text-start leading-relaxed">
+                  {suggestion.reason}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-label-sm text-neutral-500 text-start">{t("noSuggestion")}</p>
+          )}
+
+          {!suggestion ? (
+            <Button
+              type="button"
+              onClick={handleGenerate}
+              disabled={generateMutation.isPending}
+              className="w-full gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-400 h-11"
+            >
+              <CircleCheck className="size-4" aria-hidden="true" />
+              {generateMutation.isPending ? t("generating") : t("generate")}
+            </Button>
+          ) : isSuggestionPending ? (
+            <Button
+              type="button"
+              onClick={handleApprove}
+              disabled={isPending}
+              className="w-full gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-400 h-11"
+            >
+              <CircleCheck className="size-4" aria-hidden="true" />
+              {t("approve")}
+            </Button>
+          ) : null}
         </div>
 
         {/* Manual Entry */}
@@ -137,7 +225,7 @@ export function AiFixContent() {
               type="button"
               variant="outline"
               onClick={handleApply}
-              disabled={isPending || !manualUrl.trim() || !projectId || !pageId}
+              disabled={isPending || !manualUrl.trim()}
               className="shrink-0 border-neutral-200 bg-white text-secondary-500 hover:bg-neutral-50"
             >
               {t("apply")}

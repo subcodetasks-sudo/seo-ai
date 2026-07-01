@@ -7,9 +7,6 @@ import { Copy, ExternalLink, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
 import {
@@ -18,7 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-// import { Link } from "@/i18n/navigation";
+import { Link } from "@/i18n/navigation";
 import {
   Table,
   TableBody,
@@ -27,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { generateSuggestion } from "@/features/problems/queries/api";
+import { getDisplayPathname } from "@/lib/utils";
 import type { BrokenPage } from "../types";
 
 type BrokenPagesTableProps = {
@@ -35,14 +32,6 @@ type BrokenPagesTableProps = {
   projectId: string;
   projectDomain: string;
 };
-
-function getPathname(url: string): string {
-  try {
-    return new URL(url).pathname;
-  } catch {
-    return url;
-  }
-}
 
 function constructFullUrl(
   domain: string,
@@ -74,19 +63,6 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
   const dir = useDirection();
   const dateLocale = locale === "ar" ? ar : enUS;
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [fixingIds, setFixingIds] = useState<Set<string>>(new Set());
-
-  const { mutate: fixWithAi } = useMutation({
-    mutationFn: ({ pageUrl }: { pageUrl: string }) =>
-      generateSuggestion(projectId, "redirect", pageUrl),
-    onSuccess: (_, { pageUrl }) => {
-      setFixingIds((prev) => { const next = new Set(prev); next.delete(pageUrl); return next; });
-      toast.success(t("fixSuccess"));
-    },
-    onError: (_, { pageUrl }) => {
-      setFixingIds((prev) => { const next = new Set(prev); next.delete(pageUrl); return next; });
-    },
-  });
 
   function handleCopyUrl(url: string, itemId: string) {
     const fullUrl = constructFullUrl(projectDomain, null, url);
@@ -137,22 +113,16 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
           </TooltipTrigger>
           <TooltipContent side="bottom">{t("openUrl")}</TooltipContent>
         </Tooltip>
-        {/* <Link href={`/dashboard/404-problems/ai-fix?pageId=${item.id}&projectId=${projectId}`}>
-          {t("fixWithAi")}
-        </Link> */}
         <Button
           type="button"
           size="sm"
-          disabled={fixingIds.has(constructFullUrl(projectDomain, null, item.url))}
-          onClick={() => {
-            const pageUrl = constructFullUrl(projectDomain, null, item.url);
-            setFixingIds((prev) => new Set(prev).add(pageUrl));
-            fixWithAi({ pageUrl });
-          }}
-          className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm disabled:opacity-50"
+          asChild
+          className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm"
         >
-          <Sparkles className="size-3.5" aria-hidden="true" />
-          {fixingIds.has(constructFullUrl(projectDomain, null, item.url)) ? t("fixing") : t("fixWithAi")}
+          <Link href={`/dashboard/404-problems/ai-fix?pageId=${item.id}&projectId=${projectId}`}>
+            <Sparkles className="size-3.5" aria-hidden="true" />
+            {t("fixWithAi")}
+          </Link>
         </Button>
       </div>
     </TooltipProvider>
@@ -167,14 +137,14 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
             <div className="flex flex-col gap-1">
               <span className="text-label-xs text-neutral-400">{t("brokenUrl")}</span>
               <span className="text-label-sm font-medium text-error-500 truncate">
-                {getPathname(item.url)}
+                <bdi dir="ltr">{getDisplayPathname(item.url)}</bdi>
               </span>
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex flex-col gap-1">
                 <span className="text-label-xs text-neutral-400">{t("source")}</span>
                 <span className="text-label-sm text-neutral-600 truncate">
-                  {item.referrer_url ? getPathname(item.referrer_url) : t("noReferrer")}
+                  {item.referrer_url ? <bdi dir="ltr">{getDisplayPathname(item.referrer_url)}</bdi> : t("noReferrer")}
                 </span>
               </div>
               <div className="flex flex-col gap-1">
@@ -215,10 +185,10 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
             {items.map((item) => (
               <TableRow key={item.id} className="border-neutral-200">
                 <TableCell className="py-3 px-4 font-medium text-error-500 text-label-sm max-w-xs truncate">
-                  {getPathname(item.url)}
+                  <bdi dir="ltr">{getDisplayPathname(item.url)}</bdi>
                 </TableCell>
                 <TableCell className="py-3 px-4 text-label-sm text-neutral-600 max-w-xs truncate">
-                  {item.referrer_url ? getPathname(item.referrer_url) : t("noReferrer")}
+                  {item.referrer_url ? <bdi dir="ltr">{getDisplayPathname(item.referrer_url)}</bdi> : t("noReferrer")}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-label-sm text-neutral-500">
                   {formatDistanceToNow(new Date(item.first_detected_at), {

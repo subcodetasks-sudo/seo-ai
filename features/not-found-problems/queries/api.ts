@@ -1,5 +1,9 @@
 import { apiClient } from "@/lib/client";
-import type { BrokenPageStatus, BrokenPagesResponse } from "../types";
+import type {
+  BrokenPageDetailResponse,
+  BrokenPageStatus,
+  BrokenPagesResponse,
+} from "../types";
 
 export function getBrokenPages(
   projectId: string,
@@ -9,6 +13,12 @@ export function getBrokenPages(
 ) {
   return apiClient<BrokenPagesResponse>(
     `projects/${projectId}/broken-pages?status=${status}&page=${page}&page_size=${pageSize}`,
+  );
+}
+
+export function getBrokenPageDetail(projectId: string, brokenPageId: string) {
+  return apiClient<BrokenPageDetailResponse>(
+    `projects/${projectId}/broken-pages/${brokenPageId}`,
   );
 }
 

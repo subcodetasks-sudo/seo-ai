@@ -19,7 +19,7 @@ export function RegisterSuccess({ className }: RegisterSuccessProps) {
 
   function handleContinue() {
     toast.success(tToast("accountCreated"));
-    router.push("/plans");
+    router.push("/login");
   }
 
   return (

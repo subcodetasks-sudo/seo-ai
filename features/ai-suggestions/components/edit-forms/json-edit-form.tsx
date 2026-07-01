@@ -32,7 +32,7 @@ export function JsonEditForm({ suggestion, projectId, onClose, field }: JsonEdit
     defaultValues: { json: JSON.stringify(initial, null, 2) },
   });
   const [error, setError] = useState<string | null>(null);
-  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, onClose);
+  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, suggestion.type, onClose);
 
   function onSubmit({ json }: { json: string }) {
     let parsed: unknown;

@@ -119,10 +119,11 @@ export function AiSuggestionsContent() {
   }
 
   function handleToggleSelectAll() {
-    if (selectedIds.size === items.length) {
+    const selectableIds = items.filter((i) => i.status === "pending").map((i) => i.id);
+    if (selectedIds.size === selectableIds.length) {
       setSelectedIds(new Set());
     } else {
-      setSelectedIds(new Set(items.map((i) => i.id)));
+      setSelectedIds(new Set(selectableIds));
     }
   }
 

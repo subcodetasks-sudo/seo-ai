@@ -22,7 +22,7 @@ import { useDirection } from "@/components/ui/direction";
 import { verificationTokenQueryOptions } from "@/features/home/queries/queries";
 import { useVerifyDomain } from "@/features/home/queries/mutations";
 
-type VerifyMethod = "meta_tag" | "html_file" | "dns_text";
+type VerifyMethod = "meta_tag" | "html_file" | "dns_txt";
 
 type MethodConfig = {
   id: VerifyMethod;
@@ -90,7 +90,7 @@ export function VerifyPanel({ projectId, onVerified, onBack, onSkip }: VerifyPan
   const methods: MethodConfig[] = [
     { id: "meta_tag", label: t("metaTagMethod"), description: t("metaTagDesc"), icon: Code },
     { id: "html_file", label: t("htmlFileMethod"), description: t("htmlFileDesc"), icon: FileCode2 },
-    { id: "dns_text", label: t("dnsTxtMethod"), description: t("dnsTxtDesc"), icon: Globe },
+    { id: "dns_txt", label: t("dnsTxtMethod"), description: t("dnsTxtDesc"), icon: Globe },
   ];
 
   const handleVerify = () => {
@@ -167,7 +167,7 @@ export function VerifyPanel({ projectId, onVerified, onBack, onSkip }: VerifyPan
                 <p className="text-label-sm text-neutral-500">{t("htmlFileInstruction")}</p>
               </div>
             )}
-            {selectedMethod === "dns_text" && (
+            {selectedMethod === "dns_txt" && (
               <div className="flex flex-col gap-4">
                 <CopyField label={t("dnsTxtMethod")} value={tokenData.dns_txt} />
                 <p className="text-label-sm text-neutral-500">{t("dnsNote")}</p>

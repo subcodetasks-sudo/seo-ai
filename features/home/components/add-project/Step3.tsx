@@ -37,7 +37,7 @@ export default function Step3({
     control,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { isSubmitting },
   } = useForm<Step3FormData>({
     resolver: zodResolver(step3Schema),
     defaultValues: {
@@ -123,6 +123,12 @@ export default function Step3({
         </div>
 
         <div className="flex flex-col">
+          {isSectionsLoading ? (
+            <div className="flex items-center justify-center gap-2 px-4 py-10 text-label-md text-neutral-500">
+              <LoaderCircle className="size-5 animate-spin" />
+              <span>{t("loadingSections")}</span>
+            </div>
+          ) : (
           <Controller
             name="selectedSections"
             control={control}
@@ -173,6 +179,7 @@ export default function Step3({
               </>
             )}
           />
+          )}
         </div>
 
         <div className="flex items-center justify-between gap-4 border-t border-neutral-200 px-4 py-3">
@@ -232,19 +239,13 @@ export default function Step3({
         </div>
       </div>
 
-      {errors.selectedSections && (
-        <span className="w-full text-start text-label-sm text-error-300">
-          {errors.selectedSections.message}
-        </span>
-      )}
-
       <div className="flex w-full flex-col gap-3 sm:flex-row-reverse sm:justify-between">
         <Button
           type="submit"
           disabled={isSectionsLoading || isSubmitting}
           className="h-12 w-full sm:w-auto sm:px-8 rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px disabled:opacity-50"
         >
-          {(isSectionsLoading || isSubmitting) && <LoaderCircle className="size-4 animate-spin" />}
+          {isSubmitting && <LoaderCircle className="size-4 animate-spin" />}
           {t("scan")}
         </Button>
 

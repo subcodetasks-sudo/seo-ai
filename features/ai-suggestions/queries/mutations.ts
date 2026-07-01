@@ -11,6 +11,7 @@ import {
   rejectSuggestionBatch,
 } from "./api";
 import { aiSuggestionsKeys } from "./query-keys";
+import type { SuggestionPatchPayload, UnknownPatchPayload } from "../types";
 
 type SuggestionMutationVars = { projectId: string; suggestionId: string };
 type BatchMutationVars = { projectId: string; ids: string[] };
@@ -90,7 +91,7 @@ export function useIgnoreSuggestion() {
 }
 
 type EditSuggestionVars = SuggestionMutationVars & {
-  suggestedValue: Record<string, unknown>;
+  suggestedValue: SuggestionPatchPayload["suggested_value"] | UnknownPatchPayload["suggested_value"];
 };
 
 export function useEditSuggestion() {

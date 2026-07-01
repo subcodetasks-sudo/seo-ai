@@ -31,7 +31,7 @@ export function FaqEditForm({ suggestion, projectId, onClose }: FaqEditFormProps
     },
   });
   const { fields, append, remove } = useFieldArray({ control, name: "pairs" });
-  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, onClose);
+  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, suggestion.type, onClose);
 
   function onSubmit(values: FaqFormValues) {
     submit({

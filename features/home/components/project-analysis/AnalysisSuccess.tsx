@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 export type AnalysisSuccessProps = {
   url: string;
-  aiSuggestionsCount: number;
+  // aiSuggestionsCount: number;
   issuesCount: number;
   pagesCount: number;
   isMetricsLoading?: boolean;
@@ -63,7 +63,7 @@ function SuccessIcon() {
 
 export default function AnalysisSuccess({
   url,
-  aiSuggestionsCount,
+  // aiSuggestionsCount,
   issuesCount,
   pagesCount,
   isMetricsLoading,
@@ -95,13 +95,13 @@ export default function AnalysisSuccess({
       iconClassName: "text-secondary-400",
       isLoading: isMetricsLoading,
     },
-    {
-      icon: Sparkles,
-      value: countFormatter.format(aiSuggestionsCount),
-      label: t("metrics.aiSuggestions"),
-      iconClassName: "text-primary-500",
-      isLoading: isMetricsLoading,
-    },
+    // {
+    //   icon: Sparkles,
+    //   value: countFormatter.format(aiSuggestionsCount),
+    //   label: t("metrics.aiSuggestions"),
+    //   iconClassName: "text-primary-500",
+    //   isLoading: isMetricsLoading,
+    // },
   ];
 
   return (
@@ -124,7 +124,7 @@ export default function AnalysisSuccess({
         <Separator className="bg-neutral-100" />
 
         <CardContent className="w-full p-0">
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {metrics.map((metric) => (
               <MetricCard key={metric.label} {...metric} />
             ))}

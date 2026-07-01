@@ -38,7 +38,7 @@ export function InternalLinkEditForm({ suggestion, projectId, onClose }: Interna
     },
   });
   const { fields, append, remove } = useFieldArray({ control, name: "links" });
-  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, onClose);
+  const { submit, isPending } = useSubmitEdit(projectId, suggestion.id, suggestion.type, onClose);
 
   function onSubmit(values: LinkFormValues) {
     submit({ ...suggestion.rawSuggestedValue, links: values.links });

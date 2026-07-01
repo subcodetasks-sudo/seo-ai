@@ -260,8 +260,6 @@
       "detectedAt": "Detection Date",
       "action": "Action",
       "fixWithAi": "Fix with AI",
-      "fixing": "Fixing…",
-      "fixSuccess": "AI fix requested successfully",
       "noReferrer": "—",
       "copyUrl": "Copy full URL",
       "openUrl": "Open in new tab"
@@ -275,17 +273,30 @@
       "brokenUrl": "Broken URL",
       "status": "Status",
       "detectedAt": "Detected",
-      "daysAgo": "{count} days ago",
-      "unresolved": "Unresolved",
+      "statusValues": {
+        "new": "Unresolved",
+        "resolved": "Resolved",
+        "ignored": "Ignored"
+      },
+      "noReferrer": "—",
       "aiSuggestion": "AI Redirect Suggestion",
       "suggestedUrl": "Suggested Redirect URL",
       "reason": "Reason",
-      "reasonText": "The URL slug closely matches the active products list. The previous product name was changed during the 2024 catalog update.",
+      "suggestionStatus": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "noSuggestion": "No AI suggestion yet for this page.",
+      "generate": "Generate AI Suggestion",
+      "generating": "Generating…",
       "approve": "Approve",
       "enterManually": "Enter manually",
       "manualPlaceholder": "Enter redirect URL",
       "apply": "Apply",
-      "back": "Back"
+      "back": "Back",
+      "missingPage": "Missing project or page reference",
+      "loadError": "Failed to load broken page details"
     }
   },
   "aiSuggestions": {
@@ -380,6 +391,7 @@
       "edit": "Edit",
       "editTitle": "Edit Suggestion",
       "editPendingOnly": "Only suggestions still in 'pending' status can be edited.",
+      "actionPendingOnly": "Only suggestions still in 'pending' status can be reviewed.",
       "save": "Save",
       "saving": "Saving...",
       "cancel": "Cancel",
@@ -813,7 +825,8 @@
         "showingResults": "Showing {shown} of {total} results",
         "scan": "Scan",
         "cancel": "Cancel",
-        "sectionsRequired": "Please select at least one section"
+        "sectionsRequired": "Please select at least one section",
+        "loadingSections": "Loading sections..."
       }
     },
     "projectAnalysis": {

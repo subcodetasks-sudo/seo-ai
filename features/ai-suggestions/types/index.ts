@@ -111,6 +111,73 @@ export interface RedirectSuggestedValue {
   low_confidence: boolean;
 }
 
+// --- PATCH payload shapes per suggestion_type ---
+// Whitelists of writable keys only. AI metadata (confidence_score,
+// keywords_used, broken_slug, ...) lives in the read-side *SuggestedValue
+// types above and must never be echoed back on a PATCH.
+
+export interface MetaPatchValue {
+  meta_title: string;
+  meta_description: string;
+}
+
+export interface OgTitlePatchValue {
+  og_title: string;
+}
+
+export interface OgDescriptionPatchValue {
+  og_description: string;
+}
+
+export interface AltTextPatchValue {
+  alt_text: string;
+  image_url: string;
+}
+
+export interface FaqPatchValue {
+  pairs: FaqPair[];
+  pair_count: number;
+}
+
+export interface SchemaPatchValue {
+  schema: Record<string, unknown>;
+  page_type: string;
+  language_detected: string;
+  validation_warnings: string[];
+}
+
+export interface InternalLinkPatchValue {
+  links: InternalLink[];
+}
+
+export interface RedirectPatchValue {
+  diagnosis: {
+    break_type: string;
+    explanation: string;
+    suggestion: string;
+    confidence: number;
+  };
+  redirect: {
+    target_url: string;
+    confidence: number;
+    reason: string;
+    top_candidates: RedirectCandidate[];
+  };
+}
+
+export type SuggestionPatchPayload =
+  | { suggestion_type: "meta"; suggested_value: MetaPatchValue }
+  | { suggestion_type: "og_title"; suggested_value: OgTitlePatchValue }
+  | { suggestion_type: "og_description"; suggested_value: OgDescriptionPatchValue }
+  | { suggestion_type: "alt_text"; suggested_value: AltTextPatchValue }
+  | { suggestion_type: "faq"; suggested_value: FaqPatchValue }
+  | { suggestion_type: "schema"; suggested_value: SchemaPatchValue }
+  | { suggestion_type: "internal_link"; suggested_value: InternalLinkPatchValue }
+  | { suggestion_type: "redirect"; suggested_value: RedirectPatchValue };
+
+// Fallback for suggestion types outside the known union (forward-compat).
+export type UnknownPatchPayload = { suggestion_type: string; suggested_value: Record<string, unknown> };
+
 // --- API: raw suggestion ---
 
 export interface ApiSuggestion {

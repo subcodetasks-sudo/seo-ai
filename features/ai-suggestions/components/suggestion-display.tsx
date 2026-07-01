@@ -9,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { cn } from "@/lib/utils";
+import { cn, decodeUrlForDisplay } from "@/lib/utils";
 import type {
   AiSuggestionDetail,
   AltTextValue,
@@ -264,7 +264,7 @@ function InternalLinkDisplay({ suggestion }: { suggestion: AiSuggestionDetail })
               rel="noopener noreferrer"
               className="flex items-center gap-1 break-all text-label-xs text-primary-500 hover:underline"
             >
-              {link.target_url}
+              <bdi dir="ltr">{decodeUrlForDisplay(link.target_url)}</bdi>
               <ExternalLink className="size-3 shrink-0" aria-hidden="true" />
             </a>
             <p className="text-label-xs leading-relaxed text-neutral-500">{link.relevance_reason}</p>
@@ -289,7 +289,9 @@ function RedirectDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
       <TwoColumnLayout>
         <AiCard>
           <p className="break-all text-label-md leading-relaxed text-secondary-500">
-            {sv.redirect?.target_url}
+            {sv.redirect?.target_url && (
+              <bdi dir="ltr">{decodeUrlForDisplay(sv.redirect.target_url)}</bdi>
+            )}
           </p>
           {sv.redirect?.reason && (
             <div className="flex flex-col gap-1.5 rounded-lg border border-neutral-100 bg-neutral-50 p-3">
@@ -347,7 +349,7 @@ function RedirectDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
                     </span>
                     <div className="flex flex-col gap-0.5 text-start">
                       <span className="break-all text-label-sm font-medium text-secondary-500">
-                        {candidate.title || candidate.url}
+                        {candidate.title || <bdi dir="ltr">{decodeUrlForDisplay(candidate.url)}</bdi>}
                       </span>
                       <span className="text-label-xs text-neutral-400">
                         {Math.round(candidate.confidence * 100)}% {t("confidence")}
@@ -356,7 +358,9 @@ function RedirectDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
                   </div>
                 </AccordionTrigger>
                 <AccordionContent className="ps-9 pb-3">
-                  <p className="text-label-xs text-neutral-400 break-all mb-1">{candidate.url}</p>
+                  <p className="text-label-xs text-neutral-400 break-all mb-1">
+                    <bdi dir="ltr">{decodeUrlForDisplay(candidate.url)}</bdi>
+                  </p>
                   <p className="text-label-sm leading-relaxed text-neutral-500">{candidate.reason}</p>
                 </AccordionContent>
               </AccordionItem>

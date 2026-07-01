@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+import { cn, decodeUrlForDisplay } from "@/lib/utils";
 import type { ChangelogEntry, ChangelogStatus } from "../types";
 
 const statusStyles: Record<ChangelogStatus, string> = {
@@ -97,7 +97,9 @@ export function ChangelogTable({ items }: ChangelogTableProps) {
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-label-xs text-neutral-400">{t("table.url")}</span>
-              <span className="text-label-sm text-secondary-500 break-all">{entry.page_url}</span>
+              <span className="text-label-sm text-secondary-500 break-all">
+                <bdi dir="ltr">{decodeUrlForDisplay(entry.page_url)}</bdi>
+              </span>
             </div>
             <div className="flex flex-col gap-1">
               <span className="text-label-xs text-neutral-400">{t("table.field")}</span>
@@ -151,7 +153,7 @@ export function ChangelogTable({ items }: ChangelogTableProps) {
                   {formatDate(entry.applied_at)}
                 </TableCell>
                 <TableCell className="py-3 px-4 text-label-sm text-secondary-500 max-w-35 truncate">
-                  {entry.page_url}
+                  <bdi dir="ltr">{decodeUrlForDisplay(entry.page_url)}</bdi>
                 </TableCell>
                 <TableCell className="py-3 px-4 text-label-sm font-medium text-secondary-500 whitespace-nowrap">
                   {formatChangeType(entry.change_type)}

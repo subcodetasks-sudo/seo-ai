@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
+import { cn, decodeUrlForDisplay } from "@/lib/utils";
 import type { AiSuggestion, ImpactLevel } from "../types";
 
 type AiSuggestionsTableProps = {
@@ -61,8 +61,9 @@ export function AiSuggestionsTable({
     internal_link: t("types.internal_link"),
   };
 
-  const allSelected = items.length > 0 && selectedIds.size === items.length;
-  const someSelected = selectedIds.size > 0 && selectedIds.size < items.length;
+  const selectableCount = items.filter((item) => item.status === "pending").length;
+  const allSelected = selectableCount > 0 && selectedIds.size === selectableCount;
+  const someSelected = selectedIds.size > 0 && selectedIds.size < selectableCount;
 
   function ActionButtons({ item }: { item: AiSuggestion }) {
     const isPending = item.status === "pending";
@@ -124,10 +125,13 @@ export function AiSuggestionsTable({
               <Checkbox
                 checked={selectedIds.has(item.id)}
                 onCheckedChange={() => onToggleSelect(item.id)}
+                disabled={item.status !== "pending"}
                 className="mt-0.5 shrink-0"
               />
               <div className="flex min-w-0 flex-1 flex-col gap-3">
-                <span className="text-label-sm wrap-break-word text-neutral-600">{item.url}</span>
+                <span className="text-label-sm wrap-break-word text-neutral-600">
+                  <bdi dir="ltr">{decodeUrlForDisplay(item.url)}</bdi>
+                </span>
                 <div className="grid grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1">
                     <span className="text-label-xs text-neutral-400">{t("table.priority")}</span>
@@ -209,11 +213,12 @@ export function AiSuggestionsTable({
                     <Checkbox
                       checked={selectedIds.has(item.id)}
                       onCheckedChange={() => onToggleSelect(item.id)}
+                      disabled={item.status !== "pending"}
                     />
                   </div>
                 </TableCell>
                 <TableCell className="max-w-xs truncate py-3 px-4 text-start text-label-sm text-neutral-600">
-                  {item.url}
+                  <bdi dir="ltr">{decodeUrlForDisplay(item.url)}</bdi>
                 </TableCell>
                 <TableCell className="py-3 px-4 text-center">
                   <span

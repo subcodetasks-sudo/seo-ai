@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { env } from "@/config/env";
+import { getLanguageHeader } from "@/lib/server";
 
 type RouteContext = {
   params: Promise<{ project_id: string }>;
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest, context: RouteContext) {
   try {
     const response = await fetch(url, {
       method: "GET",
-      headers: { ...authHeaders },
+      headers: { ...authHeaders, ...(await getLanguageHeader()) },
     });
 
     if (!response.ok) {

@@ -1,5 +1,11 @@
 import { apiClient } from "@/lib/client";
-import type { ApiSuggestion, ApiSuggestionsResponse, BackendResponse } from "../types";
+import type {
+  ApiSuggestion,
+  ApiSuggestionsResponse,
+  BackendResponse,
+  SuggestionPatchPayload,
+  UnknownPatchPayload,
+} from "../types";
 
 type FetchSuggestionsParams = {
   projectId: string;
@@ -86,7 +92,7 @@ export async function ignoreSuggestion(projectId: string, suggestionId: string):
 export async function editSuggestion(
   projectId: string,
   suggestionId: string,
-  suggestedValue: Record<string, unknown>,
+  suggestedValue: SuggestionPatchPayload["suggested_value"] | UnknownPatchPayload["suggested_value"],
 ): Promise<ApiSuggestion> {
   const response = await apiClient<BackendResponse<ApiSuggestion>>(
     `projects/${projectId}/ai/suggestions/${suggestionId}`,
