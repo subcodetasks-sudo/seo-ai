@@ -102,7 +102,8 @@
         "passwordDigitRequired": "Password must contain at least one number",
         "passwordSymbolRequired": "Password must contain at least one symbol (e.g. @, #, $)"
       },
-      "loginFailed": "Login failed."
+      "loginFailed": "Login failed.",
+      "emailNotVerified": "Your email isn't verified yet. We've sent you a new code."
     },
     "register": {
       "title": "Create your account",
@@ -174,16 +175,22 @@
       "submit": "Send",
       "cancel": "Cancel"
     },
-    "forgetPasswordVerify": {
-      "metadata": {
-        "title": "Rank AI — Verify reset code",
-        "description": "Enter the verification code sent to your email to reset your password."
-      }
-    },
     "forgetPasswordResendOtp": {
       "metadata": {
         "title": "Rank AI — Resend reset code",
         "description": "Enter your email to receive a new password reset code."
+      }
+    },
+    "loginVerify": {
+      "metadata": {
+        "title": "Rank AI — Verify email",
+        "description": "Enter the verification code sent to your email to log in."
+      }
+    },
+    "loginResendOtp": {
+      "metadata": {
+        "title": "Rank AI — Resend code",
+        "description": "Enter your email to receive a new verification code."
       }
     },
     "resendOtp": {
@@ -206,16 +213,16 @@
       },
       "title": "Set new password",
       "subtitle": "Reset your password",
+      "codeSentTo": "Enter the code sent to {email}",
       "password": "Password",
       "passwordPlaceholder": "••••••••",
-      "confirmPassword": "Password",
-      "confirmPasswordPlaceholder": "••••••••",
       "submit": "Log in",
       "fieldValid": "Looks good",
+      "resendPrompt": "Didn't receive the code?",
+      "resendAction": "Resend code",
       "validation": {
-        "passwordMin": "Password must be at least 8 characters",
-        "confirmPasswordRequired": "Please confirm your password",
-        "passwordsMismatch": "Passwords do not match"
+        "otpRequired": "Please enter the verification code",
+        "passwordMin": "Password must be at least 8 characters"
       }
     },
     "resetPasswordSuccess": {
@@ -231,7 +238,8 @@
       "otpSent": "Verification code sent to your email",
       "forgetPasswordOtpSent": "Reset code sent to your email",
       "passwordReset": "Password reset successfully",
-      "welcomeBack": "Welcome back!"
+      "welcomeBack": "Welcome back!",
+      "emailVerified": "Email verified successfully. Please log in."
     }
   },
   "notFoundProblems": {
@@ -290,6 +298,11 @@
     "approve": "Approve",
     "approving": "Approving...",
     "reject": "Reject",
+    "rejecting": "Rejecting...",
+    "ignore": "Ignore",
+    "ignoring": "Ignoring...",
+    "approveAll": "Approve All",
+    "rejectAll": "Reject All",
     "review": "Review",
     "exportCsv": "Export CSV",
     "exporting": "Exporting...",
@@ -297,12 +310,25 @@
       "allTypes": "All Types",
       "allStatuses": "All Statuses"
     },
+    "confirm": {
+      "cancel": "Cancel",
+      "approveAllTitle": "Approve all suggestions?",
+      "approveAllDescription": "This approves every suggestion in this project, including ones not shown on the current page or filter.",
+      "approveAllAction": "Approve All",
+      "rejectAllTitle": "Reject all suggestions?",
+      "rejectAllDescription": "This rejects every suggestion in this project, including ones not shown on the current page or filter.",
+      "rejectAllAction": "Reject All",
+      "rejectSelectedTitle": "Reject selected suggestions?",
+      "rejectSelectedDescription": "This rejects {count} selected suggestion(s).",
+      "rejectSelectedAction": "Reject"
+    },
     "table": {
       "url": "URL",
       "type": "Type",
       "priority": "Priority",
       "impact": "Impact",
-      "action": "Actions"
+      "action": "Actions",
+      "moreActions": "More actions"
     },
     "priority": {
       "high": "High",
@@ -316,9 +342,12 @@
     },
     "status": {
       "pending": "Pending",
+      "queued": "Queued",
       "approved": "Approved",
       "rejected": "Rejected",
       "applied": "Applied",
+      "skipped": "Skipped",
+      "ignored": "Ignored",
       "failed": "Failed"
     },
     "types": {
@@ -350,6 +379,7 @@
       "chars": "{count} chars",
       "edit": "Edit",
       "editTitle": "Edit Suggestion",
+      "editPendingOnly": "Only suggestions still in 'pending' status can be edited.",
       "save": "Save",
       "saving": "Saving...",
       "cancel": "Cancel",
@@ -724,6 +754,7 @@
         "title": "Add your new website",
         "subtitle": "Enter the website URL and choose the type to start analyzing it",
         "urlLabel": "Website URL",
+        "sitemapLabel": "Sitemap URL (optional)",
         "typeLabel": "Website Type",
         "wordpressTitle": "WordPress",
         "wordpressDesc": "PHP integration working directly with the database",
@@ -731,7 +762,8 @@
         "customDesc": "External crawling for any HTML or Headless website",
         "continue": "Continue",
         "urlRequired": "Please enter the website URL",
-        "invalidUrl": "Please enter a valid website URL"
+        "invalidUrl": "Please enter a valid website URL",
+        "invalidSitemapUrl": "Please enter a valid sitemap URL"
       },
       "step2": {
         "title": "Verify site ownership",
@@ -1072,14 +1104,23 @@
       "connect": "Connect"
     },
     "billing": {
-      "paidPlan": "Paid plan",
+      "currentPlan": "Current plan",
       "active": "Active",
       "perMonth": "/ month",
-      "usedScanPages": "Used scan pages",
-      "quotaUsed": "{percent}% of the monthly quota has been used.",
-      "nextInvoice": "Next invoice: {date}",
+      "projectsUsed": "Projects used",
+      "nextInvoice": "Renews on {date}",
       "changePlan": "Change plan",
+      "manageBilling": "Manage billing",
+      "portalUnavailable": "Billing portal is unavailable right now. Please try again later.",
+      "choosePlan": "Choose a plan",
+      "cancel": "Cancel",
+      "processing": "Processing…",
+      "confirmChange": "Confirm",
+      "planChanged": "Your plan has been updated.",
       "invoiceHistory": "Invoice history",
+      "noInvoices": "No invoices yet.",
+      "previous": "Previous",
+      "next": "Next",
       "pdf": "PDF",
       "status": {
         "paid": "Paid",

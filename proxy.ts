@@ -56,6 +56,17 @@ export default function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  // next-intl's own cookie-based locale detection is tied to the same flag
+  // as accept-language detection (routing.localeDetection), and we only want
+  // the former. Guaranteeing a NEXT_LOCALE cookie is always present before
+  // next-intl resolves the locale makes its cookie check (which takes
+  // priority over accept-language) always win, so the browser's language
+  // never gets consulted while a real NEXT_LOCALE cookie still drives the
+  // `[locale]` route param (and therefore locale-tagged API requests).
+  if (!request.cookies.has("NEXT_LOCALE")) {
+    request.cookies.set("NEXT_LOCALE", routing.defaultLocale);
+  }
+
   return intlMiddleware(request);
 }
 

@@ -102,7 +102,8 @@
         "passwordDigitRequired": "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل",
         "passwordSymbolRequired": "يجب أن تحتوي كلمة المرور على رمز واحد على الأقل (مثل @ أو # أو $)"
       },
-      "loginFailed": "فشل تسجيل الدخول."
+      "loginFailed": "فشل تسجيل الدخول.",
+      "emailNotVerified": "لم يتم تأكيد بريدك الإلكتروني بعد. لقد أرسلنا لك رمزاً جديداً."
     },
     "register": {
       "title": "إنشاء حسابك",
@@ -174,16 +175,22 @@
       "submit": "ارسال",
       "cancel": "الغاء"
     },
-    "forgetPasswordVerify": {
-      "metadata": {
-        "title": "Rank AI — تأكيد رمز إعادة التعيين",
-        "description": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني لإعادة تعيين كلمة المرور."
-      }
-    },
     "forgetPasswordResendOtp": {
       "metadata": {
         "title": "Rank AI — إعادة إرسال رمز التعيين",
         "description": "أدخل بريدك الإلكتروني لإعادة إرسال رمز إعادة تعيين كلمة المرور."
+      }
+    },
+    "loginVerify": {
+      "metadata": {
+        "title": "Rank AI — تأكيد البريد الإلكتروني",
+        "description": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني لتسجيل الدخول."
+      }
+    },
+    "loginResendOtp": {
+      "metadata": {
+        "title": "Rank AI — إعادة إرسال الرمز",
+        "description": "أدخل بريدك الإلكتروني لإعادة إرسال رمز التحقق."
       }
     },
     "resendOtp": {
@@ -206,16 +213,16 @@
       },
       "title": "تعيين كلمة مرور جديدة",
       "subtitle": "اعادة تعيين لكلمة المرور",
+      "codeSentTo": "ادخل الكود الذي تم ارساله الى {email}",
       "password": "كلمة المرور",
       "passwordPlaceholder": "****************",
-      "confirmPassword": "كلمة المرور",
-      "confirmPasswordPlaceholder": "****************",
       "submit": "تسجيل دخول",
       "fieldValid": "يبدو رائعاً",
+      "resendPrompt": "لم تستلم الرمز؟",
+      "resendAction": "أعد إرسال الرمز",
       "validation": {
-        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
-        "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
-        "passwordsMismatch": "كلمات المرور غير متطابقة"
+        "otpRequired": "يرجى إدخال رمز التحقق",
+        "passwordMin": "يجب أن تكون كلمة المرور 8 أحرف على الأقل"
       }
     },
     "resetPasswordSuccess": {
@@ -231,7 +238,8 @@
       "otpSent": "تم إرسال رمز التحقق إلى بريدك الإلكتروني",
       "forgetPasswordOtpSent": "تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني",
       "passwordReset": "تم إعادة تعيين كلمة المرور بنجاح",
-      "welcomeBack": "مرحباً بعودتك!"
+      "welcomeBack": "مرحباً بعودتك!",
+      "emailVerified": "تم تأكيد بريدك الإلكتروني بنجاح. يرجى تسجيل الدخول."
     }
   },
   "notFoundProblems": {
@@ -290,6 +298,11 @@
     "approve": "موافقة",
     "approving": "جاري الموافقة...",
     "reject": "رفض",
+    "rejecting": "جاري الرفض...",
+    "ignore": "تجاهل",
+    "ignoring": "جاري التجاهل...",
+    "approveAll": "الموافقة على الكل",
+    "rejectAll": "رفض الكل",
     "review": "مراجعة",
     "exportCsv": "تصدير CSV",
     "exporting": "جاري التصدير...",
@@ -297,12 +310,25 @@
       "allTypes": "كل الأنواع",
       "allStatuses": "كل الحالات"
     },
+    "confirm": {
+      "cancel": "إلغاء",
+      "approveAllTitle": "الموافقة على جميع الاقتراحات؟",
+      "approveAllDescription": "سيتم قبول جميع الاقتراحات في هذا المشروع، بما في ذلك ما لا يظهر في الصفحة أو الفلتر الحالي.",
+      "approveAllAction": "الموافقة على الكل",
+      "rejectAllTitle": "رفض جميع الاقتراحات؟",
+      "rejectAllDescription": "سيتم رفض جميع الاقتراحات في هذا المشروع، بما في ذلك ما لا يظهر في الصفحة أو الفلتر الحالي.",
+      "rejectAllAction": "رفض الكل",
+      "rejectSelectedTitle": "رفض الاقتراحات المحددة؟",
+      "rejectSelectedDescription": "سيتم رفض {count} اقتراح محدد.",
+      "rejectSelectedAction": "رفض"
+    },
     "table": {
       "url": "URL",
       "type": "الحالة",
       "priority": "نوع التأثير",
       "impact": "التأثير",
-      "action": "الإجراءات"
+      "action": "الإجراءات",
+      "moreActions": "المزيد من الإجراءات"
     },
     "priority": {
       "high": "عال",
@@ -316,9 +342,12 @@
     },
     "status": {
       "pending": "قيد الانتظار",
+      "queued": "في قائمة الانتظار",
       "approved": "موافق عليه",
       "rejected": "مرفوض",
       "applied": "مُطبَّق",
+      "skipped": "تم تجاهله",
+      "ignored": "مُتجاهَل",
       "failed": "فشل"
     },
     "types": {
@@ -350,6 +379,7 @@
       "chars": "{count} حرف",
       "edit": "تعديل",
       "editTitle": "تعديل الاقتراح",
+      "editPendingOnly": "لا يمكن تعديل الاقتراح إلا إذا كانت حالته 'قيد الانتظار'.",
       "save": "حفظ",
       "saving": "جاري الحفظ...",
       "cancel": "إلغاء",
@@ -724,6 +754,7 @@
         "title": "أضف موقعك الجديد",
         "subtitle": "أدخل رابط الموقع واختر النوع لنبدأ في تحليله",
         "urlLabel": "رابط الموقع",
+        "sitemapLabel": "رابط خريطة الموقع (اختياري)",
         "typeLabel": "نوع الموقع",
         "wordpressTitle": "WordPress",
         "wordpressDesc": "إضافة PHP تعمل مباشرة مع قاعدة البيانات",
@@ -731,7 +762,8 @@
         "customDesc": "زحف خارجي لأي موقع HTML أو Headless",
         "continue": "استمرار",
         "urlRequired": "يرجى إدخال رابط الموقع",
-        "invalidUrl": "يرجى إدخال رابط موقع صالح"
+        "invalidUrl": "يرجى إدخال رابط موقع صالح",
+        "invalidSitemapUrl": "يرجى إدخال رابط خريطة موقع صالح"
       },
       "step2": {
         "title": "التحقق من ملكية الموقع",
@@ -1072,14 +1104,23 @@
       "connect": "ربط"
     },
     "billing": {
-      "paidPlan": "الخطة المدفوعة",
+      "currentPlan": "الخطة الحالية",
       "active": "نشط",
       "perMonth": "/ شهر",
-      "usedScanPages": "صفحات الفحص المستخدمة",
-      "quotaUsed": "تم استخدام {percent}% من الحصة الشهرية.",
-      "nextInvoice": "الفاتورة القادمة: {date}",
+      "projectsUsed": "المشاريع المستخدمة",
+      "nextInvoice": "يتجدد في {date}",
       "changePlan": "تغيير الخطة",
+      "manageBilling": "إدارة الفوترة",
+      "portalUnavailable": "بوابة الفوترة غير متاحة حاليًا. يرجى المحاولة لاحقًا.",
+      "choosePlan": "اختر خطة",
+      "cancel": "إلغاء",
+      "processing": "جارٍ المعالجة…",
+      "confirmChange": "تأكيد",
+      "planChanged": "تم تحديث خطتك.",
       "invoiceHistory": "سجل الفواتير",
+      "noInvoices": "لا توجد فواتير بعد.",
+      "previous": "السابق",
+      "next": "التالي",
       "pdf": "PDF",
       "status": {
         "paid": "مدفوع",
