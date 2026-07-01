@@ -1,10 +1,16 @@
 "use client";
 
-import { SquarePen } from "lucide-react";
+import { MoreVertical, SquarePen } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Link } from "@/i18n/navigation";
 import {
   Table,
@@ -23,6 +29,8 @@ type AiSuggestionsTableProps = {
   onToggleSelect: (id: string) => void;
   onToggleSelectAll: () => void;
   onApprove: (id: string) => void;
+  onReject: (id: string) => void;
+  onIgnore: (id: string) => void;
 };
 
 const levelStyles: Record<ImpactLevel, string> = {
@@ -37,6 +45,8 @@ export function AiSuggestionsTable({
   onToggleSelect,
   onToggleSelectAll,
   onApprove,
+  onReject,
+  onIgnore,
 }: AiSuggestionsTableProps) {
   const t = useTranslations("aiSuggestions");
 
@@ -55,16 +65,19 @@ export function AiSuggestionsTable({
   const someSelected = selectedIds.size > 0 && selectedIds.size < items.length;
 
   function ActionButtons({ item }: { item: AiSuggestion }) {
+    const isPending = item.status === "pending";
     return (
       <div className="flex items-center justify-end gap-2">
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => onApprove(item.id)}
-          className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm font-medium"
-        >
-          {t("approve")}
-        </Button>
+        {isPending && (
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => onApprove(item.id)}
+            className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm font-medium"
+          >
+            {t("approve")}
+          </Button>
+        )}
         <Button
           size="sm"
           variant="outline"
@@ -76,6 +89,27 @@ export function AiSuggestionsTable({
             {t("review")}
           </Link>
         </Button>
+        {isPending && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                type="button"
+                size="icon-sm"
+                variant="outline"
+                aria-label={t("table.moreActions")}
+                className="border-neutral-200 text-neutral-500 hover:bg-neutral-50"
+              >
+                <MoreVertical className="size-3.5" aria-hidden="true" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onReject(item.id)} variant="destructive">
+                {t("reject")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onIgnore(item.id)}>{t("ignore")}</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     );
   }

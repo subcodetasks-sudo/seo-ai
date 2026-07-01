@@ -1,22 +1,60 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { approveSuggestion, approveSuggestionBatch, editSuggestion, rejectSuggestion } from "./api";
+import {
+  approveAllSuggestions,
+  approveSuggestion,
+  approveSuggestionBatch,
+  editSuggestion,
+  ignoreSuggestion,
+  rejectAllSuggestions,
+  rejectSuggestion,
+  rejectSuggestionBatch,
+} from "./api";
 import { aiSuggestionsKeys } from "./query-keys";
 
 type SuggestionMutationVars = { projectId: string; suggestionId: string };
-type BatchApproveMutationVars = { projectId: string; ids: string[] };
+type BatchMutationVars = { projectId: string; ids: string[] };
+type ProjectMutationVars = { projectId: string };
 
 export function useApproveSuggestionBatch() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ projectId, ids }: BatchApproveMutationVars) =>
-      approveSuggestionBatch(projectId, ids),
+    mutationFn: ({ projectId, ids }: BatchMutationVars) => approveSuggestionBatch(projectId, ids),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
     },
   });
 }
 
+export function useRejectSuggestionBatch() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ projectId, ids }: BatchMutationVars) => rejectSuggestionBatch(projectId, ids),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
+    },
+  });
+}
+
+export function useApproveAllSuggestions() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ projectId }: ProjectMutationVars) => approveAllSuggestions(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
+    },
+  });
+}
+
+export function useRejectAllSuggestions() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ projectId }: ProjectMutationVars) => rejectAllSuggestions(projectId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
+    },
+  });
+}
 
 export function useApproveSuggestion() {
   const queryClient = useQueryClient();
@@ -34,6 +72,17 @@ export function useRejectSuggestion() {
   return useMutation({
     mutationFn: ({ projectId, suggestionId }: SuggestionMutationVars) =>
       rejectSuggestion(projectId, suggestionId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
+    },
+  });
+}
+
+export function useIgnoreSuggestion() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ projectId, suggestionId }: SuggestionMutationVars) =>
+      ignoreSuggestion(projectId, suggestionId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
     },

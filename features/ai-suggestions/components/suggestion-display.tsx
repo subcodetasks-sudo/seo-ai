@@ -21,6 +21,16 @@ import type {
   SchemaSuggestedValue,
 } from "../types";
 
+// ---- Value accessors ----
+
+function getSuggestedValue<T>(suggestion: AiSuggestionDetail): T {
+  return suggestion.rawSuggestedValue as unknown as T;
+}
+
+function getCurrentValue<T>(suggestion: AiSuggestionDetail): T {
+  return suggestion.rawCurrentValue as unknown as T;
+}
+
 // ---- Shared card primitives ----
 
 function AiCard({ children }: { children: React.ReactNode }) {
@@ -78,8 +88,8 @@ function TwoColumnLayout({ children }: { children: React.ReactNode }) {
 
 function MetaDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   const t = useTranslations("aiSuggestions.reviewPage");
-  const sv = suggestion.rawSuggestedValue as unknown as MetaSuggestedValue;
-  const cv = suggestion.rawCurrentValue as unknown as Partial<MetaCurrentValue>;
+  const sv = getSuggestedValue<MetaSuggestedValue>(suggestion);
+  const cv = getCurrentValue<Partial<MetaCurrentValue>>(suggestion);
   return (
     <TwoColumnLayout>
       <AiCard>
@@ -123,10 +133,24 @@ function SingleTextDisplay({
   );
 }
 
+function OgFieldDisplay({
+  suggestion,
+  field,
+  hint,
+}: {
+  suggestion: AiSuggestionDetail;
+  field: "og_title" | "og_description";
+  hint: { min: number; max: number };
+}) {
+  const sv = getSuggestedValue<Record<string, string>>(suggestion);
+  const cv = getCurrentValue<Record<string, string>>(suggestion);
+  return <SingleTextDisplay aiValue={sv[field] ?? ""} currentValue={cv[field] || undefined} hint={hint} />;
+}
+
 function AltTextDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   const t = useTranslations("aiSuggestions.reviewPage");
-  const sv = suggestion.rawSuggestedValue as unknown as AltTextValue;
-  const cv = suggestion.rawCurrentValue as unknown as Partial<AltTextValue>;
+  const sv = getSuggestedValue<AltTextValue>(suggestion);
+  const cv = getCurrentValue<Partial<AltTextValue>>(suggestion);
   return (
     <TwoColumnLayout>
       <AiCard>
@@ -156,7 +180,7 @@ function AltTextDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
 
 function FaqDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   const t = useTranslations("aiSuggestions.reviewPage");
-  const sv = suggestion.rawSuggestedValue as unknown as FaqSuggestedValue;
+  const sv = getSuggestedValue<FaqSuggestedValue>(suggestion);
   return (
     <AiCard>
       <div className="flex flex-col gap-3">
@@ -181,7 +205,7 @@ function FaqDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
 
 function SchemaDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   const t = useTranslations("aiSuggestions.reviewPage");
-  const sv = suggestion.rawSuggestedValue as unknown as SchemaSuggestedValue;
+  const sv = getSuggestedValue<SchemaSuggestedValue>(suggestion);
   const schemaJson = sv.schema ? JSON.stringify(sv.schema, null, 2) : "";
   return (
     <AiCard>
@@ -213,7 +237,7 @@ function SchemaDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
 
 function InternalLinkDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   const t = useTranslations("aiSuggestions.reviewPage");
-  const sv = suggestion.rawSuggestedValue as unknown as InternalLinkSuggestedValue;
+  const sv = getSuggestedValue<InternalLinkSuggestedValue>(suggestion);
   return (
     <AiCard>
       <div className="flex flex-col divide-y divide-neutral-100">
@@ -258,7 +282,7 @@ function InternalLinkDisplay({ suggestion }: { suggestion: AiSuggestionDetail })
 
 function RedirectDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   const t = useTranslations("aiSuggestions.reviewPage");
-  const sv = suggestion.rawSuggestedValue as unknown as RedirectSuggestedValue;
+  const sv = getSuggestedValue<RedirectSuggestedValue>(suggestion);
   const candidates = sv.redirect?.top_candidates ?? [];
   return (
     <div className="flex flex-col gap-4">
@@ -347,27 +371,14 @@ function RedirectDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
 // ---- Main export ----
 
 export function SuggestionDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
-  const sv = suggestion.rawSuggestedValue;
-  const cv = suggestion.rawCurrentValue;
-
   switch (suggestion.type) {
     case "meta":
       return <MetaDisplay suggestion={suggestion} />;
     case "og_title":
-      return (
-        <SingleTextDisplay
-          aiValue={String(sv.og_title ?? "")}
-          currentValue={String(cv.og_title ?? "") || undefined}
-          hint={{ min: 60, max: 70 }}
-        />
-      );
+      return <OgFieldDisplay suggestion={suggestion} field="og_title" hint={{ min: 60, max: 70 }} />;
     case "og_description":
       return (
-        <SingleTextDisplay
-          aiValue={String(sv.og_description ?? "")}
-          currentValue={String(cv.og_description ?? "") || undefined}
-          hint={{ min: 150, max: 160 }}
-        />
+        <OgFieldDisplay suggestion={suggestion} field="og_description" hint={{ min: 150, max: 160 }} />
       );
     case "alt_text":
       return <AltTextDisplay suggestion={suggestion} />;

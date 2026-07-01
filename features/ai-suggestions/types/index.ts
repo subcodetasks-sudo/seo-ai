@@ -10,7 +10,15 @@ export type SuggestionType =
   | "alt_text"
   | "internal_link";
 
-export type SuggestionStatus = "pending" | "approved" | "rejected" | "applied" | "failed";
+export type SuggestionStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "applied"
+  | "failed"
+  | "queued"
+  | "skipped"
+  | "ignored";
 
 // --- Value shapes per suggestion_type ---
 

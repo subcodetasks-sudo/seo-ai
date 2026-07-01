@@ -42,7 +42,26 @@ export async function fetchSuggestionDetail(
 export async function approveSuggestionBatch(projectId: string, ids: string[]): Promise<void> {
   return apiClient(`projects/${projectId}/ai/suggestions/approve-batch`, {
     method: "POST",
-    body: JSON.stringify({ ids }),
+    body: JSON.stringify({ ids: ids }),
+  });
+}
+
+export async function rejectSuggestionBatch(projectId: string, ids: string[]): Promise<void> {
+  return apiClient(`projects/${projectId}/ai/suggestions/reject-batch`, {
+    method: "POST",
+    body: JSON.stringify({ ids: ids }),
+  });
+}
+
+export async function approveAllSuggestions(projectId: string): Promise<void> {
+  return apiClient(`projects/${projectId}/ai/suggestions/approve-all`, {
+    method: "POST",
+  });
+}
+
+export async function rejectAllSuggestions(projectId: string): Promise<void> {
+  return apiClient(`projects/${projectId}/ai/suggestions/reject-all`, {
+    method: "POST",
   });
 }
 
@@ -54,6 +73,12 @@ export async function approveSuggestion(projectId: string, suggestionId: string)
 
 export async function rejectSuggestion(projectId: string, suggestionId: string): Promise<void> {
   return apiClient(`projects/${projectId}/ai/suggestions/${suggestionId}/reject`, {
+    method: "POST",
+  });
+}
+
+export async function ignoreSuggestion(projectId: string, suggestionId: string): Promise<void> {
+  return apiClient(`projects/${projectId}/ai/suggestions/${suggestionId}/ignore`, {
     method: "POST",
   });
 }

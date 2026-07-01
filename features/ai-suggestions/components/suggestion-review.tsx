@@ -6,21 +6,30 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useDirection } from "@/components/ui/direction";
 import { useRouter } from "@/i18n/navigation";
 import { useSelectedProject } from "@/features/home";
 import { cn } from "@/lib/utils";
 import { aiSuggestionDetailQueryOptions } from "../queries/queries";
-import { useApproveSuggestion, useRejectSuggestion } from "../queries/mutations";
+import { useApproveSuggestion, useIgnoreSuggestion, useRejectSuggestion } from "../queries/mutations";
 import { EditSuggestionModal } from "./edit-suggestion-modal";
 import { SuggestionDisplay } from "./suggestion-display";
 import type { ImpactLevel, SuggestionStatus } from "../types";
 
 const STATUS_STYLES: Record<SuggestionStatus, string> = {
   pending: "bg-warning-50 text-warning-700 border border-warning-200",
+  queued: "bg-indigo-50 text-indigo-700 border border-indigo-200",
   approved: "bg-success-50 text-success-700 border border-success-200",
   rejected: "bg-error-50 text-error-700 border border-error-200",
   applied: "bg-blue-50 text-blue-700 border border-blue-200",
+  skipped: "bg-neutral-50 text-neutral-400 border border-neutral-200",
+  ignored: "bg-neutral-50 text-neutral-400 border border-neutral-200",
   failed: "bg-neutral-100 text-neutral-600 border border-neutral-200",
 };
 
@@ -47,6 +56,7 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
 
   const approveMutation = useApproveSuggestion();
   const rejectMutation = useRejectSuggestion();
+  const ignoreMutation = useIgnoreSuggestion();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -85,6 +95,8 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
     );
   }
 
+  const canEdit = suggestion.status === "pending";
+
   function handleApprove() {
     if (!selectedProjectId) return;
     approveMutation.mutate(
@@ -100,6 +112,16 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
       { onSuccess: () => router.back() },
     );
   }
+
+  function handleIgnore() {
+    if (!selectedProjectId) return;
+    ignoreMutation.mutate(
+      { projectId: selectedProjectId, suggestionId },
+      { onSuccess: () => router.back() },
+    );
+  }
+
+  const isMutating = approveMutation.isPending || rejectMutation.isPending || ignoreMutation.isPending;
 
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
@@ -199,28 +221,58 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
             <Button
               type="button"
               onClick={handleApprove}
-              disabled={approveMutation.isPending || rejectMutation.isPending}
+              disabled={isMutating}
               className="bg-primary-300 font-medium text-secondary-500 hover:bg-primary-400 disabled:opacity-50"
             >
               {t("approve")}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setEditModalOpen(true)}
-              className="gap-2 border-neutral-200 text-neutral-500 hover:bg-neutral-50"
-            >
-              <SquarePen className="size-4" aria-hidden="true" />
-              {t("reviewPage.edit")}
-            </Button>
+            {canEdit ? (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setEditModalOpen(true)}
+                className="gap-2 border-neutral-200 text-neutral-500 hover:bg-neutral-50"
+              >
+                <SquarePen className="size-4" aria-hidden="true" />
+                {t("reviewPage.edit")}
+              </Button>
+            ) : (
+              <TooltipProvider>
+                <Tooltip delayDuration={200}>
+                  <TooltipTrigger asChild>
+                    <span className="inline-flex">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        disabled
+                        className="gap-2 border-neutral-200 text-neutral-400"
+                      >
+                        <SquarePen className="size-4" aria-hidden="true" />
+                        {t("reviewPage.edit")}
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">{t("reviewPage.editPendingOnly")}</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
             <Button
               type="button"
               variant="outline"
               onClick={handleReject}
-              disabled={rejectMutation.isPending || approveMutation.isPending}
+              disabled={isMutating}
               className="border-error-200 bg-error-50 text-error-700 hover:bg-error-100 disabled:opacity-50"
             >
               {t("reject")}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleIgnore}
+              disabled={isMutating}
+              className="border-neutral-200 text-neutral-500 hover:bg-neutral-50 disabled:opacity-50"
+            >
+              {t("ignore")}
             </Button>
           </div>
         </div>
