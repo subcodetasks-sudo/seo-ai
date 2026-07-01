@@ -27,13 +27,11 @@ export default function ProjectAnalysis({
     });
 
   if (isDone) {
-    // AI suggestions endpoint isn't wired yet, so that metric stays at 0.
     return (
       <AnalysisSuccess
         url={url}
         pagesCount={totalPages}
         issuesCount={totalIssues}
-        aiSuggestionsCount={0}
         isMetricsLoading={isMetricsLoading}
         onViewIssues={onViewIssues}
         onViewProject={onViewProject}
