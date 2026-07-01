@@ -1,19 +1,19 @@
 "use client";
 
-import { useContext, useState, useMemo } from "react";
-import { OTPInputContext } from "input-otp";
+import { useState, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { InputOTP, InputOTPGroup } from "@/components/ui/input-otp";
+import { CircularOtpSlot } from "@/features/auth/components/CircularOtpSlot";
 import { createVerifyEmailSchema } from "@/features/auth/schemas/verify-email-schema";
 import { useVerifyEmail } from "@/features/auth/queries/mutations";
 import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { LoaderCircle } from "lucide-react";
 
-const OTP_LENGTH = 5;
+const OTP_LENGTH = 6;
 
 function maskEmail(email: string): string {
   const [localPart, domain] = email.split("@");
@@ -31,42 +31,8 @@ type OtpCodeProps = {
   className?: string;
   resendHref?: string;
   successHref?: string;
-  successToastKey?: "accountCreated";
+  successToastKey?: "accountCreated" | "emailVerified";
 };
-
-function CircularOtpSlot({
-  index,
-  className,
-}: {
-  index: number;
-  className?: string;
-}) {
-  const inputOTPContext = useContext(OTPInputContext);
-  const { char, hasFakeCaret, isActive } = inputOTPContext?.slots[index] ?? {};
-  const filled = Boolean(char);
-
-  return (
-    <div
-      data-slot="input-otp-slot"
-      data-active={isActive}
-      className={cn(
-        "relative flex size-12 items-center justify-center rounded-full border-2 bg-white text-lg font-medium transition-all outline-none sm:size-14 sm:text-xl",
-        filled || isActive
-          ? "border-primary-300 text-secondary-500"
-          : "border-neutral-200 text-neutral-400",
-        isActive && "ring-2 ring-primary-75",
-        className
-      )}
-    >
-      {char ?? "–"}
-      {hasFakeCaret ? (
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-4 w-px animate-caret-blink bg-foreground duration-1000" />
-        </div>
-      ) : null}
-    </div>
-  );
-}
 
 export function OtpCode({
   email,
@@ -96,7 +62,7 @@ export function OtpCode({
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = schema.safeParse({ token: code });
+    const result = schema.safeParse({ email, otp: code });
 
     if (!result.success) {
       const message = result.error.issues[0]?.message;

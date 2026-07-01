@@ -32,9 +32,10 @@ import { useAuth } from "@/features/auth/context/auth-context";
 import { createLoginSchema } from "@/features/auth/schemas/login-schema";
 import type { ApiResponse, LoginFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
+import { ApiError } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
-import { useLogin } from "../../queries/mutations";
+import { useLogin, useResendVerification } from "../../queries/mutations";
 
 function GoogleIcon() {
   return (
@@ -169,6 +170,7 @@ export function LoginForm() {
 
 
   const { mutate: login, isPending } = useLogin();
+  const { mutate: resendVerification } = useResendVerification();
 
   const values = (useWatch({ control }) ?? {
     email: "",
@@ -206,7 +208,17 @@ export function LoginForm() {
         router.push(`/dashboard`);
       },
       onError: (error) => {
-        toast.error(error.message || tToast("loginFailed"));
+        if (error instanceof ApiError && error.status === 403) {
+          const email = _data.email;
+          resendVerification(
+            { email },
+            {
+              onSettled: () => {
+                router.push(`/login/verify-email?email=${encodeURIComponent(email)}`);
+              },
+            }
+          );
+        }
       }
     });
 

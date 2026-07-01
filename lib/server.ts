@@ -52,7 +52,7 @@ export async function serverClient<T>(
   // Backend business errors carry a safe, user-facing message.
   // Check both HTTP status and the body's status field — backends vary in which they set.
   if (!res.ok || data.status === false) {
-    throw new ApiError(data?.message || alternativeErrorMessage, data?.errors);
+    throw new ApiError(data?.message || alternativeErrorMessage, data?.errors, res.status);
   }
 
   return data as T;

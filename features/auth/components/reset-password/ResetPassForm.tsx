@@ -21,11 +21,19 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { InputOTP, InputOTPGroup } from "@/components/ui/input-otp";
+import { CircularOtpSlot } from "@/features/auth/components/CircularOtpSlot";
 import { createResetPasswordSchema } from "@/features/auth/schemas/reset-password-schema";
 import { useResetPassword } from "@/features/auth/queries/mutations";
-import type { ResetPasswordFormValues } from "@/features/auth/types";
-import { useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+
+const OTP_LENGTH = 6;
+
+type ResetPassFormValues = {
+  otp: string;
+  new_password: string;
+};
 
 type AuthFormFieldProps = {
   label: string;
@@ -63,24 +71,24 @@ function AuthFormField({
 }
 
 type ResetPassFormProps = {
+  email: string;
+  resendHref?: string;
   className?: string;
 };
 
-export function ResetPassForm({ className }: ResetPassFormProps) {
+export function ResetPassForm({ email, resendHref, className }: ResetPassFormProps) {
   const router = useRouter();
   const t = useTranslations("auth.resetPassword");
   const tToast = useTranslations("auth.toast");
   const tValidation = useTranslations("auth.resetPassword.validation");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { mutate: resetPassword, isPending } = useResetPassword();
 
   const schema = useMemo(
     () =>
       createResetPasswordSchema({
+        otpRequired: tValidation("otpRequired"),
         passwordMin: tValidation("passwordMin"),
-        confirmPasswordRequired: tValidation("confirmPasswordRequired"),
-        passwordsMismatch: tValidation("passwordsMismatch"),
       }),
     [tValidation]
   );
@@ -88,24 +96,34 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, touchedFields, dirtyFields },
     control,
-  } = useForm<ResetPasswordFormValues>({
+  } = useForm<ResetPassFormValues>({
     resolver: zodResolver(schema),
     mode: "onTouched",
     defaultValues: {
-      password: "",
-      confirmPassword: "",
+      otp: "",
+      new_password: "",
     },
   });
 
   const values = useWatch({ control });
 
-  function onSubmit(data: ResetPasswordFormValues) {
+  function handleOtpChange(value: string) {
+    setValue("otp", value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+  }
+
+  function onSubmit(data: ResetPassFormValues) {
     resetPassword(
       {
-        password: data.password,
-        confirmPassword: data.confirmPassword,
+        email,
+        otp: data.otp,
+        new_password: data.new_password,
       },
       {
         onSuccess: () => {
@@ -121,7 +139,7 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
     );
   }
 
-  function fieldSuccess(field: keyof ResetPasswordFormValues) {
+  function fieldSuccess(field: "new_password") {
     return (
       touchedFields[field] &&
       dirtyFields[field] &&
@@ -135,28 +153,54 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
         <div className="space-y-2 text-center">
           <h1 className="text-h2 font-medium text-secondary-500">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+          <p className="text-sm text-muted-foreground">
+            {t("codeSentTo", { email })}
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center gap-2">
+          <div dir="ltr" className="flex justify-center">
+            <InputOTP
+              maxLength={OTP_LENGTH}
+              value={values.otp ?? ""}
+              onChange={handleOtpChange}
+              dir="ltr"
+              containerClassName="gap-3 sm:gap-4"
+            >
+              <InputOTPGroup className="gap-3 border-0 shadow-none sm:gap-4">
+                {Array.from({ length: OTP_LENGTH }, (_, index) => (
+                  <CircularOtpSlot key={index} index={index} />
+                ))}
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+          {errors.otp ? (
+            <div className="flex items-center gap-1.5 text-destructive">
+              <AlertTriangle className="size-4 shrink-0" aria-hidden />
+              <FieldError errors={[errors.otp]} />
+            </div>
+          ) : null}
         </div>
 
         <FieldGroup>
           <AuthFormField
             label={t("password")}
-            error={errors.password}
+            error={errors.new_password}
             successMessage={t("fieldValid")}
-            showSuccess={fieldSuccess("password")}
+            showSuccess={fieldSuccess("new_password")}
           >
             <InputGroup
               className={cn(
                 "h-11 bg-white",
-                fieldSuccess("password") && "border-success-300"
+                fieldSuccess("new_password") && "border-success-300"
               )}
             >
               <InputGroupInput
-                {...register("password")}
+                {...register("new_password")}
                 type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 placeholder={t("passwordPlaceholder")}
-                aria-invalid={!!errors.password}
+                aria-invalid={!!errors.new_password}
               />
               <InputGroupAddon align="inline-end" className="m-1">
                 <InputGroupButton
@@ -175,60 +219,34 @@ export function ResetPassForm({ className }: ResetPassFormProps) {
               </InputGroupAddon>
             </InputGroup>
           </AuthFormField>
-
-          <AuthFormField
-            label={t("confirmPassword")}
-            error={errors.confirmPassword}
-            successMessage={t("fieldValid")}
-            showSuccess={fieldSuccess("confirmPassword")}
-          >
-            <InputGroup
-              className={cn(
-                "h-11 bg-white",
-                fieldSuccess("confirmPassword") && "border-success-300"
-              )}
-            >
-              <InputGroupInput
-                {...register("confirmPassword")}
-                type={showConfirmPassword ? "text" : "password"}
-                autoComplete="new-password"
-                placeholder={t("confirmPasswordPlaceholder")}
-                aria-invalid={!!errors.confirmPassword}
-              />
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={() => setShowConfirmPassword((current) => !current)}
-                  aria-label={
-                    showConfirmPassword ? "Hide password" : "Show password"
-                  }
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="size-4 text-muted-foreground" />
-                  ) : (
-                    <Eye className="size-4 text-muted-foreground" />
-                  )}
-                </InputGroupButton>
-              </InputGroupAddon>
-            </InputGroup>
-          </AuthFormField>
         </FieldGroup>
 
-        <Button
-          type="submit"
-          disabled={isPending}
-          // className="h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200 disabled:opacity-50"
-          className={cn(
-            "h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200",
-            {
-              "cursor-not-allowed opacity-50": isPending,
-            }
-          )}
-        >
-          {isPending ? <LoaderCircle /> : t("submit")}
-        </Button>
+        <div className="flex flex-col gap-4">
+          <Button
+            type="submit"
+            disabled={isPending}
+            className={cn(
+              "h-11 w-full bg-primary-300 text-secondary-500 hover:bg-primary-200",
+              {
+                "cursor-not-allowed opacity-50": isPending,
+              }
+            )}
+          >
+            {isPending ? <LoaderCircle /> : t("submit")}
+          </Button>
+
+          {resendHref ? (
+            <p className="text-center text-sm text-muted-foreground">
+              {t("resendPrompt")}{" "}
+              <Link
+                href={resendHref}
+                className="font-medium text-primary-400 underline underline-offset-4 hover:text-primary-500"
+              >
+                {t("resendAction")}
+              </Link>
+            </p>
+          ) : null}
+        </div>
       </form>
     </div>
   );

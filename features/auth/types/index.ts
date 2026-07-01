@@ -18,8 +18,9 @@ export type LoginFormValues = {
 };
 
 export type ResetPasswordFormValues = {
-  password: string;
-  confirmPassword: string;
+  email: string;
+  otp: string;
+  new_password: string;
 };
 
 export type resendVerificationFormValues = {
@@ -27,7 +28,8 @@ export type resendVerificationFormValues = {
 };
 
 export type VerifyEmailFormValues = {
-  token: string;
+  email: string;
+  otp: string;
 };
 
 export type RefreshFormValues = {

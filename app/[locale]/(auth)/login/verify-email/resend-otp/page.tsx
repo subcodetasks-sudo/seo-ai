@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header, ResendOtpCode } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
 
-type ForgetPasswordResendOtpPageProps = {
+type LoginResendOtpPageProps = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ email?: string }>;
 };
@@ -14,10 +14,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({
-    locale,
-    namespace: "auth.forgetPasswordResendOtp.metadata",
-  });
+  const t = await getTranslations({ locale, namespace: "auth.loginResendOtp.metadata" });
 
   return {
     title: t("title"),
@@ -25,10 +22,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function ForgetPasswordResendOtpPage({
+export default async function LoginResendOtpPage({
   params,
   searchParams,
-}: ForgetPasswordResendOtpPageProps) {
+}: LoginResendOtpPageProps) {
   const { locale } = await params;
   const { email } = await searchParams;
   setRequestLocale(locale);
@@ -40,7 +37,7 @@ export default async function ForgetPasswordResendOtpPage({
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8 sm:max-w-lg lg:max-w-xl lg:px-10 lg:py-12">
         <ResendOtpCode
           defaultEmail={email ?? ""}
-          verifyPath="/reset-password"
+          verifyPath="/login/verify-email"
         />
       </main>
     </div>

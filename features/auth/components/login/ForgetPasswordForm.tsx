@@ -56,7 +56,7 @@ export function ForgetPasswordForm({
       onSuccess: () => {
         toast.success(tToast("forgetPasswordOtpSent"));
         router.push(
-          `/login/forget-password/verify?email=${encodeURIComponent(data.email)}`
+          `/reset-password?email=${encodeURIComponent(data.email)}`
         );
       },
       onError: (error) => {

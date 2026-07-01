@@ -6,6 +6,7 @@ type VerifyEmailSchemaMessages = {
 
 export function createVerifyEmailSchema(messages: VerifyEmailSchemaMessages) {
   return z.object({
-    token: z.string().min(1, messages.tokenRequired),
+    email: z.string().email(),
+    otp: z.string().min(1, messages.tokenRequired),
   });
 }

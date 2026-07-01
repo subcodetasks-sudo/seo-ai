@@ -25,7 +25,7 @@ export default async function AuthLayout({ children, params }: AuthLayoutProps) 
   setRequestLocale(locale);
 
   return (
-    <div dir="ltr" className="min-h-screen bg-neutral-50 font-sans">
+    <div dir="ltr" className="min-h-screen bg-white font-sans">
       {children}
     </div>
   );

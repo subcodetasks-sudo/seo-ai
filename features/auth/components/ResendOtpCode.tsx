@@ -60,7 +60,7 @@ export function ResendOtpCode({
   function onSubmit(data: ResendOtpFormValues) {
     resendVerification(data, {
       onSuccess: () => {
-        const isForgetPasswordFlow = verifyPath.includes("forget-password");
+        const isForgetPasswordFlow = verifyPath.includes("reset-password");
         toast.success(
           tToast(isForgetPasswordFlow ? "forgetPasswordOtpSent" : "otpSent")
         );

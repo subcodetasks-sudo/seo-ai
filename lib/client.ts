@@ -66,7 +66,7 @@ export async function apiClient<T>(
   }
 
   if (!response.ok || result.status === false) {
-    throw new ApiError(result.message || alternativeErrorMessage, result.errors);
+    throw new ApiError(result.message || alternativeErrorMessage, result.errors, response.status);
   }
 
   return result;
