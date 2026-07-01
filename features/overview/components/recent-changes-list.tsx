@@ -2,7 +2,7 @@
 
 import { Check, Sparkles, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, isValid } from "date-fns";
 import { arSA, enUS } from "date-fns/locale";
 
 import { Link } from "@/i18n/navigation";
@@ -46,10 +46,10 @@ export function RecentChangesList({ items }: RecentChangesListProps) {
         {items.map((entry, index) => {
           const Icon = getChangeIcon(entry.change_type, entry.status);
           const iconClass = getIconClassName(entry.status);
-          const relativeDate = formatDistanceToNow(new Date(entry.applied_at), {
-            addSuffix: true,
-            locale: dateLocale,
-          });
+          const appliedAt = new Date(entry.applied_at);
+          const relativeDate = isValid(appliedAt)
+            ? formatDistanceToNow(appliedAt, { addSuffix: true, locale: dateLocale })
+            : "—";
 
           return (
             <li

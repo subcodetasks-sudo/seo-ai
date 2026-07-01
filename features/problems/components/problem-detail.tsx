@@ -53,8 +53,7 @@ export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailP
 
   const title = t.has(`problemTypes.${type}`) ? t(`problemTypes.${type}`) : type;
 
-  const canSuggestFix =
-    !!suggestionType && !(suggestionType === "schema" && !item?.page_types);
+  const canSuggestFix = !!suggestionType;
 
   function handleFixAll() {
     if (!selectedProjectId || pageUrls.length === 0 || !canSuggestFix || generateMutation.isPending) return;
@@ -63,8 +62,6 @@ export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailP
         projectId: selectedProjectId,
         suggestionType: suggestionType as string,
         pageUrls,
-        pageType: item?.page_types,
-        imageUrl: item?.image_url,
       },
       {
         onSuccess: () => {},
@@ -103,14 +100,14 @@ export function ProblemDetail({ type, severity, suggestionType }: ProblemDetailP
         </div>
 
         {/* Why this matters */}
-        <div className="rounded-xl border border-neutral-200 bg-white p-6 text-end">
+        {/* <div className="rounded-xl border border-neutral-200 bg-white p-6 text-end">
           <h2 className="mb-3 text-label-lg font-semibold text-secondary-500">
             {t("detail.whyTitle")}
           </h2>
           <p className="text-label-sm leading-relaxed text-neutral-600">
             {t("detail.whyBody")}
           </p>
-        </div>
+        </div> */}
 
         {/* Affected links */}
         <div className="rounded-xl border border-neutral-200 bg-white p-6">

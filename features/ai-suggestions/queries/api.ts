@@ -59,15 +59,17 @@ export async function rejectSuggestionBatch(projectId: string, ids: string[]): P
   });
 }
 
-export async function approveAllSuggestions(projectId: string): Promise<void> {
+export async function approveAllSuggestions(projectId: string, count: number): Promise<void> {
   return apiClient(`projects/${projectId}/ai/suggestions/approve-all`, {
     method: "POST",
+    body: JSON.stringify({ confirm: true, count }),
   });
 }
 
-export async function rejectAllSuggestions(projectId: string): Promise<void> {
+export async function rejectAllSuggestions(projectId: string, count: number): Promise<void> {
   return apiClient(`projects/${projectId}/ai/suggestions/reject-all`, {
     method: "POST",
+    body: JSON.stringify({ confirm: true, count }),
   });
 }
 

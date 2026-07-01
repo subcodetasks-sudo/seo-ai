@@ -19,10 +19,17 @@ export async function POST(req: NextRequest, context: RouteContext) {
 
   const { project_id } = await context.params;
 
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ message: "Invalid request body" }, { status: 400 });
+  }
+
   try {
     const data = await serverClient(
       `projects/${project_id}/ai/suggestions/approve-all`,
-      { method: "POST", headers: authHeaders },
+      { method: "POST", headers: authHeaders, body: JSON.stringify(body) },
       "Failed to approve all suggestions",
     );
     return NextResponse.json(data);

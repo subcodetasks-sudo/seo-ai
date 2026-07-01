@@ -49,47 +49,21 @@ export async function fetchCrawlPages({
   );
 }
 
-export const SCHEMA_PAGE_TYPES = [
-  "Article",
-  "Product",
-  "FAQPage",
-  "Organization",
-  "BreadcrumbList",
-  "WebPage",
-  "LocalBusiness",
-  "BlogPost",
-] as const;
-
-export type SchemaPageType = (typeof SCHEMA_PAGE_TYPES)[number];
-
 type GenerateSuggestionParams = {
   projectId: string;
   suggestionType: string;
   pageUrl: string;
-  pageType?: string | null;
-  imageUrl?: string | null;
 };
 
 export async function generateSuggestion({
   projectId,
   suggestionType,
   pageUrl,
-  pageType,
-  imageUrl,
 }: GenerateSuggestionParams): Promise<void> {
-  const payload: Record<string, string | null> = {
+  const payload = {
     suggestion_type: suggestionType,
     page_url: pageUrl,
   };
-
-  if (suggestionType === "schema") {
-    if (!pageType || !SCHEMA_PAGE_TYPES.includes(pageType as SchemaPageType)) {
-      throw new Error(`page_type must be one of: ${SCHEMA_PAGE_TYPES.join(", ")}`);
-    }
-    payload.page_type = pageType;
-  } else if (suggestionType === "alt_text") {
-    payload.image_url = imageUrl ?? null;
-  }
 
   return apiClient(`projects/${projectId}/ai/generate`, {
     method: "POST",

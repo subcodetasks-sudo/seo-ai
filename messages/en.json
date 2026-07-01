@@ -976,6 +976,11 @@
     "lastUpdate": "Last update: {date}",
     "noProject": "Select a project to view the overview",
     "error": "Failed to load overview data",
+    "noData": {
+      "title": "No scan data yet",
+      "description": "Run your first scan to see health score, SEO issues, and recent changes for this project.",
+      "cta": "Start first scan"
+    },
     "healthIndicator": "Health Indicator",
     "healthStatus": {
       "excellent": "Excellent",

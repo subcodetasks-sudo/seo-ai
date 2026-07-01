@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { arSA, enUS } from "date-fns/locale";
 
 type OverviewHeaderProps = {
@@ -13,9 +13,11 @@ export function OverviewHeader({ lastCrawlAt }: OverviewHeaderProps) {
   const locale = useLocale();
 
   const dateLocale = locale === "ar" ? arSA : enUS;
-  const formattedDate = lastCrawlAt
-    ? format(new Date(lastCrawlAt), "MMMM d, yyyy", { locale: dateLocale })
-    : "—";
+  const lastCrawlDate = lastCrawlAt ? new Date(lastCrawlAt) : null;
+  const formattedDate =
+    lastCrawlDate && isValid(lastCrawlDate)
+      ? format(lastCrawlDate, "MMMM d, yyyy", { locale: dateLocale })
+      : "—";
 
   return (
     <div className="flex flex-col gap-1 text-start">

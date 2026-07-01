@@ -48,9 +48,7 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
   }
 
   function canSuggestFix(item: IssueSummaryItem) {
-    if (!item.suggestion_type) return false;
-    if (item.suggestion_type === "schema" && !item.page_types) return false;
-    return true;
+    return !!item.suggestion_type;
   }
 
   function handleSuggestFix(item: IssueSummaryItem) {
@@ -59,8 +57,6 @@ export function ProblemsTable({ items, crawlJobId }: ProblemsTableProps) {
       projectId: selectedProjectId,
       suggestionType: item.suggestion_type as string,
       pageUrls: item.affected_urls,
-      pageType: item.page_types,
-      imageUrl: item.image_url,
     });
   }
 

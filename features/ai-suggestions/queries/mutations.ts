@@ -15,7 +15,7 @@ import type { SuggestionPatchPayload, UnknownPatchPayload } from "../types";
 
 type SuggestionMutationVars = { projectId: string; suggestionId: string };
 type BatchMutationVars = { projectId: string; ids: string[] };
-type ProjectMutationVars = { projectId: string };
+type ApproveRejectAllVars = { projectId: string; count: number };
 
 export function useApproveSuggestionBatch() {
   const queryClient = useQueryClient();
@@ -40,7 +40,8 @@ export function useRejectSuggestionBatch() {
 export function useApproveAllSuggestions() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ projectId }: ProjectMutationVars) => approveAllSuggestions(projectId),
+    mutationFn: ({ projectId, count }: ApproveRejectAllVars) =>
+      approveAllSuggestions(projectId, count),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
     },
@@ -50,7 +51,8 @@ export function useApproveAllSuggestions() {
 export function useRejectAllSuggestions() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ projectId }: ProjectMutationVars) => rejectAllSuggestions(projectId),
+    mutationFn: ({ projectId, count }: ApproveRejectAllVars) =>
+      rejectAllSuggestions(projectId, count),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
     },

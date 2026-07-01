@@ -2,7 +2,7 @@
 
 import { RefreshCw } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, isValid } from "date-fns";
 import { arSA, enUS } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
@@ -32,12 +32,11 @@ export function HealthSummaryCard({
   const { mutate: startCrawl, isPending: isRescanning } = useStartCrawl();
   const healthStatus = getHealthStatus(dashboard.health_score);
 
-  const lastScanRelative = dashboard.last_crawl_at
-    ? formatDistanceToNow(new Date(dashboard.last_crawl_at), {
-        addSuffix: true,
-        locale: dateLocale,
-      })
-    : "—";
+  const lastCrawlDate = dashboard.last_crawl_at ? new Date(dashboard.last_crawl_at) : null;
+  const lastScanRelative =
+    lastCrawlDate && isValid(lastCrawlDate)
+      ? formatDistanceToNow(lastCrawlDate, { addSuffix: true, locale: dateLocale })
+      : "—";
 
   const pagesCount = new Intl.NumberFormat(locale).format(dashboard.pages_crawled);
 

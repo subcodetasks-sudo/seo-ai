@@ -149,7 +149,7 @@ export function AiSuggestionsContent() {
   function handleApproveAll() {
     if (!selectedProjectId) return;
     approveAllMutation.mutate(
-      { projectId: selectedProjectId },
+      { projectId: selectedProjectId, count: total },
       { onSuccess: () => setSelectedIds(new Set()) },
     );
   }
@@ -157,7 +157,7 @@ export function AiSuggestionsContent() {
   function handleRejectAll() {
     if (!selectedProjectId) return;
     rejectAllMutation.mutate(
-      { projectId: selectedProjectId },
+      { projectId: selectedProjectId, count: total },
       { onSuccess: () => setSelectedIds(new Set()) },
     );
   }

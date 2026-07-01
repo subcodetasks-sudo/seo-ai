@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { ScanSearch } from "lucide-react";
 
+import EmptyState from "@/components/empty-state";
 import ErrorState from "@/components/error-state";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDirection } from "@/components/ui/direction";
 import { useRouter } from "@/i18n/navigation";
-import { allProjectsQueryOptions, useSelectedProject } from "@/features/home";
+import { allProjectsQueryOptions, useSelectedProject, useStartCrawl } from "@/features/home";
 import ProjectAnalysis from "@/features/home/components/project-analysis/ProjectAnalysis";
 import { overviewKeys } from "../queries/query-keys";
 import { overviewDashboardQueryOptions } from "../queries/queries";
@@ -61,8 +64,17 @@ export function OverviewContent() {
     refetch: refetchDashboard,
   } = useQuery(overviewDashboardQueryOptions(selectedProjectId ?? ""));
 
+  const { mutate: startCrawl, isPending: isStartingFirstScan } = useStartCrawl();
+
   function handleRescanSuccess(crawlJobId: string) {
     setActiveCrawlId(crawlJobId);
+  }
+
+  function handleStartFirstScan() {
+    if (!selectedProjectId) return;
+    startCrawl(selectedProjectId, {
+      onSuccess: (response) => handleRescanSuccess(response.data.crawl_job_id),
+    });
   }
 
   function handleCrawlDone() {
@@ -111,6 +123,25 @@ export function OverviewContent() {
               title={t("error")}
               retryLabel={tCommon("retry")}
               onRetry={() => refetchDashboard()}
+            />
+          </div>
+        ) : !dashboard.last_crawl_at ? (
+          <div className="flex flex-col gap-6">
+            <OverviewHeader />
+            <EmptyState
+              icon={ScanSearch}
+              title={t("noData.title")}
+              description={t("noData.description")}
+              action={
+                <Button
+                  type="button"
+                  className="h-10 gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-400"
+                  onClick={handleStartFirstScan}
+                  disabled={isStartingFirstScan}
+                >
+                  {t("noData.cta")}
+                </Button>
+              }
             />
           </div>
         ) : (

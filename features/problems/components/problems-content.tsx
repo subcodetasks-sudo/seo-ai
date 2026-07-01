@@ -16,7 +16,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useSelectedProject } from "@/features/home";
 import { ProblemsTable } from "./problems-table";
 import { issueSummaryQueryOptions } from "../queries/queries";
@@ -78,20 +84,19 @@ export function ProblemsContent() {
           </p>
         </div>
 
-        <Tabs value={filter} onValueChange={handleFilterChange}>
-          <TabsList>
+        <Select value={filter} onValueChange={handleFilterChange}>
+          <SelectTrigger className="h-9 w-fit min-w-40 gap-1 self-start border-neutral-200 bg-white px-3 text-label-sm text-secondary-500">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
             {FILTER_TABS.map((tab) => (
-              <TabsTrigger key={tab} value={tab} className="gap-1.5">
+              <SelectItem key={tab} value={tab}>
                 {t(`tabs.${tab}`)}
-                {tab !== "all" && (
-                  <span className="rounded-full bg-neutral-200 px-1.5 py-0.5 text-label-xs leading-none text-neutral-600">
-                    {counts[tab as ProblemSeverity]}
-                  </span>
-                )}
-              </TabsTrigger>
+                {tab !== "all" && ` (${counts[tab as ProblemSeverity]})`}
+              </SelectItem>
             ))}
-          </TabsList>
-        </Tabs>
+          </SelectContent>
+        </Select>
 
         {isLoading ? (
           <LoadingState />
