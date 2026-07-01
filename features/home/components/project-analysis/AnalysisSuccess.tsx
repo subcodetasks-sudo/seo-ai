@@ -1,10 +1,13 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { ArrowRight, Check, FileText, FolderOpen, Globe, Sparkles, TriangleAlert } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useDirection } from "@/components/ui/direction";
+import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
 export type AnalysisSuccessProps = {
@@ -12,27 +15,36 @@ export type AnalysisSuccessProps = {
   aiSuggestionsCount: number;
   issuesCount: number;
   pagesCount: number;
+  isMetricsLoading?: boolean;
   onViewIssues?: () => void;
   onViewProject?: () => void;
 };
 
 type MetricCardProps = {
+  icon: LucideIcon;
   value: string;
   label: string;
-  valueClassName?: string;
+  iconClassName?: string;
+  isLoading?: boolean;
 };
 
-function MetricCard({ value, label, valueClassName }: MetricCardProps) {
+function MetricCard({ icon: Icon, value, label, iconClassName, isLoading }: MetricCardProps) {
   return (
-    <div className="flex flex-col items-center gap-1 rounded-xl border border-neutral-200 bg-white px-3 py-4">
-      <span
+    <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-4 text-center">
+      <div
         className={cn(
-          "text-h3 font-semibold tabular-nums",
-          valueClassName ?? "text-secondary-500",
+          "flex size-9 items-center justify-center rounded-full bg-white text-neutral-400",
+          iconClassName,
         )}
       >
-        {value}
-      </span>
+        <Icon className="size-4" aria-hidden="true" />
+      </div>
+
+      {isLoading ? (
+        <span className="h-6 w-10 animate-pulse rounded bg-neutral-200" aria-hidden="true" />
+      ) : (
+        <span className="text-h4 font-semibold tabular-nums text-secondary-500">{value}</span>
+      )}
       <span className="text-center text-label-sm text-neutral-500">{label}</span>
     </div>
   );
@@ -41,7 +53,7 @@ function MetricCard({ value, label, valueClassName }: MetricCardProps) {
 function SuccessIcon() {
   return (
     <div
-      className="flex size-16 items-center justify-center rounded-full bg-success-300 text-white"
+      className="flex size-16 items-center justify-center rounded-full bg-success-300 text-white ring-8 ring-success-50"
       aria-hidden="true"
     >
       <Check className="size-8 stroke-[2.5px]" />
@@ -54,6 +66,7 @@ export default function AnalysisSuccess({
   aiSuggestionsCount,
   issuesCount,
   pagesCount,
+  isMetricsLoading,
   onViewIssues,
   onViewProject,
 }: AnalysisSuccessProps) {
@@ -69,65 +82,76 @@ export default function AnalysisSuccess({
 
   const metrics: MetricCardProps[] = [
     {
-      value: countFormatter.format(aiSuggestionsCount),
-      label: t("metrics.aiSuggestions"),
-      valueClassName: "text-error-300",
-    },
-    {
+      icon: TriangleAlert,
       value: countFormatter.format(issuesCount),
       label: t("metrics.issues"),
-      valueClassName: "text-error-300",
+      iconClassName: "text-error-300",
+      isLoading: isMetricsLoading,
     },
     {
+      icon: FileText,
       value: compactFormatter.format(pagesCount),
       label: t("metrics.pages"),
+      iconClassName: "text-secondary-400",
+      isLoading: isMetricsLoading,
+    },
+    {
+      icon: Sparkles,
+      value: countFormatter.format(aiSuggestionsCount),
+      label: t("metrics.aiSuggestions"),
+      iconClassName: "text-primary-500",
+      isLoading: isMetricsLoading,
     },
   ];
 
   return (
-    <div
-      className="mx-auto flex w-full max-w-xl flex-col items-center gap-6 px-4"
-      dir={dir}
-    >
-      <div className="flex w-full flex-col items-center gap-4 text-center">
-        <SuccessIcon />
+    <div className="mx-auto w-full max-w-xl px-4" dir={dir}>
+      <Card className="items-center gap-6 rounded-2xl border-neutral-200 bg-white p-6 shadow-sm ring-0 sm:p-8">
+        <div className="flex w-full flex-col items-center gap-4 text-center">
+          <SuccessIcon />
 
-        <div className="space-y-2">
-          <h1 className="text-h1 font-semibold text-secondary-500">
-            {t("title")}
-          </h1>
-          <p className="text-label-md text-neutral-500">{t("subtitle")}</p>
+          <div className="space-y-2">
+            <h1 className="text-h1 font-semibold text-secondary-500">{t("title")}</h1>
+            <p className="text-label-md text-neutral-500">{t("subtitle")}</p>
+          </div>
+
+          <span className="inline-flex max-w-full items-center gap-2 rounded-full border border-neutral-200 bg-neutral-75 px-4 py-2 text-label-md text-neutral-500">
+            <Globe className="size-4 shrink-0 text-neutral-400" aria-hidden="true" />
+            <span className="truncate">{url}</span>
+          </span>
         </div>
 
-        <p className="rounded-lg border border-neutral-200 bg-neutral-75 px-4 py-2.5 text-label-md text-neutral-500">
-          {url}
-        </p>
-      </div>
+        <Separator className="bg-neutral-100" />
 
-      <div className="grid w-full grid-cols-3 gap-3">
-        {metrics.map((metric) => (
-          <MetricCard key={metric.label} {...metric} />
-        ))}
-      </div>
+        <CardContent className="w-full p-0">
+          <div className="grid grid-cols-3 gap-3">
+            {metrics.map((metric) => (
+              <MetricCard key={metric.label} {...metric} />
+            ))}
+          </div>
+        </CardContent>
 
-      <div className="flex w-full flex-col gap-3">
-        <Button
-          type="button"
-          onClick={onViewIssues}
-          className="h-12 w-full rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 transition-all hover:bg-primary-300/90 active:translate-y-px"
-        >
-          {t("viewIssues")}
-        </Button>
+        <div className="flex w-full flex-col gap-3">
+          <Button
+            type="button"
+            onClick={onViewIssues}
+            className="h-12 w-full gap-2 rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 hover:bg-primary-400"
+          >
+            {t("viewIssues")}
+            <ArrowRight className="size-4 rtl:rotate-180" aria-hidden="true" />
+          </Button>
 
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onViewProject}
-          className="h-12 w-full rounded-[10px] border-neutral-200 bg-white text-body font-semibold text-secondary-500 hover:bg-neutral-50"
-        >
-          {t("viewProject")}
-        </Button>
-      </div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onViewProject}
+            className="h-12 w-full gap-2 rounded-[10px] border-neutral-200 bg-white text-body font-semibold text-secondary-500 hover:bg-neutral-50"
+          >
+            <FolderOpen className="size-4" aria-hidden="true" />
+            {t("viewProject")}
+          </Button>
+        </div>
+      </Card>
     </div>
   );
 }

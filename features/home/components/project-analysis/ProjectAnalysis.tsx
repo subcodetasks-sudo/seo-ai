@@ -19,21 +19,22 @@ export default function ProjectAnalysis({
   onViewIssues,
   onViewProject,
 }: ProjectAnalysisProps) {
-  const { isDone, crawlData, loadingProps } = useCrawlProgress({
-    projectId,
-    crawlId: crawlJobId,
-    url,
-  });
+  const { isDone, loadingProps, totalPages, totalIssues, isMetricsLoading } =
+    useCrawlProgress({
+      projectId,
+      crawlId: crawlJobId,
+      url,
+    });
 
   if (isDone) {
-    // Metrics come from the crawl status response — it only carries page
-    // counts, so issues/suggestions stay at 0 until those endpoints are wired.
+    // AI suggestions endpoint isn't wired yet, so that metric stays at 0.
     return (
       <AnalysisSuccess
         url={url}
-        pagesCount={crawlData?.pages_crawled ?? 0}
-        issuesCount={0}
+        pagesCount={totalPages}
+        issuesCount={totalIssues}
         aiSuggestionsCount={0}
+        isMetricsLoading={isMetricsLoading}
         onViewIssues={onViewIssues}
         onViewProject={onViewProject}
       />

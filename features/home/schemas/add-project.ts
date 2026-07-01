@@ -9,6 +9,11 @@ export const step1Schema = z.object({
     .min(1, "URL is required")
     .regex(urlRegex, "Invalid URL format"),
   projectType: z.enum(projectTypes),
+  sitemapUrl: z
+    .string()
+    .regex(urlRegex, "Invalid URL format")
+    .optional()
+    .or(z.literal("")),
 });
 
 export type Step1FormData = z.infer<typeof step1Schema>;

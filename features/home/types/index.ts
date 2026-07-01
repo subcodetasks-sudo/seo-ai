@@ -141,3 +141,16 @@ export type ProjectSectionsApiResponse = {
   message: string;
   data: ProjectSections;
 };
+
+/* get crawl pages */
+
+export type CrawlPagesSummary = {
+  total_pages: number;
+  total_issues: number;
+};
+
+export type CrawlPagesResponse = {
+  status: boolean;
+  message: string;
+  data: CrawlPagesSummary;
+};

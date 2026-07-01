@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { AnalysisLoadingProps, AnalysisStepId, AnalysisStepState } from "../components/project-analysis/AnalysisLoading";
-import { crawlStatusQueryOptions } from "../queries/queries";
+import { crawlPagesQueryOptions, crawlStatusQueryOptions } from "../queries/queries";
 import { homeKeys } from "../queries/query-keys";
 import type { CrawlJobResponse } from "../queries/api";
 import {
@@ -72,6 +72,9 @@ interface UseCrawlProgressResult {
   error: Error | null;
   crawlData: CrawlJobResponse["data"] | undefined;
   loadingProps: AnalysisLoadingProps;
+  totalPages: number;
+  totalIssues: number;
+  isMetricsLoading: boolean;
 }
 
 export function useCrawlProgress({
@@ -106,6 +109,10 @@ export function useCrawlProgress({
   const isDone = crawlData?.status === "done" || realtimeStatus === "done";
   const failed = crawlData?.status === "failed" || realtimeStatus === "failed";
 
+  const { data: pagesData, isPending: isPagesPending } = useQuery(
+    crawlPagesQueryOptions(projectId, crawlId, isDone)
+  );
+
   return {
     isLoading,
     isError: isError || failed,
@@ -117,5 +124,8 @@ export function useCrawlProgress({
       steps: crawlData ? mapCrawlStatusToSteps(crawlData) : undefined,
       errorMessage: crawlData?.error_message ?? null,
     },
+    totalPages: pagesData?.data.total_pages ?? 0,
+    totalIssues: pagesData?.data.total_issues ?? 0,
+    isMetricsLoading: isDone && isPagesPending,
   };
 }

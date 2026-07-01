@@ -14,4 +14,6 @@ export const homeKeys = {
     [...homeKeys.all, "language-detection", domain] as const,
   crawl: (projectId: string, crawlId: string) =>
     [...homeKeys.project(projectId), "crawl", crawlId] as const,
+  crawlPages: (projectId: string, crawlId: string) =>
+    [...homeKeys.crawl(projectId, crawlId), "pages"] as const,
 };

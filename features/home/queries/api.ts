@@ -2,6 +2,7 @@ import { apiClient } from "@/lib/client";
 import type {
   AllProjectsResponse,
   CreateProjectRequest,
+  CrawlPagesResponse,
   Project,
   ProjectSectionsApiResponse,
   ProjectSectionsRequest,
@@ -104,3 +105,9 @@ export const getCrawlStatus = (project_id: string, crawl_id: string) =>
   apiClient<CrawlJobResponse>(`projects/${project_id}/crawls/${crawl_id}`, {
     method: "GET",
   });
+
+export const getCrawlPages = (project_id: string, crawl_id: string) =>
+  apiClient<CrawlPagesResponse>(
+    `projects/${project_id}/crawls/${crawl_id}/pages?page=1&page_size=50`,
+    { method: "GET" },
+  );

@@ -30,11 +30,13 @@ export default function Step1({ onNext }: Step1Props) {
     defaultValues: {
       websiteUrl: "",
       projectType: "wordpress",
+      sitemapUrl: "",
     },
   });
 
   const projectType = watch("projectType");
   const urlError = errors.websiteUrl;
+  const sitemapError = errors.sitemapUrl;
 
   const onSubmit = async (data: Step1FormData) => {
     const fullUrl = data.websiteUrl.startsWith("http") ? data.websiteUrl : `https://${data.websiteUrl}`;
@@ -51,7 +53,7 @@ export default function Step1({ onNext }: Step1Props) {
         name: projectName,
         domain: fullUrl,
         platform: data.projectType,
-        sitemap_url: null,
+        sitemap_url: data.sitemapUrl ? data.sitemapUrl : null,
         url_filter: null,
       });
       onNext({ ...response.data, platform: data.projectType });
@@ -94,6 +96,33 @@ export default function Step1({ onNext }: Step1Props) {
           )}
         />
         {urlError && <span className="text-label-sm text-error-300">{urlError.message}</span>}
+      </div>
+
+      {/* Sitemap URL Input Field */}
+      <div className="flex w-full flex-col gap-2 text-start">
+        <label htmlFor="sitemap-url" className="text-label-md font-semibold text-secondary-500">
+          {t("sitemapLabel")}
+        </label>
+        <Controller
+          name="sitemapUrl"
+          control={control}
+          render={({ field }) => (
+            <div className="relative w-full">
+              <Input
+                {...field}
+                id="sitemap-url"
+                type="text"
+                placeholder="https://www.example.com/sitemap.xml"
+                className={cn(
+                  "h-12 w-full rounded-[10px] border border-neutral-300 bg-white px-4 py-2 text-left text-body placeholder:text-neutral-400 focus-visible:border-primary-300 focus-visible:ring-3 focus-visible:ring-primary-100/50",
+                  sitemapError && "border-error-300 focus-visible:border-error-300 focus-visible:ring-error-100/50"
+                )}
+                dir="ltr"
+              />
+            </div>
+          )}
+        />
+        {sitemapError && <span className="text-label-sm text-error-300">{sitemapError.message}</span>}
       </div>
 
       {/* Project Type Options */}

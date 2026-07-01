@@ -33,7 +33,7 @@ export function AnalysisCheck({ className }: { className?: string }) {
   );
 }
 
-export type AnalysisStepId = "queued" | "crawling" | "analysis" | "aiSuggestions";
+export type AnalysisStepId = "queued" | "crawling" | "analysis";
 
 export type AnalysisStepStatus = "completed" | "active" | "pending";
 
@@ -54,7 +54,6 @@ const STEP_ORDER: AnalysisStepId[] = [
   "queued",
   "crawling",
   "analysis",
-  "aiSuggestions",
 ];
 
 // Default shown before any crawl data has arrived — a genuine loading state
@@ -62,8 +61,7 @@ const STEP_ORDER: AnalysisStepId[] = [
 const DEFAULT_STEPS: Record<AnalysisStepId, AnalysisStepState> = {
   queued: { status: "active" },
   crawling: { status: "pending" },
-  analysis: { status: "pending" },
-  aiSuggestions: { status: "pending" },
+  analysis: { status: "active" },
 };
 
 function PendingDot() {

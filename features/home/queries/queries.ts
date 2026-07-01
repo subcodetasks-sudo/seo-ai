@@ -4,6 +4,7 @@ import {
   detectLanguage,
   getAllProjects,
   getBrokenPages,
+  getCrawlPages,
   getPageDetails,
   getProjectDashboard,
   getSingleProject,
@@ -70,4 +71,11 @@ export const crawlStatusQueryOptions = (projectId: string, crawlId: string) =>
       const status = query.state.data?.data.status;
       return status === "done" || status === "failed" ? false : 2000;
     },
+  });
+
+export const crawlPagesQueryOptions = (projectId: string, crawlId: string, enabled: boolean) =>
+  queryOptions({
+    queryKey: homeKeys.crawlPages(projectId, crawlId),
+    queryFn: () => getCrawlPages(projectId, crawlId),
+    enabled: !!projectId && !!crawlId && enabled,
   });
