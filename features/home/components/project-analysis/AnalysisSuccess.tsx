@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Check, FileStack, FileText, FolderOpen, Globe, Link2, Sparkles, TriangleAlert } from "lucide-react";
+import { Check, FileStack, FileText, FolderOpen, Globe, Link2, Sparkles, TriangleAlert } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -18,7 +18,6 @@ export type AnalysisSuccessProps = {
   basicPagesCount: number;
   internalPagesCount: number;
   isMetricsLoading?: boolean;
-  onViewIssues?: () => void;
   onViewProject?: () => void;
 };
 
@@ -71,7 +70,6 @@ export default function AnalysisSuccess({
   basicPagesCount,
   internalPagesCount,
   isMetricsLoading,
-  onViewIssues,
   onViewProject,
 }: AnalysisSuccessProps) {
   const dir = useDirection();
@@ -152,18 +150,8 @@ export default function AnalysisSuccess({
         <div className="flex w-full flex-col gap-3">
           <Button
             type="button"
-            onClick={onViewIssues}
-            className="h-12 w-full gap-2 rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 hover:bg-primary-400"
-          >
-            {t("viewIssues")}
-            <ArrowRight className="size-4 rtl:rotate-180" aria-hidden="true" />
-          </Button>
-
-          <Button
-            type="button"
-            variant="outline"
             onClick={onViewProject}
-            className="h-12 w-full gap-2 rounded-[10px] border-neutral-200 bg-white text-body font-semibold text-secondary-500 hover:bg-neutral-50"
+            className="h-12 w-full gap-2 rounded-[10px] bg-primary-300 text-body font-semibold text-secondary-500 hover:bg-primary-400"
           >
             <FolderOpen className="size-4" aria-hidden="true" />
             {t("viewProject")}

@@ -1,5 +1,11 @@
 import { apiClient } from "@/lib/client";
-import type { ReportsAnalytics, ReportsPeriod, ScanLogEntry } from "../types";
+import type {
+  ExportReportPdfPayload,
+  ExportReportPdfResponse,
+  ReportsAnalytics,
+  ReportsPeriod,
+  ScanLogEntry,
+} from "../types";
 import { reportsTrendsResponseSchema, scanLogResponseSchema } from "../schemas/reports.schema";
 
 export async function getReportsAnalytics(
@@ -32,4 +38,15 @@ export async function getScanLog(
     "Failed to fetch scan log",
   );
   return scanLogResponseSchema.parse(response).data.items;
+}
+
+export async function exportReportPdf(
+  projectId: string,
+  payload: ExportReportPdfPayload,
+): Promise<ExportReportPdfResponse> {
+  return apiClient<ExportReportPdfResponse>(
+    `projects/${projectId}/reports/export-pdf`,
+    { method: "POST", body: JSON.stringify(payload) },
+    "Failed to export report",
+  );
 }

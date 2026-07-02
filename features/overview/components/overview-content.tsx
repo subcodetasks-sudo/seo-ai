@@ -7,10 +7,10 @@ import { ScanSearch } from "lucide-react";
 
 import EmptyState from "@/components/empty-state";
 import ErrorState from "@/components/error-state";
+import SelectProjectState from "@/components/select-project-state";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDirection } from "@/components/ui/direction";
-import { useRouter } from "@/i18n/navigation";
 import { allProjectsQueryOptions, useSelectedProject, useStartCrawl } from "@/features/home";
 import ProjectAnalysis from "@/features/home/components/project-analysis/ProjectAnalysis";
 import { overviewKeys } from "../queries/query-keys";
@@ -48,7 +48,6 @@ export function OverviewContent() {
   const t = useTranslations("overview");
   const tCommon = useTranslations("common.state");
   const dir = useDirection();
-  const router = useRouter();
   const queryClient = useQueryClient();
   const { selectedProjectId } = useSelectedProject();
   const [activeCrawlId, setActiveCrawlId] = useState<string | null>(null);
@@ -89,7 +88,7 @@ export function OverviewContent() {
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }
@@ -101,10 +100,6 @@ export function OverviewContent() {
           projectId={selectedProjectId}
           crawlJobId={activeCrawlId}
           url={selectedProject?.domain ?? ""}
-          onViewIssues={() => {
-            handleCrawlDone();
-            router.push("/dashboard/problems");
-          }}
           onViewProject={handleCrawlDone}
         />
       </div>

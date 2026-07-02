@@ -17,7 +17,16 @@
       "errorTitle": "Something went wrong",
       "errorDescription": "We couldn't load this page. Please try again.",
       "retry": "Try again",
-      "emptyTitle": "No results found"
+      "emptyTitle": "No results found",
+      "selectProjectTitle": "No project selected",
+      "selectProjectDescription": "Please select a project to proceed."
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "previousPage": "Go to previous page",
+      "nextPage": "Go to next page",
+      "morePages": "More pages"
     }
   },
   "sidebar": {
@@ -27,7 +36,6 @@
     "selectProject": "Select a project",
     "projects": "Projects",
     "overview": "Overview",
-    "problemList": "Problem list",
     "aiSuggestions": "AI suggestions",
     "notFoundProblems": "404 problems",
     "reports": "Reports",
@@ -82,7 +90,8 @@
       "featureSubtitle": "AI-powered recommendations",
       "trustedBy": "Trusted by",
       "wordpress": "WordPress",
-      "shopify": "Shopify"
+      "shopify": "Shopify",
+      "zid": "Zid"
     },
     "login": {
       "metadata": {
@@ -252,7 +261,6 @@
   "notFoundProblems": {
     "title": "404 Problems",
     "subtitle": "{count} problems in {domain}",
-    "noProject": "Select a project to view 404 problems",
     "loading": "Loading...",
     "error": "Failed to load broken pages",
     "empty": "No problems found",
@@ -290,9 +298,12 @@
       "suggestedUrl": "Suggested Redirect URL",
       "reason": "Reason",
       "suggestionStatus": {
+        "queued": "Queued",
         "pending": "Pending",
         "approved": "Approved",
-        "rejected": "Rejected"
+        "rejected": "Rejected",
+        "failed": "Failed",
+        "skipped": "Skipped"
       },
       "noSuggestion": "No AI suggestion yet for this page.",
       "generate": "Generate AI Suggestion",
@@ -309,7 +320,6 @@
   "aiSuggestions": {
     "title": "AI Suggestions",
     "subtitle": "{count} suggestions total",
-    "noProject": "Select a project to view AI suggestions",
     "empty": "No suggestions found",
     "loading": "Loading suggestions...",
     "error": "Failed to load suggestions",
@@ -366,7 +376,8 @@
       "applied": "Applied",
       "skipped": "Skipped",
       "ignored": "Ignored",
-      "failed": "Failed"
+      "failed": "Failed",
+      "processing": "Processing"
     },
     "types": {
       "meta": "Meta",
@@ -376,14 +387,12 @@
       "faq": "FAQ",
       "redirect": "Redirect",
       "alt_text": "Alt Text",
-      "internal_link": "Internal Link"
+      "internal_link": "Internal Link",
+      "h1": "H1",
+      "content": "Content"
     },
     "pagination": {
-      "showing": "Showing {shown} of {total} results",
-      "previous": "Previous",
-      "next": "Next",
-      "previousPage": "Go to previous page",
-      "nextPage": "Go to next page"
+      "showing": "Showing {shown} of {total} results"
     },
     "reviewPage": {
       "title": "Review Suggestion",
@@ -417,6 +426,15 @@
       "altText": {
         "label": "Alt Text"
       },
+      "h1": {
+        "label": "H1",
+        "duplicateWarning": "{count} H1 tags found on this page",
+        "actions": {
+          "consolidate": "Consolidate duplicates",
+          "rewrite": "Rewrite",
+          "keep": "Keep as is"
+        }
+      },
       "redirect": {
         "targetUrl": "Redirect URL"
       },
@@ -429,6 +447,10 @@
       "internalLink": {
         "count": "{count} suggested links"
       },
+      "content": {
+        "wordCount": "{count} words (AI)",
+        "currentWordCount": "{count} words (current)"
+      },
       "editForm": {
         "ogTitle": "OG Title",
         "ogDescription": "OG Description",
@@ -439,6 +461,9 @@
         "targetUrl": "Target URL",
         "relevanceReason": "Relevance reason",
         "addLink": "Add link",
+        "heading": "Heading",
+        "sectionContent": "Section content",
+        "addSection": "Add section",
         "remove": "Remove",
         "invalidJson": "Invalid JSON format",
         "emptyList": "No items yet — add one to continue."
@@ -453,12 +478,27 @@
   "reports": {
     "title": "Reports",
     "subtitle": "SEO performance overview for {domain}",
-    "noProject": "Select a project to view reports",
     "empty": "No scan history found for this period",
     "loading": "Loading...",
     "error": "Failed to load report analytics",
     "createReport": "Create Report",
+    "exporting": "Exporting…",
+    "exportSuccess": "Report exported successfully",
+    "download": "Download",
+    "downloadUnavailable": "Generate a report first to download it",
     "period": "{days} days",
+    "report": {
+      "dialogTitle": "Generate & Email Report",
+      "titleLabel": "Report Title",
+      "titlePlaceholder": "e.g. May 2026 SEO Report",
+      "titleRequired": "Report title is required",
+      "emailLabel": "Send to Email",
+      "emailPlaceholder": "you@example.com",
+      "emailRequired": "A valid email address is required",
+      "generate": "Generate",
+      "generating": "Generating...",
+      "cancel": "Cancel"
+    },
     "charts": {
       "healthTrend": "Health Score Trend",
       "issuesTrend": "SEO Issues Trend",
@@ -491,7 +531,6 @@
     }
   },
   "googleAnalytics": {
-    "noProject": "Select a project to connect Google Analytics",
     "loading": "Loading...",
     "title": "Connect Google Analytics",
     "description": "Link your Google Analytics account to view traffic and visitor insights for {domain} directly in RankAI.",
@@ -655,7 +694,6 @@
   "changelog": {
     "title": "Changelog",
     "subtitle": "Complete audit log of all applied SEO changes",
-    "noProject": "Select a project to view the changelog",
     "empty": "No changes found for this period",
     "loading": "Loading...",
     "createReport": "Create Report",
@@ -691,30 +729,6 @@
     }
   },
   "problems": {
-    "title": "Problem List",
-    "subtitle": "{count} problems found",
-    "noProject": "Select a project to view problems",
-    "empty": "No problems found",
-    "loading": "Loading problems…",
-    "error": "Failed to load problems",
-    "tabs": {
-      "all": "All Problems",
-      "critical": "Critical",
-      "high": "High",
-      "medium": "Medium",
-      "low": "Low"
-    },
-    "table": {
-      "problem": "Problem",
-      "affectedPages": "Affected Pages",
-      "priority": "Priority",
-      "action": "Action",
-      "suggestFix": "Suggest Fix",
-      "ignore": "Ignore",
-      "ignoring": "Ignoring…",
-      "viewPages": "View Pages",
-      "pageCount": "{count} pages"
-    },
     "severity": {
       "critical": "Critical",
       "high": "High",
@@ -739,27 +753,9 @@
       "http_error": "HTTP Error",
       "no_canonical": "Missing Canonical Tag",
       "is_noindex": "Page Set to Noindex"
-    },
-    "pagination": {
-      "showing": "Showing {shown} of {total} problems"
-    },
-    "detail": {
-      "affectedPagesCount": "Affected pages: {count}",
-      "priorityBadge": "{severity} priority",
-      "whyTitle": "Why this matters",
-      "whyBody": "Pages missing a meta title tag lose a strong SEO signal. Search engines use the title as a primary indicator of page content and display it as the clickable headline in results. Without a title, Google generates one automatically from page content, which is rarely optimal.",
-      "affectedLinks": "Affected links",
-      "noLinks": "No affected links found",
-      "showingLinks": "Showing {shown} of {total} links",
-      "backToList": "Back to problems list",
-      "fixAllAi": "Fix automatically with AI for all",
-      "fixing": "Generating fixes…",
-      "fixSuccess": "Requested AI fixes for {count} pages",
-      "fixError": "Failed to generate AI fixes"
     }
   },
   "crawlHistory": {
-    "noProject": "Select a project to view crawl history",
     "title": "Crawl history",
     "subtitle": "{count} crawls recorded",
     "empty": "No crawls yet",
@@ -784,7 +780,6 @@
       "scheduled": "Scheduled"
     },
     "pages": {
-      "noProject": "Select a project to view pages",
       "title": "Crawled pages",
       "subtitle": "{count} pages crawled",
       "empty": "No pages found",
@@ -795,22 +790,50 @@
         "basic": "Basic pages",
         "internal": "Internal pages",
         "issues": "Total issues"
+      },
+      "filter": {
+        "label": "Filter results",
+        "all": "All",
+        "issues": "With issues",
+        "notFound": "Not found",
+        "noResults": "No pages match this filter"
       }
     },
     "pageCard": {
       "redirect": "Redirect",
       "score": "Score {score}",
+      "statusOk": "OK",
+      "statusNotFound": "Not Found",
       "issues": "Issues",
+      "issuesCount": "{count} issues",
       "internalLinks": "Internal links",
       "externalLinks": "External links",
-      "viewLinks": "View links"
+      "viewDetails": "View details"
     },
-    "linksSheet": {
-      "title": "Page links",
-      "internal": "Internal",
-      "external": "External",
-      "empty": "No links found",
-      "search": "Search links…"
+    "pageDetail": {
+      "error": "Failed to load page details",
+      "notFound": "Page not found",
+      "backToPages": "Back to pages",
+      "crawledAt": "Crawled {time}",
+      "responseTime": "{ms}ms response",
+      "noIssues": "No issues found on this page",
+      "noLinks": "No links found",
+      "search": "Search links…",
+      "aiSuggest": "AI suggest fix",
+      "aiSuggestRedirect": "AI suggest redirect",
+      "aiSuggestPending": "Generating…",
+      "aiSuggestSuccess": "AI suggestion generated successfully",
+      "notFoundIssueTitle": "This page returns a 404 Not Found",
+      "notFoundIssueDetail": "This page could not be found. Get an AI-suggested redirect to fix broken links pointing here.",
+      "ignore": "Ignore",
+      "ignorePending": "Ignoring…",
+      "ignoreSuccess": "Issue ignored successfully",
+      "ignored": "Ignored",
+      "tabs": {
+        "issues": "Issues",
+        "internal": "Internal",
+        "external": "External"
+      }
     }
   },
   "home": {
@@ -932,7 +955,6 @@
           "basic": "Basic pages",
           "internal": "Internal pages"
         },
-        "viewIssues": "View issues",
         "viewProject": "View project"
       }
     },
@@ -965,8 +987,10 @@
       },
       "health": "Health",
       "status": "Status",
+      "all": "All",
       "verified": "Verified",
       "unverified": "Unverified",
+      "noFilterResults": "No projects match this filter",
       "archived": "Archived",
       "verifyToken": "Verify Token"
     }
@@ -974,7 +998,6 @@
   "overview": {
     "title": "Overview",
     "lastUpdate": "Last update: {date}",
-    "noProject": "Select a project to view the overview",
     "error": "Failed to load overview data",
     "noData": {
       "title": "No scan data yet",
@@ -1009,7 +1032,6 @@
   "aiInsights": {
     "title": "AI Insights",
     "subtitle": "Analyze your site performance with AI-powered analysis",
-    "noProject": "Select a project to view AI insights",
     "period": "Last {days} days",
     "reanalyze": "Re-analyze",
     "tabs": {

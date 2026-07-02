@@ -8,7 +8,9 @@ export type SuggestionType =
   | "faq"
   | "redirect"
   | "alt_text"
-  | "internal_link";
+  | "internal_link"
+  | "h1"
+  | "content";
 
 export type SuggestionStatus =
   | "pending"
@@ -17,6 +19,7 @@ export type SuggestionStatus =
   | "applied"
   | "failed"
   | "queued"
+  | "processing"
   | "skipped"
   | "ignored";
 
@@ -56,6 +59,19 @@ export interface AltTextValue {
   image_url: string;
 }
 
+export interface H1CurrentValue {
+  h1: string;
+  h1_count: number;
+}
+
+export interface H1SuggestedValue {
+  h1_text: string;
+  action: string;
+  keywords_used: string[];
+  language_detected: string;
+  confidence_score: number;
+}
+
 export interface FaqPair {
   question: string;
   answer: string;
@@ -85,6 +101,23 @@ export interface InternalLink {
 
 export interface InternalLinkSuggestedValue {
   links: InternalLink[];
+}
+
+export interface ContentCurrentValue {
+  word_count: number;
+}
+
+export interface ContentSection {
+  heading: string;
+  content: string;
+}
+
+export interface ContentSuggestedValue {
+  sections: ContentSection[];
+  total_word_count: number;
+  keywords_used: string[];
+  language_detected: string;
+  confidence_score: number;
 }
 
 export interface RedirectCandidate {
@@ -134,6 +167,11 @@ export interface AltTextPatchValue {
   image_url: string;
 }
 
+export interface H1PatchValue {
+  h1_text: string;
+  action: string;
+}
+
 export interface FaqPatchValue {
   pairs: FaqPair[];
   pair_count: number;
@@ -148,6 +186,11 @@ export interface SchemaPatchValue {
 
 export interface InternalLinkPatchValue {
   links: InternalLink[];
+}
+
+export interface ContentPatchValue {
+  sections: ContentSection[];
+  total_word_count: number;
 }
 
 export interface RedirectPatchValue {
@@ -170,10 +213,12 @@ export type SuggestionPatchPayload =
   | { suggestion_type: "og_title"; suggested_value: OgTitlePatchValue }
   | { suggestion_type: "og_description"; suggested_value: OgDescriptionPatchValue }
   | { suggestion_type: "alt_text"; suggested_value: AltTextPatchValue }
+  | { suggestion_type: "h1"; suggested_value: H1PatchValue }
   | { suggestion_type: "faq"; suggested_value: FaqPatchValue }
   | { suggestion_type: "schema"; suggested_value: SchemaPatchValue }
   | { suggestion_type: "internal_link"; suggested_value: InternalLinkPatchValue }
-  | { suggestion_type: "redirect"; suggested_value: RedirectPatchValue };
+  | { suggestion_type: "redirect"; suggested_value: RedirectPatchValue }
+  | { suggestion_type: "content"; suggested_value: ContentPatchValue };
 
 // Fallback for suggestion types outside the known union (forward-compat).
 export type UnknownPatchPayload = { suggestion_type: string; suggested_value: Record<string, unknown> };
@@ -218,6 +263,21 @@ export interface BackendResponse<T> {
   status: boolean;
   message: string;
   data: T;
+}
+
+// --- API: POST /ai/generate (suggestion generation is queued, not returned synchronously) ---
+
+export interface GenerateSuggestionResult {
+  job_id: string;
+  suggestion_id: string;
+  generation_id: string;
+  status: string;
+  message: string;
+  project_id: string;
+  suggestion_type: string;
+  page_type: string | null;
+  image_url: string | null;
+  page_url: string;
 }
 
 // --- UI types ---

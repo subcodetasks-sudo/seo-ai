@@ -32,7 +32,7 @@ export function OverviewStatCards({
         locale={locale}
       />
       <OverviewStatCard
-        href="/dashboard/problems"
+        href="/dashboard/crawl-history"
         icon={AlertTriangle}
         count={seoErrorsTotal}
         label={t("seoErrors")}

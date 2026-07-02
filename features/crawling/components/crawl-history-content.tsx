@@ -8,15 +8,9 @@ import { useTranslations } from "next-intl";
 import EmptyState from "@/components/empty-state";
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
+import SelectProjectState from "@/components/select-project-state";
+import { TablePagination } from "@/components/table-pagination";
 import { useDirection } from "@/components/ui/direction";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Link } from "@/i18n/navigation";
 import { useSelectedProject } from "@/features/home";
 import { CrawlJobCard } from "./crawl-job-card";
@@ -42,7 +36,7 @@ export function CrawlHistoryContent() {
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }
@@ -72,7 +66,11 @@ export function CrawlHistoryContent() {
             onRetry={() => refetch()}
           />
         ) : items.length === 0 ? (
-          <EmptyState title={t("empty")} />
+          <EmptyState
+            title={t("empty")}
+            fullPage={false}
+            className="rounded-xl border border-neutral-200 bg-white p-10"
+          />
         ) : (
           <div className="flex flex-col gap-4">
             {items.map((crawl) => (
@@ -81,45 +79,8 @@ export function CrawlHistoryContent() {
           </div>
         )}
 
-        {total > 0 && totalPages > 1 && (
-          <Pagination className="mx-0 w-auto justify-end">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (page > 1) setPage(page - 1);
-                  }}
-                  className={page <= 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <PaginationItem key={p}>
-                  <PaginationLink
-                    href="#"
-                    isActive={p === page}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setPage(p);
-                    }}
-                  >
-                    {p}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (page < totalPages) setPage(page + 1);
-                  }}
-                  className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+        {total > 0 && (
+          <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
         )}
       </div>
     </div>

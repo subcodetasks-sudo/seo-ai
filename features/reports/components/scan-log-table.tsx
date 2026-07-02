@@ -2,6 +2,8 @@
 
 import { useTranslations } from "next-intl";
 
+import EmptyState from "@/components/empty-state";
+import { TableEmptyRow } from "@/components/table-empty-row";
 import {
   Table,
   TableBody,
@@ -29,9 +31,10 @@ function computeDurationSeconds(createdAt: string, finishedAt: string): number {
 
 type ScanLogTableProps = {
   items: ScanLogEntry[];
+  emptyMessage: string;
 };
 
-export function ScanLogTable({ items }: ScanLogTableProps) {
+export function ScanLogTable({ items, emptyMessage }: ScanLogTableProps) {
   const t = useTranslations("reports.scanLog");
 
   return (
@@ -42,6 +45,9 @@ export function ScanLogTable({ items }: ScanLogTableProps) {
       <div className="rounded-xl border border-neutral-200 bg-white overflow-hidden">
         {/* Mobile: card layout */}
         <div className="flex flex-col divide-y divide-neutral-200 md:hidden">
+          {items.length === 0 && (
+            <EmptyState title={emptyMessage} fullPage={false} className="border-0 py-10" />
+          )}
           {items.map((entry) => (
             <div key={entry.id} className="flex flex-col gap-3 p-4">
               <div className="flex items-center justify-between">
@@ -104,6 +110,7 @@ export function ScanLogTable({ items }: ScanLogTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {items.length === 0 && <TableEmptyRow colSpan={5} title={emptyMessage} />}
               {items.map((entry) => (
                 <TableRow key={entry.id} className="border-neutral-200">
                   <TableCell className="text-label-sm text-secondary-500 py-3 px-4 whitespace-nowrap">

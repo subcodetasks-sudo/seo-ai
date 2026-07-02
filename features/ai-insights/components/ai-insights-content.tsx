@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 
+import SelectProjectState from "@/components/select-project-state";
 import { useDirection } from "@/components/ui/direction";
 import { useSelectedProject } from "@/features/home";
 import { issueSummaryQueryOptions } from "../queries/queries";
@@ -16,7 +16,6 @@ import { PerformanceTab } from "./performance-tab";
 import { RecommendationsTab } from "./recommendations-tab";
 
 export function AiInsightsContent() {
-  const t = useTranslations("aiInsights");
   const dir = useDirection();
   const { selectedProjectId } = useSelectedProject();
 
@@ -33,7 +32,7 @@ export function AiInsightsContent() {
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }

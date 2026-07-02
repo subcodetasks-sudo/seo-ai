@@ -12,6 +12,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Link } from "@/i18n/navigation";
+import EmptyState from "@/components/empty-state";
+import { TableEmptyRow } from "@/components/table-empty-row";
 import {
   Table,
   TableBody,
@@ -26,6 +28,7 @@ import type { AiSuggestion, ImpactLevel } from "../types";
 type AiSuggestionsTableProps = {
   items: AiSuggestion[];
   selectedIds: Set<string>;
+  emptyMessage: string;
   onToggleSelect: (id: string) => void;
   onToggleSelectAll: () => void;
   onApprove: (id: string) => void;
@@ -42,6 +45,7 @@ const levelStyles: Record<ImpactLevel, string> = {
 export function AiSuggestionsTable({
   items,
   selectedIds,
+  emptyMessage,
   onToggleSelect,
   onToggleSelectAll,
   onApprove,
@@ -59,6 +63,7 @@ export function AiSuggestionsTable({
     redirect: t("types.redirect"),
     alt_text: t("types.alt_text"),
     internal_link: t("types.internal_link"),
+    h1: t("types.h1"),
   };
 
   const selectableCount = items.filter((item) => item.status === "pending").length;
@@ -119,6 +124,7 @@ export function AiSuggestionsTable({
     <div className="overflow-x-auto rounded-xl border border-neutral-200 bg-white">
       {/* Mobile: card layout */}
       <div className="flex flex-col divide-y divide-neutral-200 md:hidden">
+        {items.length === 0 && <EmptyState title={emptyMessage} fullPage={false} className="border-0 py-10" />}
         {items.map((item) => (
           <div key={item.id} className="flex flex-col gap-3 p-4">
             <div className="flex items-start gap-3">
@@ -200,6 +206,7 @@ export function AiSuggestionsTable({
             </TableRow>
           </TableHeader>
           <TableBody>
+            {items.length === 0 && <TableEmptyRow colSpan={6} title={emptyMessage} />}
             {items.map((item) => (
               <TableRow
                 key={item.id}

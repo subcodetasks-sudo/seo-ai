@@ -8,7 +8,6 @@ type ProjectAnalysisProps = {
   projectId: string;
   crawlJobId: string;
   url: string;
-  onViewIssues: () => void;
   onViewProject: () => void;
 };
 
@@ -16,7 +15,6 @@ export default function ProjectAnalysis({
   projectId,
   crawlJobId,
   url,
-  onViewIssues,
   onViewProject,
 }: ProjectAnalysisProps) {
   const {
@@ -42,7 +40,6 @@ export default function ProjectAnalysis({
         basicPagesCount={totalBasic}
         internalPagesCount={totalInternal}
         isMetricsLoading={isMetricsLoading}
-        onViewIssues={onViewIssues}
         onViewProject={onViewProject}
       />
     );

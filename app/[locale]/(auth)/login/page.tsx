@@ -27,10 +27,10 @@ export default async function LoginPage({ params }: LoginPageProps) {
   const direction = getLocaleDirection(locale);
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
+    <div className="min-h-screen lg:grid lg:grid-cols-2 lg:grid-rows-[auto_1fr] bg-white">
       <div
         dir={direction}
-        className="bg-secondary-50 lg:col-start-2 lg:row-start-1"
+        className="lg:col-start-2 lg:row-start-1"
       >
         <Header />
       </div>
@@ -42,7 +42,7 @@ export default async function LoginPage({ params }: LoginPageProps) {
       </div>
       <div
         dir={direction}
-        className="flex flex-col items-center justify-center bg-secondary-50 lg:col-start-2 lg:row-start-2"
+        className="flex flex-col items-center justify-center lg:col-start-2 lg:row-start-2"
       >
         <LoginForm />
       </div>

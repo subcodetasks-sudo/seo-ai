@@ -4,18 +4,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-import EmptyState from "@/components/empty-state";
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
+import SelectProjectState from "@/components/select-project-state";
+import { TablePagination } from "@/components/table-pagination";
 import { useDirection } from "@/components/ui/direction";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { projectQueryOptions, useSelectedProject } from "@/features/home";
 import { brokenPagesQueryOptions } from "../queries/queries";
@@ -56,7 +49,7 @@ export function NotFoundProblemsContent() {
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }
@@ -91,10 +84,13 @@ export function NotFoundProblemsContent() {
             retryLabel={tCommon("retry")}
             onRetry={() => brokenPagesQuery.refetch()}
           />
-        ) : items.length === 0 ? (
-          <EmptyState title={t("empty")} />
         ) : (
-          <BrokenPagesTable items={items} projectId={selectedProjectId} projectDomain={domain} />
+          <BrokenPagesTable
+            items={items}
+            projectId={selectedProjectId}
+            projectDomain={domain}
+            emptyMessage={t("empty")}
+          />
         )}
 
         {totalPages > 1 || items.length > 0 ? (
@@ -102,46 +98,7 @@ export function NotFoundProblemsContent() {
             <p className="text-label-sm text-neutral-500">
               {t("pagination.showing", { shown: items.length, total })}
             </p>
-            {totalPages > 1 && (
-              <Pagination className="w-auto mx-0 justify-end">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (page > 1) setPage(page - 1);
-                      }}
-                      className={page <= 1 ? "pointer-events-none opacity-50" : ""}
-                    />
-                  </PaginationItem>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <PaginationItem key={p}>
-                      <PaginationLink
-                        href="#"
-                        isActive={p === page}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setPage(p);
-                        }}
-                      >
-                        {p}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (page < totalPages) setPage(page + 1);
-                      }}
-                      className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            )}
+            <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
           </div>
         ) : null}
       </div>

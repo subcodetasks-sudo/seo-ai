@@ -77,6 +77,13 @@ export const FLAT_EDIT_CONFIGS: Record<string, FlatEditConfig> = {
     build: (v, sv) => ({ ...sv, alt_text: v.alt_text }),
   },
 
+  h1: {
+    fields: [{ name: "h1_text", labelKey: "reviewPage.h1.label" }],
+    getInitial: (sv) => ({ h1_text: str(sv.h1_text) }),
+    // Keeps action from the original value.
+    build: (v, sv) => ({ ...sv, h1_text: v.h1_text }),
+  },
+
   redirect: {
     fields: [{ name: "target_url", labelKey: "reviewPage.redirect.targetUrl" }],
     getInitial: (sv) => ({

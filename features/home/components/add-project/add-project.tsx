@@ -25,7 +25,6 @@ export function AddProject() {
     backStep,
     exitAddProject,
     viewProject,
-    viewIssues,
   } = useAddProject();
 
   if (!step) {
@@ -82,7 +81,6 @@ export function AddProject() {
             projectId={formData.projectId}
             crawlJobId={crawlJobId}
             url={formData.domain ?? ""}
-            onViewIssues={viewIssues}
             onViewProject={viewProject}
           />
         )}

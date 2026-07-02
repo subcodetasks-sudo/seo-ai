@@ -53,5 +53,7 @@ export function aiSuggestionDetailQueryOptions(projectId: string, suggestionId: 
     select: transformSuggestionDetail,
     enabled: Boolean(projectId) && Boolean(suggestionId),
     staleTime: 1000 * 60 * 5,
+    refetchInterval: (query) =>
+      ["processing", "pending", "queued"].includes(query.state.data?.status ?? "") ? 5000 : false,
   });
 }

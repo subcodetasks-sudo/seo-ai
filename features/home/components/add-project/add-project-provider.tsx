@@ -36,7 +36,6 @@ type AddProjectContextValue = {
   backStep: () => void;
   exitAddProject: () => void;
   viewProject: () => void;
-  viewIssues: () => void;
 };
 
 // Step 4 is the live crawl analysis screen shown after the form is submitted.
@@ -161,12 +160,6 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
     router.push("/dashboard/overview");
   }, [formData.projectId, setSelectedProjectId, resetFlow, router]);
 
-  const viewIssues = useCallback(() => {
-    if (formData.projectId) setSelectedProjectId(formData.projectId);
-    resetFlow();
-    router.push("/dashboard/problems");
-  }, [formData.projectId, setSelectedProjectId, resetFlow, router]);
-
   return (
     <AddProjectContext.Provider
       value={{
@@ -183,7 +176,6 @@ export function AddProjectProvider({ children }: { children: React.ReactNode }) 
         backStep,
         exitAddProject,
         viewProject,
-        viewIssues,
       }}
     >
       {children}

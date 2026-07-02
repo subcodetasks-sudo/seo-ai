@@ -15,8 +15,7 @@ import { useDirection } from "@/components/ui/direction";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "@/i18n/navigation";
 import { cn, getDisplayPathname } from "@/lib/utils";
-import { generateSuggestion } from "@/features/problems/queries/api";
-import { redirectBrokenPage } from "../queries/api";
+import { approveRedirectSuggestion, createRedirectSuggestion, redirectBrokenPage } from "../queries/api";
 import { brokenPageDetailQueryOptions } from "../queries/queries";
 import { notFoundProblemsKeys } from "../queries/query-keys";
 
@@ -64,17 +63,28 @@ export function AiFixContent() {
     },
   });
 
-  const generateMutation = useMutation({
-    mutationFn: () =>
-      generateSuggestion({ projectId, suggestionType: "redirect", pageUrl: page!.url }),
+  const approveMutation = useMutation({
+    mutationFn: (suggestionId: string) => approveRedirectSuggestion(projectId, suggestionId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: notFoundProblemsKeys.detail(projectId, pageId) });
+      queryClient.invalidateQueries({
+        queryKey: notFoundProblemsKeys.detail(projectId, pageId),
+      });
+    },
+  });
+
+  const generateMutation = useMutation({
+    mutationFn: () => createRedirectSuggestion(projectId, page?.url ?? ""),
+    onSuccess: (suggestion) => {
+      queryClient.invalidateQueries({
+        queryKey: notFoundProblemsKeys.detail(projectId, pageId),
+      });
+      router.push(`/dashboard/ai-suggestions/${suggestion.suggestion_id}`);
     },
   });
 
   function handleApprove() {
     if (!suggestion || !isSuggestionPending) return;
-    redirectMutation.mutate(suggestion.target_url);
+    approveMutation.mutate(suggestion.suggestion_id);
   }
 
   function handleGenerate() {
@@ -167,6 +177,7 @@ export function AiFixContent() {
                   suggestion.status === "approved" && "bg-success-50 text-success-700",
                   suggestion.status === "rejected" && "bg-error-50 text-error-700",
                   suggestion.status === "pending" && "bg-warning-50 text-warning-700",
+                  suggestion.status === "queued" && "bg-neutral-100 text-neutral-600",
                 )}
               >
                 {t(`suggestionStatus.${suggestion.status}`)}
@@ -205,7 +216,7 @@ export function AiFixContent() {
             <Button
               type="button"
               onClick={handleApprove}
-              disabled={isPending}
+              disabled={approveMutation.isPending}
               className="w-full gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-400 h-11"
             >
               <CircleCheck className="size-4" aria-hidden="true" />

@@ -17,7 +17,16 @@
       "errorTitle": "حدث خطأ ما",
       "errorDescription": "تعذّر تحميل هذه الصفحة. يرجى المحاولة مرة أخرى.",
       "retry": "إعادة المحاولة",
-      "emptyTitle": "لا توجد نتائج"
+      "emptyTitle": "لا توجد نتائج",
+      "selectProjectTitle": "لم يتم اختيار مشروع",
+      "selectProjectDescription": "يرجى اختيار مشروع للمتابعة."
+    },
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "morePages": "المزيد من الصفحات"
     }
   },
   "sidebar": {
@@ -27,7 +36,6 @@
     "selectProject": "اختر مشروعاً",
     "projects": "المشاريع",
     "overview": "نظرة عامة",
-    "problemList": "قائمة المشاكل",
     "aiSuggestions": "اقتراحات الـ AI",
     "notFoundProblems": "مشاكل 404",
     "reports": "التقارير",
@@ -82,7 +90,8 @@
       "featureSubtitle": "توصيات مدعومة بـ AI",
       "trustedBy": "موثوق به من قبل",
       "wordpress": "WordPress",
-      "shopify": "Shopify"
+      "shopify": "Shopify",
+      "zid": "Zid"
     },
     "login": {
       "metadata": {
@@ -252,7 +261,6 @@
   "notFoundProblems": {
     "title": "مشاكل 404",
     "subtitle": "{count} مشكلة في {domain}",
-    "noProject": "اختر مشروعاً لعرض مشاكل 404",
     "loading": "جاري التحميل...",
     "error": "فشل تحميل الصفحات المعطلة",
     "empty": "لا توجد مشاكل",
@@ -290,9 +298,12 @@
       "suggestedUrl": "رابط إعادة التوجيه المقترح",
       "reason": "السبب",
       "suggestionStatus": {
+        "queued": "قيد الانتظار في الطابور",
         "pending": "قيد الانتظار",
         "approved": "تمت الموافقة",
-        "rejected": "مرفوض"
+        "rejected": "مرفوض",
+        "failed": "فشل",
+        "skipped": "تم التجاهل"
       },
       "noSuggestion": "لا يوجد اقتراح ذكاء اصطناعي لهذه الصفحة بعد.",
       "generate": "توليد اقتراح بالذكاء الاصطناعي",
@@ -309,7 +320,6 @@
   "aiSuggestions": {
     "title": "اقتراحات الذكاء الاصطناعي",
     "subtitle": "{count} اقتراح إجمالي",
-    "noProject": "اختر مشروعاً لعرض اقتراحات الذكاء الاصطناعي",
     "empty": "لا توجد اقتراحات",
     "loading": "جاري تحميل الاقتراحات...",
     "error": "فشل تحميل الاقتراحات",
@@ -341,7 +351,7 @@
       "rejectSelectedAction": "رفض"
     },
     "table": {
-      "url": "URL",
+      "url": "الرابط",
       "type": "الحالة",
       "priority": "نوع التأثير",
       "impact": "التأثير",
@@ -366,7 +376,8 @@
       "applied": "مُطبَّق",
       "skipped": "تم تجاهله",
       "ignored": "مُتجاهَل",
-      "failed": "فشل"
+      "failed": "فشل",
+      "processing": "جاري المعالجة"
     },
     "types": {
       "meta": "Meta",
@@ -376,14 +387,12 @@
       "faq": "FAQ",
       "redirect": "Redirect",
       "alt_text": "نص Alt",
-      "internal_link": "رابط داخلي"
+      "internal_link": "رابط داخلي",
+      "h1": "H1",
+      "content": "محتوى"
     },
     "pagination": {
-      "showing": "عرض {shown} من {total} نتائج",
-      "previous": "السابق",
-      "next": "التالي",
-      "previousPage": "الصفحة السابقة",
-      "nextPage": "الصفحة التالية"
+      "showing": "عرض {shown} من {total} نتائج"
     },
     "reviewPage": {
       "title": "مراجعة الاقتراح",
@@ -417,6 +426,15 @@
       "altText": {
         "label": "النص البديل"
       },
+      "h1": {
+        "label": "H1",
+        "duplicateWarning": "تم العثور على {count} وسوم H1 في هذه الصفحة",
+        "actions": {
+          "consolidate": "دمج التكرارات",
+          "rewrite": "إعادة الصياغة",
+          "keep": "الإبقاء كما هو"
+        }
+      },
       "redirect": {
         "targetUrl": "رابط التوجيه"
       },
@@ -429,6 +447,10 @@
       "internalLink": {
         "count": "{count} روابط مقترحة"
       },
+      "content": {
+        "wordCount": "{count} كلمة (AI)",
+        "currentWordCount": "{count} كلمة (الحالي)"
+      },
       "editForm": {
         "ogTitle": "OG Title",
         "ogDescription": "OG Description",
@@ -439,6 +461,9 @@
         "targetUrl": "الرابط المستهدف",
         "relevanceReason": "سبب الصلة",
         "addLink": "إضافة رابط",
+        "heading": "العنوان",
+        "sectionContent": "محتوى القسم",
+        "addSection": "إضافة قسم",
         "remove": "حذف",
         "invalidJson": "صيغة JSON غير صحيحة",
         "emptyList": "لا توجد عناصر — أضف عنصراً للمتابعة."
@@ -453,12 +478,27 @@
   "reports": {
     "title": "التقارير",
     "subtitle": "نظرة عامة على أداء السيو لـ {domain}",
-    "noProject": "اختر مشروعاً لعرض التقارير",
     "empty": "لا يوجد سجل فحص في هذه الفترة",
     "loading": "جاري التحميل...",
     "error": "تعذّر تحميل تحليلات التقرير",
     "createReport": "انشاء تقرير",
+    "exporting": "جارٍ التصدير…",
+    "exportSuccess": "تم تصدير التقرير بنجاح",
+    "download": "تنزيل",
+    "downloadUnavailable": "يرجى إنشاء تقرير أولاً لتتمكن من تنزيله",
     "period": "{days} يوماً",
+    "report": {
+      "dialogTitle": "إنشاء وإرسال تقرير",
+      "titleLabel": "عنوان التقرير",
+      "titlePlaceholder": "مثال: تقرير السيو لشهر مايو 2026",
+      "titleRequired": "عنوان التقرير مطلوب",
+      "emailLabel": "إرسال إلى البريد الإلكتروني",
+      "emailPlaceholder": "example@email.com",
+      "emailRequired": "يرجى إدخال بريد إلكتروني صحيح",
+      "generate": "إنشاء",
+      "generating": "جاري الإنشاء...",
+      "cancel": "إلغاء"
+    },
     "charts": {
       "healthTrend": "اتجاه نقاط الصحة",
       "issuesTrend": "اتجاه مشكلات السيو",
@@ -491,7 +531,6 @@
     }
   },
   "googleAnalytics": {
-    "noProject": "اختر مشروعاً لربط Google Analytics",
     "loading": "جاري التحميل...",
     "title": "ربط Google Analytics",
     "description": "اربط حساب Google Analytics الخاص بك لمشاهدة تحليلات الزوار والزيارات لموقع {domain} مباشرة داخل المنصة.",
@@ -655,7 +694,6 @@
   "changelog": {
     "title": "سجل التغييرات",
     "subtitle": "سجل تدقيق كامل لجميع تغييرات السيو المطابقة",
-    "noProject": "اختر مشروعاً لعرض سجل التغييرات",
     "empty": "لا توجد تغييرات في هذه الفترة",
     "loading": "جاري التحميل...",
     "createReport": "أنشاء تقرير",
@@ -691,30 +729,6 @@
     }
   },
   "problems": {
-    "title": "قائمة المشاكل",
-    "subtitle": "تم العثور على {count} مشكلة",
-    "noProject": "اختر مشروعاً لعرض المشاكل",
-    "empty": "لا توجد مشاكل",
-    "loading": "جارٍ تحميل المشاكل…",
-    "error": "تعذّر تحميل المشاكل",
-    "tabs": {
-      "all": "جميع المشكلات",
-      "critical": "حرجة",
-      "high": "عال",
-      "medium": "متوسطة",
-      "low": "منخفضة"
-    },
-    "table": {
-      "problem": "المشكلة",
-      "affectedPages": "الصفحات المتأثرة",
-      "priority": "الأولوية",
-      "action": "الإجراء",
-      "suggestFix": "اقتراح حل",
-      "ignore": "تجاهل",
-      "ignoring": "جارٍ التجاهل…",
-      "viewPages": "عرض الصفحات",
-      "pageCount": "{count} صفحة"
-    },
     "severity": {
       "critical": "حرجة",
       "high": "عال",
@@ -739,27 +753,9 @@
       "http_error": "خطأ HTTP",
       "no_canonical": "وسم Canonical مفقود",
       "is_noindex": "الصفحة مضبوطة على Noindex"
-    },
-    "pagination": {
-      "showing": "يتم عرض {shown} من أصل {total} مشكلة"
-    },
-    "detail": {
-      "affectedPagesCount": "الصفحات المتأثرة: {count}",
-      "priorityBadge": "أولوية {severity}",
-      "whyTitle": "لماذا هذا مهم",
-      "whyBody": "الصفحات التي تفتقر إلى وسم عنوان meta تفوّت إشارة SEO بالغة الأهمية. تستخدم محركات البحث العنوان كمؤشر رئيسي لمحتوى الصفحة، وتعرضه كالعنوان القابل للنقر في نتائج البحث. غياب العنوان كثيراً ما يدفع Google إلى توليد عنوان تلقائي من محتوى الصفحة، وهو نادراً ما يكون مثالياً.",
-      "affectedLinks": "الروابط المتأثرة",
-      "noLinks": "لا توجد روابط متأثرة",
-      "showingLinks": "يتم عرض {shown} من أصل {total} روابط",
-      "backToList": "العودة لقائمة المشاكل",
-      "fixAllAi": "إصلاح تلقائي بالذكاء الاصطناعي للكل",
-      "fixing": "جارٍ توليد الإصلاحات…",
-      "fixSuccess": "تم طلب إصلاحات الذكاء الاصطناعي لـ {count} صفحة",
-      "fixError": "تعذّر توليد إصلاحات الذكاء الاصطناعي"
     }
   },
   "crawlHistory": {
-    "noProject": "اختر مشروعاً لعرض سجل الزحف",
     "title": "سجل الزحف",
     "subtitle": "تم تسجيل {count} عملية زحف",
     "empty": "لا توجد عمليات زحف بعد",
@@ -784,7 +780,6 @@
       "scheduled": "مجدول"
     },
     "pages": {
-      "noProject": "اختر مشروعاً لعرض الصفحات",
       "title": "الصفحات المزحوفة",
       "subtitle": "تم زحف {count} صفحة",
       "empty": "لا توجد صفحات",
@@ -795,22 +790,50 @@
         "basic": "الصفحات الأساسية",
         "internal": "الصفحات الداخلية",
         "issues": "إجمالي المشاكل"
+      },
+      "filter": {
+        "label": "تصفية النتائج",
+        "all": "الكل",
+        "issues": "بها مشاكل",
+        "notFound": "غير موجودة",
+        "noResults": "لا توجد صفحات مطابقة لهذا الفلتر"
       }
     },
     "pageCard": {
       "redirect": "إعادة توجيه",
       "score": "النتيجة {score}",
+      "statusOk": "سليمة",
+      "statusNotFound": "غير موجودة",
       "issues": "المشاكل",
+      "issuesCount": "{count} مشاكل",
       "internalLinks": "الروابط الداخلية",
       "externalLinks": "الروابط الخارجية",
-      "viewLinks": "عرض الروابط"
+      "viewDetails": "عرض التفاصيل"
     },
-    "linksSheet": {
-      "title": "روابط الصفحة",
-      "internal": "داخلية",
-      "external": "خارجية",
-      "empty": "لا توجد روابط",
-      "search": "بحث في الروابط…"
+    "pageDetail": {
+      "error": "تعذّر تحميل تفاصيل الصفحة",
+      "notFound": "الصفحة غير موجودة",
+      "backToPages": "العودة إلى الصفحات",
+      "crawledAt": "تم الزحف {time}",
+      "responseTime": "{ms} مللي ثانية للاستجابة",
+      "noIssues": "لا توجد مشاكل في هذه الصفحة",
+      "noLinks": "لا توجد روابط",
+      "search": "بحث في الروابط…",
+      "aiSuggest": "اقتراح إصلاح بالذكاء الاصطناعي",
+      "aiSuggestRedirect": "اقتراح إعادة توجيه بالذكاء الاصطناعي",
+      "aiSuggestPending": "جارٍ الإنشاء…",
+      "aiSuggestSuccess": "تم إنشاء الاقتراح بنجاح",
+      "notFoundIssueTitle": "هذه الصفحة ترجع خطأ 404 غير موجودة",
+      "notFoundIssueDetail": "تعذّر العثور على هذه الصفحة. احصل على اقتراح إعادة توجيه بالذكاء الاصطناعي لإصلاح الروابط المعطوبة المؤدية إليها.",
+      "ignore": "تجاهل",
+      "ignorePending": "جارٍ التجاهل…",
+      "ignoreSuccess": "تم تجاهل المشكلة بنجاح",
+      "ignored": "متجاهَلة",
+      "tabs": {
+        "issues": "المشاكل",
+        "internal": "داخلية",
+        "external": "خارجية"
+      }
     }
   },
   "home": {
@@ -932,7 +955,6 @@
           "basic": "صفحة أساسية",
           "internal": "صفحة داخلية"
         },
-        "viewIssues": "عرض المشاكل",
         "viewProject": "عرض المشروع"
       }
     },
@@ -965,8 +987,10 @@
       },
       "health": "الصحة",
       "status": "الحالة",
+      "all": "الكل",
       "verified": "موثّق",
       "unverified": "غير موثّق",
+      "noFilterResults": "لا توجد مشاريع تطابق هذا الفلتر",
       "archived": "مؤرشف",
       "verifyToken": "التحقق من الرمز"
     }
@@ -974,7 +998,6 @@
   "overview": {
     "title": "نظرة عامة",
     "lastUpdate": "آخر تحديث: {date}",
-    "noProject": "اختر مشروعاً لعرض النظرة العامة",
     "error": "تعذّر تحميل بيانات النظرة العامة",
     "noData": {
       "title": "لا توجد بيانات فحص بعد",
@@ -1009,7 +1032,6 @@
   "aiInsights": {
     "title": "رؤى الذكاء الاصطناعي",
     "subtitle": "حلّل أداء موقعك بتحليل مدعوم بالذكاء الاصطناعي",
-    "noProject": "اختر مشروعاً لعرض رؤى الذكاء الاصطناعي",
     "period": "آخر {days} يوم",
     "reanalyze": "إعادة التحليل",
     "tabs": {

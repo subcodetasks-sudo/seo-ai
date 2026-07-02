@@ -3,17 +3,17 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 
-import EmptyState from "@/components/empty-state";
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
+import SelectProjectState from "@/components/select-project-state";
 import { useDirection } from "@/components/ui/direction";
-import { GenerateReportDialog } from "@/features/changelog/components/generate-report-dialog";
-import { useGenerateReport } from "@/features/changelog/queries/mutations";
-import type { ChangelogPeriod, GenerateReportFormValues } from "@/features/changelog/types";
 import { allProjectsQueryOptions, useSelectedProject } from "@/features/home";
+import { useExportReportPdf } from "../queries/mutations";
 import { reportsAnalyticsQueryOptions, scanLogQueryOptions } from "../queries/queries";
-import type { ReportsPeriod } from "../types";
+import type { ExportReportPdfPayload, ReportsPeriod } from "../types";
+import { ExportReportDialog } from "./export-report-dialog";
 import { HealthScoreTrendChart } from "./health-score-trend-chart";
 import { NotFoundTrendChart } from "./not-found-trend-chart";
 import { ReportsHeader } from "./reports-header";
@@ -29,6 +29,7 @@ export function ReportsContent() {
 
   const [period, setPeriod] = useState<ReportsPeriod>(30);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [lastReportUrl, setLastReportUrl] = useState<string | null>(null);
 
   const { data: projectsResponse } = useQuery(allProjectsQueryOptions());
   const projects = projectsResponse?.data?.items ?? [];
@@ -46,21 +47,31 @@ export function ReportsContent() {
     scanLogQueryOptions(selectedProjectId ?? "", period),
   );
 
-  const { mutate: generateReport, isPending: isGenerating } = useGenerateReport(
+  const { mutate: exportReportPdf, isPending: isExportingPdf } = useExportReportPdf(
     selectedProjectId ?? "",
-    period as ChangelogPeriod,
   );
 
-  function handleReportSubmit(values: GenerateReportFormValues) {
-    generateReport(values, {
-      onSuccess: () => setDialogOpen(false),
+  function handleExportSubmit(values: ExportReportPdfPayload) {
+    exportReportPdf(values, {
+      onSuccess: (response) => {
+        setDialogOpen(false);
+        if (response.data?.url) {
+          setLastReportUrl(response.data.url);
+        }
+        toast.success(t("exportSuccess"));
+      },
     });
+  }
+
+  function handleDownload() {
+    if (!lastReportUrl) return;
+    window.open(lastReportUrl, "_blank", "noopener,noreferrer");
   }
 
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }
@@ -74,7 +85,9 @@ export function ReportsContent() {
           domain={domain}
           period={period}
           onPeriodChange={setPeriod}
-          onCreateReport={() => setDialogOpen(true)}
+          onOpenExportDialog={() => setDialogOpen(true)}
+          onDownload={handleDownload}
+          canDownload={Boolean(lastReportUrl)}
         />
 
         {isLoading ? (
@@ -107,20 +120,16 @@ export function ReportsContent() {
               </div>
             )}
 
-            {scanLog.length === 0 ? (
-              <EmptyState title={t("empty")} fullPage={false} className="rounded-xl border border-neutral-200 bg-white p-8" />
-            ) : (
-              <ScanLogTable items={scanLog} />
-            )}
+            <ScanLogTable items={scanLog} emptyMessage={t("empty")} />
           </>
         )}
       </div>
 
-      <GenerateReportDialog
+      <ExportReportDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        onSubmit={handleReportSubmit}
-        isPending={isGenerating}
+        onSubmit={handleExportSubmit}
+        isPending={isExportingPdf}
       />
     </div>
   );

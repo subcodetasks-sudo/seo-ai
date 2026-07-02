@@ -1,13 +1,13 @@
 "use client";
 
-import { ArrowRight, Calendar, FileText, Timer } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, FileText, Loader2, Timer } from "lucide-react";
 import { arSA, enUS } from "date-fns/locale";
 import { formatDistanceToNow } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { useDirection } from "@/components/ui/direction";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { getCrawlStatusBadgeClassName } from "../services/page-status";
@@ -17,11 +17,21 @@ type CrawlJobCardProps = {
   crawl: CrawlListItem;
 };
 
+const STATUS_ACCENT: Record<string, string> = {
+  done: "bg-success-400",
+  failed: "bg-error-400",
+  running: "bg-primary-400",
+  in_progress: "bg-primary-400",
+  queued: "bg-neutral-300",
+};
+
 export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
   const t = useTranslations("crawlHistory");
   const locale = useLocale();
+  const dir = useDirection();
   const dateLocale = locale === "ar" ? arSA : enUS;
   const numberFormatter = new Intl.NumberFormat(locale);
+  const ChevronIcon = dir === "rtl" ? ChevronLeft : ChevronRight;
 
   const isActive = crawl.status === "running" || crawl.status === "in_progress";
   const startedRelative = crawl.started_at
@@ -39,11 +49,23 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
       : null;
 
   return (
-    <article className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <Link
+      href={`/dashboard/crawl-history/${crawl.crawl_job_id}`}
+      className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-neutral-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-sm"
+    >
+      <span
+        className={cn(
+          "absolute inset-y-0 start-0 w-1 rounded-e-full",
+          STATUS_ACCENT[crawl.status] ?? "bg-neutral-300",
+        )}
+        aria-hidden="true"
+      />
+
+      <div className="flex flex-wrap items-start justify-between gap-3 ps-2">
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className={getCrawlStatusBadgeClassName(crawl.status)}>
+            <Badge className={cn("gap-1", getCrawlStatusBadgeClassName(crawl.status))}>
+              {isActive && <Loader2 className="size-3 animate-spin" aria-hidden="true" />}
               {t(`status.${crawl.status}`)}
             </Badge>
             <Badge variant="outline" className="border-neutral-200 text-neutral-500 capitalize">
@@ -57,29 +79,22 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
           </p>
         </div>
 
-        <Button
-          asChild
-          type="button"
-          variant="outline"
-          className="h-9 shrink-0 gap-2 border-neutral-200 text-secondary-500 hover:border-primary-200 hover:bg-primary-50 hover:text-primary-600"
-        >
-          <Link href={`/dashboard/crawl-history/${crawl.crawl_job_id}`}>
-            {t("seeResults")}
-            <ArrowRight className="size-4 rtl:rotate-180" aria-hidden="true" />
-          </Link>
-        </Button>
+        <span className="flex shrink-0 items-center gap-1 text-label-sm font-medium text-neutral-400 transition-colors group-hover:text-primary-600">
+          {t("seeResults")}
+          <ChevronIcon className="size-4" aria-hidden="true" />
+        </span>
       </div>
 
       {isActive && (
-        <div className="space-y-1.5">
-          <Progress value={crawl.progress_pct} />
+        <div className="space-y-1.5 ps-2">
+          <Progress value={crawl.progress_pct} className="h-1.5" />
           <p className="text-label-xs text-neutral-400">
             {t("progress", { percent: crawl.progress_pct })}
           </p>
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 ps-2 sm:grid-cols-3">
         <div className="flex items-center gap-2.5 rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2.5">
           <FileText className="size-4 shrink-0 text-neutral-400" aria-hidden="true" />
           <div className="flex min-w-0 flex-col">
@@ -117,10 +132,10 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
       </div>
 
       {crawl.status === "failed" && crawl.error_message && (
-        <p className="rounded-lg border border-error-100 bg-error-50 px-3 py-2 text-label-sm text-error-600">
+        <p className="ms-2 rounded-lg border border-error-100 bg-error-50 px-3 py-2 text-label-sm text-error-600">
           {crawl.error_message}
         </p>
       )}
-    </article>
+    </Link>
   );
 }

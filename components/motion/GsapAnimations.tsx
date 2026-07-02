@@ -16,41 +16,6 @@ function formatNumber(value: number, plain: boolean) {
   return Math.round(value).toLocaleString("en-US");
 }
 
-function createLogoSvg(name: string) {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 32 32");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "1.6");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-
-  const add = (tag: "circle" | "path", attrs: Record<string, string>) => {
-    const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
-    Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
-    svg.appendChild(el);
-  };
-
-  if (name === "WordPress") {
-    add("circle", { cx: "16", cy: "16", r: "13" });
-    add("path", { d: "M8 11 L10.5 22 L14 14 L17.5 22 L20 11" });
-  } else if (name === "Shopify") {
-    add("path", { d: "M9 11h14l-1.3 14a2 2 0 0 1-2 1.8H12.3a2 2 0 0 1-2-1.8z" });
-    add("path", { d: "M12.5 11V9.5a3.5 3.5 0 0 1 7 0V11" });
-  } else if (name === "سلة") {
-    add("path", { d: "M7 13h18l-2 11.5a2 2 0 0 1-2 1.7H11a2 2 0 0 1-2-1.7z" });
-    add("path", { d: "M11 13l3-6M21 13l-3-6" });
-    add("path", { d: "M13.5 17.5v5M18.5 17.5v5" });
-  } else {
-    add("path", { d: "M6 13l1.8-5h16.4L26 13" });
-    add("path", { d: "M7.5 13v11.5h17V13" });
-    add("path", { d: "M13 24.5V18h6v6.5" });
-    add("path", { d: "M6 13a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0" });
-  }
-
-  return svg;
-}
-
 export function GsapAnimations() {
   const t = useTranslations("landing");
 
@@ -377,48 +342,6 @@ export function GsapAnimations() {
         render();
         restart();
       }
-
-      const logoNames = ["WordPress", "Shopify", "سلة", "زد"];
-      const appendSet = (parent: HTMLElement) => {
-        logoNames.forEach((name) => {
-          const item = document.createElement("div");
-          item.className = "logo-item";
-          item.appendChild(createLogoSvg(name));
-          parent.appendChild(item);
-        });
-      };
-      const fillMarquee = (track: HTMLElement) => {
-        track.removeAttribute("data-marquee-ready");
-        track.style.transform = "translateX(0)";
-        const group = document.createElement("div");
-        group.className = "marquee-group";
-        let guard = 0;
-        do {
-          appendSet(group);
-          guard += 1;
-          track.appendChild(group);
-        } while (group.offsetWidth < window.innerWidth * 1.15 && guard < 30);
-        group.remove();
-        const clone = group.cloneNode(true) as HTMLElement;
-        clone.setAttribute("aria-hidden", "true");
-        track.replaceChildren(group, clone);
-        window.setTimeout(() => {
-          track.setAttribute("data-marquee-ready", "true");
-          track.style.transform = "";
-        }, 700);
-      };
-      const marquees = Array.from(root.querySelectorAll<HTMLElement>("[data-marquee]"));
-      marquees.forEach(fillMarquee);
-      let marqueeTimer: number | null = null;
-      const onMarqueeResize = () => {
-        if (marqueeTimer) window.clearTimeout(marqueeTimer);
-        marqueeTimer = window.setTimeout(() => marquees.forEach(fillMarquee), 300);
-      };
-      window.addEventListener("resize", onMarqueeResize);
-      cleanups.push(() => {
-        if (marqueeTimer) window.clearTimeout(marqueeTimer);
-        window.removeEventListener("resize", onMarqueeResize);
-      });
 
       const svg = root.querySelector<SVGSVGElement>("#flow-svg");
       const wrap = root.querySelector<HTMLElement>("#showcase-flow");

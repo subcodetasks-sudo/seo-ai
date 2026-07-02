@@ -61,6 +61,42 @@ type ProjectStatProps = {
   iconClassName?: string;
 };
 
+type VerificationFilter = "all" | "verified" | "unverified";
+
+type FilterTabProps = {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  count: number;
+  icon?: LucideIcon;
+  activeClassName: string;
+};
+
+function FilterTab({ active, onClick, label, count, icon: Icon, activeClassName }: FilterTabProps) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={cn(
+        "flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-label-md font-medium transition-colors",
+        active ? activeClassName : "text-neutral-500 hover:bg-white hover:text-secondary-500",
+      )}
+    >
+      {Icon && <Icon className="size-4" aria-hidden="true" />}
+      {label}
+      <span
+        className={cn(
+          "min-w-5 rounded-full px-1.5 py-0.5 text-center text-label-sm font-semibold leading-tight",
+          active ? "bg-white/25 text-white" : "bg-neutral-200 text-neutral-500",
+        )}
+      >
+        {count}
+      </span>
+    </button>
+  );
+}
+
 function ProjectStat({ icon: Icon, value, label, valueClassName, iconClassName }: ProjectStatProps) {
   return (
     <div className="flex items-center gap-2.5 rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2.5">
@@ -287,9 +323,16 @@ function ProjectCard({ project }: ProjectCardProps) {
 export default function Projects({ projects }: ProjectsProps) {
   const t = useTranslations("home.projects");
   const { startAddProject } = useAddProject();
+  const [verificationFilter, setVerificationFilter] = useState<VerificationFilter>("all");
 
   const verifiedCount = projects.filter((p) => p.is_verified).length;
   const unverifiedCount = projects.length - verifiedCount;
+
+  const filteredProjects = projects.filter((project) => {
+    if (verificationFilter === "verified") return project.is_verified;
+    if (verificationFilter === "unverified") return !project.is_verified;
+    return true;
+  });
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
@@ -311,25 +354,44 @@ export default function Projects({ projects }: ProjectsProps) {
         </Button>
       </div>
 
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-          <p className="text-label-md text-secondary-400">
-            {t("verified")} :{" "}
-            <span className="font-semibold text-success-500">{verifiedCount}</span>
-          </p>
-        </div>
-        <div className="rounded-xl border border-neutral-200 bg-white px-5 py-4">
-          <p className="text-label-md text-secondary-400">
-            {t("unverified")} :{" "}
-            <span className="font-semibold text-warning-400">{unverifiedCount}</span>
-          </p>
-        </div>
+      <div
+        role="group"
+        aria-label={t("status")}
+        className="inline-flex w-fit items-center gap-1 rounded-xl border border-neutral-200 bg-neutral-50 p-1"
+      >
+        <FilterTab
+          active={verificationFilter === "all"}
+          onClick={() => setVerificationFilter("all")}
+          label={t("all")}
+          count={projects.length}
+          activeClassName="bg-secondary-500 text-white"
+        />
+        <FilterTab
+          active={verificationFilter === "verified"}
+          onClick={() => setVerificationFilter("verified")}
+          label={t("verified")}
+          count={verifiedCount}
+          icon={ShieldCheck}
+          activeClassName="bg-success-500 text-white"
+        />
+        <FilterTab
+          active={verificationFilter === "unverified"}
+          onClick={() => setVerificationFilter("unverified")}
+          label={t("unverified")}
+          count={unverifiedCount}
+          icon={ShieldX}
+          activeClassName="bg-warning-400 text-white"
+        />
       </div>
 
       <div className="flex flex-col gap-4">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
+        {filteredProjects.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-neutral-200 bg-neutral-50 px-5 py-10 text-center text-label-md text-neutral-500">
+            {t("noFilterResults")}
+          </div>
+        ) : (
+          filteredProjects.map((project) => <ProjectCard key={project.id} project={project} />)
+        )}
       </div>
     </div>
   );

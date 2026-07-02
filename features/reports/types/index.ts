@@ -12,6 +12,19 @@ export type ReportsAnalytics = {
   weeklyChanges: ChartPoint[];
 };
 
+export type ExportReportPdfPayload = {
+  title: string;
+  email: string;
+};
+
+export type ExportReportPdfResponse = {
+  status: boolean;
+  message: string;
+  data: {
+    url: string;
+  };
+};
+
 export type ScanLogStatus = "completed" | "running" | "failed" | "done";
 
 export type ScanLogEntry = {

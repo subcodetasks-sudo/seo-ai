@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/client";
+import type { BackendResponse, GenerateSuggestionResult } from "@/features/ai-suggestions/types";
 import type {
   BrokenPageDetailResponse,
   BrokenPageStatus,
@@ -34,4 +35,24 @@ export function redirectBrokenPage(
       body: JSON.stringify({ target_url: targetUrl }),
     },
   );
+}
+
+export async function createRedirectSuggestion(
+  projectId: string,
+  pageUrl: string,
+): Promise<GenerateSuggestionResult> {
+  const response = await apiClient<BackendResponse<GenerateSuggestionResult>>(
+    `projects/${projectId}/ai/generate`,
+    {
+      method: "POST",
+      body: JSON.stringify({ suggestion_type: "redirect", page_url: pageUrl }),
+    },
+  );
+  return response.data;
+}
+
+export function approveRedirectSuggestion(projectId: string, suggestionId: string) {
+  return apiClient(`projects/${projectId}/ai/suggestions/${suggestionId}/approve`, {
+    method: "POST",
+  });
 }

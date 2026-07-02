@@ -1,5 +1,6 @@
 "use client";
 
+import { Download } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
@@ -12,14 +13,18 @@ type ReportsHeaderProps = {
   domain: string;
   period: ReportsPeriod;
   onPeriodChange: (period: ReportsPeriod) => void;
-  onCreateReport: () => void;
+  onOpenExportDialog: () => void;
+  onDownload: () => void;
+  canDownload: boolean;
 };
 
 export function ReportsHeader({
   domain,
   period,
   onPeriodChange,
-  onCreateReport,
+  onOpenExportDialog,
+  onDownload,
+  canDownload,
 }: ReportsHeaderProps) {
   const t = useTranslations("reports");
 
@@ -50,14 +55,30 @@ export function ReportsHeader({
             </button>
           ))}
         </div>
-        <Button
-          type="button"
-          size="sm"
-          onClick={onCreateReport}
-          className="w-full bg-primary-300 text-label-sm font-medium text-secondary-500 hover:bg-primary-400 sm:w-auto"
-        >
-          {t("createReport")}
-        </Button>
+        <div className="flex w-full gap-2 sm:w-auto">
+          {/* Direct download button — disabled for now, generation happens via the export dialog below.
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onDownload}
+            disabled={!canDownload}
+            title={canDownload ? undefined : t("downloadUnavailable")}
+            className="flex-1 gap-1.5 border-neutral-200 text-label-sm font-medium text-neutral-600 hover:bg-neutral-50 sm:flex-none"
+          >
+            <Download size={16} />
+            {t("download")}
+          </Button>
+          */}
+          <Button
+            type="button"
+            size="sm"
+            onClick={onOpenExportDialog}
+            className="flex-1 bg-primary-300 text-label-sm font-medium text-secondary-500 hover:bg-primary-400 sm:flex-none"
+          >
+            {t("createReport")}
+          </Button>
+        </div>
       </div>
     </div>
   );

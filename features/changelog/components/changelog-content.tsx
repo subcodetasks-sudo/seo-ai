@@ -4,18 +4,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-import EmptyState from "@/components/empty-state";
 import LoadingState from "@/components/loading-state";
+import SelectProjectState from "@/components/select-project-state";
+import { TablePagination } from "@/components/table-pagination";
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { useSelectedProject } from "@/features/home";
 import { changelogQueryOptions } from "../queries/queries";
 import { useGenerateReport } from "../queries/mutations";
@@ -61,7 +54,7 @@ export function ChangelogContent() {
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }
@@ -107,10 +100,8 @@ export function ChangelogContent() {
         {/* Table */}
         {isLoading ? (
           <LoadingState />
-        ) : items.length === 0 ? (
-          <EmptyState title={t("empty")} />
         ) : (
-          <ChangelogTable items={items} />
+          <ChangelogTable items={items} emptyMessage={t("empty")} />
         )}
 
         {/* Pagination */}
@@ -119,37 +110,7 @@ export function ChangelogContent() {
             <p className="text-label-sm text-neutral-500">
               {t("pagination.showing", { shown: items.length, total })}
             </p>
-            {totalPages > 1 && (
-              <Pagination className="mx-0 w-auto justify-end">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(e) => { e.preventDefault(); if (page > 1) setPage(page - 1); }}
-                      className={page <= 1 ? "pointer-events-none opacity-50" : ""}
-                    />
-                  </PaginationItem>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <PaginationItem key={p}>
-                      <PaginationLink
-                        href="#"
-                        isActive={p === page}
-                        onClick={(e) => { e.preventDefault(); setPage(p); }}
-                      >
-                        {p}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(e) => { e.preventDefault(); if (page < totalPages) setPage(page + 1); }}
-                      className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            )}
+            <TablePagination page={page} totalPages={totalPages} onPageChange={setPage} />
           </div>
         )}
       </div>

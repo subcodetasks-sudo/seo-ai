@@ -16,19 +16,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import EmptyState from "@/components/empty-state";
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
+import SelectProjectState from "@/components/select-project-state";
+import { TablePagination } from "@/components/table-pagination";
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -61,6 +54,8 @@ const SUGGESTION_TYPES: SuggestionType[] = [
   "redirect",
   "alt_text",
   "internal_link",
+  "h1",
+  "content",
 ];
 
 const SUGGESTION_STATUSES: SuggestionStatus[] = [
@@ -227,7 +222,7 @@ export function AiSuggestionsContent() {
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8 lg:px-10">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }
@@ -393,12 +388,11 @@ export function AiSuggestionsContent() {
             retryLabel={tCommon("retry")}
             onRetry={() => refetch()}
           />
-        ) : items.length === 0 ? (
-          <EmptyState title={t("empty")} />
         ) : (
           <AiSuggestionsTable
             items={items}
             selectedIds={selectedIds}
+            emptyMessage={t("empty")}
             onToggleSelect={handleToggleSelect}
             onToggleSelectAll={handleToggleSelectAll}
             onApprove={handleApprove}
@@ -412,50 +406,12 @@ export function AiSuggestionsContent() {
             <p className="text-label-sm text-neutral-500">
               {t("pagination.showing", { shown: items.length, total })}
             </p>
-            {totalPages > 1 && (
-              <Pagination className="mx-0 w-full justify-center sm:w-auto sm:justify-end">
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      text={t("pagination.previous")}
-                      aria-label={t("pagination.previousPage")}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (page > 1) setPage(page - 1);
-                      }}
-                      className={page <= 1 ? "pointer-events-none opacity-50" : ""}
-                    />
-                  </PaginationItem>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <PaginationItem key={p}>
-                      <PaginationLink
-                        href="#"
-                        isActive={p === page}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setPage(p);
-                        }}
-                      >
-                        {p}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      text={t("pagination.next")}
-                      aria-label={t("pagination.nextPage")}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        if (page < totalPages) setPage(page + 1);
-                      }}
-                      className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            )}
+            <TablePagination
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setPage}
+              className="w-full justify-center sm:w-auto sm:justify-end"
+            />
           </div>
         )}
       </div>

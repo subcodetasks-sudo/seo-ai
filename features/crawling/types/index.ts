@@ -36,6 +36,7 @@ export type CrawlPageIssue = {
   points_deducted: number;
   suggestion_type?: string;
   page_type: string | null;
+  image_url?: string;
   ignored?: boolean;
 };
 
@@ -77,12 +78,12 @@ export type CrawlPageItem = {
   id: string;
   url: string;
   status_code: number;
-  health_score: number;
+  health_score: number | null;
   crawled_at: string;
   response_time_ms: number;
   is_redirect: boolean;
   issues: CrawlPageIssue[];
-  seo_data: CrawlPageSeoData;
+  seo_data: CrawlPageSeoData | null;
 };
 
 export type CrawlPagesData = {

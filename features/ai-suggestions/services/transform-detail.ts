@@ -35,6 +35,11 @@ function extractPrimaryText(type: string, value: Record<string, unknown>): strin
     case "og_title": return String(value.og_title ?? "");
     case "og_description": return String(value.og_description ?? "");
     case "alt_text": return String(value.alt_text ?? "");
+    case "h1": return String(value.h1_text ?? value.h1 ?? "");
+    case "content": {
+      const sections = Array.isArray(value.sections) ? (value.sections as { heading?: string }[]) : [];
+      return sections.map((section) => section.heading ?? "").filter(Boolean).join(", ");
+    }
     default: return "";
   }
 }

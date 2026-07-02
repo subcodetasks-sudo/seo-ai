@@ -13,7 +13,11 @@ import { cn, decodeUrlForDisplay } from "@/lib/utils";
 import type {
   AiSuggestionDetail,
   AltTextValue,
+  ContentCurrentValue,
+  ContentSuggestedValue,
   FaqSuggestedValue,
+  H1CurrentValue,
+  H1SuggestedValue,
   InternalLinkSuggestedValue,
   MetaCurrentValue,
   MetaSuggestedValue,
@@ -178,6 +182,32 @@ function AltTextDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   );
 }
 
+function H1Display({ suggestion }: { suggestion: AiSuggestionDetail }) {
+  const t = useTranslations("aiSuggestions.reviewPage");
+  const sv = getSuggestedValue<H1SuggestedValue>(suggestion);
+  const cv = getCurrentValue<Partial<H1CurrentValue>>(suggestion);
+  return (
+    <TwoColumnLayout>
+      <AiCard>
+        <LabeledField label={t("h1.label")} value={sv.h1_text} />
+        {sv.action && (
+          <span className="w-fit rounded-full border border-secondary-200 px-2.5 py-0.5 text-label-xs text-secondary-500">
+            {t.has(`h1.actions.${sv.action}`) ? t(`h1.actions.${sv.action}`) : sv.action}
+          </span>
+        )}
+      </AiCard>
+      <CurrentCard isEmpty={!cv.h1}>
+        <LabeledField label={t("h1.label")} value={cv.h1} />
+        {(cv.h1_count ?? 0) > 1 && (
+          <span className="text-label-xs text-warning-600">
+            {t("h1.duplicateWarning", { count: cv.h1_count ?? 0 })}
+          </span>
+        )}
+      </CurrentCard>
+    </TwoColumnLayout>
+  );
+}
+
 function FaqDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
   const t = useTranslations("aiSuggestions.reviewPage");
   const sv = getSuggestedValue<FaqSuggestedValue>(suggestion);
@@ -199,6 +229,35 @@ function FaqDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
           {t("faq.pairsCount", { count: sv.pair_count })}
         </span>
       )}
+    </AiCard>
+  );
+}
+
+function ContentDisplay({ suggestion }: { suggestion: AiSuggestionDetail }) {
+  const t = useTranslations("aiSuggestions.reviewPage");
+  const sv = getSuggestedValue<ContentSuggestedValue>(suggestion);
+  const cv = getCurrentValue<Partial<ContentCurrentValue>>(suggestion);
+  return (
+    <AiCard>
+      <div className="flex flex-col gap-3">
+        {sv.sections?.map((section, i) => (
+          <div
+            key={i}
+            className="flex flex-col gap-1.5 rounded-lg border border-neutral-100 bg-neutral-50 p-3"
+          >
+            <p className="text-label-sm font-medium text-secondary-500">{section.heading}</p>
+            <p className="text-label-sm leading-relaxed text-neutral-600">{section.content}</p>
+          </div>
+        ))}
+      </div>
+      <div className="flex items-center gap-3 text-label-xs text-neutral-400">
+        {sv.total_word_count !== undefined && (
+          <span>{t("content.wordCount", { count: sv.total_word_count })}</span>
+        )}
+        {cv.word_count !== undefined && (
+          <span>{t("content.currentWordCount", { count: cv.word_count })}</span>
+        )}
+      </div>
     </AiCard>
   );
 }
@@ -386,8 +445,12 @@ export function SuggestionDisplay({ suggestion }: { suggestion: AiSuggestionDeta
       );
     case "alt_text":
       return <AltTextDisplay suggestion={suggestion} />;
+    case "h1":
+      return <H1Display suggestion={suggestion} />;
     case "faq":
       return <FaqDisplay suggestion={suggestion} />;
+    case "content":
+      return <ContentDisplay suggestion={suggestion} />;
     case "schema":
       return <SchemaDisplay suggestion={suggestion} />;
     case "internal_link":

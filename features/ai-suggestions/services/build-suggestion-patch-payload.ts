@@ -1,4 +1,5 @@
 import type {
+  ContentSection,
   FaqPair,
   InternalLink,
   RedirectCandidate,
@@ -11,6 +12,10 @@ const num = (v: unknown): number => (typeof v === "number" ? v : Number(v ?? 0))
 const arr = <T>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 const obj = (v: unknown): Record<string, unknown> =>
   v && typeof v === "object" ? (v as Record<string, unknown>) : {};
+const wordCount = (text: string): number => {
+  const trimmed = text.trim();
+  return trimmed ? trimmed.split(/\s+/).length : 0;
+};
 
 // Builds the exact suggested_value shape the backend accepts for a given
 // suggestion_type, keeping only the keys that type is allowed to carry.
@@ -51,6 +56,15 @@ export function buildSuggestionPatchPayload(
         },
       };
 
+    case "h1":
+      return {
+        suggestion_type: "h1",
+        suggested_value: {
+          h1_text: str(candidate.h1_text),
+          action: str(candidate.action),
+        },
+      };
+
     case "faq": {
       const pairs = arr<FaqPair>(candidate.pairs);
       return {
@@ -75,6 +89,20 @@ export function buildSuggestionPatchPayload(
         suggestion_type: "internal_link",
         suggested_value: { links: arr<InternalLink>(candidate.links) },
       };
+
+    case "content": {
+      const sections = arr<ContentSection>(candidate.sections).map((section) => ({
+        heading: str(section.heading),
+        content: str(section.content),
+      }));
+      return {
+        suggestion_type: "content",
+        suggested_value: {
+          sections,
+          total_word_count: sections.reduce((sum, section) => sum + wordCount(section.content), 0),
+        },
+      };
+    }
 
     case "redirect": {
       const diagnosis = obj(candidate.diagnosis);

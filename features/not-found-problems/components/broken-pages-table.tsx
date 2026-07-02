@@ -15,7 +15,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Link } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
+import EmptyState from "@/components/empty-state";
+import { TableEmptyRow } from "@/components/table-empty-row";
 import {
   Table,
   TableBody,
@@ -31,6 +33,7 @@ type BrokenPagesTableProps = {
   items: BrokenPage[];
   projectId: string;
   projectDomain: string;
+  emptyMessage: string;
 };
 
 function constructFullUrl(
@@ -57,12 +60,22 @@ function constructFullUrl(
   return `${fullDomain}${path}`;
 }
 
-export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPagesTableProps) {
+export function BrokenPagesTable({
+  items,
+  projectId,
+  projectDomain,
+  emptyMessage,
+}: BrokenPagesTableProps) {
   const t = useTranslations("notFoundProblems.table");
   const locale = useLocale();
   const dir = useDirection();
   const dateLocale = locale === "ar" ? ar : enUS;
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const router = useRouter();
+
+  function handleFixWithAi(item: BrokenPage) {
+    router.push(`/dashboard/404-problems/ai-fix?pageId=${item.id}&projectId=${projectId}`);
+  }
 
   function handleCopyUrl(url: string, itemId: string) {
     const fullUrl = constructFullUrl(projectDomain, null, url);
@@ -116,13 +129,11 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
         <Button
           type="button"
           size="sm"
-          asChild
+          onClick={() => handleFixWithAi(item)}
           className="gap-1.5 bg-primary-300 text-secondary-500 hover:bg-primary-400 text-label-sm"
         >
-          <Link href={`/dashboard/404-problems/ai-fix?pageId=${item.id}&projectId=${projectId}`}>
-            <Sparkles className="size-3.5" aria-hidden="true" />
-            {t("fixWithAi")}
-          </Link>
+          <Sparkles className="size-3.5" aria-hidden="true" />
+          {t("fixWithAi")}
         </Button>
       </div>
     </TooltipProvider>
@@ -132,6 +143,7 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
     <div dir={dir} className="rounded-xl border border-neutral-200 bg-white overflow-hidden">
       {/* Mobile: card layout */}
       <div className="flex flex-col divide-y divide-neutral-200 md:hidden">
+        {items.length === 0 && <EmptyState title={emptyMessage} fullPage={false} className="border-0 py-10" />}
         {items.map((item) => (
           <div key={item.id} className="flex flex-col gap-3 p-4">
             <div className="flex flex-col gap-1">
@@ -182,6 +194,7 @@ export function BrokenPagesTable({ items, projectId, projectDomain }: BrokenPage
             </TableRow>
           </TableHeader>
           <TableBody>
+            {items.length === 0 && <TableEmptyRow colSpan={4} title={emptyMessage} />}
             {items.map((item) => (
               <TableRow key={item.id} className="border-neutral-200">
                 <TableCell className="py-3 px-4 font-medium text-error-500 text-label-sm max-w-xs truncate">

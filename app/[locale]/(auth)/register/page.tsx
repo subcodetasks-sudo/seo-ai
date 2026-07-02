@@ -15,7 +15,7 @@ export default async function RegisterPage({ params }: RegisterPageProps) {
     <div className="min-h-screen lg:grid lg:grid-cols-2 lg:grid-rows-[auto_1fr]">
       <div
         dir={direction}
-        className="bg-secondary-50 lg:col-start-2 lg:row-start-1"
+        className="bg-white lg:col-start-2 lg:row-start-1"
       >
         <Header />
       </div>
@@ -27,7 +27,7 @@ export default async function RegisterPage({ params }: RegisterPageProps) {
       </div>
       <div
         dir={direction}
-        className="flex flex-col items-center justify-center bg-secondary-50 lg:col-start-2 lg:row-start-2"
+        className="flex flex-col items-center justify-center bg-white lg:col-start-2 lg:row-start-2"
       >
         <RegisterForm />
       </div>

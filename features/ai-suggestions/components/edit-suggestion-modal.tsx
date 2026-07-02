@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import type { AiSuggestionDetail } from "../types";
+import { ContentEditForm } from "./edit-forms/content-edit-form";
 import { FaqEditForm } from "./edit-forms/faq-edit-form";
 import { FlatEditForm } from "./edit-forms/flat-edit-form";
 import { FLAT_EDIT_CONFIGS } from "./edit-forms/flat-edit-config";
@@ -17,7 +18,7 @@ import { InternalLinkEditForm } from "./edit-forms/internal-link-edit-form";
 import { JsonEditForm } from "./edit-forms/json-edit-form";
 
 // Types whose forms benefit from a wider dialog (lists / JSON).
-const WIDE_TYPES = new Set(["faq", "internal_link", "schema"]);
+const WIDE_TYPES = new Set(["faq", "internal_link", "schema", "content"]);
 
 type EditSuggestionModalProps = {
   open: boolean;
@@ -39,6 +40,8 @@ export function EditSuggestionModal({
     switch (suggestion.type) {
       case "faq":
         return <FaqEditForm {...props} />;
+      case "content":
+        return <ContentEditForm {...props} />;
       case "internal_link":
         return <InternalLinkEditForm {...props} />;
       case "schema":

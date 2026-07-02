@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
+import SelectProjectState from "@/components/select-project-state";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -27,6 +28,7 @@ import type { ImpactLevel, SuggestionStatus } from "../types";
 const STATUS_STYLES: Record<SuggestionStatus, string> = {
   pending: "bg-warning-50 text-warning-700 border border-warning-200",
   queued: "bg-indigo-50 text-indigo-700 border border-indigo-200",
+  processing: "bg-indigo-50 text-indigo-700 border border-indigo-200",
   approved: "bg-success-50 text-success-700 border border-success-200",
   rejected: "bg-error-50 text-error-700 border border-error-200",
   applied: "bg-blue-50 text-blue-700 border border-blue-200",
@@ -72,12 +74,14 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
     redirect: t("types.redirect"),
     alt_text: t("types.alt_text"),
     internal_link: t("types.internal_link"),
+    h1: t("types.h1"),
+    content: t("types.content"),
   };
 
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
-        <p className="text-label-md text-neutral-500">{t("noProject")}</p>
+        <SelectProjectState />
       </div>
     );
   }

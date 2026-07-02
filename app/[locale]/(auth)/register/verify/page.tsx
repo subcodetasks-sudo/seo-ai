@@ -31,7 +31,7 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
   const userEmail = email ?? "aa62@gmail.com";
 
   return (
-    <div dir={direction} className="flex min-h-screen flex-col bg-secondary-50">
+    <div dir={direction} className="flex min-h-screen flex-col bg-white">
       <Header />
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8 sm:max-w-lg lg:max-w-xl lg:px-10 lg:py-12">
         <div className="flex flex-col gap-10 sm:gap-12">

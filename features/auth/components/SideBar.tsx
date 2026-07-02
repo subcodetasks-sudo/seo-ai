@@ -7,7 +7,6 @@ import {
   FolderOpen,
   Home,
   Link2Off,
-  List,
   LogOut,
   PanelRightClose,
   Sparkles,
@@ -50,7 +49,6 @@ type NavItem =
 const NAV_ITEMS: NavItem[] = [
   { href: "/dashboard", labelKey: "projects", icon: FolderOpen, exact: true },
   { href: "/dashboard/overview", labelKey: "overview", icon: Home, exact: true },
-  { href: "/dashboard/problems", labelKey: "problemList", icon: List, exact: false },
   { href: "/dashboard/ai-suggestions", labelKey: "aiSuggestions", icon: AlertTriangle, exact: false },
   { href: "/dashboard/404-problems", labelKey: "notFoundProblems", icon: Link2Off, exact: false },
   { href: "/dashboard/reports", labelKey: "reports", icon: BarChart3, exact: false },
@@ -128,12 +126,13 @@ export default function SideBar() {
   };
 
   const handleLogout = () => {
-    clearSelectedProject();
     logout(undefined, {
       onSuccess: () => {
-        // Wipe React Query cache so the next login always fetches fresh data.
-        queryClient.clear();
+        // access_token/refresh_token cookies are cleared server-side by /api/auth/logout.
+        clearSelectedProject();
         setUser(null);
+        localStorage.clear();
+        queryClient.clear();
         router.push("/login");
       },
     });

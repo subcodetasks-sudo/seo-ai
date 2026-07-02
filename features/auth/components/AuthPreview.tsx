@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { cn } from "@/lib/utils";
 
@@ -48,20 +48,23 @@ function TrustedLogoImage({
 
 export async function AuthPreview({ className }: AuthPreviewProps) {
   const t = await getTranslations("auth.preview");
-
+    const local = await getLocale();
   const trustedLogos = [
-    { key: "wordpress-1", src: "/imgs/wordpress.webp", alt: t("wordpress") },
-    { key: "shopify-1", src: "/imgs/shopify.webp", alt: t("shopify") }
+    { key: "wordpress-1", src: "/imgs/wordpress.png", alt: t("wordpress") },
+    { key: "shopify-1", src: "/imgs/shopify.webp", alt: t("shopify") },
+    { key: "zid-1", src: "/imgs/zid.png", alt: t("zid") },
+    { key: "salla", src: "/imgs/salla.png", alt: t("salla") }
+
   ] as const;
 
   return (
     <aside
       className={cn(
-        "hidden flex-col justify-between bg-secondary-50 px-8 py-10 xl:px-12 xl:py-14 lg:flex",
+        "hidden flex-col justify-around px-8 py-10 xl:px-12 xl:py-8 lg:flex",
         className
       )}
     >
-      <div className="flex flex-1 flex-col gap-8">
+      <div className="flex  flex-col gap-4">
         <div className="space-y-4">
           <h1 className="max-w-xl text-h1 font-medium leading-tight text-secondary-500">
             {t("headline")}
@@ -70,7 +73,7 @@ export async function AuthPreview({ className }: AuthPreviewProps) {
             {t("subtitle")}
           </p>
         </div>
-
+{/* 
         <ul className="flex gap-4">
           {Array.from({ length: 3 }).map((_, index) => (
             <li key={index} className="min-w-0 flex-1">
@@ -80,17 +83,17 @@ export async function AuthPreview({ className }: AuthPreviewProps) {
               />
             </li>
           ))}
-        </ul>
+        </ul> */}
 
-        <div className="relative flex flex-1 items-center justify-center py-2">
+        <div className="relative flex items-center justify-center">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-6 top-1/2 h-3/5 -translate-y-1/2 rounded-full bg-primary-100/60 blur-3xl"
           />
-          <div className="relative w-full overflow-hidden rounded-3xl bg-white shadow-[0_20px_60px_rgba(54,53,57,0.12)] ring-1 ring-neutral-200">
+          <div className="relative w-full overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(54,53,57,0.12)] ">
             <Image
-              src="/imgs/auth-img.webp"
-              alt=""
+              src={local === "en" ? "/imgs/auth-imgEN.png" : "/imgs/auth-img.png"}
+              alt="hero image"
               width={720}
               height={540}
               className="h-auto w-full object-cover"
@@ -100,7 +103,7 @@ export async function AuthPreview({ className }: AuthPreviewProps) {
         </div>
       </div>
 
-      <div className="mt-8 space-y-5 text-center">
+      <div className="space-y-5 text-center">
         <p className="text-sm text-muted-foreground">{t("trustedBy")}</p>
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
           {trustedLogos.map((logo) => (

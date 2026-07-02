@@ -23,7 +23,7 @@ export type BrokenPagesResponse = {
   };
 };
 
-export type RedirectSuggestionStatus = "pending" | "approved" | "rejected";
+export type RedirectSuggestionStatus = "queued" | "pending" | "approved" | "rejected";
 
 export type RedirectSuggestion = {
   suggestion_id: string;
