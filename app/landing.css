@@ -41,7 +41,7 @@ body.reveal-ready #landing-root [data-anim] {
 /* --------------------------------------------------------------------------
    Background system — subtle digital pattern + soft primary glows
    -------------------------------------------------------------------------- */
-#landing-root .bg-pattern {
+/* #landing-root .bg-pattern {
   position: relative;
 }
 
@@ -61,7 +61,7 @@ body.reveal-ready #landing-root [data-anim] {
   opacity: 1;
   pointer-events: none;
   z-index: 0;
-}
+} */
 
 #landing-root section:not(.bg-pattern) {
   position: relative;

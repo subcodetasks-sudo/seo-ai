@@ -118,13 +118,15 @@ export function LandingFooter() {
               </div>
             )}
 
-            <div dir='ltr'>
+            <div>
               <h5 className='mb-4 text-base font-extrabold text-white' dir='rtl'>{t('footer.phonesTitle')}</h5>
               <div className='space-y-3 text-sm text-white/65'>
                 {phones.map((phone, i) => (
                   <p key={i} className='flex items-center gap-2.5'>
                     {PHONE_ICON}
-                    <span className='whitespace-nowrap'>{phone}</span>
+                    <span className='whitespace-nowrap' dir='ltr'>
+                      {phone}
+                    </span>
                   </p>
                 ))}
               </div>
