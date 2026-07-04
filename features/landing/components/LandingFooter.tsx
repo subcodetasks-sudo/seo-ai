@@ -63,11 +63,11 @@ export function LandingFooter() {
   const hasSocial = social && Object.values(social).some(Boolean);
 
   return (
-    <footer className='relative overflow-hidden bg-ink text-white'>
+    <footer className='relative overflow-hidden bg-white text-ink'>
       <div className='swirl-watermark -left-20 -top-20 h-[520px] w-[520px]' style={{ opacity: '0.04' }} />
 
       {/* CTA banner */}
-      <div className='relative border-b border-white/10'>
+      <div className='relative border-b border-ink/10'>
         <div className='glow left-1/2 -top-40 h-[520px] w-[520px] -translate-x-1/2 opacity-40' />
         <div
           className='layer-content mx-auto max-w-7xl px-4 py-12 text-center sm:px-5 sm:py-14 lg:px-8 lg:py-20'
@@ -76,7 +76,7 @@ export function LandingFooter() {
           <h2 className='text-2xl font-extrabold leading-[1.4] sm:text-4xl lg:text-5xl'>
             {cta?.title ?? t('footer.cta')}
           </h2>
-          <p className='mx-auto mt-4 max-w-2xl text-base text-white/70 sm:text-lg'>
+          <p className='mx-auto mt-4 max-w-2xl text-base text-ink-muted sm:text-lg'>
             {cta?.description ?? t('footer.subtitle')}
           </p>
           <a
@@ -89,16 +89,53 @@ export function LandingFooter() {
       </div>
 
       {/* Footer links + contact */}
-      <div className='relative border-b border-white/10'>
+      <div className='relative border-b border-ink/10'>
         <div className='mx-auto max-w-7xl px-4 py-10 sm:px-5 lg:px-8'>
-          <div className='grid grid-cols-2 gap-10 md:grid-cols-4 lg:gap-12'>
+          <div className='grid grid-cols-2 gap-10 md:grid-cols-3 lg:gap-12'>
+
+            <div className='space-y-8'>
+              <div>
+                <Image
+                  src='/logo.webp'
+                  alt='Howyah Logo'
+                  width={100}
+                  height={40}
+                  className='h-14 w-auto sm:h-20'
+                />
+              </div>
+              {hasSocial && (
+                <div className='flex items-center gap-4'>
+                  {social?.linkedin && (
+                    <a href={social.linkedin} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
+                      <LinkedinIcon />
+                    </a>
+                  )}
+                  {social?.facebook && (
+                    <a href={social.facebook} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
+                      <FacebookIcon />
+                    </a>
+                  )}
+                  {social?.instagram && (
+                    <a href={social.instagram} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
+                      <InstagramIcon />
+                    </a>
+                  )}
+                  {social?.x && (
+                    <a href={social.x} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
+                      <XIcon />
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+
             {platform.length > 0 && (
               <div>
-                <h5 className='mb-4 text-base font-extrabold text-white'>{t('footer.platformTitle')}</h5>
-                <ul className='space-y-2 text-sm text-white/65'>
+                <h5 className='mb-4 text-base font-extrabold text-ink'>{t('footer.platformTitle')}</h5>
+                <ul className='space-y-2 text-sm text-ink-muted'>
                   {platform.map((link) => (
                     <li key={link.url}>
-                      <a href={link.url} className='transition-colors hover:text-white'>{link.label}</a>
+                      <a href={link.url} className='transition-colors hover:text-ink'>{link.label}</a>
                     </li>
                   ))}
                 </ul>
@@ -107,20 +144,62 @@ export function LandingFooter() {
 
             {company.length > 0 && (
               <div>
-                <h5 className='mb-4 text-base font-extrabold text-white'>{t('footer.companyTitle')}</h5>
-                <ul className='space-y-2 text-sm text-white/65'>
+                <h5 className='mb-4 text-base font-extrabold text-ink'>{t('footer.quickLinksTitle')}</h5>
+                <ul className='space-y-2 text-sm text-ink-muted'>
                   {company.map((link) => (
                     <li key={link.url}>
-                      <a href={link.url} className='transition-colors hover:text-white'>{link.label}</a>
+                      <a href={link.url} className='transition-colors hover:text-ink'>{link.label}</a>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
 
-            <div>
-              <h5 className='mb-4 text-base font-extrabold text-white' dir='rtl'>{t('footer.phonesTitle')}</h5>
-              <div className='space-y-3 text-sm text-white/65'>
+          </div>
+        </div>
+      </div>
+
+      {/* Certification + social + legal */}
+      <div className='relative'>
+        <div className='mx-auto max-w-7xl px-4 py-8 sm:px-5 lg:px-8'>
+          <div className='grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0'>
+            {/* <div className='flex flex-col items-center gap-6 md:gap-0 md:flex-row md:justify-between'> */}
+
+            <div className='w-fit'>
+              <h5 className='mb-4 text-base font-extrabold text-ink'>{t('footer.officesTitle')}</h5>
+              <div className='space-y-3 text-sm text-ink-muted'>
+                {offices.map((office, i) => (
+                  <div key={i} className='flex items-start gap-2.5 w-fit'>
+                    {LOCATION_ICON}
+                    <span>
+                      {office.title && (
+                        <strong className='font-bold text-ink'>{office.title}:</strong>
+                      )}{' '}
+                      <div>
+                        {office.address}
+                      </ div>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className='flex flex-col items-center gap-2 flex-1 md:justify-self-end'>
+              <div className='inline-flex'>
+                <Image
+                  src='/ministry-commerce-certification 1.png'
+                  alt={t('footer.certifiedAlt')}
+                  width={300}
+                  height={200}
+                  className='h-14 w-auto sm:h-30'
+                />
+              </div>
+              <p className='text-sm font-semibold text-ink-muted'>{t('footer.certified')}</p>
+            </div>
+
+            <div className='md:justify-self-end'>
+              <h5 className='mb-4 text-base font-extrabold text-ink' dir='rtl'>{t('footer.phonesTitle')}</h5>
+              <div className='space-y-3 text-sm text-ink-muted'>
                 {phones.map((phone, i) => (
                   <p key={i} className='flex items-center gap-2.5'>
                     {PHONE_ICON}
@@ -132,82 +211,33 @@ export function LandingFooter() {
               </div>
             </div>
 
-            <div>
-              <h5 className='mb-4 text-base font-extrabold text-white'>{t('footer.officesTitle')}</h5>
-              <div className='space-y-3 text-sm text-white/65'>
-                {offices.map((office, i) => (
-                  <p key={i} className='flex items-start gap-2.5'>
-                    {LOCATION_ICON}
-                    <span>
-                      {office.title && (
-                        <strong className='font-bold text-white/90'>{office.title}:</strong>
-                      )}{' '}
-                      {office.address}
-                    </span>
-                  </p>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Certification + social + legal */}
-      <div className='relative'>
-        <div className='mx-auto max-w-7xl px-4 py-8 sm:px-5 lg:px-8'>
-          <div className='flex flex-col items-center gap-6 md:flex-row md:justify-between'>
-            <div className='flex flex-col items-center gap-2'>
-              <div className='inline-flex rounded-2xl bg-white p-3'>
-                <Image
-                  src='/ministry-commerce-certification 1.png'
-                  alt={t('footer.certifiedAlt')}
-                  width={200}
-                  height={100}
-                  className='h-12 w-auto sm:h-16'
-                />
-              </div>
-              <p className='text-sm font-semibold text-white/65'>{t('footer.certified')}</p>
-            </div>
-
-            {hasSocial && (
-              <div className='flex items-center gap-4'>
-                {social?.linkedin && (
-                  <a href={social.linkedin} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
-                    <LinkedinIcon />
-                  </a>
-                )}
-                {social?.facebook && (
-                  <a href={social.facebook} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
-                    <FacebookIcon />
-                  </a>
-                )}
-                {social?.instagram && (
-                  <a href={social.instagram} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
-                    <InstagramIcon />
-                  </a>
-                )}
-                {social?.x && (
-                  <a href={social.x} target='_blank' rel='noreferrer' className='text-white/60 transition-colors hover:text-white'>
-                    <XIcon />
-                  </a>
-                )}
-              </div>
-            )}
-
-            {legal.length > 0 && (
-              <div className='flex flex-wrap items-center gap-4 text-sm text-white/60'>
-                {legal.map((link) => (
-                  <a key={link.url} href={link.url} className='transition-colors hover:text-white'>
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
-        <div className='border-t border-white/10 bg-black/20 px-4 py-5 text-center'>
-          <p className='text-sm font-semibold text-white/60'>{copyright}</p>
+        <div className='border-t flex items-center justify-evenly gap-4 border-ink/10 bg-ink/5 px-4 py-5 text-center'>
+
+          {legal.length > 0 && (
+            <div className='flex  items-center gap-2 text-xs text-ink-muted'>
+              {legal.map((link) => (
+                <a key={link.url} href={link.url} className='transition-colors hover:text-ink'>
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          )}
+
+          <p className='text-xs  text-ink-muted'>{copyright}</p>
+
+
+          <div>
+            <Image
+              src='/imgs/payments.webp'
+              alt={"payment methods"}
+              width={150}
+              height={30}
+              className='w-auto h-4'
+            />
+          </div>
         </div>
       </div>
     </footer>
