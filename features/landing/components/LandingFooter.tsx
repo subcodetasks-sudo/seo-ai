@@ -89,7 +89,7 @@ export function LandingFooter() {
       </div>
 
       {/* Footer links + contact */}
-      <div className='relative border-b border-ink/10'>
+      <div className='relative '>
         <div className='mx-auto max-w-7xl px-4 py-10 sm:px-5 lg:px-8'>
           <div className='grid grid-cols-2 gap-10 md:grid-cols-3 lg:gap-12'>
 
@@ -130,7 +130,7 @@ export function LandingFooter() {
             </div>
 
             {platform.length > 0 && (
-              <div>
+              <div className='md:justify-self-center'>
                 <h5 className='mb-4 text-base font-extrabold text-ink'>{t('footer.platformTitle')}</h5>
                 <ul className='space-y-2 text-sm text-ink-muted'>
                   {platform.map((link) => (
@@ -143,7 +143,7 @@ export function LandingFooter() {
             )}
 
             {company.length > 0 && (
-              <div>
+              <div className='md:justify-self-end'>
                 <h5 className='mb-4 text-base font-extrabold text-ink'>{t('footer.quickLinksTitle')}</h5>
                 <ul className='space-y-2 text-sm text-ink-muted'>
                   {company.map((link) => (
@@ -163,7 +163,6 @@ export function LandingFooter() {
       <div className='relative'>
         <div className='mx-auto max-w-7xl px-4 py-8 sm:px-5 lg:px-8'>
           <div className='grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-0'>
-            {/* <div className='flex flex-col items-center gap-6 md:gap-0 md:flex-row md:justify-between'> */}
 
             <div className='w-fit'>
               <h5 className='mb-4 text-base font-extrabold text-ink'>{t('footer.officesTitle')}</h5>
@@ -184,7 +183,7 @@ export function LandingFooter() {
               </div>
             </div>
 
-            <div className='flex flex-col items-center gap-2 flex-1 md:justify-self-end'>
+            <div className='flex flex-col items-center gap-2 flex-1 md:justify-self-center'>
               <div className='inline-flex'>
                 <Image
                   src='/ministry-commerce-certification 1.png'
