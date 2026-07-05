@@ -45,7 +45,7 @@ export const onForegroundMessage = (
   const messagingInstance = getFirebaseMessaging();
   if (messagingInstance) {
     return onMessage(messagingInstance, (payload: MessagePayload) => {
-      console.log("Foreground message received:", payload);
+      // console.log("Foreground message received:", payload);
       callback(payload);
     });
   }

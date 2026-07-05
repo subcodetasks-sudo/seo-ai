@@ -57,7 +57,7 @@ export async function serverClient<T>(
     throw new Error(GENERIC_ERROR);
   }
 
-  console.log(`Server response from ${url}:`, data);
+  // console.log(`Server response from ${url}:`, data);
 
   // Backend business errors carry a safe, user-facing message.
   // Check both HTTP status and the body's status field — backends vary in which they set.

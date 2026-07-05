@@ -12,7 +12,7 @@ const Logo = () => {
       alt={t("brand")}
       width={200}
       height={40}
-      className="shrink-0"
+      className="shrink-0 w-auto h-14"
       priority
     />
     {/* <span className="text-lg font-semibold text-secondary-500">{t("brand")}</span> */}

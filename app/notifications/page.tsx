@@ -17,7 +17,7 @@ export default function NotificationsTestPage() {
   useEffect(() => {
     // Listen for foreground messages
     const unsubscribe = onForegroundMessage((payload) => {
-      console.log("Foreground message received in Test Page:", payload);
+      // console.log("Foreground message received in Test Page:", payload);
       setUnreadCount((prev) => prev + 1);
     });
 

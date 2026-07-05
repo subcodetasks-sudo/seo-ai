@@ -14,31 +14,33 @@ export function PricingSection() {
   const local = useLocale();
   const { data: raw } = useQuery(pricingQueryOptions(local));
   const pricing = Array.isArray(raw) ? raw[0] : raw;
-
+  // console.log('PricingSection raw:', raw);
   const plans: Plan[] = pricing?.packages?.items.map((item, i) => {
     const priceNum = parseFloat(item.price ?? '0');
-    const annual =
-      isNaN(priceNum) || priceNum === 0
-        ? item.price
-        : String(Math.round(priceNum * 0.8));
+    // const annual =
+    //   isNaN(priceNum) || priceNum === 0
+    //     ? item.price
+    //     : String(Math.round(priceNum * 0.8));
     return {
       id: String(i),
       name: item.title,
       description: item.description,
       monthly: item.price,
-      annual,
+      // annual,
       features: item.features ?? [],
       action: item.button_text,
       barClass: BAR_CLASSES[i % BAR_CLASSES.length],
     };
   }) ?? [];
 
+  // console.log('PricingSection plans:', plans);
+
   return (
     <PricingCards
       plans={plans}
-      eyebrow={pricing?.content}
-      title={pricing?.title}
-      subtitle={pricing?.description}
+      eyebrow={pricing?.content ?? ''}
+      title={pricing?.title ?? ''}
+      subtitle={pricing?.description ?? ''}
     />
   );
 }

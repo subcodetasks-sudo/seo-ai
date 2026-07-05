@@ -8,17 +8,18 @@ export interface Plan {
   name: string;
   description: string;
   monthly: string;
-  annual: string;
+  // annual: string;
   features: string[];
   action: string;
   barClass: string;
+  button_text?: string;
 }
 
 interface Props {
   plans: Plan[];
-  eyebrow?: string;
-  title?: string;
-  subtitle?: string;
+  eyebrow: string;
+  title: string;
+  subtitle: string;
 }
 
 const PLAN_BAR_CLASSES = [
@@ -29,7 +30,7 @@ const PLAN_BAR_CLASSES = [
 
 export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
   const t = useTranslations('landing');
-  const [isAnnual, setIsAnnual] = useState(false);
+  // const [isAnnual, setIsAnnual] = useState(false);
 
   // null = auto-select; when data loads Math.min(1, length-1) picks the middle plan
   const [userSelected, setUserSelected] = useState<number | null>(null);
@@ -41,7 +42,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
   const featured = plans.find((p) => p.id === featuredId) ?? plans[0];
   const ordered =
     others.length >= 2 ? [others[0], featured, others[1]] : plans;
-
+  console.log(plans);
   if (!plans.length) return null;
 
   return (
@@ -53,7 +54,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
 
       <div className='layer-content mx-auto max-w-7xl px-5 lg:px-8'>
         <div className='mx-auto max-w-2xl text-center' data-anim='fade-up'>
-          <div className='eyebrow mb-5'>{eyebrow ?? t('pricing.eyebrow')}</div>
+          <div className='eyebrow mb-5'>{parse(eyebrow) ?? t('pricing.eyebrow')}</div>
           <h2 className='text-3xl font-extrabold leading-[1.25] text-ink sm:text-4xl lg:text-[2.7rem]'>
             {title ? parse(title) : t('pricing.defaultTitle')}
           </h2>
@@ -62,7 +63,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
           </div>
 
           <div className='pricing-toggle-wrap mt-7 inline-flex items-center justify-center'>
-            <span className={`text-base font-extrabold ${isAnnual ? 'text-neutral-400' : 'text-ink'}`}>
+            {/* <span className={`text-base font-extrabold ${isAnnual ? 'text-neutral-400' : 'text-ink'}`}>
               {t('pricing.monthly')}
             </span>
             <button
@@ -73,13 +74,13 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
               onClick={() => setIsAnnual((v) => !v)}
             >
               <span className='toggle-thumb'></span>
-            </button>
-            <span className={`annual-label inline-flex items-center gap-3 text-base font-bold ${isAnnual ? 'text-ink' : 'text-neutral-400'}`}>
+            </button> */}
+            {/* <span className={`annual-label inline-flex items-center gap-3 text-base font-bold text-neutral-400`}>
               <span>{t('pricing.yearly')}</span>
               <span className='discount-badge rounded-full bg-primary/15 px-2.5 py-1 text-xs font-bold text-primary-700'>
                 {t('pricing.saveBadge')}
               </span>
-            </span>
+            </span> */}
           </div>
 
           <p className='mt-4 text-sm font-bold text-neutral-400'>
@@ -87,7 +88,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
           </p>
         </div>
 
-        <div className='pricing-grid mt-12 grid items-stretch gap-6 lg:grid-cols-[0.92fr_1.24fr_0.92fr] lg:gap-5'>
+        <div className='pricing-grid mt-18 grid gap-6 lg:grid-cols-[0.92fr_1.24fr_0.92fr] lg:gap-5'>
           {ordered.map((plan, slotIndex) => {
             if (!plan) return null;
             const isFeatured = plan.id === featuredId;
@@ -97,8 +98,8 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
             return (
               <div
                 key={plan.id}
-                className={`relative flex flex-col transition-all duration-300 ${isFeatured ? 'lg:-translate-y-6 lg:scale-[1.02]' : ''}`}
-                data-anim='fade-up'
+                className={`relative flex flex-col transition-all duration-300 ${isFeatured ? 'md:scale-[1.02]' : 'md:translate-y-10 md:scale-100'}`}
+                // data-anim='fade-down'
               >
                 {isFeatured && (
                   <div className='absolute -top-3.5 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded-full bg-ink px-4 py-1.5 text-xs font-extrabold text-primary shadow-sm'>
@@ -138,16 +139,16 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
 
                   <div className='mt-9 flex items-end justify-center gap-2 text-center' dir='rtl'>
                     <span className={`${isFeatured ? 'text-[4.8rem]' : 'text-[3.6rem]'} font-black leading-none text-ink`}>
-                      {isAnnual ? plan.annual : plan.monthly}
+                      {plan.monthly}
                     </span>
                     <span className={`mb-3 text-2xl font-extrabold ${isFeatured ? 'text-primary-900/55' : 'text-neutral-400'}`}>
                       {t('pricing.currency')}{' '}
-                      <span>{isAnnual ? t('pricing.perYear') : t('pricing.perMonth')}</span>
+                      <span>{t('pricing.perMonth')}</span>
                     </span>
                   </div>
 
                   <span className={`btn mt-9 w-full transition-transform duration-200 group-hover:scale-[1.02] ${isFeatured ? 'pricing-main-cta-featured py-5 text-xl' : 'btn-ghost py-4 text-lg'}`}>
-                    {plan.action}
+                    {plan.button_text || plan.action}
                   </span>
 
                   <ul className={`mt-9 space-y-4 text-lg font-semibold leading-7 ${isFeatured ? 'text-ink/80' : 'text-ink-soft'}`}>

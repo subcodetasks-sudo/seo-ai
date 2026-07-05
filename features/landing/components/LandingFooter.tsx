@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import { settingsQueryOptions } from '../queries/queries';
+import Link from 'next/link';
 
 const LinkedinIcon = () => (
   <svg viewBox='0 0 24 24' fill='currentColor' className='h-[18px] w-[18px]'>
@@ -58,7 +59,12 @@ export function LandingFooter() {
   const copyright = settings?.copyright ?? t('footer.copyright');
   const platform = settings?.footer_links?.platform ?? [];
   const company = settings?.footer_links?.company ?? [];
-  const legal = settings?.footer_links?.legal ?? [];
+  const legal = settings?.footer_links?.legal?.length
+    ? settings.footer_links.legal
+    : [
+        { label: t('footer.termsLabel'), url: '/terms-of-use' },
+        { label: t('footer.privacyLabel'), url: '/privacy-policy' },
+      ];
   const social = settings?.social;
   const hasSocial = social && Object.values(social).some(Boolean);
 
@@ -79,12 +85,12 @@ export function LandingFooter() {
           <p className='mx-auto mt-4 max-w-2xl text-base text-ink-muted sm:text-lg'>
             {cta?.description ?? t('footer.subtitle')}
           </p>
-          <a
-            href={cta?.platform_url ?? '#pricing'}
+          <Link
+            href="/dashboard"
             className='btn btn-primary cta-pulse mt-8 w-full px-8 py-4 text-base sm:mt-9 sm:w-auto sm:px-10 sm:text-lg'
           >
             {cta?.button_text ?? t('footer.ctaButton')}
-          </a>
+          </Link>
         </div>
       </div>
 

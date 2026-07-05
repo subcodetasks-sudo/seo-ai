@@ -55,37 +55,46 @@ export function TestimonialsSection() {
                 className='testimonial-portrait relative w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden flex items-end justify-center shadow-[0_40px_80px_-30px_rgba(160,205,57,0.6)] transition-colors duration-500'
                 style={{ background: portraitColor }}
               >
-                <svg viewBox='0 0 200 200' className='w-[88%] h-[88%]' aria-hidden='true'>
-                  <defs>
-                    <clipPath id='pc'>
-                      <circle cx='100' cy='110' r='100' />
-                    </clipPath>
-                  </defs>
-                  <g clipPath='url(#pc)'>
-                    <circle cx='100' cy='78' r='42' fill='#ffffff' opacity='0.92' />
-                    <path d='M28 210 C28 150 60 132 100 132 C140 132 172 150 172 210 Z' fill='#ffffff' opacity='0.92' />
-                  </g>
-                  <text
-                    x='100'
-                    y='92'
-                    textAnchor='middle'
-                    dominantBaseline='middle'
-                    fill='var(--primary-700)'
-                    fontSize='46'
-                    fontWeight='900'
-                  >
-                    {portraitInitial}
-                  </text>
-                </svg>
+                {active?.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={active.image}
+                    alt={active.image_alt ?? active.content.name}
+                    className='w-full h-full object-cover'
+                  />
+                ) : (
+                  <svg viewBox='0 0 200 200' className='w-[88%] h-[88%]' aria-hidden='true'>
+                    <defs>
+                      <clipPath id='pc'>
+                        <circle cx='100' cy='110' r='100' />
+                      </clipPath>
+                    </defs>
+                    <g clipPath='url(#pc)'>
+                      <circle cx='100' cy='78' r='42' fill='#ffffff' opacity='0.92' />
+                      <path d='M28 210 C28 150 60 132 100 132 C140 132 172 150 172 210 Z' fill='#ffffff' opacity='0.92' />
+                    </g>
+                    <text
+                      x='100'
+                      y='92'
+                      textAnchor='middle'
+                      dominantBaseline='middle'
+                      fill='var(--primary-700)'
+                      fontSize='46'
+                      fontWeight='900'
+                    >
+                      {portraitInitial}
+                    </text>
+                  </svg>
+                )}
               </div>
             </div>
           </div>
 
           {/* Slide content */}
           <div data-anim='fade-up'>
-            <svg className='w-16 h-16 text-primary-line' viewBox='0 0 24 24' fill='currentColor' aria-hidden='true'>
+            {/* <svg className='w-16 h-16 text-primary-line' viewBox='0 0 24 24' fill='currentColor' aria-hidden='true'>
               <path d='M9.5 6C6.5 7.5 5 10.5 5 14v4h6v-6H8c0-2 .7-3.6 2.5-4.5L9.5 6zm9 0C15.5 7.5 14 10.5 14 14v4h6v-6h-3c0-2 .7-3.6 2.5-4.5L18.5 6z' />
-            </svg>
+            </svg> */}
 
             {active && (
               <div key={safeIdx} className='animate-in fade-in slide-in-from-bottom-3 duration-500'>
@@ -93,8 +102,17 @@ export function TestimonialsSection() {
                   {parse(active.content.content)}
                 </div>
                 <div className='mt-7 flex items-center gap-4'>
-                  <div className='w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center font-extrabold text-primary-700'>
-                    {portraitInitial}
+                  <div className='w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center font-extrabold text-primary-700 overflow-hidden'>
+                    {active.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={active.image}
+                        alt={active.image_alt ?? active.content.name}
+                        className='w-full h-full object-cover'
+                      />
+                    ) : (
+                      portraitInitial
+                    )}
                   </div>
                   <div>
                     <div className='font-extrabold text-ink'>{parse(active.content.name)}</div>

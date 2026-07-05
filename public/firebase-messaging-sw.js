@@ -23,7 +23,7 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
-  console.log("[SW] Background message received:", payload);
+  // console.log("[SW] Background message received:", payload);
 
   const title =
     payload.data?.title ||

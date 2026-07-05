@@ -14,6 +14,8 @@ const SHELL_EXCLUDED_PREFIXES = [
   "/register",
   "/reset-password",
   "/plans",
+  "/terms-of-use",
+  "/privacy-policy",
 ];
 
 function shouldShowShell(pathname: string) {

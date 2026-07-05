@@ -17,7 +17,7 @@ export async function apiClient<T>(
   });
 
   const result = await response?.json();
-  console.log("result", result);
+  // console.log("result", result);
 
   if (response.status === 401) {
     if (!refreshing) {
