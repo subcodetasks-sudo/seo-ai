@@ -98,7 +98,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
             return (
               <div
                 key={plan.id}
-                className={`relative flex flex-col transition-all duration-300 ${isFeatured ? 'md:scale-[1.02]' : 'md:translate-y-10 md:scale-100'}`}
+                className={`relative flex flex-col transition-all duration-300 ${isFeatured ? '' : 'md:translate-y-10'}`}
                 // data-anim='fade-down'
               >
                 {isFeatured && (
@@ -148,7 +148,8 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
                   </div>
 
                   <span className={`btn mt-9 w-full transition-transform duration-200 group-hover:scale-[1.02] ${isFeatured ? 'pricing-main-cta-featured py-5 text-xl' : 'btn-ghost py-4 text-lg'}`}>
-                    {plan.button_text || plan.action}
+                    {plan.action}
+                    {/* {t('pricing.subscribeBtn')} */}
                   </span>
 
                   <ul className={`mt-9 space-y-4 text-lg font-semibold leading-7 ${isFeatured ? 'text-ink/80' : 'text-ink-soft'}`}>
