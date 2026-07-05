@@ -6,7 +6,7 @@ import { LandingHeader } from "@/features/landing/components/LandingHeader";
 import { LandingFooter } from "@/features/landing/components/LandingFooter";
 import { LegalContent } from "@/features/legal/components/LegalContent";
 import { GsapAnimations } from "@/components/motion/GsapAnimations";
-import { settingsQueryOptions } from "@/features/landing/queries/queries";
+import { privacyPolicyQueryOptions, settingsQueryOptions } from "@/features/landing/queries/queries";
 
 export default async function PrivacyPolicyPage({
   params,
@@ -17,7 +17,10 @@ export default async function PrivacyPolicyPage({
   const { locale } = await params;
 
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(settingsQueryOptions(locale));
+  await Promise.all([
+    queryClient.prefetchQuery(settingsQueryOptions(locale)),
+    queryClient.prefetchQuery(privacyPolicyQueryOptions(locale)),
+  ]);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

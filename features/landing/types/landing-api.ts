@@ -211,6 +211,15 @@ export interface TestimonialsData {
   testimonials: Testimonial[];
 }
 
+// ── Legal (Terms of Use / Privacy Policy) ────────────────────────
+export interface LegalPage {
+  id: number;
+  title: string;
+  description: string;
+  content: string;
+  sort_order: number;
+}
+
 // ── Settings ──────────────────────────────────────────────────────
 export interface SettingsBrand {
   logo: string | null;

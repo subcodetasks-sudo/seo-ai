@@ -1458,9 +1458,7 @@
       "office0Name": "Turkey Office",
       "office0Address": "Al-Fatih, opposite Historia Mall",
       "office1Name": "Sultanate of Oman Office",
-      "office1Address": "Barka, Market Street",
-      "termsLabel": "Terms and Conditions",
-      "privacyLabel": "Privacy Policy"
+      "office1Address": "Barka, Market Street"
     },
     "a11y": {
       "logoAlt": "Howyah",
@@ -1471,151 +1469,11 @@
     }
   },
   "legal": {
-    "backToHome": "Back to home",
     "termsOfUse": {
-      "eyebrow": "Legal",
-      "title": "Terms and Conditions",
-      "intro": "These Terms and Conditions apply to all users and visitors of the platform. By using the website, creating an account, or making use of any of our services, you agree to comply with these Terms and Conditions.",
-      "sections": [
-        {
-          "heading": "First: Account and Usage Terms",
-          "paragraphs": [
-            "The user must provide accurate and correct information when creating an account, and update it whenever necessary to ensure the continued proper provision of services.",
-            "The user bears full responsibility for keeping their login credentials confidential, and for all activities carried out through their account.",
-            "Using the platform for any unlawful purpose, attempting unauthorized access to systems, disrupting the services, or misusing them in any way is prohibited.",
-            "Howeyah may suspend or disable any account that violates these terms or misuses the platform, without prejudice to its legal rights."
-          ]
-        },
-        {
-          "heading": "Second: Intellectual Property",
-          "paragraphs": [
-            "All rights related to the platform, including software, designs, logos, text, graphics, trademarks, and content, are owned by Howeyah or its licensors, and are subject to applicable intellectual property protection laws.",
-            "No part of the platform may be copied, modified, republished, or distributed without prior written consent."
-          ]
-        },
-        {
-          "heading": "Third: Subscriptions and Services",
-          "paragraphs": [
-            "Howeyah Rank AI provides website analysis and search engine optimization services using artificial intelligence technologies, in accordance with the packages and subscriptions published on the platform.",
-            "Howeyah reserves the right to modify subscription prices, update services, add new features, or discontinue certain services when needed, while notifying users where appropriate."
-          ]
-        },
-        {
-          "heading": "Fourth: Artificial Intelligence Services",
-          "paragraphs": [
-            "The platform relies on artificial intelligence technologies to provide analyses and recommendations that help improve the performance of websites in search engines.",
-            "All outputs and recommendations are advisory in nature, and the user is responsible for reviewing and approving them before applying them to their website.",
-            "Howeyah does not guarantee a specific ranking in search results or a specific increase in traffic or sales, as results depend on multiple factors beyond the platform's control."
-          ]
-        },
-        {
-          "heading": "Fifth: Cancellation and Refunds",
-          "paragraphs": [
-            "Subscription, cancellation, and refund processes are subject to Howeyah's approved Subscription and Refund Policy, and users are advised to review that policy before completing a subscription."
-          ]
-        },
-        {
-          "heading": "Sixth: Disclaimer",
-          "paragraphs": [
-            "The platform's services are provided \"as is\" and \"as available\", with best efforts made to ensure the continuity and accuracy of the service.",
-            "Howeyah is not liable for any direct or indirect losses or damages arising from the use of the platform or reliance on its results, or from any interruption or technical failure beyond its control."
-          ]
-        },
-        {
-          "heading": "Seventh: Amending the Terms and Conditions",
-          "paragraphs": [
-            "Howeyah reserves the right to amend these Terms and Conditions at any time. Continued use of the platform after any amendments are published constitutes acceptance of the updated version."
-          ]
-        },
-        {
-          "heading": "Eighth: Governing Law",
-          "paragraphs": [
-            "These Terms and Conditions are governed by and interpreted in accordance with the laws and regulations applicable in the country from which Howeyah's services are provided, unless mandatory laws provide otherwise."
-          ]
-        }
-      ],
-      "closing": "For inquiries regarding these Terms and Conditions, you can contact our support team by email or through the official communication channels listed on Howeyah's website."
+      "eyebrow": "Legal"
     },
     "privacyPolicy": {
-      "eyebrow": "Legal",
-      "title": "Privacy Policy",
-      "intro": "At the Howeyah platform (Howeyah Rank AI), we are committed to protecting users' privacy and safeguarding the confidentiality of their data, and we adhere to appropriate measures to ensure personal information is handled responsibly and transparently. This policy explains the types of data we collect, how it is used and protected, and the rights available to users when using the website or any of our services.",
-      "sections": [
-        {
-          "heading": "1. Information We Collect",
-          "intro": "We collect the information you provide to us directly when creating an account or using Howeyah's (Howeyah AI) services, in addition to some data collected automatically to improve the platform's performance, including:",
-          "items": [
-            { "label": "Personal Data", "text": "Full name, email address, phone number (if provided), and company or organization name." },
-            { "label": "Billing Data", "text": "Invoice information and payment data required to complete subscriptions, noting that bank card data is processed by approved payment service providers and is not stored on our servers." },
-            { "label": "Connected Website Data", "text": "Information about the websites the user connects to the platform to enable analysis and search engine optimization services." },
-            { "label": "Usage Data", "text": "Technical information collected automatically, such as IP address, browser type, operating system, and activity log within the platform, to help improve performance, enhance security, and develop the user experience." }
-          ]
-        },
-        {
-          "heading": "2. How We Use Information",
-          "intro": "We use the information we collect to provide and improve our services, ensuring a more efficient experience for users. Uses of the data include the following:",
-          "items": [
-            { "label": "Account Management", "text": "Creating and managing the user's account, verifying identity, and facilitating access to the platform's services." },
-            { "label": "Providing Platform Services", "text": "Analyzing websites, providing search engine optimization (SEO) recommendations using artificial intelligence technologies, and preparing reports on website performance." },
-            { "label": "Service Development", "text": "Improving the platform's quality, adding new features, and analyzing service performance to enhance the user experience." },
-            { "label": "Support and Communication", "text": "Providing technical support, responding to inquiries, and sending notifications related to the account, subscriptions, or important service updates." },
-            { "label": "Legal Compliance", "text": "Fulfilling legal and regulatory obligations, and protecting the rights of the platform and its users when necessary." }
-          ]
-        },
-        {
-          "heading": "3. Artificial Intelligence and Content",
-          "paragraphs": [
-            "The platform relies on artificial intelligence technologies to provide recommendations related to search engine optimization, such as suggesting titles, meta descriptions, and content improvements.",
-            "All recommendations remain subject to the user's review, and the user is responsible for reviewing and approving them before applying them to their website."
-          ]
-        },
-        {
-          "heading": "4. Sharing Information",
-          "intro": "We do not sell or rent personal data to any third party, but information may be shared with:",
-          "items": [
-            { "text": "Hosting and cloud computing service providers." },
-            { "text": "Payment service providers." },
-            { "text": "Technical support partners." },
-            { "text": "Government or judicial authorities when there is a legal obligation." }
-          ]
-        },
-        {
-          "heading": "5. Data Protection",
-          "paragraphs": [
-            "We apply advanced security and technical standards to protect your data from unauthorized access, modification, or disclosure. However, please note that no method of transmission over the internet is 100% secure."
-          ]
-        },
-        {
-          "heading": "6. Cookies",
-          "paragraphs": [
-            "The website may use cookies to improve the user experience, analyze performance, and personalize services. Users can disable cookies through their browser settings, although some website functions may be affected as a result."
-          ]
-        },
-        {
-          "heading": "7. Data Retention",
-          "paragraphs": [
-            "We retain data for as long as it is necessary to provide services or comply with legal requirements, after which it is deleted or anonymized in accordance with internal policies."
-          ]
-        },
-        {
-          "heading": "8. User Rights",
-          "intro": "Subject to applicable laws, users may request to:",
-          "items": [
-            { "text": "Access their data." },
-            { "text": "Correct inaccurate data." },
-            { "text": "Delete data in cases permitted by law." },
-            { "text": "Restrict or object to the processing of their data." },
-            { "text": "Withdraw consent when processing is based on consent." }
-          ]
-        },
-        {
-          "heading": "9. Changes to This Policy",
-          "paragraphs": [
-            "We may update this Privacy Policy from time to time to keep up with legal or technical changes. Any changes will be posted on this page along with an updated effective date."
-          ]
-        }
-      ],
-      "closing": "If you have any inquiries about this Privacy Policy, you can contact us through the official communication channels listed on Howeyah's website."
+      "eyebrow": "Legal"
     }
   }
 }

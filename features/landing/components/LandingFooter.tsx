@@ -59,12 +59,7 @@ export function LandingFooter() {
   const copyright = settings?.copyright ?? t('footer.copyright');
   const platform = settings?.footer_links?.platform ?? [];
   const company = settings?.footer_links?.company ?? [];
-  const legal = settings?.footer_links?.legal?.length
-    ? settings.footer_links.legal
-    : [
-        { label: t('footer.termsLabel'), url: '/terms-of-use' },
-        { label: t('footer.privacyLabel'), url: '/privacy-policy' },
-      ];
+  const legal = settings?.footer_links?.legal ?? [];
   const social = settings?.social;
   const hasSocial = social && Object.values(social).some(Boolean);
 

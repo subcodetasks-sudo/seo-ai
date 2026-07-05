@@ -8,4 +8,6 @@ export const landingKeys = {
   testimonials: (lang: string) => ['landing', 'testimonials', lang] as const,
   settings: (lang: string) => ['landing', 'settings', lang] as const,
   footer: (lang: string) => ['landing', 'footer', lang] as const,
+  termsOfUse: (lang: string) => ['landing', 'terms-of-use', lang] as const,
+  privacyPolicy: (lang: string) => ['landing', 'privacy-policy', lang] as const,
 };

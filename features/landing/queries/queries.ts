@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/landing-api";
-import type { AboutUs, Faq, Hero, Pricing, Statistics, TestimonialsData, ToolUsage } from "@/features/landing/types/landing-api";
+import type { AboutUs, Faq, Hero, LegalPage, Pricing, Statistics, TestimonialsData, ToolUsage } from "@/features/landing/types/landing-api";
 import { landingKeys } from "./query-keys";
 
 export function heroQueryOptions(lang: string) {
@@ -66,4 +66,18 @@ export function footerQueryOptions(lang: string) {
     queryKey: landingKeys.footer(lang),
     queryFn: () => apiFetch(`/api/v1/footer-cta?lang=${lang}`),
     })
+}
+
+export function termsOfUseQueryOptions(lang: string) {
+  return queryOptions({
+    queryKey: landingKeys.termsOfUse(lang),
+    queryFn: () => apiFetch<LegalPage>('/api/v1/terms-of-use'),
+  });
+}
+
+export function privacyPolicyQueryOptions(lang: string) {
+  return queryOptions({
+    queryKey: landingKeys.privacyPolicy(lang),
+    queryFn: () => apiFetch<LegalPage>('/api/v1/privacy-policy'),
+  });
 }
