@@ -89,9 +89,9 @@ export function TestimonialsSection() {
 
             {active && (
               <div key={safeIdx} className='animate-in fade-in slide-in-from-bottom-3 duration-500'>
-                <p className='text-2xl sm:text-[1.7rem] font-bold text-ink leading-[1.6]'>
+                <div className='text-2xl sm:text-[1.7rem] font-bold text-ink leading-[1.6]'>
                   {parse(active.content.content)}
-                </p>
+                </div>
                 <div className='mt-7 flex items-center gap-4'>
                   <div className='w-12 h-12 rounded-xl bg-primary/15 flex items-center justify-center font-extrabold text-primary-700'>
                     {portraitInitial}

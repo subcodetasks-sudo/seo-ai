@@ -128,7 +128,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
                   ></span>
 
                   <div className='pricing-card-v2__head'>
-                    <h3 className='text-2xl font-extrabold text-ink'>{plan.name}</h3>
+                    <h3 className='text-2xl font-extrabold text-ink'>{parse(plan.name)}</h3>
                     {plan.description && (
                       <div className={`mt-1 text-base font-semibold ${isFeatured ? 'text-primary-900/65' : 'text-neutral-400'}`}>
                         {parse(plan.description)}

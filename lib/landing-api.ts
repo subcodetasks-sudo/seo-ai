@@ -11,7 +11,7 @@ export const LANDING_API_BASE_URL =
       Accept: "application/json",
       "Accept-Language": locale || "ar",
     },
-    next: { revalidate: 3600 },
+    cache: "no-store",
   });
 
   if (!res.ok) {
