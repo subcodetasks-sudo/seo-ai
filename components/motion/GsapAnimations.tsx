@@ -200,6 +200,7 @@ export function GsapAnimations() {
 
         root.querySelectorAll<HTMLElement>(staggerSelector).forEach((grid) => {
           const items = grid.querySelectorAll("[data-anim]");
+          if (!items.length) return;
           gsap.fromTo(
             items,
             { autoAlpha: 0, y: 40 },

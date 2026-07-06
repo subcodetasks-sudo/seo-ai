@@ -1,8 +1,6 @@
 // Public API surface for the notifications package
-export * from "./components/NotificationBell";
 export * from "./components/notifications-content";
 export * from "./components/fcm-initializer";
-export * from "./hooks/use-fcm";
 export * from "./hooks/use-firebase-notifications";
 export * from "./services/firebase-client";
 export * from "./queries/query-keys";
