@@ -42,7 +42,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
   const featured = plans.find((p) => p.id === featuredId) ?? plans[0];
   const ordered =
     others.length >= 2 ? [others[0], featured, others[1]] : plans;
-  console.log(plans);
+  // console.log(plans);
   if (!plans.length) return null;
 
   return (
