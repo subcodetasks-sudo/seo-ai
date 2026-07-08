@@ -1461,7 +1461,10 @@
       "office0Name": "Turkey Office",
       "office0Address": "Al-Fatih, opposite Historia Mall",
       "office1Name": "Sultanate of Oman Office",
-      "office1Address": "Barka, Market Street"
+      "office1Address": "Barka, Market Street",
+      "termsOfUse": "Terms & Conditions",
+      "privacyPolicy": "Privacy Policy",
+      "pricingPolicy": "Pricing & Refunds"
     },
     "a11y": {
       "logoAlt": "Howyah",
@@ -1477,6 +1480,30 @@
     },
     "privacyPolicy": {
       "eyebrow": "Legal"
+    }
+  },
+  "pricingPolicy": {
+    "eyebrow": "Pricing & Refunds",
+    "title": "Pricing & Refund Policy",
+    "intro": "This page explains how Howyah Rank AI package pricing works, our subscription policy, and the terms for subscription refunds — to ensure transparency and make clear the rights and obligations of every user.",
+    "section1": {
+      "title": "First: Subscriptions & Pricing",
+      "paragraphs": [
+        "Howyah Rank AI provides website analysis and search engine optimization services powered by artificial intelligence, in accordance with the packages and subscriptions announced on the platform.",
+        "Package prices are shown in US Dollars (USD) on the platform for illustration purposes, while payments are processed through an approved payment gateway that operates in Omani Rial (OMR). Upon completing payment, the subscription amount may appear in Omani Rial according to the exchange rate applied by the payment provider or card issuer, deducting the amount equivalent to the announced package price at the time of purchase.",
+        "Howyah Rank AI reserves the right to modify subscription prices, update packages, add new features, or discontinue certain services when necessary. Any changes apply to new subscriptions or upon renewal, with users notified accordingly where applicable."
+      ]
+    },
+    "section2": {
+      "title": "Second: Refund Policy",
+      "intro": "Users may request a refund of their subscription amount within 7 (seven) days of the package purchase date, provided the service has not been used and the following conditions are met:",
+      "conditions": [
+        "None of the package's services have been used or benefited from.",
+        "No AI Tokens have been activated or consumed, and none of the AI features available on the platform have been used.",
+        "The refund request is submitted within a period not exceeding 7 days from the purchase date."
+      ],
+      "note": "If any AI Tokens have been used, or any AI services or package features have been benefited from — whether in whole or in part — the subscription is considered used, and the user is not entitled to a refund of the subscription amount.",
+      "review": "Howyah Rank AI reserves the right to review all refund requests and verify that they meet the conditions of this policy before approving any refund."
     }
   }
 }

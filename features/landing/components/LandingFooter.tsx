@@ -59,7 +59,11 @@ export function LandingFooter() {
   const copyright = settings?.copyright ?? t('footer.copyright');
   const platform = settings?.footer_links?.platform ?? [];
   const company = settings?.footer_links?.company ?? [];
-  const legal = settings?.footer_links?.legal ?? [];
+  const legal = settings?.footer_links?.legal ?? [
+    { label: t('footer.termsOfUse'), url: '/terms-of-use' },
+    { label: t('footer.privacyPolicy'), url: '/privacy-policy' },
+    // { label: t('footer.pricing'), url: '/pricing' },
+  ];
   const social = settings?.social;
   const hasSocial = social && Object.values(social).some(Boolean);
 
@@ -223,6 +227,9 @@ export function LandingFooter() {
                   {link.label}
                 </a>
               ))}
+              <a  href={"/pricing"} className='transition-colors hover:text-ink'>
+                {t('footer.pricingPolicy')}
+              </a>
             </div>
           )}
 

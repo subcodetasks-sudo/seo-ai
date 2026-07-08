@@ -16,6 +16,7 @@ const SHELL_EXCLUDED_PREFIXES = [
   "/plans",
   "/terms-of-use",
   "/privacy-policy",
+  "/pricing",
 ];
 
 function shouldShowShell(pathname: string) {

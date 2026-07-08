@@ -181,8 +181,8 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
 
           {plans.length > 1 && (
             <>
-              <CarouselPrevious className='left-0 lg:-left-20' />
-              <CarouselNext className='right-0 lg:-right-20' />
+              <CarouselPrevious className='left-0 lg:-left-20 size-10' />
+              <CarouselNext className='right-0 lg:-right-20 size-10' />
             </>
           )}
         </Carousel>

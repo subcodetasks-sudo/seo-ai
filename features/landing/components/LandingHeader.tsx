@@ -6,12 +6,12 @@ import Link from 'next/link';
 import { useLocaleSwitch } from '@/i18n/use-locale-switch';
 
 const navItems = [
-  { href: '#about', key: 'navbar.about' },
-  { href: '#usecases', key: 'navbar.usecases' },
-  { href: '#stats', key: 'navbar.stats' },
-  { href: '#pricing', key: 'navbar.pricing' },
-  { href: '#testimonials', key: 'navbar.testimonials' },
-  { href: '#faq', key: 'navbar.faq' },
+  { href: '/#about', key: 'navbar.about' },
+  { href: '/#usecases', key: 'navbar.usecases' },
+  { href: '/#stats', key: 'navbar.stats' },
+  { href: '/#pricing', key: 'navbar.pricing' },
+  { href: '/#testimonials', key: 'navbar.testimonials' },
+  { href: '/#faq', key: 'navbar.faq' },
 ] as const;
 
 export function LandingHeader() {
