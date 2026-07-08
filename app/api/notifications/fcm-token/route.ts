@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const data = await serverClient(
-      "notifications/fcm-token",
+      "notifications/fcm_token",
       { method: "POST", headers: authHeaders, body: JSON.stringify(body) },
       "Failed to update FCM token",
     );
