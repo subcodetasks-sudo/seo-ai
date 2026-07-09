@@ -10,6 +10,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -30,6 +31,7 @@ import { Input } from "@/components/ui/input";
 import { createRegisterSchema } from "@/features/auth/schemas/register-schema";
 import type { RegisterFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
+import { readCallbackUrl, withCallbackUrl } from "@/lib/callback-url";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
 import { useRegister } from "../../queries/mutations";
@@ -116,6 +118,8 @@ function GoogleSignInButton({ label, className }: GoogleSignInButtonProps) {
 
 export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = readCallbackUrl(searchParams);
   const t = useTranslations("auth.register");
   const tValidation = useTranslations("auth.register.validation");
   const [showPassword, setShowPassword] = useState(false);
@@ -156,7 +160,9 @@ export function RegisterForm() {
   function onSubmit(_data: RegisterFormValues) {
     registerUser(_data, {
       onSuccess: () => {
-        router.push(`/register/verify?email=${encodeURIComponent(_data.email)}`);
+        router.push(
+          withCallbackUrl(`/register/verify?email=${encodeURIComponent(_data.email)}`, callbackUrl)
+        );
       },
       onError: (error) => {
         toast.error(error.message || t("registrationFailed"));

@@ -2,11 +2,7 @@ import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
 import { routing } from "./i18n/routing";
-import {
-  CALLBACK_URL_COOKIE,
-  CALLBACK_URL_MAX_AGE,
-  decodeCallbackUrl,
-} from "./lib/callback-url";
+import { readCallbackUrl, withCallbackUrl } from "./lib/callback-url";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -54,34 +50,17 @@ export default function middleware(request: NextRequest) {
   const isAuthenticated = hasRefreshToken(request);
 
   if (!isAuthenticated && pathname.startsWith("/dashboard")) {
-    const response = NextResponse.redirect(new URL("/login", request.url));
-
     // Remember where the user was headed so the auth flow can send them
-    // back after login (see lib/callback-url.ts). A cookie (rather than a
-    // query param) survives the register → verify-email → login detours
-    // without threading the URL through every auth page.
-    response.cookies.set(
-      CALLBACK_URL_COOKIE,
-      encodeURIComponent(pathname + request.nextUrl.search),
-      { path: "/", maxAge: CALLBACK_URL_MAX_AGE, sameSite: "lax" }
-    );
-
-    return response;
+    // back after login/register (see lib/callback-url.ts). Carried as a
+    // query param — like NextAuth's callbackUrl — through the
+    // register → verify-email → login detour via each page's own link.
+    const target = withCallbackUrl("/login", pathname + request.nextUrl.search);
+    return NextResponse.redirect(new URL(target, request.url));
   }
 
   if (isAuthenticated && AUTH_PATH_PATTERN.test(pathname)) {
-    const callbackUrl = decodeCallbackUrl(
-      request.cookies.get(CALLBACK_URL_COOKIE)?.value
-    );
-    const response = NextResponse.redirect(
-      new URL(callbackUrl ?? "/dashboard", request.url)
-    );
-
-    if (callbackUrl) {
-      response.cookies.set(CALLBACK_URL_COOKIE, "", { path: "/", maxAge: 0 });
-    }
-
-    return response;
+    const callbackUrl = readCallbackUrl(request.nextUrl.searchParams);
+    return NextResponse.redirect(new URL(callbackUrl ?? "/dashboard", request.url));
   }
 
   // next-intl's own cookie-based locale detection is tied to the same flag

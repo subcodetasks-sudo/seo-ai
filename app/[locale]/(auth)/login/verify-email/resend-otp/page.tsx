@@ -5,7 +5,7 @@ import { getLocaleDirection } from "@/i18n/routing";
 
 type LoginResendOtpPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ email?: string }>;
+  searchParams: Promise<{ email?: string; callbackUrl?: string }>;
 };
 
 export async function generateMetadata({
@@ -27,7 +27,7 @@ export default async function LoginResendOtpPage({
   searchParams,
 }: LoginResendOtpPageProps) {
   const { locale } = await params;
-  const { email } = await searchParams;
+  const { email, callbackUrl } = await searchParams;
   setRequestLocale(locale);
   const direction = getLocaleDirection(locale);
 
@@ -38,6 +38,7 @@ export default async function LoginResendOtpPage({
         <ResendOtpCode
           defaultEmail={email ?? ""}
           verifyPath="/login/verify-email"
+          callbackUrl={callbackUrl}
         />
       </main>
     </div>

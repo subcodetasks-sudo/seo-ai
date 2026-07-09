@@ -5,7 +5,7 @@ import { getLocaleDirection } from "@/i18n/routing";
 
 type ResendOtpPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ email?: string }>;
+  searchParams: Promise<{ email?: string; callbackUrl?: string }>;
 };
 
 export async function generateMetadata({
@@ -27,7 +27,7 @@ export default async function ResendOtpPage({
   searchParams,
 }: ResendOtpPageProps) {
   const { locale } = await params;
-  const { email } = await searchParams;
+  const { email, callbackUrl } = await searchParams;
   setRequestLocale(locale);
   const direction = getLocaleDirection(locale);
 
@@ -35,7 +35,7 @@ export default async function ResendOtpPage({
     <div dir={direction} className="flex min-h-screen flex-col bgwhite">
       <Header />
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8 sm:max-w-lg lg:max-w-xl lg:px-10 lg:py-12">
-        <ResendOtpCode defaultEmail={email ?? ""} />
+        <ResendOtpCode defaultEmail={email ?? ""} callbackUrl={callbackUrl} />
       </main>
     </div>
   );

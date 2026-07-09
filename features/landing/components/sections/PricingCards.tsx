@@ -11,7 +11,6 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 import { useRouter } from '@/i18n/navigation';
-import { storeCallbackUrlCookie } from '@/lib/callback-url';
 import { PricingFeatureList } from './pricing-feature-list';
 
 export interface Plan {
@@ -116,7 +115,8 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
               const select = () => {
                 setSelected(index);
                 api?.scrollTo(index);
-                storeCallbackUrlCookie('/dashboard/settings?tab=billing');
+                // Unauthenticated visitors are bounced to /login?callbackUrl=...
+                // by proxy.ts and land back here after auth (see lib/callback-url.ts).
                 router.push('/dashboard/settings?tab=billing');
               };
 

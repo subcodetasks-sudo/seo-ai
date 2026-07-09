@@ -1,4 +1,4 @@
-import { storeCallbackUrlCookie } from "@/lib/callback-url";
+import { withCallbackUrl } from "@/lib/callback-url";
 import { ApiError } from "@/lib/errors";
 
 let refreshing: Promise<void> | null = null;
@@ -24,8 +24,7 @@ function logout() {
   // Guard against redirecting when we're already on the login page, which would
   // reload the page and re-fire the failing request in an endless loop.
   if (pathname !== loginPath) {
-    storeCallbackUrlCookie(pathname + search);
-    window.location.href = loginPath;
+    window.location.href = withCallbackUrl(loginPath, pathname + search);
   }
 }
 

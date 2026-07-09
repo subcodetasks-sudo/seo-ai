@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import LoadingState from "@/components/loading-state";
 import { AuthPreview, Header, LoginForm } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
 
@@ -44,7 +46,9 @@ export default async function LoginPage({ params }: LoginPageProps) {
         dir={direction}
         className="flex flex-col items-center justify-center lg:col-start-2 lg:row-start-2"
       >
-        <LoginForm />
+        <Suspense fallback={<LoadingState fullPage={false} />}>
+          <LoginForm />
+        </Suspense>
       </div>
     </div>
   );

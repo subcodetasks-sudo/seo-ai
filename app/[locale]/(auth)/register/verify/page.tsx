@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header, OtpCode, RegisterProgress } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
+import { withCallbackUrl } from "@/lib/callback-url";
 
 type VerifyPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ email?: string }>;
+  searchParams: Promise<{ email?: string; callbackUrl?: string }>;
 };
 
 export async function generateMetadata({
@@ -24,7 +25,7 @@ export async function generateMetadata({
 
 export default async function VerifyPage({ params, searchParams }: VerifyPageProps) {
   const { locale } = await params;
-  const { email } = await searchParams;
+  const { email, callbackUrl } = await searchParams;
   setRequestLocale(locale);
   const direction = getLocaleDirection(locale);
 
@@ -38,7 +39,11 @@ export default async function VerifyPage({ params, searchParams }: VerifyPagePro
           <RegisterProgress currentStep={2} />
           <OtpCode
             email={userEmail}
-            successHref="/login"
+            resendHref={withCallbackUrl(
+              `/register/resend-otp?email=${encodeURIComponent(userEmail)}`,
+              callbackUrl
+            )}
+            successHref={withCallbackUrl("/login", callbackUrl)}
             successToastKey="accountCreated"
           />
         </div>

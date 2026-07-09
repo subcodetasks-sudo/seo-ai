@@ -10,6 +10,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -32,7 +33,7 @@ import { useAuth } from "@/features/auth/context/auth-context";
 import { createLoginSchema } from "@/features/auth/schemas/login-schema";
 import type { ApiResponse, LoginFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
-import { consumeCallbackUrlCookie } from "@/lib/callback-url";
+import { readCallbackUrl, withCallbackUrl } from "@/lib/callback-url";
 import { ApiError } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
@@ -137,6 +138,8 @@ function GoogleSignInButton({ label, className }: GoogleSignInButtonProps) {
 
 export function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = readCallbackUrl(searchParams);
   const { setUser } = useAuth();
   const t = useTranslations("auth.login");
   const tToast = useTranslations("auth.toast");
@@ -206,7 +209,7 @@ export function LoginForm() {
           });
         }
         toast.success(tToast("welcomeBack"));
-        router.push(consumeCallbackUrlCookie() ?? "/dashboard");
+        router.push(callbackUrl ?? "/dashboard");
       },
       onError: (error) => {
         if (error instanceof ApiError && error.status === 403) {
@@ -215,7 +218,9 @@ export function LoginForm() {
             { email },
             {
               onSettled: () => {
-                router.push(`/login/verify-email?email=${encodeURIComponent(email)}`);
+                router.push(
+                  withCallbackUrl(`/login/verify-email?email=${encodeURIComponent(email)}`, callbackUrl)
+                );
               },
             }
           );

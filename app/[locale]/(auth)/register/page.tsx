@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import { setRequestLocale } from "next-intl/server";
+import LoadingState from "@/components/loading-state";
 import { AuthPreview, Header, RegisterForm } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
 
@@ -29,7 +31,9 @@ export default async function RegisterPage({ params }: RegisterPageProps) {
         dir={direction}
         className="flex flex-col items-center justify-center bg-white lg:col-start-2 lg:row-start-2"
       >
-        <RegisterForm />
+        <Suspense fallback={<LoadingState fullPage={false} />}>
+          <RegisterForm />
+        </Suspense>
       </div>
     </div>
   );

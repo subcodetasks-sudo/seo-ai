@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Header, OtpCode } from "@/features/auth";
 import { getLocaleDirection } from "@/i18n/routing";
+import { withCallbackUrl } from "@/lib/callback-url";
 
 type LoginVerifyEmailPageProps = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ email?: string }>;
+  searchParams: Promise<{ email?: string; callbackUrl?: string }>;
 };
 
 export async function generateMetadata({
@@ -27,7 +28,7 @@ export default async function LoginVerifyEmailPage({
   searchParams,
 }: LoginVerifyEmailPageProps) {
   const { locale } = await params;
-  const { email } = await searchParams;
+  const { email, callbackUrl } = await searchParams;
   setRequestLocale(locale);
   const direction = getLocaleDirection(locale);
 
@@ -39,8 +40,11 @@ export default async function LoginVerifyEmailPage({
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8 sm:max-w-lg lg:max-w-xl lg:px-10 lg:py-12">
         <OtpCode
           email={userEmail}
-          resendHref={`/login/verify-email/resend-otp?email=${encodeURIComponent(userEmail)}`}
-          successHref="/login"
+          resendHref={withCallbackUrl(
+            `/login/verify-email/resend-otp?email=${encodeURIComponent(userEmail)}`,
+            callbackUrl
+          )}
+          successHref={withCallbackUrl("/login", callbackUrl)}
           successToastKey="emailVerified"
         />
       </main>

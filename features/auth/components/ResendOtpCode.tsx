@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "@/i18n/navigation";
+import { withCallbackUrl } from "@/lib/callback-url";
 import { cn } from "@/lib/utils";
 import { useResendVerification } from "../queries/mutations";
 
@@ -23,12 +24,14 @@ type ResendOtpCodeProps = {
   defaultEmail?: string;
   className?: string;
   verifyPath?: string;
+  callbackUrl?: string | null;
 };
 
 export function ResendOtpCode({
   defaultEmail = "",
   className,
   verifyPath = "/register/verify",
+  callbackUrl,
 }: ResendOtpCodeProps) {
   const router = useRouter();
   const t = useTranslations("auth.resendOtp");
@@ -64,7 +67,9 @@ export function ResendOtpCode({
         toast.success(
           tToast(isForgetPasswordFlow ? "forgetPasswordOtpSent" : "otpSent")
         );
-        router.push(`${verifyPath}?email=${encodeURIComponent(data.email)}`);
+        router.push(
+          withCallbackUrl(`${verifyPath}?email=${encodeURIComponent(data.email)}`, callbackUrl)
+        );
       },
       onError: (error) => {
         toast.error(error.message || tToast("resendOtpFailed"));
