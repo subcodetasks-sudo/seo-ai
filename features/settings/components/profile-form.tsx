@@ -80,7 +80,7 @@ export function ProfileForm({ onSaved }: ProfileFormProps) {
           email: data.email,
           display_name: data.display_name,
           name: data.display_name,
-          plan: data.plan?.name,
+          plan: data.plan,
           initials,
         });
         toast.success(t("saved"));

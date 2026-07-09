@@ -186,11 +186,11 @@ export function LoginForm() {
         if (userData) {
           const initials = userData.display_name
             ? userData.display_name
-                .split(" ")
-                .map((n: string) => n[0])
-                .join("")
-                .toUpperCase()
-                .slice(0, 2)
+              .split(" ")
+              .map((n: string) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 2)
             : "";
           setUser({
             id: userData.id,
@@ -199,8 +199,8 @@ export function LoginForm() {
             name: userData.display_name || userData.name,
             plan:
               typeof userData.plan === "string"
-                ? userData.plan
-                : userData.plan?.name,
+                ? { name: userData.plan }
+                : { name: userData.plan?.name ?? "" },
             avatar: userData.avatar,
             initials,
           });
