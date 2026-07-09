@@ -51,14 +51,16 @@ features/[name]/
   index.ts         # Barrel export
 ```
 
-### API Layer
+### API Layer — two client wrappers, don't mix them up
 
-`lib/client.ts` exports `apiClient<T>(endpoint, options)`:
-- `endpoint` is relative (e.g. `"projects"` → calls `/api/projects`)
-- Throws on non-2xx or `result.status === false`
-- Adds `Content-Type: application/json` automatically
+- **`lib/client.ts` → `apiClient<T>(endpoint, options)`** — used from `features/*/queries/api.ts` (browser side). Calls `/api/{endpoint}` (i.e. this app's own route handlers, never the real backend directly). On a `401` it POSTs `/api/auth/refresh` once, retries the original request, and hard-redirects to `/{locale}/login` if the refresh also fails.
+- **`lib/server.ts` → `serverClient<T>(endpoint, options)`** — used only inside `app/api/**/route.ts` handlers. Calls the real backend at `${env.API_URL}${env.API_PREFIX}{endpoint}` (`config/env.ts`), always attaching an `X-Language` header from `getLocale()`.
 
-All backend calls go through `/api/[feature]/[action]/route.ts` handlers which proxy to the real backend.
+Route handler pattern: read `access_token` from `req.cookies`, return `401` if missing, forward it as `Authorization: Bearer` to `serverClient`, and convert thrown `ApiError` (`lib/errors.ts`) to a JSON error response via `toErrorResponse()`.
+
+### Auth cookies
+
+`access_token` (15 min) and `refresh_token` (30 days) are `httpOnly` cookies set by `app/api/auth/{login,register,refresh}/route.ts` — never stored in JS-accessible state. `proxy.ts` (this project's equivalent of Next's old `middleware.ts` — see `AGENTS.md`) reads `refresh_token` to gate `/dashboard` routes and redirect authenticated users away from `/login`, `/register`, `/reset-password`.
 
 ### Data Flow (Server → Client)
 
@@ -87,6 +89,10 @@ Errors from queries/mutations are handled centrally via `QueryCache` and `Mutati
 - **Update both files simultaneously** when adding new keys
 - **RTL layout**: use Tailwind logical properties (`ps-*`, `me-*`, `start-0`) — never `left-*`/`right-*`
 - Dates via `date-fns` with `ar-SA` or `en-US` locale; numbers via `Intl.NumberFormat`
+
+## Environment
+
+`config/env.ts` centralizes env vars — always import `env` from there instead of reading `process.env` directly in new code. Copy `.env.example` to `.env.local`; required vars: `NEXT_PUBLIC_API_URL` (backend base URL, prefixed with `/api/v1/` for all `serverClient` calls) and the `NEXT_PUBLIC_FIREBASE_*` set (client SDK config — safe to expose).
 
 ## UI & Styling
 

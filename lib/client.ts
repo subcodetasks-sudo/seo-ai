@@ -1,3 +1,4 @@
+import { storeCallbackUrlCookie } from "@/lib/callback-url";
 import { ApiError } from "@/lib/errors";
 
 let refreshing: Promise<void> | null = null;
@@ -15,7 +16,7 @@ function logout() {
     // Ignore storage access errors (private mode, etc.).
   }
 
-  const { pathname } = window.location;
+  const { pathname, search } = window.location;
   const locale = pathname.split("/")[1];
   const prefix = ["ar", "en"].includes(locale) ? `/${locale}` : "/ar";
   const loginPath = `${prefix}/login`;
@@ -23,6 +24,7 @@ function logout() {
   // Guard against redirecting when we're already on the login page, which would
   // reload the page and re-fire the failing request in an endless loop.
   if (pathname !== loginPath) {
+    storeCallbackUrlCookie(pathname + search);
     window.location.href = loginPath;
   }
 }

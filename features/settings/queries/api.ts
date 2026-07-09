@@ -195,6 +195,29 @@ export function changeBillingPlan(planName: string) {
   );
 }
 
+export type BillingCheckout = {
+  payment_url: string;
+  reference: string;
+  amount: number;
+  currency: string;
+  plan_name: string;
+  expires_note: string;
+};
+
+type BillingCheckoutResponse = {
+  status: boolean;
+  message: string;
+  data: BillingCheckout;
+};
+
+export function startBillingCheckout(planName: string) {
+  return apiClient<BillingCheckoutResponse>(
+    "billing/checkout",
+    { method: "POST", body: JSON.stringify({ plan_name: planName }) },
+    "Failed to start checkout",
+  );
+}
+
 // The redirect field name isn't confirmed for this endpoint, so callers
 // should read it defensively (see extractRedirectUrl in mutations.ts).
 type BillingRedirectResponse = {
@@ -202,14 +225,6 @@ type BillingRedirectResponse = {
   message: string;
   data?: Record<string, unknown>;
 };
-
-export function startBillingCheckout(planName: string) {
-  return apiClient<BillingRedirectResponse>(
-    "billing/checkout",
-    { method: "POST", body: JSON.stringify({ plan_name: planName }) },
-    "Failed to start checkout",
-  );
-}
 
 export function openBillingPortal() {
   return apiClient<BillingRedirectResponse>(

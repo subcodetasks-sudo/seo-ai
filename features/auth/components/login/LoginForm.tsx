@@ -32,6 +32,7 @@ import { useAuth } from "@/features/auth/context/auth-context";
 import { createLoginSchema } from "@/features/auth/schemas/login-schema";
 import type { ApiResponse, LoginFormValues } from "@/features/auth/types";
 import { Link } from "@/i18n/navigation";
+import { consumeCallbackUrlCookie } from "@/lib/callback-url";
 import { ApiError } from "@/lib/errors";
 import { cn } from "@/lib/utils";
 import { useRouter } from "@/i18n/navigation";
@@ -205,7 +206,7 @@ export function LoginForm() {
           });
         }
         toast.success(tToast("welcomeBack"));
-        router.push(`/dashboard`);
+        router.push(consumeCallbackUrlCookie() ?? "/dashboard");
       },
       onError: (error) => {
         if (error instanceof ApiError && error.status === 403) {

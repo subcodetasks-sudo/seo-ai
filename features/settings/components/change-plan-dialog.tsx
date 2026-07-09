@@ -16,7 +16,7 @@ import {
 import { PlanCard } from "@/features/plans";
 
 import type { CurrentBilling } from "../queries/api";
-import { extractRedirectUrl, useChangeBillingPlan, useStartBillingCheckout } from "../queries/mutations";
+import { useChangeBillingPlan, useStartBillingCheckout } from "../queries/mutations";
 import { billingPlansQueryOptions } from "../queries/queries";
 
 type ChangePlanDialogProps = {
@@ -53,13 +53,7 @@ export function ChangePlanDialog({ open, onOpenChange, currentBilling }: ChangeP
     if (needsCheckout) {
       startCheckout(selectedPlan.name, {
         onSuccess: (response) => {
-          const url = extractRedirectUrl(response.data);
-          if (url) {
-            window.location.href = url;
-            return;
-          }
-          toast.success(t("planChanged"));
-          handleClose(false);
+          window.location.href = response.data.payment_url;
         },
       });
       return;
@@ -75,24 +69,26 @@ export function ChangePlanDialog({ open, onOpenChange, currentBilling }: ChangeP
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
-        <DialogHeader>
+      <DialogContent className="flex max-h-[85vh] w-full flex-col gap-0 overflow-hidden p-0 sm:max-w-3xl lg:max-w-4xl">
+        <DialogHeader className="shrink-0 border-b border-secondary-50 px-5 py-4 sm:px-6 sm:py-5">
           <DialogTitle className="text-start text-secondary-500">{t("choosePlan")}</DialogTitle>
         </DialogHeader>
 
-        <div className="grid gap-4 py-2 sm:grid-cols-2 lg:grid-cols-4">
-          {plans.map((plan) => (
-            <PlanCard
-              key={plan.id}
-              plan={plan}
-              isSelected={selectedPlanId === plan.id}
-              isPopular={plan.name.toLowerCase() === "pro"}
-              onSelect={() => setSelectedPlanId(plan.id)}
-            />
-          ))}
+        <div className="custom-scrollbar flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+            {plans.map((plan) => (
+              <PlanCard
+                key={plan.id}
+                plan={plan}
+                isSelected={selectedPlanId === plan.id}
+                isPopular={plan.name.toLowerCase() === "pro"}
+                onSelect={() => setSelectedPlanId(plan.id)}
+              />
+            ))}
+          </div>
         </div>
 
-        <DialogFooter className="mt-2 flex-row justify-end gap-2">
+        <DialogFooter className="mx-0 mb-0 shrink-0 flex-row justify-end gap-2 rounded-b-xl">
           <Button
             type="button"
             variant="outline"

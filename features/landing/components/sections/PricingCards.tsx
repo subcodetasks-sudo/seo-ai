@@ -10,6 +10,8 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
+import { useRouter } from '@/i18n/navigation';
+import { storeCallbackUrlCookie } from '@/lib/callback-url';
 import { PricingFeatureList } from './pricing-feature-list';
 
 export interface Plan {
@@ -40,6 +42,7 @@ const PLAN_BAR_CLASSES = [
 export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
   const t = useTranslations('landing');
   const locale = useLocale();
+  const router = useRouter();
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
   // const [isAnnual, setIsAnnual] = useState(false);
 
@@ -113,6 +116,8 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
               const select = () => {
                 setSelected(index);
                 api?.scrollTo(index);
+                storeCallbackUrlCookie('/dashboard/settings?tab=billing');
+                router.push('/dashboard/settings?tab=billing');
               };
 
               return (

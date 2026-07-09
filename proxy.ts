@@ -2,6 +2,11 @@ import createMiddleware from "next-intl/middleware";
 import { NextRequest, NextResponse } from "next/server";
 
 import { routing } from "./i18n/routing";
+import {
+  CALLBACK_URL_COOKIE,
+  CALLBACK_URL_MAX_AGE,
+  decodeCallbackUrl,
+} from "./lib/callback-url";
 
 const intlMiddleware = createMiddleware(routing);
 
@@ -49,11 +54,34 @@ export default function middleware(request: NextRequest) {
   const isAuthenticated = hasRefreshToken(request);
 
   if (!isAuthenticated && pathname.startsWith("/dashboard")) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const response = NextResponse.redirect(new URL("/login", request.url));
+
+    // Remember where the user was headed so the auth flow can send them
+    // back after login (see lib/callback-url.ts). A cookie (rather than a
+    // query param) survives the register → verify-email → login detours
+    // without threading the URL through every auth page.
+    response.cookies.set(
+      CALLBACK_URL_COOKIE,
+      encodeURIComponent(pathname + request.nextUrl.search),
+      { path: "/", maxAge: CALLBACK_URL_MAX_AGE, sameSite: "lax" }
+    );
+
+    return response;
   }
 
   if (isAuthenticated && AUTH_PATH_PATTERN.test(pathname)) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    const callbackUrl = decodeCallbackUrl(
+      request.cookies.get(CALLBACK_URL_COOKIE)?.value
+    );
+    const response = NextResponse.redirect(
+      new URL(callbackUrl ?? "/dashboard", request.url)
+    );
+
+    if (callbackUrl) {
+      response.cookies.set(CALLBACK_URL_COOKIE, "", { path: "/", maxAge: 0 });
+    }
+
+    return response;
   }
 
   // next-intl's own cookie-based locale detection is tied to the same flag

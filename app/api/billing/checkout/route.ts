@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = await serverClient(
-      "billing/checkout",
+      "billing/amwal/checkout",
       { method: "POST", headers: authHeaders, body: JSON.stringify(body) },
       "Failed to start checkout",
     );

@@ -10,8 +10,8 @@ import {
 import type { NotificationPrefs } from "./api";
 import { settingsKeys } from "./query-keys";
 
-// The checkout/portal endpoints' redirect field name isn't confirmed
-// against a real response yet — read it defensively under a few likely keys.
+// The portal endpoint's redirect field name isn't confirmed against a
+// real response yet — read it defensively under a few likely keys.
 export function extractRedirectUrl(data?: Record<string, unknown>): string | null {
   if (!data) return null;
   const candidate = data.url ?? data.checkout_url ?? data.portal_url ?? data.redirect_url;
