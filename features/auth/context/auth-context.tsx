@@ -7,7 +7,9 @@ export type User = {
   email?: string;
   display_name?: string;
   name?: string;
-  plan?: string;
+  plan: {
+    name: string;
+  };
   avatar?: string;
   initials?: string;
 };
