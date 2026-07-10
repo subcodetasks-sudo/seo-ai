@@ -143,16 +143,18 @@ export function AiSuggestionsContent() {
 
   function handleApproveAll() {
     if (!selectedProjectId) return;
+    const approvableIds = items.filter((i) => i.status === "pending").map((i) => i.id);
     approveAllMutation.mutate(
-      { projectId: selectedProjectId, count: total },
+      { projectId: selectedProjectId, ids: approvableIds },
       { onSuccess: () => setSelectedIds(new Set()) },
     );
   }
 
   function handleRejectAll() {
     if (!selectedProjectId) return;
+    const rejectableIds = items.filter((i) => i.status === "pending").map((i) => i.id);
     rejectAllMutation.mutate(
-      { projectId: selectedProjectId, count: total },
+      { projectId: selectedProjectId, ids: rejectableIds },
       { onSuccess: () => setSelectedIds(new Set()) },
     );
   }
