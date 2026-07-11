@@ -473,6 +473,22 @@
         "high": "High Impact",
         "medium": "Medium Impact",
         "low": "Low Impact"
+      },
+      "consentNotice": {
+        "base": "By approving this suggestion, you agree to apply this change to your website.",
+        "default": "By approving this suggestion, you agree to apply this change to your website.",
+        "benefits": {
+          "meta": "Applying this change helps you include stronger keywords and write a more compelling description to improve your click-through rate.",
+          "og_title": "Applying this change helps your page look more appealing when shared on social media.",
+          "og_description": "Applying this change helps your page look more appealing and informative when shared on social media.",
+          "schema": "Applying this change helps search engines better understand your page and can enable rich results.",
+          "faq": "Applying this change helps answer common user questions directly in search results and can enable FAQ rich snippets.",
+          "redirect": "Applying this change fixes the broken link and preserves your page's SEO value by directing visitors to the right destination.",
+          "alt_text": "Applying this change improves accessibility and helps search engines understand your images.",
+          "internal_link": "Applying this change helps search engines discover related pages and improves navigation across your site.",
+          "h1": "Applying this change helps clarify your page's main topic for both visitors and search engines.",
+          "content": "Applying this change helps improve your content's relevance and can include stronger keywords."
+        }
       }
     }
   },

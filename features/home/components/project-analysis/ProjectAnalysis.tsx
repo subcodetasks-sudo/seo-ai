@@ -35,6 +35,8 @@ export default function ProjectAnalysis({
     return (
       <AnalysisSuccess
         url={url}
+        projectId={projectId}
+        crawlJobId={crawlJobId}
         pagesCount={totalPages}
         issuesCount={totalIssues}
         basicPagesCount={totalBasic}

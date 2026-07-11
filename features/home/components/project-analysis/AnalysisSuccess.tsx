@@ -8,10 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useDirection } from "@/components/ui/direction";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "@/i18n/navigation";
+import { useSelectedProject } from "@/features/home/context/selected-project-context";
 import { cn } from "@/lib/utils";
 
 export type AnalysisSuccessProps = {
   url: string;
+  projectId: string;
+  crawlJobId: string;
   // aiSuggestionsCount: number;
   issuesCount: number;
   pagesCount: number;
@@ -27,11 +31,13 @@ type MetricCardProps = {
   label: string;
   iconClassName?: string;
   isLoading?: boolean;
+  href?: string;
+  onNavigate?: () => void;
 };
 
-function MetricCard({ icon: Icon, value, label, iconClassName, isLoading }: MetricCardProps) {
-  return (
-    <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-4 text-center">
+function MetricCard({ icon: Icon, value, label, iconClassName, isLoading, href, onNavigate }: MetricCardProps) {
+  const content = (
+    <>
       <div
         className={cn(
           "flex size-9 items-center justify-center rounded-full bg-white text-neutral-400",
@@ -47,6 +53,24 @@ function MetricCard({ icon: Icon, value, label, iconClassName, isLoading }: Metr
         <span className="text-h4 font-semibold tabular-nums text-secondary-500">{value}</span>
       )}
       <span className="text-center text-label-sm text-neutral-500">{label}</span>
+    </>
+  );
+
+  if (href && !isLoading) {
+    return (
+      <Link
+        href={href}
+        onClick={onNavigate}
+        className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-4 text-center transition-colors hover:border-primary-200 hover:bg-primary-50/40"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-200 bg-neutral-50 px-3 py-4 text-center">
+      {content}
     </div>
   );
 }
@@ -64,6 +88,8 @@ function SuccessIcon() {
 
 export default function AnalysisSuccess({
   url,
+  projectId,
+  crawlJobId,
   // aiSuggestionsCount,
   issuesCount,
   pagesCount,
@@ -75,12 +101,21 @@ export default function AnalysisSuccess({
   const dir = useDirection();
   const locale = useLocale();
   const t = useTranslations("home.projectAnalysis.success");
+  const { setSelectedProjectId } = useSelectedProject();
 
   const countFormatter = new Intl.NumberFormat(locale);
   const compactFormatter = new Intl.NumberFormat(locale, {
     notation: "compact",
     maximumFractionDigits: 1,
   });
+
+  function crawlHistoryHref(filter: "all" | "issues") {
+    return `/dashboard/crawl-history/${crawlJobId}?filter=${filter}`;
+  }
+
+  function handleMetricNavigate() {
+    setSelectedProjectId(projectId);
+  }
 
   const metrics: MetricCardProps[] = [
     {
@@ -89,6 +124,8 @@ export default function AnalysisSuccess({
       label: t("metrics.issues"),
       iconClassName: "text-error-300",
       isLoading: isMetricsLoading,
+      href: crawlHistoryHref("issues"),
+      onNavigate: handleMetricNavigate,
     },
     {
       icon: FileText,
@@ -96,6 +133,8 @@ export default function AnalysisSuccess({
       label: t("metrics.pages"),
       iconClassName: "text-secondary-400",
       isLoading: isMetricsLoading,
+      href: crawlHistoryHref("all"),
+      onNavigate: handleMetricNavigate,
     },
     {
       icon: FileStack,
@@ -103,6 +142,8 @@ export default function AnalysisSuccess({
       label: t("metrics.basic"),
       iconClassName: "text-neutral-500",
       isLoading: isMetricsLoading,
+      href: crawlHistoryHref("all"),
+      onNavigate: handleMetricNavigate,
     },
     {
       icon: Link2,
@@ -110,6 +151,8 @@ export default function AnalysisSuccess({
       label: t("metrics.internal"),
       iconClassName: "text-primary-500",
       isLoading: isMetricsLoading,
+      href: crawlHistoryHref("all"),
+      onNavigate: handleMetricNavigate,
     },
     // {
     //   icon: Sparkles,

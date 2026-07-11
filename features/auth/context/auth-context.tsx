@@ -7,9 +7,7 @@ export type User = {
   email?: string;
   display_name?: string;
   name?: string;
-  plan: {
-    name: string;
-  };
+  plan: string;
   avatar?: string;
   initials?: string;
 };
@@ -37,7 +35,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load from localStorage immediately for instant display
     const stored = localStorage.getItem("user");
     if (stored) {
       try {

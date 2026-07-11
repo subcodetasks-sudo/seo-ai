@@ -96,7 +96,7 @@ function WordPressStep2({
                     variant="outline"
                     size="sm"
                     asChild
-                    className="h-9 shrink-0 gap-2 rounded-[10px] border-neutral-200 bg-white px-4 text-label-md font-medium text-secondary-500 hover:bg-neutral-50"
+                    className="h-9 shrink-0 gap-2 rounded-[10px] border-neutral-200 bg-primary-300 px-4 text-label-md font-medium text-secondary-500 hover:bg-primary-500"
                   >
                     <a href={PLUGIN_DOWNLOAD_URL} download>
                       <Download className="size-4" />

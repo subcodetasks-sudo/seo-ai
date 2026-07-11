@@ -115,7 +115,7 @@ export default function Step3({
             <span className="text-label-md font-semibold text-secondary-500">{t("selectSections")}</span>
           </div>
 
-          <div className="flex items-center gap-3 text-label-sm text-neutral-500 ps-7 sm:ps-0">
+          <div className="flex items-center gap-3 text-label-sm text-black ps-7 font-extrabold sm:ps-0">
             <span>{t("sectionsSelected", { count: selectedCount })}</span>
             <span className="text-neutral-300">-</span>
             <span>{t("approxPages", { count: approxPageCount })}</span>
@@ -170,7 +170,7 @@ export default function Step3({
                         </span>
                       </div>
 
-                      <span className="shrink-0 rounded-full bg-primary-100 px-2.5 py-1 text-label-sm font-medium text-primary-500">
+                      <span className="shrink-0 rounded-full bg-primary-100 px-2.5 py-1 text-label-sm font-bold text-primary-500">
                         {t("pageCount", { count: section.count })}
                       </span>
                     </label>

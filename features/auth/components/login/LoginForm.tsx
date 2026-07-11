@@ -202,8 +202,8 @@ export function LoginForm() {
             name: userData.display_name || userData.name,
             plan:
               typeof userData.plan === "string"
-                ? { name: userData.plan }
-                : { name: userData.plan?.name ?? "" },
+                ? userData.plan
+                : userData.plan?.name ?? "",
             avatar: userData.avatar,
             initials,
           });

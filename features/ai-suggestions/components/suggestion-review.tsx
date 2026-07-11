@@ -78,6 +78,19 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
     content: t("types.content"),
   };
 
+  const consentBenefits: Record<string, string> = {
+    meta: t("reviewPage.consentNotice.benefits.meta"),
+    og_title: t("reviewPage.consentNotice.benefits.og_title"),
+    og_description: t("reviewPage.consentNotice.benefits.og_description"),
+    schema: t("reviewPage.consentNotice.benefits.schema"),
+    faq: t("reviewPage.consentNotice.benefits.faq"),
+    redirect: t("reviewPage.consentNotice.benefits.redirect"),
+    alt_text: t("reviewPage.consentNotice.benefits.alt_text"),
+    internal_link: t("reviewPage.consentNotice.benefits.internal_link"),
+    h1: t("reviewPage.consentNotice.benefits.h1"),
+    content: t("reviewPage.consentNotice.benefits.content"),
+  };
+
   if (!selectedProjectId) {
     return (
       <div className="flex flex-1 items-center justify-center bg-neutral-75 px-6 py-8">
@@ -107,6 +120,11 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
   }
 
   const isPending = suggestion.status === "pending";
+
+  const consentBenefit = consentBenefits[suggestion.type];
+  const consentText = consentBenefit
+    ? `${t("reviewPage.consentNotice.base")} ${consentBenefit}`
+    : t("reviewPage.consentNotice.default");
 
   function handleApprove() {
     if (!selectedProjectId) return;
@@ -207,6 +225,14 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
                 <p className="text-label-sm leading-relaxed text-neutral-500">{suggestion.explanation}</p>
               </div>
             ) : null}
+          </div>
+        )}
+
+        {/* Consent notice */}
+        {isPending && (
+          <div className="flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50/50 p-4">
+            <Info className="mt-0.5 size-4 shrink-0 text-primary-500" aria-hidden="true" />
+            <p className="text-label-sm leading-relaxed text-secondary-500">{consentText}</p>
           </div>
         )}
 

@@ -272,10 +272,10 @@ export default function SideBar() {
                   </p>
                   <p className="truncate text-sm text-secondary-200">
                     {user?.plan
-                      ? KNOWN_PLANS.has(user.plan.name)
-                        ? tPlans(user.plan.name as Parameters<typeof tPlans>[0])
-                        : user.plan.name
-                      : t("userPlan")}
+                      ? KNOWN_PLANS.has(user.plan)
+                        ? tPlans(user.plan as Parameters<typeof tPlans>[0])
+                        : user.plan
+                      : user?.plan}
                   </p>
                 </div>
               </div>
