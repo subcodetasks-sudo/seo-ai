@@ -2,6 +2,7 @@
 import { useLocale } from 'next-intl';
 import { useQuery } from '@tanstack/react-query';
 import { pricingQueryOptions } from '../../queries/queries';
+import type { Pricing, PricingPackageItem } from '../../types/landing-api';
 import { PricingCards, type Plan } from './PricingCards';
 
 const BAR_CLASSES = [
@@ -13,9 +14,9 @@ const BAR_CLASSES = [
 export function PricingSection() {
   const local = useLocale();
   const { data: raw } = useQuery(pricingQueryOptions(local));
-  const pricing = Array.isArray(raw) ? raw[0] : raw;
-  // console.log('PricingSection raw:', raw);
-  const plans: Plan[] = pricing?.packages?.items.map((item, i) => {
+  const rawData: Pricing | Pricing[] | undefined = raw;
+  const pricing = Array.isArray(rawData) ? rawData[0] : rawData;
+  const plans: Plan[] = pricing?.packages?.items.map((item: PricingPackageItem, i: number) => {
     const priceNum = parseFloat(item.price ?? '0');
     // const annual =
     //   isNaN(priceNum) || priceNum === 0
