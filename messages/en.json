@@ -928,7 +928,7 @@
         "pageCount": "{count} pages",
         "showingResults": "Showing {shown} of {total} results",
         "scan": "Scan",
-        "cancel": "Cancel",
+        "back": "Back",
         "sectionsRequired": "Please select at least one section",
         "loadingSections": "Loading sections..."
       }

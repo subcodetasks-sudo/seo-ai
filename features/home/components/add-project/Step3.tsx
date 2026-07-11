@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { CheckCircle2, ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -251,12 +251,13 @@ export default function Step3({
 
         <Button
           type="button"
-          variant="outline"
+          variant="ghost"
           onClick={onBack}
           disabled={isSubmitting}
-          className="h-12 w-full sm:w-auto sm:px-8 rounded-[10px] border-neutral-200 bg-white text-body font-semibold text-secondary-500 hover:bg-neutral-50 disabled:opacity-50"
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] px-2 text-body font-medium text-neutral-500 hover:bg-transparent hover:text-secondary-500 disabled:opacity-50 sm:w-auto sm:justify-start"
         >
-          {t("cancel")}
+          {dir === "rtl" ? <ArrowRight className="size-4" /> : <ArrowLeft className="size-4" />}
+          <span>{t("back")}</span>
         </Button>
       </div>
     </form>

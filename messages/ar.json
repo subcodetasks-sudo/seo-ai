@@ -928,7 +928,7 @@
         "pageCount": "{count} صفحة",
         "showingResults": "عرض {shown} من {total} نتائج",
         "scan": "فحص",
-        "cancel": "إلغاء",
+        "back": "رجوع",
         "sectionsRequired": "يرجى اختيار قسم واحد على الأقل",
         "loadingSections": "جارٍ تحميل الأقسام..."
       }
