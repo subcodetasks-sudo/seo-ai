@@ -83,7 +83,7 @@ export function OtpCode({
         },
         onError: (error) => {
           toast.error(
-            error instanceof Error ? error.message : "error"
+            error instanceof Error ? error.message : tToast("genericError")
           );
         },
       }

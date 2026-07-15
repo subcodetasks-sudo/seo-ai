@@ -23,16 +23,16 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage(function (payload) {
-  // console.log("[SW] Background message received:", payload);
+  // When the push already includes a `notification` payload, the browser
+  // displays it automatically. Calling showNotification again would duplicate it.
+  if (payload.notification) {
+    return;
+  }
 
-  const title =
-    payload.data?.title ||
-    payload.notification?.title ||
-    "New Notification";
+  const title = payload.data?.title || "New Notification";
 
   const options = {
-    body:
-      payload.data?.body || payload.notification?.body || "",
+    body: payload.data?.body || "",
     icon: payload.data?.icon || "/imgs/logo.png",
     badge: "/imgs/logo.png",
     data: payload.data ?? {},

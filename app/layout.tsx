@@ -20,7 +20,7 @@ const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
 
 export const metadata: Metadata = {
   title: "Rank AI",
-  description: "Rank AI is a platform for ranking and analyzing data.",
+  description: "Rank AI",
 };
 
 // Runs before the browser renders any body content — reads the locale from the

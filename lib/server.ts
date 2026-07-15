@@ -48,7 +48,7 @@ export async function serverClient<T>(
   let data: {
     status?: boolean;
     message?: string;
-    errors?: Record<string, string[]>;
+    errors?: Record<string, unknown>;
   } & Record<string, unknown>;
   try {
     data = await res.json();

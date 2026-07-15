@@ -1,3 +1,5 @@
+export type ProjectCrawlStatus = "queued" | "running" | "done" | "stopped" | "failed";
+
 export type ProjectListItem = {
   id: string;
   name: string;
@@ -20,6 +22,10 @@ export type ProjectListItem = {
   setup_token: string;
   setup_link: string;
   setup_token_used: boolean;
+  /** UUID of the most recent crawl job; null if never crawled */
+  crawl_job_id?: string | null;
+  /** Status of the most recent crawl; null if never crawled */
+  crawl_status?: ProjectCrawlStatus | null;
 };
 
 export type AllProjectsResponse = {

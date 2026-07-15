@@ -103,7 +103,7 @@ export function HeroSection() {
               </div>
               <iframe
                 src={`${videoSrc}?autoplay=1&rel=0`}
-                title='YouTube video player'
+                title={t("a11y.videoPlayer")}
                 allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
                 allowFullScreen
               />

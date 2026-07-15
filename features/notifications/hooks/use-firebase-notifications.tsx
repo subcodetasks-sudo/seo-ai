@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { getToken } from "firebase/messaging";
+import { getToken, type MessagePayload } from "firebase/messaging";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { Bell } from "lucide-react";
@@ -15,6 +15,37 @@ import { notificationsKeys } from "../queries/query-keys";
 
 const FCM_TOKEN_KEY = "fcm_token";
 const VAPID_KEY = env.FIREBASE_VAPID_KEY ?? "";
+
+function pickField(
+  dataValue: string | undefined,
+  notificationValue: string | undefined,
+): string | undefined {
+  const data = dataValue?.trim();
+  const notification = notificationValue?.trim();
+  // Prefer the richer payload field — backends often send a generic
+  // notification.title ("New Notification") alongside the real title in data.
+  if (data && notification) {
+    const generic = /^(new notification|إشعار جديد)$/i.test(notification);
+    return generic ? data : notification.length >= data.length ? notification : data;
+  }
+  return data || notification || undefined;
+}
+
+async function dismissOsNotifications(matchTitles: string[]) {
+  if (!("serviceWorker" in navigator)) return;
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const notifications = await registration.getNotifications();
+    const titles = new Set(matchTitles.map((title) => title.trim().toLowerCase()).filter(Boolean));
+    for (const notification of notifications) {
+      if (titles.has(notification.title.trim().toLowerCase())) {
+        notification.close();
+      }
+    }
+  } catch {
+    // Best-effort: OS notifications may already have been dismissed.
+  }
+}
 
 export function useFirebaseNotifications() {
   const router = useRouter();
@@ -55,18 +86,31 @@ export function useFirebaseNotifications() {
     init();
 
     // Subscribe to foreground messages.
-    const unsubscribe = onForegroundMessage((payload) => {
+    const unsubscribe = onForegroundMessage((payload: MessagePayload) => {
       const title =
-        payload.data?.title ?? payload.notification?.title ?? "New Notification";
+        pickField(payload.data?.title, payload.notification?.title) ??
+        t("newNotification");
       const body =
-        payload.data?.body ?? payload.notification?.body ?? "";
+        pickField(payload.data?.body, payload.notification?.body) ?? "";
 
       // Keep the bell badge and list in sync with the live push instead of
       // waiting for an unrelated refetch trigger.
       queryClient.invalidateQueries({ queryKey: notificationsKeys.all });
 
+      // FCM messages with a `notification` payload can also raise an OS
+      // banner while the tab is focused. Close those so only the in-app toast
+      // remains visible.
+      void dismissOsNotifications([
+        title,
+        payload.notification?.title ?? "",
+        payload.data?.title ?? "",
+        "New Notification",
+        t("newNotification"),
+      ]);
+
       toast(title, {
-        description: body,
+        id: payload.messageId ?? `fcm-${title}-${body}`,
+        description: body || undefined,
         icon: <Bell className="size-4" />,
         action: {
           label: t("viewAll"),

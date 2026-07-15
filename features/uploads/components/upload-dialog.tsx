@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AlertCircle, CheckCircle2, ImageIcon, UploadCloud, VideoIcon, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -25,6 +27,7 @@ export function UploadDialog({
   videoChunkEndpoint = "/api/uploads/video/chunk",
   videoMergeEndpoint = "/api/uploads/video/merge",
 }: UploadDialogProps) {
+  const t = useTranslations("uploads");
   const [open, setOpen] = useState(false);
   const [queue, setQueue] = useState<UploadItem[]>([]);
   const [filesById, setFilesById] = useState<Record<string, File>>({});
@@ -71,25 +74,28 @@ export function UploadDialog({
   }
 
   async function uploadImage(item: UploadItem, file: File) {
-    updateItem(item.id, { status: "processing", message: "Resizing and converting to WebP..." });
-    updateItem(item.id, { status: "uploading", progress: 35, message: "Uploading image..." });
+    updateItem(item.id, { status: "processing", message: t("status.processing") });
+    updateItem(item.id, { status: "uploading", progress: 35, message: t("status.uploadingImage") });
     await uploadImageFile(file, imageUploadEndpoint);
-    updateItem(item.id, { status: "done", progress: 100, message: "Uploaded successfully" });
+    updateItem(item.id, { status: "done", progress: 100, message: t("status.uploaded") });
   }
 
   async function uploadVideo(item: UploadItem, file: File) {
-    updateItem(item.id, { status: "uploading", progress: 5, message: "Uploading chunks..." });
+    updateItem(item.id, { status: "uploading", progress: 5, message: t("status.uploadingChunks") });
     await uploadVideoFile({
       file,
       videoChunkEndpoint,
       videoMergeEndpoint,
       onChunkUploaded: (chunkIndex, chunksTotal) => {
         const progress = Math.round(((chunkIndex + 1) / chunksTotal) * 90);
-        updateItem(item.id, { progress, message: `Uploaded chunk ${chunkIndex + 1}/${chunksTotal}` });
+        updateItem(item.id, {
+          progress,
+          message: t("status.chunkProgress", { current: chunkIndex + 1, total: chunksTotal }),
+        });
       },
     });
 
-    updateItem(item.id, { status: "done", progress: 100, message: "Video merged successfully" });
+    updateItem(item.id, { status: "done", progress: 100, message: t("status.videoMerged") });
   }
 
   async function autoUploadItems(items: UploadItem[], fileMap: Record<string, File>) {
@@ -99,7 +105,7 @@ export function UploadDialog({
       for (const item of items) {
         const file = fileMap[item.id];
         if (!file) {
-          updateItem(item.id, { status: "error", message: "Missing selected file" });
+          updateItem(item.id, { status: "error", message: t("status.missingFile") });
           continue;
         }
 
@@ -112,7 +118,7 @@ export function UploadDialog({
         } catch (error) {
           updateItem(item.id, {
             status: "error",
-            message: error instanceof Error ? error.message : "Upload failed",
+            message: error instanceof Error ? error.message : t("status.failedGeneric"),
           });
         }
       }
@@ -176,7 +182,7 @@ export function UploadDialog({
       return (
         <Badge variant="secondary" className="bg-emerald-600/90 text-white">
           <CheckCircle2 className="size-3" />
-          Done
+          {t("status.done")}
         </Badge>
       );
     }
@@ -185,16 +191,16 @@ export function UploadDialog({
       return (
         <Badge variant="destructive">
           <AlertCircle className="size-3" />
-          Failed
+          {t("status.failed")}
         </Badge>
       );
     }
 
     if (item.status === "uploading" || item.status === "processing") {
-      return <Badge variant="outline">Uploading</Badge>;
+      return <Badge variant="outline">{t("status.uploading")}</Badge>;
     }
 
-    return <Badge variant="outline">Pending</Badge>;
+    return <Badge variant="outline">{t("status.pending")}</Badge>;
   }
 
   return (
@@ -202,16 +208,13 @@ export function UploadDialog({
       <DialogTrigger asChild>
         <Button>
           <UploadCloud />
-          Upload media
+          {t("trigger")}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Upload images and videos</DialogTitle>
-          <DialogDescription>
-            Images are resized to a max of 1920x1080 and converted to WebP. Videos are uploaded in
-            chunks and merged on the server.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
 
         <Input
@@ -239,19 +242,19 @@ export function UploadDialog({
 
         <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "images" | "videos")}>
           <TabsList className="w-full">
-            <TabsTrigger value="images">Images</TabsTrigger>
-            <TabsTrigger value="videos">Videos</TabsTrigger>
+            <TabsTrigger value="images">{t("tabs.images")}</TabsTrigger>
+            <TabsTrigger value="videos">{t("tabs.videos")}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="images" className="space-y-3">
             <div className="flex items-center justify-end gap-2 rounded-lg border border-dashed p-3">
               <Button variant="outline" onClick={() => imageInputRef.current?.click()} disabled={isRunning}>
-                Add images
+                {t("addImages")}
               </Button>
             </div>
             <div className="max-h-112 overflow-y-auto rounded-lg border p-3">
               {imageItems.length === 0 ? (
-                <p className="text-sm text-zinc-500">You havent upload anything yet.</p>
+                <p className="text-sm text-zinc-500">{t("empty")}</p>
               ) : (
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
                   {imageItems.map((item) => (
@@ -266,19 +269,19 @@ export function UploadDialog({
                         <Button
                           size="icon-xs"
                           variant="secondary"
-                          className="absolute top-2 right-2 bg-black/60 text-white hover:bg-black/80"
+                          className="absolute top-2 end-2 bg-black/60 text-white hover:bg-black/80"
                           onClick={() => removeItem(item.id)}
                           disabled={item.status === "uploading" || item.status === "processing"}
                         >
                           <X className="size-3" />
                         </Button>
-                        <div className="absolute top-2 left-2">
+                        <div className="absolute top-2 start-2">
                           <Badge variant="outline" className="bg-black/60 text-white">
                             <ImageIcon className="size-3" />
-                            Image
+                            {t("kind.image")}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-2 left-2">{getStatusBadge(item)}</div>
+                        <div className="absolute bottom-2 start-2">{getStatusBadge(item)}</div>
                       </div>
                       <div className="space-y-2 p-2.5">
                         <p className="truncate text-xs font-medium">{item.name}</p>
@@ -297,12 +300,12 @@ export function UploadDialog({
           <TabsContent value="videos" className="space-y-3">
             <div className="flex items-center justify-end gap-2 rounded-lg border border-dashed p-3">
               <Button variant="outline" onClick={() => videoInputRef.current?.click()} disabled={isRunning}>
-                Add videos
+                {t("addVideos")}
               </Button>
             </div>
             <div className="max-h-112 overflow-y-auto rounded-lg border p-3">
               {videoItems.length === 0 ? (
-                <p className="text-sm text-zinc-500">You havent upload anything yet.</p>
+                <p className="text-sm text-zinc-500">{t("empty")}</p>
               ) : (
                 <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-4">
                   {videoItems.map((item) => (
@@ -312,19 +315,19 @@ export function UploadDialog({
                         <Button
                           size="icon-xs"
                           variant="secondary"
-                          className="absolute top-2 right-2 bg-black/60 text-white hover:bg-black/80"
+                          className="absolute top-2 end-2 bg-black/60 text-white hover:bg-black/80"
                           onClick={() => removeItem(item.id)}
                           disabled={item.status === "uploading" || item.status === "processing"}
                         >
                           <X className="size-3" />
                         </Button>
-                        <div className="absolute top-2 left-2">
+                        <div className="absolute top-2 start-2">
                           <Badge variant="outline" className="bg-black/60 text-white">
                             <VideoIcon className="size-3" />
-                            Video
+                            {t("kind.video")}
                           </Badge>
                         </div>
-                        <div className="absolute bottom-2 left-2">{getStatusBadge(item)}</div>
+                        <div className="absolute bottom-2 start-2">{getStatusBadge(item)}</div>
                       </div>
                       <div className="space-y-2 p-2.5">
                         <p className="truncate text-xs font-medium">{item.name}</p>
@@ -343,7 +346,7 @@ export function UploadDialog({
 
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={resetAll} disabled={isRunning || queue.length === 0}>
-            Clear
+            {t("clear")}
           </Button>
         </div>
       </DialogContent>

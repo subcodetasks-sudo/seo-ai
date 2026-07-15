@@ -9,6 +9,7 @@ import {
 import { env } from "@/config/env";
 
 let messaging: Messaging | null = null;
+let foregroundUnsubscribe: (() => void) | null = null;
 
 function isFirebaseConfigured(): boolean {
   return !!(
@@ -38,16 +39,29 @@ export const getFirebaseMessaging = (): Messaging | null => {
   return messaging;
 };
 
-// Helper for listening to messages in the foreground
+// Singleton foreground listener — avoids duplicate toasts when React Strict
+// Mode remounts or when multiple components call this helper.
 export const onForegroundMessage = (
   callback: (payload: MessagePayload) => void
 ) => {
   const messagingInstance = getFirebaseMessaging();
-  if (messagingInstance) {
-    return onMessage(messagingInstance, (payload: MessagePayload) => {
-      // console.log("Foreground message received:", payload);
-      callback(payload);
-    });
+  if (!messagingInstance) {
+    return () => {};
   }
-  return () => {};
+
+  if (foregroundUnsubscribe) {
+    foregroundUnsubscribe();
+    foregroundUnsubscribe = null;
+  }
+
+  foregroundUnsubscribe = onMessage(messagingInstance, (payload: MessagePayload) => {
+    callback(payload);
+  });
+
+  return () => {
+    if (foregroundUnsubscribe) {
+      foregroundUnsubscribe();
+      foregroundUnsubscribe = null;
+    }
+  };
 };

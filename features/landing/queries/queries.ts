@@ -1,7 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/landing-api";
-import type { AboutUs, Faq, Hero, LegalPage, Pricing, Statistics, TestimonialsData, ToolUsage } from "@/features/landing/types/landing-api";
+import type { AboutUs, Faq, Hero, LegalPage, Statistics, TestimonialsData, ToolUsage } from "@/features/landing/types/landing-api";
 import { landingKeys } from "./query-keys";
+import { fetchLandingPricing } from "./fetch-pricing";
 
 export function heroQueryOptions(lang: string) {
   return queryOptions({
@@ -13,8 +14,7 @@ export function heroQueryOptions(lang: string) {
 export function pricingQueryOptions(lang: string) {
   return queryOptions({
     queryKey: landingKeys.pricing(lang),
-    queryFn: () =>
-      apiFetch<Pricing | Pricing[]>(`/api/v1/pricing?lang=${lang}`),
+    queryFn: () => fetchLandingPricing(lang),
   });
 }
 

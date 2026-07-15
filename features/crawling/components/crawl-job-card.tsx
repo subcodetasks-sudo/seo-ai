@@ -6,12 +6,13 @@ import { formatDistanceToNow } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { useDirection } from "@/components/ui/direction";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
+import ProjectCrawlControls from "@/features/home/components/project-crawl-controls";
 import { getCrawlStatusBadgeClassName } from "../services/page-status";
 import type { CrawlListItem } from "../types";
+import type { ProjectCrawlStatus } from "@/features/home/types";
 
 type CrawlJobCardProps = {
   crawl: CrawlListItem;
@@ -20,6 +21,7 @@ type CrawlJobCardProps = {
 const STATUS_ACCENT: Record<string, string> = {
   done: "bg-success-400",
   failed: "bg-error-400",
+  stopped: "bg-warning-400",
   running: "bg-primary-400",
   in_progress: "bg-primary-400",
   queued: "bg-neutral-300",
@@ -33,7 +35,13 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
   const numberFormatter = new Intl.NumberFormat(locale);
   const ChevronIcon = dir === "rtl" ? ChevronLeft : ChevronRight;
 
-  const isActive = crawl.status === "running" || crawl.status === "in_progress";
+  const isActive =
+    crawl.status === "running" ||
+    crawl.status === "in_progress" ||
+    crawl.status === "queued";
+  const showControls =
+    isActive || crawl.status === "stopped" || crawl.status === "failed";
+
   const startedRelative = crawl.started_at
     ? formatDistanceToNow(new Date(crawl.started_at), { addSuffix: true, locale: dateLocale })
     : "—";
@@ -48,11 +56,11 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
         )
       : null;
 
+  const mappedStatus: ProjectCrawlStatus =
+    crawl.status === "in_progress" ? "running" : (crawl.status as ProjectCrawlStatus);
+
   return (
-    <Link
-      href={`/dashboard/crawl-history/${crawl.crawl_job_id}`}
-      className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-neutral-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-sm"
-    >
+    <div className="relative flex flex-col gap-4 overflow-hidden rounded-xl border border-neutral-200 bg-white p-5 transition-all hover:border-primary-200 hover:shadow-sm">
       <span
         className={cn(
           "absolute inset-y-0 start-0 w-1 rounded-e-full",
@@ -61,7 +69,10 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
         aria-hidden="true"
       />
 
-      <div className="flex flex-wrap items-start justify-between gap-3 ps-2">
+      <Link
+        href={`/dashboard/crawl-history/${crawl.crawl_job_id}`}
+        className="group flex flex-wrap items-start justify-between gap-3 ps-2"
+      >
         <div className="min-w-0 flex-1 space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge className={cn("gap-1", getCrawlStatusBadgeClassName(crawl.status))}>
@@ -83,14 +94,16 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
           {t("seeResults")}
           <ChevronIcon className="size-4" aria-hidden="true" />
         </span>
-      </div>
+      </Link>
 
-      {isActive && (
-        <div className="space-y-1.5 ps-2">
-          <Progress value={crawl.progress_pct} className="h-1.5" />
-          <p className="text-label-xs text-neutral-400">
-            {t("progress", { percent: crawl.progress_pct })}
-          </p>
+      {showControls && (
+        <div className="ps-2">
+          <ProjectCrawlControls
+            projectId={crawl.project_id}
+            crawlJobId={crawl.crawl_job_id}
+            crawlStatus={mappedStatus}
+            compact
+          />
         </div>
       )}
 
@@ -136,6 +149,6 @@ export function CrawlJobCard({ crawl }: CrawlJobCardProps) {
           {crawl.error_message}
         </p>
       )}
-    </Link>
+    </div>
   );
 }

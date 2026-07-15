@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Info, SquarePen } from "lucide-react";
+import { Info, Loader2, SquarePen } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
+import BackLink from "@/components/back-link";
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
 import SelectProjectState from "@/components/select-project-state";
@@ -22,6 +23,7 @@ import { cn, decodeUrlForDisplay } from "@/lib/utils";
 import { aiSuggestionDetailQueryOptions } from "../queries/queries";
 import { useApproveSuggestion, useIgnoreSuggestion, useRejectSuggestion } from "../queries/mutations";
 import { EditSuggestionModal } from "./edit-suggestion-modal";
+import SuggestionProcessingPanel from "./suggestion-processing-panel";
 import { SuggestionDisplay } from "./suggestion-display";
 import type { ImpactLevel, SuggestionStatus } from "../types";
 
@@ -52,7 +54,6 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
   const tCommon = useTranslations("common.state");
   const dir = useDirection();
   const router = useRouter();
-  const isRtl = dir === "rtl";
   const { selectedProjectId } = useSelectedProject();
 
   const { data: suggestion, isLoading, isError, refetch } = useQuery(
@@ -120,6 +121,8 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
   }
 
   const isPending = suggestion.status === "pending";
+  const isProcessing =
+    suggestion.status === "queued" || suggestion.status === "processing";
 
   const consentBenefit = consentBenefits[suggestion.type];
   const consentText = consentBenefit
@@ -130,7 +133,11 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
     if (!selectedProjectId) return;
     approveMutation.mutate(
       { projectId: selectedProjectId, suggestionId },
-      { onSuccess: () => router.back() },
+      {
+        onSuccess: () => {
+          void refetch();
+        },
+      },
     );
   }
 
@@ -181,202 +188,200 @@ export function SuggestionReview({ suggestionId }: SuggestionReviewProps) {
                 STATUS_STYLES[suggestion.status],
               )}
             >
-              <span className="size-1.5 shrink-0 rounded-full bg-current opacity-80" aria-hidden="true" />
+              {isProcessing ? (
+                <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" />
+              ) : (
+                <span className="size-1.5 shrink-0 rounded-full bg-current opacity-80" aria-hidden="true" />
+              )}
               {t(`status.${suggestion.status}`)}
             </span>
           </div>
         </div>
 
-        {/* Type-specific content */}
-        <SuggestionDisplay suggestion={suggestion} />
+        {suggestion.status === "queued" || suggestion.status === "processing" ? (
+          <SuggestionProcessingPanel status={suggestion.status} />
+        ) : (
+          <>
+            {/* Type-specific content */}
+            <SuggestionDisplay suggestion={suggestion} />
 
-        {/* Info grid */}
-        {((suggestion.type !== "redirect" && suggestion.keywords.length > 0) || suggestion.explanation) && (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {suggestion.type !== "redirect" && suggestion.keywords.length > 0 ? (
-              <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
-                <div className="flex items-center gap-1.5">
-                  <span className="size-2 shrink-0 rounded-full bg-primary-400" aria-hidden="true" />
-                  <span className="text-label-sm font-medium text-secondary-500">
-                    {t("reviewPage.keywords")}
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {suggestion.keywords.map((kw) => (
-                    <span
-                      key={kw}
-                      className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-label-xs text-secondary-500"
-                    >
-                      {kw}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ) : null}
+            {/* Info grid */}
+            {((suggestion.type !== "redirect" && suggestion.keywords.length > 0) || suggestion.explanation) && (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {suggestion.type !== "redirect" && suggestion.keywords.length > 0 ? (
+                  <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
+                    <div className="flex items-center gap-1.5">
+                      <span className="size-2 shrink-0 rounded-full bg-primary-400" aria-hidden="true" />
+                      <span className="text-label-sm font-medium text-secondary-500">
+                        {t("reviewPage.keywords")}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {suggestion.keywords.map((kw) => (
+                        <span
+                          key={kw}
+                          className="rounded-lg border border-neutral-200 bg-neutral-50 px-3 py-1.5 text-label-xs text-secondary-500"
+                        >
+                          {kw}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
 
-            {suggestion.explanation ? (
-              <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
-                <div className="flex items-center gap-2">
-                  <Info className="size-4 shrink-0 text-neutral-400" aria-hidden="true" />
-                  <span className="text-label-sm font-medium text-secondary-500">
-                    {t("reviewPage.whyGenerated")}
-                  </span>
-                </div>
-                <p className="text-label-sm leading-relaxed text-neutral-500">{suggestion.explanation}</p>
+                {suggestion.explanation ? (
+                  <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
+                    <div className="flex items-center gap-2">
+                      <Info className="size-4 shrink-0 text-neutral-400" aria-hidden="true" />
+                      <span className="text-label-sm font-medium text-secondary-500">
+                        {t("reviewPage.whyGenerated")}
+                      </span>
+                    </div>
+                    <p className="text-label-sm leading-relaxed text-neutral-500">{suggestion.explanation}</p>
+                  </div>
+                ) : null}
               </div>
-            ) : null}
-          </div>
+            )}
+
+            {/* Consent notice */}
+            {isPending && (
+              <div className="flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50/50 p-4">
+                <Info className="mt-0.5 size-4 shrink-0 text-primary-500" aria-hidden="true" />
+                <p className="text-label-sm leading-relaxed text-secondary-500">{consentText}</p>
+              </div>
+            )}
+
+            {/* Action bar */}
+            <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
+              <BackLink onClick={() => router.back()}>{t("reviewPage.back")}</BackLink>
+
+              <div className="flex flex-wrap flex-row-reverse items-center gap-2 sm:justify-end">
+                {isPending ? (
+                  <Button
+                    type="button"
+                    onClick={handleApprove}
+                    disabled={isMutating}
+                    className="bg-primary-300 font-medium text-secondary-500 hover:bg-primary-400 disabled:opacity-50"
+                  >
+                    {t("approve")}
+                  </Button>
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip delayDuration={200}>
+                      <TooltipTrigger asChild>
+                        <span className="inline-flex">
+                          <Button
+                            type="button"
+                            disabled
+                            className="bg-primary-100 font-medium text-secondary-300"
+                          >
+                            {t("approve")}
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{t("reviewPage.actionPendingOnly")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+                {isPending ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setEditModalOpen(true)}
+                    className="gap-2 border-neutral-200 text-neutral-500 hover:bg-neutral-50"
+                  >
+                    <SquarePen className="size-4" aria-hidden="true" />
+                    {t("reviewPage.edit")}
+                  </Button>
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip delayDuration={200}>
+                      <TooltipTrigger asChild>
+                        <span className="inline-flex">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled
+                            className="gap-2 border-neutral-200 text-neutral-400"
+                          >
+                            <SquarePen className="size-4" aria-hidden="true" />
+                            {t("reviewPage.edit")}
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{t("reviewPage.editPendingOnly")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+                {isPending ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleReject}
+                    disabled={isMutating}
+                    className="border-error-200 bg-error-50 text-error-700 hover:bg-error-100 disabled:opacity-50"
+                  >
+                    {t("reject")}
+                  </Button>
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip delayDuration={200}>
+                      <TooltipTrigger asChild>
+                        <span className="inline-flex">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled
+                            className="border-neutral-200 text-neutral-400"
+                          >
+                            {t("reject")}
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{t("reviewPage.actionPendingOnly")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+                {isPending ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleIgnore}
+                    disabled={isMutating}
+                    className="border-neutral-200 text-neutral-500 hover:bg-neutral-50 disabled:opacity-50"
+                  >
+                    {t("ignore")}
+                  </Button>
+                ) : (
+                  <TooltipProvider>
+                    <Tooltip delayDuration={200}>
+                      <TooltipTrigger asChild>
+                        <span className="inline-flex">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled
+                            className="border-neutral-200 text-neutral-400"
+                          >
+                            {t("ignore")}
+                          </Button>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">{t("reviewPage.actionPendingOnly")}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+            </div>
+          </>
         )}
 
-        {/* Consent notice */}
-        {isPending && (
-          <div className="flex items-start gap-3 rounded-xl border border-primary-200 bg-primary-50/50 p-4">
-            <Info className="mt-0.5 size-4 shrink-0 text-primary-500" aria-hidden="true" />
-            <p className="text-label-sm leading-relaxed text-secondary-500">{consentText}</p>
-          </div>
+        {isProcessing && (
+          <BackLink onClick={() => router.back()}>{t("reviewPage.back")}</BackLink>
         )}
-
-        {/* Action bar */}
-        <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="flex items-center gap-1.5 text-label-sm text-neutral-500 transition-colors hover:text-secondary-500"
-          >
-            {isRtl ? (
-              <>
-                {t("reviewPage.back")}
-                <ArrowRight className="size-4" aria-hidden="true" />
-              </>
-            ) : (
-              <>
-                <ArrowLeft className="size-4" aria-hidden="true" />
-                {t("reviewPage.back")}
-              </>
-            )}
-          </button>
-
-          <div className="flex flex-wrap flex-row-reverse items-center gap-2 sm:justify-end">
-            {isPending ? (
-              <Button
-                type="button"
-                onClick={handleApprove}
-                disabled={isMutating}
-                className="bg-primary-300 font-medium text-secondary-500 hover:bg-primary-400 disabled:opacity-50"
-              >
-                {t("approve")}
-              </Button>
-            ) : (
-              <TooltipProvider>
-                <Tooltip delayDuration={200}>
-                  <TooltipTrigger asChild>
-                    <span className="inline-flex">
-                      <Button
-                        type="button"
-                        disabled
-                        className="bg-primary-100 font-medium text-secondary-300"
-                      >
-                        {t("approve")}
-                      </Button>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">{t("reviewPage.actionPendingOnly")}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-            {isPending ? (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditModalOpen(true)}
-                className="gap-2 border-neutral-200 text-neutral-500 hover:bg-neutral-50"
-              >
-                <SquarePen className="size-4" aria-hidden="true" />
-                {t("reviewPage.edit")}
-              </Button>
-            ) : (
-              <TooltipProvider>
-                <Tooltip delayDuration={200}>
-                  <TooltipTrigger asChild>
-                    <span className="inline-flex">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled
-                        className="gap-2 border-neutral-200 text-neutral-400"
-                      >
-                        <SquarePen className="size-4" aria-hidden="true" />
-                        {t("reviewPage.edit")}
-                      </Button>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">{t("reviewPage.editPendingOnly")}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-            {isPending ? (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleReject}
-                disabled={isMutating}
-                className="border-error-200 bg-error-50 text-error-700 hover:bg-error-100 disabled:opacity-50"
-              >
-                {t("reject")}
-              </Button>
-            ) : (
-              <TooltipProvider>
-                <Tooltip delayDuration={200}>
-                  <TooltipTrigger asChild>
-                    <span className="inline-flex">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled
-                        className="border-neutral-200 text-neutral-400"
-                      >
-                        {t("reject")}
-                      </Button>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">{t("reviewPage.actionPendingOnly")}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-            {isPending ? (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleIgnore}
-                disabled={isMutating}
-                className="border-neutral-200 text-neutral-500 hover:bg-neutral-50 disabled:opacity-50"
-              >
-                {t("ignore")}
-              </Button>
-            ) : (
-              <TooltipProvider>
-                <Tooltip delayDuration={200}>
-                  <TooltipTrigger asChild>
-                    <span className="inline-flex">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        disabled
-                        className="border-neutral-200 text-neutral-400"
-                      >
-                        {t("ignore")}
-                      </Button>
-                    </span>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">{t("reviewPage.actionPendingOnly")}</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-          </div>
-        </div>
       </div>
 
-      {selectedProjectId && (
+      {selectedProjectId && !isProcessing && (
         <EditSuggestionModal
           open={editModalOpen}
           suggestion={suggestion}

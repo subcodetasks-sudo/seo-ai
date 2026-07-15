@@ -132,7 +132,7 @@ export function ResetPassForm({ email, resendHref, className }: ResetPassFormPro
         },
         onError: (error) => {
           toast.error(
-            error instanceof Error ? error.message : "error"
+            error instanceof Error ? error.message : tToast("genericError")
           );
         },
       }

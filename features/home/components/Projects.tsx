@@ -36,13 +36,21 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { useRouter } from "@/i18n/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useAddProject } from "@/features/home/components/add-project/add-project-provider";
 import { useSelectedProject } from "@/features/home/context/selected-project-context";
 import { useDeleteProject, useStartCrawl } from "@/features/home/queries/mutations";
 import { homeKeys } from "@/features/home/queries/query-keys";
 import type { ProjectListItem } from "@/features/home/types";
+import { isActiveCrawlStatus } from "@/features/home/services/crawl-guard";
 import { cn } from "@/lib/utils";
+import ProjectCrawlControls from "./project-crawl-controls";
 import { VerifyPanel } from "./verify-panel";
 
 type ProjectsProps = {
@@ -53,12 +61,17 @@ type ProjectCardProps = {
   project: ProjectListItem;
 };
 
+type CrawlResultFilter = "all" | "issues" | "notFound";
+
 type ProjectStatProps = {
   icon: LucideIcon;
   value: string;
   label: string;
   valueClassName?: string;
   iconClassName?: string;
+  href?: string;
+  tooltip?: string;
+  onNavigate?: () => void;
 };
 
 type VerificationFilter = "all" | "verified" | "unverified";
@@ -97,9 +110,18 @@ function FilterTab({ active, onClick, label, count, icon: Icon, activeClassName 
   );
 }
 
-function ProjectStat({ icon: Icon, value, label, valueClassName, iconClassName }: ProjectStatProps) {
-  return (
-    <div className="flex items-center gap-2.5 rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2.5">
+function ProjectStat({
+  icon: Icon,
+  value,
+  label,
+  valueClassName,
+  iconClassName,
+  href,
+  tooltip,
+  onNavigate,
+}: ProjectStatProps) {
+  const content = (
+    <>
       <Icon className={cn("size-4 shrink-0 text-neutral-400", iconClassName)} aria-hidden="true" />
       <div className="flex min-w-0 flex-col">
         <span className={cn("text-h4 font-semibold leading-tight text-secondary-500", valueClassName)}>
@@ -107,8 +129,48 @@ function ProjectStat({ icon: Icon, value, label, valueClassName, iconClassName }
         </span>
         <span className="truncate text-label-sm text-neutral-500">{label}</span>
       </div>
-    </div>
+    </>
   );
+
+  const baseClassName =
+    "flex items-center gap-2.5 rounded-lg border border-neutral-100 bg-neutral-50 px-3 py-2.5";
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        onClick={onNavigate}
+        className={cn(
+          baseClassName,
+          "transition-colors hover:border-primary-200 hover:bg-primary-50/40",
+        )}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  if (tooltip) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              tabIndex={0}
+              className={cn(baseClassName, "cursor-help outline-none focus-visible:border-primary-300 focus-visible:ring-2 focus-visible:ring-primary-200")}
+            >
+              {content}
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="top" sideOffset={6} className="max-w-56 text-center leading-relaxed">
+            {tooltip}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return <div className={baseClassName}>{content}</div>;
 }
 
 function VerifyProjectModal({ project }: { project: ProjectListItem }) {
@@ -187,6 +249,22 @@ function ProjectCard({ project }: ProjectCardProps) {
     router.push("/dashboard/crawl-history");
   }
 
+  function handleStatNavigate() {
+    setSelectedProjectId(project.id);
+  }
+
+  function crawlResultsHref(filter: CrawlResultFilter) {
+    if (!project.crawl_job_id) return undefined;
+    return `/dashboard/crawl-history/${project.crawl_job_id}?filter=${filter}`;
+  }
+
+  const crawlIsActive = isActiveCrawlStatus(project.crawl_status);
+  const showRescan =
+    !crawlIsActive &&
+    project.crawl_status !== "stopped" &&
+    project.crawl_status !== "failed";
+  const noCrawlTooltip = t("statTooltips.noCrawl");
+
   return (
     <article className="flex flex-col gap-5 rounded-xl border border-neutral-200 bg-white p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -254,6 +332,7 @@ function ProjectCard({ project }: ProjectCardProps) {
           value={healthScore}
           label={t("health")}
           valueClassName={project.health_score !== null ? "text-secondary-500" : "text-neutral-400"}
+          tooltip={t("statTooltips.health")}
         />
         <ProjectStat
           icon={project.is_verified ? ShieldCheck : ShieldX}
@@ -261,14 +340,25 @@ function ProjectCard({ project }: ProjectCardProps) {
           label={t("status")}
           valueClassName={project.is_verified ? "text-success-500" : "text-warning-400"}
           iconClassName={project.is_verified ? "text-success-500" : "text-warning-400"}
+          tooltip={t("statTooltips.status")}
         />
-        <ProjectStat icon={FileText} value={pagesCrawled} label={t("pages")} />
+        <ProjectStat
+          icon={FileText}
+          value={pagesCrawled}
+          label={t("pages")}
+          href={crawlResultsHref("all")}
+          tooltip={project.crawl_job_id ? undefined : noCrawlTooltip}
+          onNavigate={handleStatNavigate}
+        />
         <ProjectStat
           icon={AlertTriangle}
           value={totalIssues}
           label={t("errors")}
           valueClassName={project.total_issues > 0 ? "text-warning-500" : "text-secondary-500"}
           iconClassName={project.total_issues > 0 ? "text-warning-500" : "text-neutral-400"}
+          href={crawlResultsHref("issues")}
+          tooltip={project.crawl_job_id ? undefined : noCrawlTooltip}
+          onNavigate={handleStatNavigate}
         />
         <ProjectStat
           icon={Link2Off}
@@ -276,8 +366,28 @@ function ProjectCard({ project }: ProjectCardProps) {
           label={t("errors404")}
           valueClassName={project.total_404_pages > 0 ? "text-error-500" : "text-secondary-500"}
           iconClassName={project.total_404_pages > 0 ? "text-error-500" : "text-neutral-400"}
+          href={crawlResultsHref("notFound")}
+          tooltip={project.crawl_job_id ? undefined : noCrawlTooltip}
+          onNavigate={handleStatNavigate}
         />
       </div>
+
+      {(crawlIsActive ||
+        project.crawl_status === "stopped" ||
+        project.crawl_status === "failed") && (
+        <ProjectCrawlControls
+          projectId={project.id}
+          crawlJobId={project.crawl_job_id ?? null}
+          crawlStatus={project.crawl_status ?? null}
+          onCrawlStarted={(crawlJobId) => {
+            enterAnalysis({
+              projectId: project.id,
+              domain: project.domain,
+              crawlJobId,
+            });
+          }}
+        />
+      )}
 
       <div className="flex flex-wrap items-center gap-2 border-t border-neutral-100 pt-4">
         {!project.is_verified && project.platform === "custom" && (
@@ -306,15 +416,17 @@ function ProjectCard({ project }: ProjectCardProps) {
           </a>
         </Button>
 
-        <Button
-          type="button"
-          onClick={handleRescan}
-          disabled={isRescanning}
-          className="h-9 gap-2 bg-primary-300 text-secondary-500 px-4 hover:bg-primary-400 disabled:opacity-60"
-        >
-          <RefreshCw className={cn("size-4", isRescanning && "animate-spin")} aria-hidden="true" />
-          {isRescanning ? t("rescanning") : t("rescan")}
-        </Button>
+        {showRescan && (
+          <Button
+            type="button"
+            onClick={handleRescan}
+            disabled={isRescanning}
+            className="h-9 gap-2 bg-primary-300 text-secondary-500 px-4 hover:bg-primary-400 disabled:opacity-60"
+          >
+            <RefreshCw className={cn("size-4", isRescanning && "animate-spin")} aria-hidden="true" />
+            {isRescanning ? t("rescanning") : t("rescan")}
+          </Button>
+        )}
       </div>
     </article>
   );

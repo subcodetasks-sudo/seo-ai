@@ -33,10 +33,24 @@ export function InvoiceRow({ invoice }: InvoiceRowProps) {
           {invoice.amount_usd != null ? `$${invoice.amount_usd.toFixed(2)}` : "—"}
         </p>
         {invoice.status ? (
-          <Badge className="bg-primary-50 text-primary-700 hover:bg-primary-50">
+          <Badge
+            className={
+              invoice.status === "paid"
+                ? "bg-primary-50 text-primary-700 hover:bg-primary-50"
+                : invoice.status === "pending"
+                  ? "bg-amber-100 text-amber-900 hover:bg-amber-100"
+                  : invoice.status === "failed" || invoice.status === "canceled" || invoice.status === "cancelled"
+                    ? "bg-red-100 text-red-800 hover:bg-red-100"
+                    : "bg-neutral-100 text-neutral-600 hover:bg-neutral-100"
+            }
+          >
             {invoice.status === "paid" || invoice.status === "pending"
               ? t(`status.${invoice.status}`)
-              : invoice.status}
+              : invoice.status === "failed"
+                ? t("status.failed")
+                : invoice.status === "canceled" || invoice.status === "cancelled"
+                  ? t("status.canceled")
+                  : invoice.status}
           </Badge>
         ) : null}
         {invoice.invoice_pdf_url ? (

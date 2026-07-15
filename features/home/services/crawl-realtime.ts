@@ -7,7 +7,7 @@ import { env } from "@/config/env";
 // client setup used for notifications (features/notifications/services), but
 // subscribes to the Realtime Database instead of Cloud Messaging.
 
-export type CrawlRealtimeStatus = "queued" | "running" | "done" | "failed";
+export type CrawlRealtimeStatus = "queued" | "running" | "done" | "stopped" | "failed";
 
 export type CrawlRealtimePayload = {
   job_id: string;

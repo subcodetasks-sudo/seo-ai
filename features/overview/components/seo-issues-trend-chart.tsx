@@ -12,15 +12,15 @@ import { MOCK_SEO_ISSUES_TREND } from "../queries/mock-data";
 
 const SEO_ISSUES_COLOR = "#F39C12";
 
-const chartConfig = {
-  value: {
-    label: "Issues",
-    color: SEO_ISSUES_COLOR,
-  },
-};
-
 export function SeoIssuesTrendChart() {
   const t = useTranslations("overview.charts");
+
+  const chartConfig = {
+    value: {
+      label: t("issuesLabel"),
+      color: SEO_ISSUES_COLOR,
+    },
+  };
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">

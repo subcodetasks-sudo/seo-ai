@@ -62,6 +62,8 @@ export const languageDetectionQueryOptions = (domain: string) =>
     queryFn: () => detectLanguage(domain),
   });
 
+const TERMINAL_CRAWL_STATUSES = new Set(["done", "failed", "stopped"]);
+
 export const crawlStatusQueryOptions = (projectId: string, crawlId: string) =>
   queryOptions({
     queryKey: homeKeys.crawl(projectId, crawlId),
@@ -69,7 +71,8 @@ export const crawlStatusQueryOptions = (projectId: string, crawlId: string) =>
     enabled: !!projectId && !!crawlId,
     refetchInterval: (query) => {
       const status = query.state.data?.data.status;
-      return status === "done" || status === "failed" ? false : 2000;
+      if (status && TERMINAL_CRAWL_STATUSES.has(status)) return false;
+      return 4000;
     },
   });
 

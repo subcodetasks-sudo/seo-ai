@@ -1,13 +1,18 @@
+"use client"
+
 import * as React from "react"
 import { Slot } from "radix-ui"
-
-import { cn } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react"
 
+import { cn } from "@/lib/utils"
+
 function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
+  const t = useTranslations("common")
+
   return (
     <nav
-      aria-label="breadcrumb"
+      aria-label={props["aria-label"] ?? t("breadcrumb")}
       data-slot="breadcrumb"
       className={cn(className)}
       {...props}
@@ -93,6 +98,8 @@ function BreadcrumbEllipsis({
   className,
   ...props
 }: React.ComponentProps<"span">) {
+  const tPagination = useTranslations("common.pagination")
+
   return (
     <span
       data-slot="breadcrumb-ellipsis"
@@ -106,7 +113,7 @@ function BreadcrumbEllipsis({
     >
       <MoreHorizontalIcon
       />
-      <span className="sr-only">More</span>
+      <span className="sr-only">{tPagination("morePages")}</span>
     </span>
   )
 }

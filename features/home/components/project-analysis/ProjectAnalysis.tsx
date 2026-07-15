@@ -1,8 +1,11 @@
 "use client";
 
 import { useCrawlProgress } from "../../hooks/useCrawlProgress";
+import ProjectCrawlControls from "../project-crawl-controls";
 import AnalysisLoading from "./AnalysisLoading";
 import AnalysisSuccess from "./AnalysisSuccess";
+import { isActiveCrawlStatus } from "../../services/crawl-guard";
+import type { ProjectCrawlStatus } from "../../types";
 
 type ProjectAnalysisProps = {
   projectId: string;
@@ -20,6 +23,7 @@ export default function ProjectAnalysis({
   const {
     isDone,
     loadingProps,
+    crawlData,
     totalPages,
     totalIssues,
     totalBasic,
@@ -30,6 +34,11 @@ export default function ProjectAnalysis({
     crawlId: crawlJobId,
     url,
   });
+
+  const rawStatus = crawlData?.status ?? "queued";
+  const crawlStatus: ProjectCrawlStatus =
+    rawStatus === "in_progress" ? "running" : (rawStatus as ProjectCrawlStatus);
+  const showControls = crawlStatus !== "done";
 
   if (isDone) {
     return (
@@ -47,5 +56,21 @@ export default function ProjectAnalysis({
     );
   }
 
-  return <AnalysisLoading {...loadingProps} />;
+  return (
+    <AnalysisLoading
+      {...loadingProps}
+      actions={
+        showControls ? (
+          <div className="w-full">
+            <ProjectCrawlControls
+              projectId={projectId}
+              crawlJobId={crawlJobId}
+              crawlStatus={crawlStatus}
+              actionsOnly={isActiveCrawlStatus(crawlStatus)}
+            />
+          </div>
+        ) : undefined
+      }
+    />
+  );
 }

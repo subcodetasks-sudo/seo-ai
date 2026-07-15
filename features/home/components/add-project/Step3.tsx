@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, LoaderCircle } from "lucide-react";
+import BackLink from "@/components/back-link";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
@@ -249,16 +250,9 @@ export default function Step3({
           {t("scan")}
         </Button>
 
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onBack}
-          disabled={isSubmitting}
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-[10px] px-2 text-body font-medium text-neutral-500 hover:bg-transparent hover:text-secondary-500 disabled:opacity-50 sm:w-auto sm:justify-start"
-        >
-          {dir === "rtl" ? <ArrowRight className="size-4" /> : <ArrowLeft className="size-4" />}
-          <span>{t("back")}</span>
-        </Button>
+        <BackLink onClick={onBack} disabled={isSubmitting}>
+          {t("back")}
+        </BackLink>
       </div>
     </form>
   );

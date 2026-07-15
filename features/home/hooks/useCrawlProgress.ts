@@ -52,6 +52,18 @@ function mapCrawlStatusToSteps(crawlData: CrawlJobResponse["data"]): Record<Anal
         crawling: { status: "active" },
       };
 
+    case "stopped":
+      return {
+        queued: { status: "completed" },
+        crawling: {
+          status: "active",
+          pageCount: crawlData.pages_crawled,
+          pagesTotalEst: crawlData.pages_total_est ?? undefined,
+          progressPct: crawlData.progress_pct ?? undefined,
+        },
+        analysis: { status: "pending" },
+      };
+
     default:
       return baseSteps;
   }
@@ -92,7 +104,7 @@ export function useCrawlProgress({
 
   // Live status from Firebase Realtime DB. Each push triggers an immediate
   // REST refetch so the detailed step data (page counts) stays in sync without
-  // waiting for the 2s polling tick. Non-fatal: no-ops when RTDB is unavailable.
+  // waiting for the polling tick. Non-fatal: no-ops when RTDB is unavailable.
   useEffect(() => {
     if (!crawlId) return;
 

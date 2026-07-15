@@ -1,3 +1,5 @@
+import "../../pricing-cards.css";
+
 export default function DashboardLayout({
   children,
 }: {

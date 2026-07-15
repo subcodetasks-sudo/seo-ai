@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Clock, ExternalLink, EyeOff, Link2, Loader2, Sparkles, TriangleAlert } from "lucide-react";
+import { Clock, ExternalLink, EyeOff, Link2, Loader2, Sparkles, TriangleAlert } from "lucide-react";
 import { arSA, enUS } from "date-fns/locale";
 import { formatDistanceToNow } from "date-fns";
 import { useLocale, useTranslations } from "next-intl";
@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import BackLink from "@/components/back-link";
 import EmptyState from "@/components/empty-state";
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
@@ -17,8 +18,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link, useRouter } from "@/i18n/navigation";
-import { useSelectedProject } from "@/features/home";
+import { useRouter } from "@/i18n/navigation";
+import { useSelectedProject, CrawlGuardDialog, parseCrawlGuardError } from "@/features/home";
+import type { CrawlGuardError } from "@/features/home/services/crawl-guard";
 import { cn, getDisplayPathname } from "@/lib/utils";
 import { HealthScoreRing } from "./health-score-ring";
 import { LinksList } from "./links-list";
@@ -53,6 +55,7 @@ export function CrawlPageDetailContent({ crawlId, pageId }: CrawlPageDetailConte
   const ignoreMutation = useIgnoreIssue();
   const [pendingSuggestKey, setPendingSuggestKey] = useState<number | "redirect" | null>(null);
   const [pendingIgnoreIndex, setPendingIgnoreIndex] = useState<number | null>(null);
+  const [crawlGuard, setCrawlGuard] = useState<CrawlGuardError | null>(null);
 
   const listPage = Number(searchParams.get("listPage") ?? "1") || 1;
   const pageSize = Number(searchParams.get("pageSize") ?? "10") || 10;
@@ -98,13 +101,7 @@ export function CrawlPageDetailContent({ crawlId, pageId }: CrawlPageDetailConte
             fullPage={false}
             className="rounded-xl border border-neutral-200 bg-white p-10"
           />
-          <Link
-            href={backHref}
-            className="inline-flex w-fit items-center gap-1.5 text-label-sm text-neutral-500 hover:text-neutral-700"
-          >
-            <ArrowRight className="size-3.5 rtl:rotate-180" aria-hidden="true" />
-            {t("backToPages")}
-          </Link>
+          <BackLink href={backHref}>{t("backToPages")}</BackLink>
         </div>
       </div>
     );
@@ -133,6 +130,10 @@ export function CrawlPageDetailContent({ crawlId, pageId }: CrawlPageDetailConte
           toast.success(t("aiSuggestSuccess"));
           router.push(`/dashboard/ai-suggestions/${suggestion.suggestion_id}`);
         },
+        onError: (error) => {
+          const guard = parseCrawlGuardError(error);
+          if (guard) setCrawlGuard(guard);
+        },
         onSettled: () => setPendingSuggestKey(null),
       },
     );
@@ -147,6 +148,10 @@ export function CrawlPageDetailContent({ crawlId, pageId }: CrawlPageDetailConte
         onSuccess: (suggestion) => {
           toast.success(t("aiSuggestSuccess"));
           router.push(`/dashboard/ai-suggestions/${suggestion.suggestion_id}`);
+        },
+        onError: (error) => {
+          const guard = parseCrawlGuardError(error);
+          if (guard) setCrawlGuard(guard);
         },
         onSettled: () => setPendingSuggestKey(null),
       },
@@ -169,14 +174,16 @@ export function CrawlPageDetailContent({ crawlId, pageId }: CrawlPageDetailConte
 
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
+      <CrawlGuardDialog
+        projectId={selectedProjectId}
+        guard={crawlGuard}
+        open={crawlGuard !== null}
+        onOpenChange={(open) => {
+          if (!open) setCrawlGuard(null);
+        }}
+      />
       <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6">
-        <Link
-          href={backHref}
-          className="inline-flex w-fit items-center gap-1.5 text-label-sm text-neutral-500 hover:text-neutral-700"
-        >
-          <ArrowRight className="size-3.5 rtl:rotate-180" aria-hidden="true" />
-          {t("backToPages")}
-        </Link>
+        <BackLink href={backHref}>{t("backToPages")}</BackLink>
 
         <div
           className={cn(

@@ -147,6 +147,8 @@ export function OverviewContent() {
               projectId={selectedProjectId}
               domain={selectedProject?.domain ?? selectedProject?.name ?? "—"}
               dashboard={dashboard}
+              crawlJobId={selectedProject?.crawl_job_id ?? null}
+              crawlStatus={selectedProject?.crawl_status ?? null}
               onRescanSuccess={handleRescanSuccess}
             />
 

@@ -84,6 +84,9 @@ export interface PricingPackageItem {
   price: string;
   button_text: string;
   features: string[];
+  /** Optional billing slug when CMS provides it (e.g. "starter", "pro"). */
+  plan_name?: string;
+  slug?: string;
 }
 
 export interface PricingPackages {

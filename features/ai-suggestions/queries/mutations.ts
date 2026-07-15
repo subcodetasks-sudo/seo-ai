@@ -61,8 +61,11 @@ export function useApproveSuggestion() {
   return useMutation({
     mutationFn: ({ projectId, suggestionId }: SuggestionMutationVars) =>
       approveSuggestion(projectId, suggestionId),
-    onSuccess: () => {
+    onSuccess: (_data, { projectId, suggestionId }) => {
       queryClient.invalidateQueries({ queryKey: aiSuggestionsKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: aiSuggestionsKeys.detail(projectId, suggestionId),
+      });
     },
   });
 }

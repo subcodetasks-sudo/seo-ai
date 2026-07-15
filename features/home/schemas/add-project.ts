@@ -3,20 +3,27 @@ import { z } from "zod";
 const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/i;
 const projectTypes = ["wordpress", "custom", "salla"] as const;
 
-export const step1Schema = z.object({
-  websiteUrl: z
-    .string()
-    .min(1, "URL is required")
-    .regex(urlRegex, "Invalid URL format"),
-  projectType: z.enum(projectTypes),
-  sitemapUrl: z
-    .string()
-    .regex(urlRegex, "Invalid URL format")
-    .optional()
-    .or(z.literal("")),
+type Step1Messages = {
+  urlRequired: string;
+  invalidUrl: string;
+};
+
+export function createStep1Schema(messages: Step1Messages) {
+  return z.object({
+    websiteUrl: z
+      .string()
+      .min(1, messages.urlRequired)
+      .regex(urlRegex, messages.invalidUrl),
+    projectType: z.enum(projectTypes),
+  });
+}
+
+export const step1Schema = createStep1Schema({
+  urlRequired: "URL is required",
+  invalidUrl: "Invalid URL format",
 });
 
-export type Step1FormData = z.infer<typeof step1Schema>;
+export type Step1FormData = z.infer<ReturnType<typeof createStep1Schema>>;
 
 export const step2Schema = z.object({
   token: z.string().min(1, "Token is required"),

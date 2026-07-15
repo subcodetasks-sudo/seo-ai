@@ -3,6 +3,14 @@
     "title": "مرحباً بالعالم!"
   },
   "common": {
+    "metadata": {
+      "title": "Rank AI",
+      "description": "يساعدك Rank AI على فحص موقعك وتحليله وتحسين تحسين محركات البحث تلقائياً."
+    },
+    "command": {
+      "title": "لوحة الأوامر",
+      "description": "ابحث عن أمر لتشغيله…"
+    },
     "header": {
       "language": "اللغة",
       "english": "English",
@@ -26,12 +34,17 @@
       "next": "التالي",
       "previousPage": "الصفحة السابقة",
       "nextPage": "الصفحة التالية",
-      "morePages": "المزيد من الصفحات"
-    }
+      "morePages": "المزيد من الصفحات",
+      "nav": "ترقيم الصفحات"
+    },
+    "breadcrumb": "مسار التنقل"
   },
   "sidebar": {
     "open": "فتح القائمة الجانبية",
     "close": "إغلاق القائمة الجانبية",
+    "toggle": "تبديل القائمة الجانبية",
+    "mobileTitle": "القائمة الجانبية",
+    "mobileDescription": "يعرض القائمة الجانبية على الجوال.",
     "store": "متجر",
     "selectProject": "اختر مشروعاً",
     "projects": "المشاريع",
@@ -41,8 +54,8 @@
     "reports": "التقارير",
     "googleAnalytics": "Google Analytics",
     "aiInsights": "رؤى الذكاء الاصطناعي",
+    "pricing": "الأسعار",
     "changelog": "سجل التغييرات",
-    "userName": "محمد أحمد",
     "userPlan": "الخطة المدفوعة",
     "plans": {
       "free": "مجاني",
@@ -50,7 +63,6 @@
       "pro": "احترافي",
       "agency": "وكالة"
     },
-    "userInitials": "م أ",
     "logout": "تسجيل الخروج",
     "settings": "الإعدادات",
     "notifications": "الإشعارات"
@@ -62,6 +74,7 @@
     },
     "title": "اختر خطتك",
     "subtitle": "ابدأ مجاناً وتوسع مع نموك. تشمل جميع الخطط المدفوعة تجربة مجانية لمدة 14 يوماً — لا يلزم بطاقة ائتمانية.",
+    "empty": "لا توجد خطط متاحة حالياً.",
     "perMonth": "/شهر",
     "mostPopular": "الأكثر شيوعاً",
     "continue": "استمرار",
@@ -92,7 +105,8 @@
       "wordpress": "WordPress",
       "shopify": "Shopify",
       "zid": "Zid",
-      "salla": "Salla"
+      "salla": "Salla",
+      "heroImageAlt": "صورة الغلاف"
     },
     "login": {
       "metadata": {
@@ -256,7 +270,9 @@
       "forgetPasswordOtpSent": "تم إرسال رمز إعادة التعيين إلى بريدك الإلكتروني",
       "passwordReset": "تم إعادة تعيين كلمة المرور بنجاح",
       "welcomeBack": "مرحباً بعودتك!",
-      "emailVerified": "تم تأكيد بريدك الإلكتروني بنجاح. يرجى تسجيل الدخول."
+      "emailVerified": "تم تأكيد بريدك الإلكتروني بنجاح. يرجى تسجيل الدخول.",
+      "resendOtpFailed": "فشل إعادة إرسال رمز التحقق. يرجى المحاولة مرة أخرى.",
+      "genericError": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
     }
   },
   "notFoundProblems": {
@@ -409,6 +425,19 @@
       "editTitle": "تعديل الاقتراح",
       "editPendingOnly": "لا يمكن تعديل الاقتراح إلا إذا كانت حالته 'قيد الانتظار'.",
       "actionPendingOnly": "لا يمكن مراجعة الاقتراح إلا إذا كانت حالته 'قيد الانتظار'.",
+      "processingState": {
+        "queuedTitle": "اقتراحك في قائمة الانتظار",
+        "queuedDescription": "أضفنا هذا التغيير إلى قائمة الانتظار، وسيبدأ معالجته قريبًا.",
+        "processingTitle": "جاري تطبيق اقتراحك",
+        "processingDescription": "يقوم الذكاء الاصطناعي بتطبيق التغييرات المعتمدة. تتحدث هذه الصفحة تلقائيًا عند الانتهاء.",
+        "progressLabel": "التقدم",
+        "hint": "أبقِ هذه الصفحة مفتوحة — يتم تحديث الحالة تلقائيًا.",
+        "steps": {
+          "queued": "في قائمة الانتظار",
+          "processing": "معالجة التغييرات",
+          "finishing": "الإنهاء"
+        }
+      },
       "save": "حفظ",
       "saving": "جاري الحفظ...",
       "cancel": "إلغاء",
@@ -725,6 +754,7 @@
     },
     "status": {
       "applied": "مُطبَّق",
+      "success": "نجاح",
       "pending": "قيد الانتظار",
       "failed": "فشل",
       "reverted": "مُعاد"
@@ -790,6 +820,7 @@
       "running": "قيد التشغيل",
       "in_progress": "قيد التنفيذ",
       "done": "مكتمل",
+      "stopped": "متوقّف",
       "failed": "فشل"
     },
     "trigger": {
@@ -806,7 +837,13 @@
         "pages": "إجمالي الصفحات",
         "basic": "الصفحات الأساسية",
         "internal": "الصفحات الداخلية",
-        "issues": "إجمالي المشاكل"
+        "issues": "إجمالي المشاكل",
+        "tooltips": {
+          "pages": "إجمالي عدد الصفحات التي تم اكتشافها وزحفها في هذا الفحص",
+          "basic": "الصفحات الرئيسية للموقع مثل الصفحة الرئيسية والأقسام وصفحات المحتوى الأساسية",
+          "internal": "الصفحات المكتشفة عبر الروابط الداخلية داخل موقعك",
+          "issues": "إجمالي مشاكل السيو التي تم العثور عليها في جميع الصفحات المفحوصة"
+        }
       },
       "filter": {
         "label": "تصفية النتائج",
@@ -861,6 +898,8 @@
       "addProject": "اضافة مشروع"
     },
     "addProject": {
+      "exit": "العودة إلى المشاريع",
+      "close": "إغلاق",
       "progress": {
         "step1": "معلومات الموقع",
         "step2": "التحقق من الملكية",
@@ -870,7 +909,6 @@
         "title": "أضف موقعك الجديد",
         "subtitle": "أدخل رابط الموقع واختر النوع لنبدأ في تحليله",
         "urlLabel": "رابط الموقع",
-        "sitemapLabel": "رابط خريطة الموقع (اختياري)",
         "typeLabel": "نوع الموقع",
         "wordpressTitle": "WordPress",
         "wordpressDesc": "إضافة PHP تعمل مباشرة مع قاعدة البيانات",
@@ -882,14 +920,26 @@
         "invalidSitemapUrl": "يرجى إدخال رابط خريطة موقع صالح"
       },
       "step2": {
-        "title": "التحقق من ملكية الموقع",
-        "subtitle": "ثبّت الإضافة واربطها بحسابك باستخدام رمز الربط",
-        "instruction1": "حمّل إضافة RankAI وثبّتها على WordPress",
-        "instruction2": "افتح رابط الإعداد أدناه لربط الإضافة بحسابك",
-        "instruction3": "انسخ رمز الإعداد واستخدمه لإكمال إعداد الإضافة",
+        "title": "اربط موقع WordPress الخاص بك",
+        "subtitle": "حمّل الإضافة وثبّتها، ثم انسخ بيانات الربط لربط الموقع",
+        "stepDownloadTitle": "حمّل إضافة ووردبريس",
+        "stepDownloadDesc": "حمّل ملف الإضافة wordpress-plugin.zip من المنصة.",
+        "stepInstallTitle": "ثبّت الإضافة في موقعك",
+        "installNav": "لوحة تحكم ووردبريس → إضافات → أضف جديد → رفع إضافة",
+        "installUpload": "ارفع الملف → تثبيت → تفعيل",
+        "stepConnectTitle": "اربط الموقع",
+        "stepConnectDesc": "انسخ رمز الربط وعنوان المنصة أدناه، ثم الصقهما في إعدادات الإضافة.",
+        "connectOpen": "افتح الإعدادات → Howeyah Rank",
+        "connectPaste": "الصق Setup Token و Platform URL",
+        "connectAction": "اضغط Connect to Platform",
+        "stepDoneTitle": "تم!",
+        "stepDoneDesc": "ستظهر رسالة Connected — وموقعك أصبح موثّقًا تلقائيًا في المنصة.",
+        "stepDoneCta": "تم الربط — متابعة",
+        "afterConnect": "بعد الربط كل شيء يعمل تلقائيًا: الزحف يقرأ بيانات SEO الحقيقية، التعديلات المعتمدة تُطبَّق على الموقع مباشرة، وصفحات 404 تُبلَّغ للمنصة أولًا بأول.",
+        "tokenNote": "ملاحظة: رمز الربط يُستخدم مرة واحدة فقط — لو فصلت الاتصال ستحتاج رمزًا جديدًا من صفحة المشروع.",
         "downloadPlugin": "تحميل الإضافة",
-        "setupLinkLabel": "رابط الإعداد",
-        "setupTokenLabel": "رمز الإعداد",
+        "setupLinkLabel": "عنوان المنصة (Platform URL)",
+        "setupTokenLabel": "رمز الربط (Setup Token)",
         "copy": "نسخ",
         "copied": "تم النسخ",
         "continue": "متابعة",
@@ -919,8 +969,8 @@
         "skip": "تخطي"
       },
       "step3": {
-        "successTitle": "تم الاتصال بنجاح!",
-        "successSubtitle": "إضافة RankAI مرتبطة بنجاح بـ",
+        "successTitle": "تم الوصول إلى الموقع بنجاح!",
+        "successSubtitle": "تمكنا من الوصول بنجاح إلى",
         "selectSections": "اختر الأقسام للزحف",
         "sectionsSelected": "{count} قسم محدد",
         "approxPages": "~{count} صفحة تقريباً",
@@ -1009,7 +1059,35 @@
       "unverified": "غير موثّق",
       "noFilterResults": "لا توجد مشاريع تطابق هذا الفلتر",
       "archived": "مؤرشف",
-      "verifyToken": "التحقق من الرمز"
+      "verifyToken": "التحقق من الرمز",
+      "statTooltips": {
+        "health": "درجة الصحة العامة لتحسين محركات البحث بناءً على المشاكل المكتشفة في الصفحات المفحوصة",
+        "status": "ما إذا تم التحقق من ملكية الموقع لهذا المشروع",
+        "noCrawl": "لا توجد نتائج فحص بعد. قم بتشغيل فحص لعرض التفاصيل."
+      },
+      "crawl": {
+        "queued": "الفحص في قائمة الانتظار",
+        "running": "جاري الفحص",
+        "progress": "{percent}% مكتمل",
+        "pagesProgress": "{crawled} من {total} صفحة",
+        "stop": "إيقاف",
+        "stopping": "جاري الإيقاف...",
+        "incomplete": "الفحص غير مكتمل ({crawled} من {total} صفحة)",
+        "continue": "متابعة",
+        "continuing": "جاري الاستئناف...",
+        "failed": "فشل الفحص",
+        "retry": "إعادة المحاولة",
+        "retrying": "جاري البدء...",
+        "guard": {
+          "inProgressTitle": "الفحص ما زال جارياً",
+          "inProgressDescription": "اقتراحات الذكاء الاصطناعي متاحة بعد انتهاء الفحص. يرجى انتظار اكتمال الفحص الحالي.",
+          "notFinishedTitle": "الفحص غير مكتمل",
+          "notFinishedDescription": "تم إيقاف آخر فحص لهذا المشروع قبل اكتماله. تابع الفحص لتفعيل اقتراحات الذكاء الاصطناعي.",
+          "continue": "متابعة الفحص",
+          "continuing": "جاري الاستئناف...",
+          "dismiss": "إغلاق"
+        }
+      }
     }
   },
   "overview": {
@@ -1040,7 +1118,9 @@
     },
     "charts": {
       "healthTrend": "اتجاه مؤشر الصحة",
-      "issuesTrend": "اتجاه مشاكل SEO"
+      "issuesTrend": "اتجاه مشاكل SEO",
+      "healthScoreLabel": "مؤشر الصحة",
+      "issuesLabel": "المشاكل"
     },
     "recentChanges": "آخر التغييرات",
     "viewAll": "عرض الكل",
@@ -1235,6 +1315,7 @@
       "projectsUsed": "المشاريع المستخدمة",
       "nextInvoice": "يتجدد في {date}",
       "changePlan": "تغيير الخطة",
+      "viewPlans": "عرض الخطط",
       "manageBilling": "إدارة الفوترة",
       "portalUnavailable": "بوابة الفوترة غير متاحة حاليًا. يرجى المحاولة لاحقًا.",
       "choosePlan": "اختر خطة",
@@ -1242,6 +1323,9 @@
       "processing": "جارٍ المعالجة…",
       "confirmChange": "تأكيد",
       "planChanged": "تم تحديث خطتك.",
+      "planUnavailable": "هذه الخطة غير متاحة حالياً.",
+      "alreadyOnPlan": "أنت مشترك بالفعل في هذه الخطة.",
+      "paymentStatuses": "سجل المدفوعات",
       "invoiceHistory": "سجل الفواتير",
       "noInvoices": "لا توجد فواتير بعد.",
       "previous": "السابق",
@@ -1249,7 +1333,15 @@
       "pdf": "PDF",
       "status": {
         "paid": "مدفوع",
-        "pending": "قيد الانتظار"
+        "pending": "قيد الانتظار",
+        "failed": "فشل",
+        "canceled": "ملغى"
+      },
+      "subscriptionStatus": {
+        "active": "نشط",
+        "pending": "قيد الانتظار",
+        "canceled": "ملغى",
+        "past_due": "متأخر"
       },
       "usageLimits": "حدود الاستخدام",
       "billingMonth": "فترة الفوترة: {month}",
@@ -1280,7 +1372,8 @@
     "clearSelection": "إلغاء التحديد",
     "emptyTitle": "لا توجد إشعارات بعد",
     "emptyDescription": "عند حدوث أي شيء في مشاريعك، سيظهر هنا.",
-    "viewAll": "عرض الكل"
+    "viewAll": "عرض الكل",
+    "newNotification": "إشعار جديد"
   },
   "landing": {
     "navbar": {
@@ -1416,6 +1509,7 @@
       "allFeaturesTitle": "كل ما تحصل عليه في هذه الباقة",
       "currency": "",
       "subscribeBtn": "اشترك الآن",
+      "processing": "جارٍ المعالجة…",
       "perMonth": "شهرياً",
       "perYear": "سنوياً",
       "plan0Name": "المؤسسات",
@@ -1480,14 +1574,17 @@
       "office1Address": "بركاء شارع السوق",
       "termsOfUse": "الشروط والأحكام",
       "privacyPolicy": "سياسة الخصوصية",
-      "pricingPolicy": "سياسة الاسعار"
+      "pricingPolicy": "سياسة الاسعار",
+      "paymentMethodsAlt": "طرق الدفع"
     },
     "a11y": {
       "logoAlt": "هويّة",
       "changeLanguage": "تغيير اللغة",
       "closeVideo": "إغلاق الفيديو",
       "slide": "الشريحة {n}",
-      "statisticsAlt": "إحصائيات"
+      "statisticsAlt": "إحصائيات",
+      "videoPlayer": "مشغل فيديو يوتيوب",
+      "heroImage": "صورة الغلاف"
     }
   },
   "legal": {
@@ -1520,6 +1617,37 @@
       ],
       "note": "وفي حال تم استخدام أي AI Tokens أو الاستفادة من خدمات الذكاء الاصطناعي أو أي من مزايا الباقة، سواء كان الاستخدام كليًا أو جزئيًا، يُعد الاشتراك مستخدمًا، ولا يحق للمستخدم المطالبة باسترداد قيمة الاشتراك.",
       "review": "تحتفظ هويّة رانك AI بحقها في مراجعة جميع طلبات الاسترداد والتحقق من استيفائها للشروط الواردة في هذه السياسة قبل الموافقة على إعادة المبلغ."
+    }
+  },
+  "uploads": {
+    "trigger": "رفع وسائط",
+    "title": "رفع صور وفيديوهات",
+    "description": "يتم تغيير حجم الصور إلى حد أقصى 1920×1080 وتحويلها إلى WebP. تُرفع الفيديوهات على دفعات ثم تُدمَج على الخادم.",
+    "tabs": {
+      "images": "الصور",
+      "videos": "الفيديوهات"
+    },
+    "addImages": "إضافة صور",
+    "addVideos": "إضافة فيديوهات",
+    "empty": "لم ترفع أي شيء بعد.",
+    "clear": "مسح",
+    "kind": {
+      "image": "صورة",
+      "video": "فيديو"
+    },
+    "status": {
+      "done": "تم",
+      "failed": "فشل",
+      "uploading": "جارٍ الرفع",
+      "pending": "قيد الانتظار",
+      "processing": "جارٍ تغيير الحجم والتحويل إلى WebP…",
+      "uploadingImage": "جارٍ رفع الصورة…",
+      "uploaded": "تم الرفع بنجاح",
+      "uploadingChunks": "جارٍ رفع الأجزاء…",
+      "chunkProgress": "تم رفع الجزء {current}/{total}",
+      "videoMerged": "تم دمج الفيديو بنجاح",
+      "missingFile": "الملف المحدد غير موجود",
+      "failedGeneric": "فشل الرفع"
     }
   }
 }

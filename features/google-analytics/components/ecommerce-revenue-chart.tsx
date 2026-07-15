@@ -11,19 +11,19 @@ import {
 
 import type { RevenueTrendPoint } from "../types";
 
-const chartConfig = {
-  value: {
-    label: "Revenue",
-    color: "#84CC16",
-  },
-};
-
 type EcommerceRevenueChartProps = {
   data: RevenueTrendPoint[];
 };
 
 export function EcommerceRevenueChart({ data }: EcommerceRevenueChartProps) {
   const t = useTranslations("googleAnalytics.ecommerceDashboard");
+
+  const chartConfig = {
+    value: {
+      label: t("revenue"),
+      color: "#84CC16",
+    },
+  };
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">

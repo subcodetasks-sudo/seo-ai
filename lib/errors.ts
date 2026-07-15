@@ -1,7 +1,7 @@
 export class ApiError extends Error {
   constructor(
     message: string,
-    public readonly errors?: Record<string, string[]>,
+    public readonly errors?: Record<string, unknown>,
     public readonly status?: number,
   ) {
     super(message);
@@ -12,7 +12,7 @@ export class ApiError extends Error {
 /** Extracts a JSON-serialisable error payload from any thrown value. */
 export function toErrorResponse(error: unknown): {
   message: string;
-  errors?: Record<string, string[]>;
+  errors?: Record<string, unknown>;
 } {
   if (error instanceof ApiError) {
     return { message: error.message, errors: error.errors };

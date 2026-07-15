@@ -12,15 +12,15 @@ import { MOCK_HEALTH_SCORE_TREND } from "../queries/mock-data";
 
 const HEALTH_SCORE_COLOR = "#7C7BE6";
 
-const chartConfig = {
-  value: {
-    label: "Health Score",
-    color: HEALTH_SCORE_COLOR,
-  },
-};
-
 export function HealthScoreTrendChart() {
   const t = useTranslations("overview.charts");
+
+  const chartConfig = {
+    value: {
+      label: t("healthScoreLabel"),
+      color: HEALTH_SCORE_COLOR,
+    },
+  };
 
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">

@@ -10,6 +10,7 @@ import {
   LogOut,
   PanelRightClose,
   Sparkles,
+  Tags,
   type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -60,6 +61,7 @@ const NAV_ITEMS: NavItem[] = [
   },
   
   { href: "/dashboard/ai-insights", labelKey: "aiInsights", icon: Sparkles, exact: false },
+  { href: "/dashboard/pricing", labelKey: "pricing", icon: Tags, exact: true },
   { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock, exact: false },
 ] as const;
 
@@ -259,27 +261,27 @@ export default function SideBar() {
                   <Skeleton className="h-3 w-16" />
                 </div>
               </div>
-            ) : (
+            ) : user ? (
               <div className="mb-3 flex items-center gap-3">
                 <Avatar size="lg">
                   <AvatarFallback className="bg-primary-75 text-sm font-semibold text-secondary-500">
-                    {user?.initials || t("userInitials")}
+                    {user.initials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="min-w-0">
                   <p className="truncate font-semibold text-secondary-500">
-                    {user?.display_name || t("userName")}
+                    {user.display_name}
                   </p>
                   <p className="truncate text-sm text-secondary-200">
-                    {user?.plan
+                    {user.plan
                       ? KNOWN_PLANS.has(user.plan)
                         ? tPlans(user.plan as Parameters<typeof tPlans>[0])
                         : user.plan
-                      : user?.plan}
+                      : null}
                   </p>
                 </div>
               </div>
-            )}
+            ) : null}
             <Button
               type="button"
               variant="outline"

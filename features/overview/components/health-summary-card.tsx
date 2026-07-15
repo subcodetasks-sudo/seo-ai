@@ -7,7 +7,12 @@ import { arSA, enUS } from "date-fns/locale";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useStartCrawl } from "@/features/home";
+import {
+  isActiveCrawlStatus,
+  ProjectCrawlControls,
+  useStartCrawl,
+} from "@/features/home";
+import type { ProjectCrawlStatus } from "@/features/home/types";
 import type { ProjectDashboard } from "../types";
 import { getHealthStatus } from "../services/health-status";
 import { HealthScoreGauge } from "./health-score-gauge";
@@ -16,6 +21,8 @@ type HealthSummaryCardProps = {
   projectId: string;
   domain: string;
   dashboard: ProjectDashboard;
+  crawlJobId?: string | null;
+  crawlStatus?: ProjectCrawlStatus | null;
   onRescanSuccess?: (crawlJobId: string) => void;
 };
 
@@ -23,6 +30,8 @@ export function HealthSummaryCard({
   projectId,
   domain,
   dashboard,
+  crawlJobId = null,
+  crawlStatus = null,
   onRescanSuccess,
 }: HealthSummaryCardProps) {
   const t = useTranslations("overview");
@@ -39,6 +48,9 @@ export function HealthSummaryCard({
       : "—";
 
   const pagesCount = new Intl.NumberFormat(locale).format(dashboard.pages_crawled);
+  const crawlIsActive = isActiveCrawlStatus(crawlStatus);
+  const showRescan =
+    !crawlIsActive && crawlStatus !== "stopped" && crawlStatus !== "failed";
 
   function handleRescan() {
     startCrawl(projectId, {
@@ -49,19 +61,33 @@ export function HealthSummaryCard({
   return (
     <div className="flex flex-col gap-6 rounded-xl border border-neutral-200 bg-white p-6 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex flex-col gap-4 lg:max-w-xs">
-        <Button
-          type="button"
-          className="h-10 gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-400"
-          onClick={handleRescan}
-          disabled={isRescanning}
-        >
-          <RefreshCw
-            className={isRescanning ? "size-4 animate-spin" : "size-4"}
-            aria-hidden="true"
+        {(crawlIsActive || crawlStatus === "stopped" || crawlStatus === "failed") && (
+          <ProjectCrawlControls
+            projectId={projectId}
+            crawlJobId={crawlJobId}
+            crawlStatus={crawlStatus}
+            compact
+            onCrawlStarted={onRescanSuccess}
           />
-          {t("rescan")}
-        </Button>
-        <p className="text-label-sm text-neutral-500">{t("nextCrawlUnknown")}</p>
+        )}
+
+        {showRescan && (
+          <>
+            <Button
+              type="button"
+              className="h-10 gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-400"
+              onClick={handleRescan}
+              disabled={isRescanning}
+            >
+              <RefreshCw
+                className={isRescanning ? "size-4 animate-spin" : "size-4"}
+                aria-hidden="true"
+              />
+              {t("rescan")}
+            </Button>
+            <p className="text-label-sm text-neutral-500">{t("nextCrawlUnknown")}</p>
+          </>
+        )}
       </div>
 
       <div className="flex flex-1 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">

@@ -62,7 +62,6 @@ export function LandingFooter() {
   const legal = settings?.footer_links?.legal ?? [
     { label: t('footer.termsOfUse'), url: '/terms-of-use' },
     { label: t('footer.privacyPolicy'), url: '/privacy-policy' },
-    // { label: t('footer.pricing'), url: '/pricing' },
   ];
   const social = settings?.social;
   const hasSocial = social && Object.values(social).some(Boolean);
@@ -102,7 +101,7 @@ export function LandingFooter() {
               <div>
                 <Image
                   src='/logo.webp'
-                  alt='Howyah Logo'
+                  alt={t('a11y.logoAlt')}
                   width={100}
                   height={40}
                   className='h-14 w-auto sm:h-20'
@@ -239,7 +238,7 @@ export function LandingFooter() {
           <div>
             <Image
               src='/imgs/payments.webp'
-              alt={"payment methods"}
+              alt={t('footer.paymentMethodsAlt')}
               width={150}
               height={30}
               className='w-auto h-4'

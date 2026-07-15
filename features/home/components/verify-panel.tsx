@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
-  ArrowLeft,
-  ArrowRight,
   Check,
   Code,
   Copy,
@@ -15,6 +13,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import BackLink from "@/components/back-link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -185,17 +184,7 @@ export function VerifyPanel({ projectId, onVerified, onBack, onSkip }: VerifyPan
       >
         {hasNav && (
           <div className="flex items-center gap-1">
-            {onBack && (
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={onBack}
-                className="flex h-11 items-center gap-2 px-2 text-label-md font-medium text-neutral-500 hover:bg-transparent hover:text-secondary-500"
-              >
-                {dir === "rtl" ? <ArrowRight className="size-4" /> : <ArrowLeft className="size-4" />}
-                <span>{t("back")}</span>
-              </Button>
-            )}
+            {onBack && <BackLink onClick={onBack}>{t("back")}</BackLink>}
             {onSkip && (
               <Button
                 type="button"

@@ -61,7 +61,7 @@ export function ForgetPasswordForm({
       },
       onError: (error) => {
         toast.error(
-          error instanceof Error ? error.message : "error"
+          error instanceof Error ? error.message : tToast("genericError")
         );
       },
     });

@@ -1,0 +1,184 @@
+/* Shared pricing card chrome — usable outside #landing-root (e.g. dashboard). */
+
+@keyframes pricingCenterIn {
+  from {
+    opacity: 0.82;
+    transform: translateY(14px) scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.pricing-scope {
+  --muted: var(--ink-muted);
+  --line: var(--primary-line);
+  --bg-soft: var(--primary-surface);
+  --primary: var(--primary-300);
+}
+
+.pricing-scope .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  line-height: 1;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.pricing-scope .btn-ghost {
+  background-color: white;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.pricing-scope .btn-ghost:hover {
+  border-color: var(--primary);
+  color: var(--primary-700);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px -14px color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.pricing-scope .pricing-card-v2 {
+  background-color: white;
+  background-image: none;
+  overflow: hidden;
+  border: 1.5px solid var(--line);
+  border-radius: 1.75rem;
+  cursor: pointer;
+  outline: none;
+  box-shadow:
+    0 4px 16px -4px color-mix(in srgb, var(--ink) 8%, transparent),
+    0 1px 4px color-mix(in srgb, var(--ink) 4%, transparent);
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.pricing-scope .pricing-card-v2:focus-visible {
+  border-color: var(--primary);
+  box-shadow:
+    0 8px 24px -8px color-mix(in srgb, var(--ink) 16%, transparent),
+    0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.pricing-scope .pricing-card-v2:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+  box-shadow: 0 12px 32px -10px color-mix(in srgb, var(--ink) 14%, transparent);
+}
+
+.pricing-scope .pricing-card-v2-featured {
+  background-color: var(--primary);
+  border: none;
+  animation: pricingCenterIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  background-image: linear-gradient(
+    148deg,
+    color-mix(in srgb, white 22%, transparent) 0%,
+    transparent 48%,
+    color-mix(in srgb, black 8%, transparent) 100%
+  );
+  box-shadow:
+    0 0 0 7px color-mix(in srgb, var(--primary) 20%, transparent),
+    0 24px 50px -12px color-mix(in srgb, var(--primary-700) 55%, transparent),
+    0 6px 14px color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.pricing-scope .pricing-card-v2-featured:hover {
+  transform: none;
+  box-shadow:
+    0 0 0 8px color-mix(in srgb, var(--primary) 28%, transparent),
+    0 28px 54px -12px color-mix(in srgb, var(--primary-700) 55%, transparent),
+    0 6px 14px color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+.pricing-scope .pricing-card-v2-featured::before,
+.pricing-scope .pricing-card-v2-featured::after {
+  display: none;
+}
+
+.pricing-scope .pricing-card-v2-featured .check {
+  background: color-mix(in srgb, var(--ink) 18%, transparent);
+}
+
+.pricing-scope .pricing-card-v2-featured .check::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23131a14' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+}
+
+.pricing-scope .pricing-card-v2__head {
+  min-height: 72px;
+}
+
+.pricing-scope .pricing-main-cta-featured {
+  background-color: var(--ink);
+  color: var(--primary);
+  border-radius: 9999px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 14px 32px -10px rgba(20, 33, 10, 0.45);
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.pricing-scope .pricing-main-cta-featured:hover {
+  background-color: color-mix(in srgb, var(--ink) 100%, black);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 38px -10px color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+.pricing-scope .check {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  position: relative;
+}
+
+.pricing-scope .check::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235c7a20' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 13px;
+}
+
+.pricing-scope .pricing-check {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 639px) {
+  .pricing-scope .pricing-card-v2,
+  .pricing-scope .pricing-card-v2:hover,
+  .pricing-scope .pricing-card-v2-featured,
+  .pricing-scope .pricing-card-v2-featured:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .pricing-scope .pricing-card-v2 {
+    min-height: auto;
+  }
+}

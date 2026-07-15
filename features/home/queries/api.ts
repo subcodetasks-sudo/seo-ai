@@ -78,22 +78,33 @@ export const detectLanguage = (domain: string) =>
     body: JSON.stringify({ domain }),
   });
 
+export type CrawlJobStatus =
+  | "queued"
+  | "running"
+  | "in_progress"
+  | "done"
+  | "stopped"
+  | "failed";
+
+export type CrawlJobData = {
+  crawl_job_id: string;
+  project_id: string;
+  status: CrawlJobStatus;
+  pages_limit: number;
+  pages_crawled?: number;
+  pages_total_est?: number | null;
+  progress_pct?: number | null;
+  created_at?: string;
+  started_at?: string | null;
+  finished_at?: string | null;
+  error_message?: string | null;
+  message?: string;
+};
+
 export type CrawlJobResponse = {
   status: boolean;
   message: string;
-  data: {
-    crawl_job_id: string;
-    project_id: string;
-    status: "queued" | "running" | "in_progress" | "done" | "failed";
-    pages_limit: number;
-    pages_crawled?: number;
-    pages_total_est?: number;
-    progress_pct?: number;
-    created_at: string;
-    started_at?: string;
-    finished_at?: string;
-    error_message?: string | null;
-  };
+  data: CrawlJobData;
 };
 
 export const startCrawl = (project_id: string) =>
@@ -104,6 +115,16 @@ export const startCrawl = (project_id: string) =>
 export const getCrawlStatus = (project_id: string, crawl_id: string) =>
   apiClient<CrawlJobResponse>(`projects/${project_id}/crawls/${crawl_id}`, {
     method: "GET",
+  });
+
+export const stopCrawl = (project_id: string, crawl_id: string) =>
+  apiClient<CrawlJobResponse>(`projects/${project_id}/crawls/${crawl_id}/stop`, {
+    method: "POST",
+  });
+
+export const continueCrawl = (project_id: string, crawl_id: string) =>
+  apiClient<CrawlJobResponse>(`projects/${project_id}/crawls/${crawl_id}/continue`, {
+    method: "POST",
   });
 
 export const getCrawlPages = (project_id: string, crawl_id: string) =>

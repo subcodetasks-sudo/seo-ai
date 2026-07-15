@@ -1,4 +1,4 @@
-export type CrawlStatus = "queued" | "running" | "in_progress" | "done" | "failed";
+export type CrawlStatus = "queued" | "running" | "in_progress" | "done" | "stopped" | "failed";
 
 export type CrawlListItem = {
   crawl_job_id: string;

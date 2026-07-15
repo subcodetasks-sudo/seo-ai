@@ -3,6 +3,14 @@
     "title": "Hello world!"
   },
   "common": {
+    "metadata": {
+      "title": "Rank AI",
+      "description": "Rank AI helps you scan, analyze, and improve your website SEO automatically."
+    },
+    "command": {
+      "title": "Command palette",
+      "description": "Search for a command to run…"
+    },
     "header": {
       "language": "Language",
       "english": "English",
@@ -26,12 +34,17 @@
       "next": "Next",
       "previousPage": "Go to previous page",
       "nextPage": "Go to next page",
-      "morePages": "More pages"
-    }
+      "morePages": "More pages",
+      "nav": "Pagination"
+    },
+    "breadcrumb": "Breadcrumb"
   },
   "sidebar": {
     "open": "Open sidebar",
     "close": "Close sidebar",
+    "toggle": "Toggle sidebar",
+    "mobileTitle": "Sidebar",
+    "mobileDescription": "Displays the mobile sidebar.",
     "store": "Store",
     "selectProject": "Select a project",
     "projects": "Projects",
@@ -41,8 +54,8 @@
     "reports": "Reports",
     "googleAnalytics": "Google Analytics",
     "aiInsights": "AI Insights",
+    "pricing": "Pricing",
     "changelog": "Changelog",
-    "userName": "Mohamed Ahmed",
     "userPlan": "Paid plan",
     "plans": {
       "free": "Free",
@@ -50,7 +63,6 @@
       "pro": "Pro",
       "agency": "Agency"
     },
-    "userInitials": "MA",
     "logout": "Log out",
     "settings": "Settings",
     "notifications": "Notifications"
@@ -62,6 +74,7 @@
     },
     "title": "Choose your plan",
     "subtitle": "Start for free and scale as you grow. All paid plans include a 14-day free trial — no credit card required.",
+    "empty": "No plans are available right now.",
     "perMonth": "/month",
     "mostPopular": "Most popular",
     "continue": "Continue",
@@ -92,7 +105,8 @@
       "wordpress": "WordPress",
       "shopify": "Shopify",
       "zid": "Zid",
-      "salla": "Salla"
+      "salla": "Salla",
+      "heroImageAlt": "Hero image"
     },
     "login": {
       "metadata": {
@@ -256,7 +270,9 @@
       "forgetPasswordOtpSent": "Reset code sent to your email",
       "passwordReset": "Password reset successfully",
       "welcomeBack": "Welcome back!",
-      "emailVerified": "Email verified successfully. Please log in."
+      "emailVerified": "Email verified successfully. Please log in.",
+      "resendOtpFailed": "Failed to resend the verification code. Please try again.",
+      "genericError": "Something went wrong. Please try again."
     }
   },
   "notFoundProblems": {
@@ -409,6 +425,19 @@
       "editTitle": "Edit Suggestion",
       "editPendingOnly": "Only suggestions still in 'pending' status can be edited.",
       "actionPendingOnly": "Only suggestions still in 'pending' status can be reviewed.",
+      "processingState": {
+        "queuedTitle": "Your suggestion is queued",
+        "queuedDescription": "We've added this change to the queue. It will start processing shortly.",
+        "processingTitle": "Applying your suggestion",
+        "processingDescription": "AI is applying the approved changes. This page updates automatically when ready.",
+        "progressLabel": "Progress",
+        "hint": "Please keep this page open — status refreshes automatically.",
+        "steps": {
+          "queued": "Waiting in queue",
+          "processing": "Processing changes",
+          "finishing": "Finalizing"
+        }
+      },
       "save": "Save",
       "saving": "Saving...",
       "cancel": "Cancel",
@@ -725,6 +754,7 @@
     },
     "status": {
       "applied": "Applied",
+      "success": "Success",
       "pending": "Pending",
       "failed": "Failed",
       "reverted": "Reverted"
@@ -785,11 +815,12 @@
     "pagesEstimated": "Estimated pages",
     "duration": "Duration",
     "durationSeconds": "{count}s",
-    "status": {
+      "status": {
       "queued": "Queued",
       "running": "Running",
       "in_progress": "In progress",
       "done": "Done",
+      "stopped": "Stopped",
       "failed": "Failed"
     },
     "trigger": {
@@ -806,7 +837,13 @@
         "pages": "Total pages",
         "basic": "Basic pages",
         "internal": "Internal pages",
-        "issues": "Total issues"
+        "issues": "Total issues",
+        "tooltips": {
+          "pages": "Total number of pages discovered and crawled in this scan",
+          "basic": "Core site pages such as the homepage, categories, and main content pages",
+          "internal": "Pages discovered through internal links within your website",
+          "issues": "Total SEO issues found across all crawled pages"
+        }
       },
       "filter": {
         "label": "Filter results",
@@ -861,6 +898,8 @@
       "addProject": "Add project"
     },
     "addProject": {
+      "exit": "Back to projects",
+      "close": "Close",
       "progress": {
         "step1": "Website Info",
         "step2": "Ownership Verification",
@@ -870,7 +909,6 @@
         "title": "Add your new website",
         "subtitle": "Enter the website URL and choose the type to start analyzing it",
         "urlLabel": "Website URL",
-        "sitemapLabel": "Sitemap URL (optional)",
         "typeLabel": "Website Type",
         "wordpressTitle": "WordPress",
         "wordpressDesc": "PHP integration working directly with the database",
@@ -882,14 +920,26 @@
         "invalidSitemapUrl": "Please enter a valid sitemap URL"
       },
       "step2": {
-        "title": "Verify site ownership",
-        "subtitle": "Install the plugin and link it to your account using the connection token",
-        "instruction1": "Download the RankAI plugin and install it on WordPress",
-        "instruction2": "Open the setup link below to connect the plugin to your account",
-        "instruction3": "Copy the setup token and use it to complete the plugin setup",
+        "title": "Connect your WordPress site",
+        "subtitle": "Download the plugin, install it, then copy your credentials to connect the site",
+        "stepDownloadTitle": "Download the WordPress plugin",
+        "stepDownloadDesc": "Download wordpress-plugin.zip from the platform.",
+        "stepInstallTitle": "Install the plugin on your site",
+        "installNav": "WordPress admin → Plugins → Add New → Upload Plugin",
+        "installUpload": "Upload the file → Install → Activate",
+        "stepConnectTitle": "Connect the site",
+        "stepConnectDesc": "Copy the Setup Token and Platform URL below, then paste them into the plugin settings.",
+        "connectOpen": "Open Settings → Howeyah Rank",
+        "connectPaste": "Paste the Setup Token and Platform URL",
+        "connectAction": "Click Connect to Platform",
+        "stepDoneTitle": "You're connected",
+        "stepDoneDesc": "A “Connected” message will appear — your site is verified automatically on the platform.",
+        "stepDoneCta": "I've connected — Continue",
+        "afterConnect": "After connecting, everything runs automatically: crawls read real SEO data, approved edits apply to your site directly, and 404 pages are reported to the platform as they happen.",
+        "tokenNote": "Note: The setup token can be used once only. If you disconnect, you'll need a new token from the project page.",
         "downloadPlugin": "Download plugin",
-        "setupLinkLabel": "Setup link",
-        "setupTokenLabel": "Setup token",
+        "setupLinkLabel": "Platform URL",
+        "setupTokenLabel": "Setup Token",
         "copy": "Copy",
         "copied": "Copied",
         "continue": "Continue",
@@ -919,8 +969,8 @@
         "skip": "Skip"
       },
       "step3": {
-        "successTitle": "Connected successfully!",
-        "successSubtitle": "RankAI plugin successfully linked to",
+        "successTitle": "Website accessed successfully!",
+        "successSubtitle": "We've successfully accessed",
         "selectSections": "Select sections to crawl",
         "sectionsSelected": "{count} sections selected",
         "approxPages": "~{count} pages approximately",
@@ -1009,7 +1059,35 @@
       "unverified": "Unverified",
       "noFilterResults": "No projects match this filter",
       "archived": "Archived",
-      "verifyToken": "Verify Token"
+      "verifyToken": "Verify Token",
+      "statTooltips": {
+        "health": "Overall SEO health score based on issues found across crawled pages",
+        "status": "Whether website ownership has been verified for this project",
+        "noCrawl": "No crawl results available yet. Run a scan to view details."
+      },
+      "crawl": {
+        "queued": "Crawl queued",
+        "running": "Crawling in progress",
+        "progress": "{percent}% complete",
+        "pagesProgress": "{crawled} of {total} pages",
+        "stop": "Stop",
+        "stopping": "Stopping...",
+        "incomplete": "Crawl incomplete ({crawled} of {total} pages)",
+        "continue": "Continue",
+        "continuing": "Resuming...",
+        "failed": "Crawl failed",
+        "retry": "Retry",
+        "retrying": "Starting...",
+        "guard": {
+          "inProgressTitle": "Crawl still in progress",
+          "inProgressDescription": "AI suggestions are available after the crawl finishes. Please wait for the current crawl to complete.",
+          "notFinishedTitle": "Crawl not finished",
+          "notFinishedDescription": "This project's last crawl was stopped before it finished. Continue the crawl to unlock AI suggestions.",
+          "continue": "Continue crawl",
+          "continuing": "Resuming...",
+          "dismiss": "Dismiss"
+        }
+      }
     }
   },
   "overview": {
@@ -1040,7 +1118,9 @@
     },
     "charts": {
       "healthTrend": "Health Score Trend",
-      "issuesTrend": "SEO Issues Trend"
+      "issuesTrend": "SEO Issues Trend",
+      "healthScoreLabel": "Health Score",
+      "issuesLabel": "Issues"
     },
     "recentChanges": "Recent Changes",
     "viewAll": "View All",
@@ -1235,6 +1315,7 @@
       "projectsUsed": "Projects used",
       "nextInvoice": "Renews on {date}",
       "changePlan": "Change plan",
+      "viewPlans": "View plans",
       "manageBilling": "Manage billing",
       "portalUnavailable": "Billing portal is unavailable right now. Please try again later.",
       "choosePlan": "Choose a plan",
@@ -1242,6 +1323,9 @@
       "processing": "Processing…",
       "confirmChange": "Confirm",
       "planChanged": "Your plan has been updated.",
+      "planUnavailable": "This plan is unavailable right now.",
+      "alreadyOnPlan": "You are already on this plan.",
+      "paymentStatuses": "Payment history",
       "invoiceHistory": "Invoice history",
       "noInvoices": "No invoices yet.",
       "previous": "Previous",
@@ -1249,7 +1333,15 @@
       "pdf": "PDF",
       "status": {
         "paid": "Paid",
-        "pending": "Pending"
+        "pending": "Pending",
+        "failed": "Failed",
+        "canceled": "Canceled"
+      },
+      "subscriptionStatus": {
+        "active": "Active",
+        "pending": "Pending",
+        "canceled": "Canceled",
+        "past_due": "Past due"
       },
       "usageLimits": "Usage limits",
       "billingMonth": "Billing period: {month}",
@@ -1280,7 +1372,8 @@
     "clearSelection": "Clear",
     "emptyTitle": "No notifications yet",
     "emptyDescription": "When something happens across your projects, you'll see it here.",
-    "viewAll": "View all"
+    "viewAll": "View all",
+    "newNotification": "New notification"
   },
   "landing": {
     "navbar": {
@@ -1416,6 +1509,7 @@
       "allFeaturesTitle": "Everything included in this plan",
       "currency": "",
       "subscribeBtn": "Subscribe",
+      "processing": "Processing…",
       "perMonth": "monthly",
       "perYear": "yearly",
       "plan0Name": "Enterprise",
@@ -1480,14 +1574,17 @@
       "office1Address": "Barka, Market Street",
       "termsOfUse": "Terms & Conditions",
       "privacyPolicy": "Privacy Policy",
-      "pricingPolicy": "Pricing & Refunds"
+      "pricingPolicy": "Pricing & Refunds",
+      "paymentMethodsAlt": "Payment methods"
     },
     "a11y": {
       "logoAlt": "Howyah",
       "changeLanguage": "Change language",
       "closeVideo": "Close video",
       "slide": "Slide {n}",
-      "statisticsAlt": "Statistics"
+      "statisticsAlt": "Statistics",
+      "videoPlayer": "YouTube video player",
+      "heroImage": "Hero image"
     }
   },
   "legal": {
@@ -1520,6 +1617,37 @@
       ],
       "note": "If any AI Tokens have been used, or any AI services or package features have been benefited from — whether in whole or in part — the subscription is considered used, and the user is not entitled to a refund of the subscription amount.",
       "review": "Howyah Rank AI reserves the right to review all refund requests and verify that they meet the conditions of this policy before approving any refund."
+    }
+  },
+  "uploads": {
+    "trigger": "Upload media",
+    "title": "Upload images and videos",
+    "description": "Images are resized to a max of 1920×1080 and converted to WebP. Videos are uploaded in chunks and merged on the server.",
+    "tabs": {
+      "images": "Images",
+      "videos": "Videos"
+    },
+    "addImages": "Add images",
+    "addVideos": "Add videos",
+    "empty": "You haven't uploaded anything yet.",
+    "clear": "Clear",
+    "kind": {
+      "image": "Image",
+      "video": "Video"
+    },
+    "status": {
+      "done": "Done",
+      "failed": "Failed",
+      "uploading": "Uploading",
+      "pending": "Pending",
+      "processing": "Resizing and converting to WebP…",
+      "uploadingImage": "Uploading image…",
+      "uploaded": "Uploaded successfully",
+      "uploadingChunks": "Uploading chunks…",
+      "chunkProgress": "Uploaded chunk {current}/{total}",
+      "videoMerged": "Video merged successfully",
+      "missingFile": "Missing selected file",
+      "failedGeneric": "Upload failed"
     }
   }
 }

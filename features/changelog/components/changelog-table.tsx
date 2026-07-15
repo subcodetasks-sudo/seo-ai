@@ -24,6 +24,7 @@ import type { ChangelogEntry, ChangelogStatus } from "../types";
 
 const statusStyles: Record<ChangelogStatus, string> = {
   applied: "bg-success-50 text-success-700 border border-success-200",
+  success: "bg-success-50 text-success-700 border border-success-200",
   pending: "bg-warning-50 text-warning-700 border border-warning-200",
   failed: "bg-error-50 text-error-700 border border-error-200",
   reverted: "bg-neutral-100 text-neutral-600 border border-neutral-200",

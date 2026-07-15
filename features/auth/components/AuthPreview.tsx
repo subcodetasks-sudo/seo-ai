@@ -93,7 +93,7 @@ export async function AuthPreview({ className }: AuthPreviewProps) {
           <div className="relative w-full overflow-hidden rounded-3xl shadow-[0_20px_60px_rgba(54,53,57,0.12)] ">
             <Image
               src={local === "en" ? "/imgs/auth-imgEN.png" : "/imgs/auth-img.png"}
-              alt="hero image"
+              alt={t("heroImageAlt")}
               width={720}
               height={540}
               className="h-auto w-full object-cover"

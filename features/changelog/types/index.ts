@@ -1,4 +1,4 @@
-export type ChangelogStatus = "applied" | "pending" | "failed" | "reverted";
+export type ChangelogStatus = "applied" | "success" | "pending" | "failed" | "reverted";
 
 export type ChangelogPeriod = 7 | 30 | 90;
 

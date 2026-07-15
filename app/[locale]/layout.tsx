@@ -1,10 +1,9 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
+import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 
 import { LocaleDirectionProvider } from "@/app/[locale]/locale-direction-provider";
-import { Spinner } from "@/components/ui/spinner";
 import { routing } from "@/i18n/routing";
 
 import { LocaleShell } from "./locale-shell";
@@ -18,10 +17,28 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "common.metadata" });
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
+
 function LocaleLayoutFallback() {
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Spinner className="size-8 text-primary" />
+      <div
+        role="status"
+        aria-hidden="true"
+        className="size-8 animate-spin rounded-full border-2 border-primary border-t-transparent"
+      />
     </div>
   );
 }

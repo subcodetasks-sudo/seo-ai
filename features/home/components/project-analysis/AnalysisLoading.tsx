@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { Check } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -7,10 +8,12 @@ import { useDirection } from "@/components/ui/direction";
 import { cn } from "@/lib/utils";
 
 export function AnalysisSpinner({ className }: { className?: string }) {
+  const tCommon = useTranslations("common.state");
+
   return (
     <div
       role="status"
-      aria-label="Loading"
+      aria-label={tCommon("loading")}
       className={cn(
         "size-6 shrink-0 animate-spin rounded-full border-2 border-success-100 border-t-success-300",
         className,
@@ -48,6 +51,7 @@ export type AnalysisLoadingProps = {
   url: string;
   steps?: Partial<Record<AnalysisStepId, AnalysisStepState>>;
   errorMessage?: string | null;
+  actions?: ReactNode;
 };
 
 const STEP_ORDER: AnalysisStepId[] = [
@@ -164,7 +168,12 @@ function AnalysisStepRow({
   );
 }
 
-export default function AnalysisLoading({ url, steps, errorMessage }: AnalysisLoadingProps) {
+export default function AnalysisLoading({
+  url,
+  steps,
+  errorMessage,
+  actions,
+}: AnalysisLoadingProps) {
   const dir = useDirection();
   const t = useTranslations("home.projectAnalysis.loading");
 
@@ -223,6 +232,8 @@ export default function AnalysisLoading({ url, steps, errorMessage }: AnalysisLo
           <p className="mt-0.5 text-label-sm text-error-400">{errorMessage}</p>
         </div>
       )}
+
+      {actions}
 
       <p className="max-w-md text-center text-label-sm text-neutral-500">
         {t("footer")}

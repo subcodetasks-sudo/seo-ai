@@ -31,6 +31,8 @@ export function getCrawlStatusBadgeClassName(status: string): string {
       return "border-success-100 bg-success-50 text-success-600";
     case "failed":
       return "border-error-100 bg-error-50 text-error-600";
+    case "stopped":
+      return "border-warning-100 bg-warning-50 text-warning-600";
     case "running":
     case "in_progress":
       return "border-primary-100 bg-primary-50 text-primary-600";

@@ -1,19 +1,22 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { CircleCheck, ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import { CircleCheck, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { ar, enUS } from "date-fns/locale";
 
+import BackLink from "@/components/back-link";
 import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
 import { useDirection } from "@/components/ui/direction";
 import { Input } from "@/components/ui/input";
 import { useRouter } from "@/i18n/navigation";
+import { CrawlGuardDialog, parseCrawlGuardError } from "@/features/home";
+import type { CrawlGuardError } from "@/features/home/services/crawl-guard";
 import { cn, getDisplayPathname } from "@/lib/utils";
 import { approveRedirectSuggestion, createRedirectSuggestion, redirectBrokenPage } from "../queries/api";
 import { brokenPageDetailQueryOptions } from "../queries/queries";
@@ -46,7 +49,7 @@ export function AiFixContent() {
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const [manualUrl, setManualUrl] = useState("");
-  const isRtl = dir === "rtl";
+  const [crawlGuard, setCrawlGuard] = useState<CrawlGuardError | null>(null);
 
   const projectId = searchParams.get("projectId") ?? "";
   const pageId = searchParams.get("pageId") ?? "";
@@ -79,6 +82,10 @@ export function AiFixContent() {
         queryKey: notFoundProblemsKeys.detail(projectId, pageId),
       });
       router.push(`/dashboard/ai-suggestions/${suggestion.suggestion_id}`);
+    },
+    onError: (error) => {
+      const guard = parseCrawlGuardError(error);
+      if (guard) setCrawlGuard(guard);
     },
   });
 
@@ -128,6 +135,14 @@ export function AiFixContent() {
 
   return (
     <div dir={dir} className="flex flex-1 flex-col bg-neutral-75 px-6 py-8 lg:px-10">
+      <CrawlGuardDialog
+        projectId={projectId}
+        guard={crawlGuard}
+        open={crawlGuard !== null}
+        onOpenChange={(open) => {
+          if (!open) setCrawlGuard(null);
+        }}
+      />
       <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
 
         <h1 className="text-h1 font-semibold text-secondary-500 text-start">{t("title")}</h1>
@@ -250,24 +265,7 @@ export function AiFixContent() {
           </div>
         </div>
 
-        {/* Back link */}
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-label-sm text-neutral-500 hover:text-secondary-500 transition-colors self-start"
-        >
-          {isRtl ? (
-            <>
-              {t("back")}
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </>
-          ) : (
-            <>
-              <ArrowLeft className="size-4" aria-hidden="true" />
-              {t("back")}
-            </>
-          )}
-        </button>
+        <BackLink onClick={() => router.back()}>{t("back")}</BackLink>
 
       </div>
     </div>

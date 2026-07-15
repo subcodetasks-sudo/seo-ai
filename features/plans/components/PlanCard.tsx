@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
+import { getPlanFeatures } from "../services/plan-features";
 import type { Plan } from "../types/types";
 
 type PlanCardProps = {
@@ -47,34 +48,6 @@ function formatPrice(price: string): string {
   }).format(num);
 }
 
-function getFeatures(plan: Plan, t: ReturnType<typeof useTranslations>): string[] {
-  const features: string[] = [];
-
-  if (plan.max_projects !== -1) {
-    features.push(`${plan.max_projects} ${t("max_projects")}`);
-  } else {
-    features.push(`${t("unlimited")} ${t("max_projects")}`);
-  }
-
-  features.push(`${plan.max_pages_per_crawl} ${t("max_pages_per_crawl")}`);
-
-  if (plan.max_crawls_per_month === -1) {
-    features.push(`${t("unlimited")} ${t("max_crawls_per_month")}`);
-  } else {
-    features.push(`${plan.max_crawls_per_month} ${t("max_crawls_per_month")}`);
-  }
-
-  features.push(`${plan.crawl_schedule.charAt(0).toUpperCase() + plan.crawl_schedule.slice(1)} ${t("max_crawls_per_month")}`);
-
-  if (plan.max_ai_pages_per_month === -1) {
-    features.push(`${t("unlimited")} ${t("max_ai_pages_per_month")}`);
-  } else {
-    features.push(`${plan.max_ai_pages_per_month} ${t("max_ai_pages_per_month")}`);
-  }
-
-  return features;
-}
-
 export function PlanCard({
   plan,
   isSelected = false,
@@ -83,7 +56,7 @@ export function PlanCard({
   className,
 }: PlanCardProps) {
   const t = useTranslations("plans");
-  const features = getFeatures(plan, t);
+  const features = getPlanFeatures(plan, t);
 
   return (
     <article
