@@ -152,6 +152,7 @@ export function DashboardPricingContent() {
 
     autoStartedRef.current = true;
     clearPlanIdFromUrl();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     beginPayment(plan.billingPlanName, plan.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, planIdParam, displayPlans, currentBilling]);

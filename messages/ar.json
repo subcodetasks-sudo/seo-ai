@@ -581,8 +581,11 @@
     "title": "ربط Google Analytics",
     "description": "اربط حساب Google Analytics الخاص بك لمشاهدة تحليلات الزوار والزيارات لموقع {domain} مباشرة داخل المنصة.",
     "connectButton": "ربط مع Google",
+    "connecting": "جاري الاتصال...",
     "secureNote": "سيتم توجيهك بشكل آمن إلى Google لمنح الصلاحيات.",
     "logoAlt": "Google Analytics",
+    "connectError": "فشل بدء الاتصال بـ Google Analytics. يرجى المحاولة مرة أخرى.",
+    "disconnectError": "فشل قطع اتصال Google Analytics. يرجى المحاولة مرة أخرى.",
     "tabs": {
       "label": "أقسام Google Analytics",
       "overview": "نظرة عامة",
@@ -595,63 +598,39 @@
     },
     "toolbar": {
       "connected": "متصل",
-      "lastMonitored": "آخر مراقبة: منذ 5 دقائق",
       "period": "آخر {days} يوم",
       "refresh": "تحديث",
       "disconnect": "قطع الاتصال"
     },
     "charts": {
-      "trafficDistribution": "توزيع الزيارات",
-      "distribution": {
-        "organic": "البحث العضوي",
-        "direct": "مباشر",
-        "social": "اجتماعي",
-        "paid": "البحث المدفوع",
-        "referral": "إحالة"
-      }
+      "trafficDistribution": "توزيع الزيارات"
     },
     "audience": {
-      "countries": "الدول",
-      "country": {
-        "sa": "المملكة العربية السعودية",
-        "ae": "الإمارات العربية المتحدة",
-        "eg": "مصر",
-        "kw": "الكويت",
-        "bh": "البحرين"
-      }
+      "countries": "الدول"
     },
     "trafficSources": {
       "title": "مصادر الزيارات",
-      "visitorsSuccess": "الزوار / النجاح",
-      "items": {
-        "organic": "البحث العضوي",
-        "direct": "مباشر",
-        "social": "اجتماعي",
-        "paid": "البحث المدفوع",
-        "referral": "إحالة"
-      }
+      "visitorsSuccess": "الزوار / النجاح"
+    },
+    "propertyPicker": {
+      "title": "اختر خاصية Google Analytics",
+      "description": "اختر خاصية GA4 التي تريد ربطها بهذا المشروع.",
+      "confirm": "تأكيد الاختيار",
+      "connecting": "جاري الاتصال...",
+      "loadError": "فشل تحميل خصائص Google Analytics.",
+      "retry": "إعادة المحاولة",
+      "noProperties": "لم يتم العثور على خصائص Google Analytics",
+      "noPropertiesDescription": "لا يحتوي حساب Google المتصل على أي خصائص GA4. أضف واحدة في Google Analytics ثم أعد الاتصال."
+    },
+    "callbackPage": {
+      "connecting": "جاري إنهاء الاتصال بـ Google Analytics...",
+      "redirecting": "جاري التوجيه إلى لوحة التحكم...",
+      "errorTitle": "تعذر الاتصال بـ Google Analytics",
+      "errorDescription": "رابط التفويض غير صالح أو منتهي الصلاحية. يرجى محاولة الاتصال مرة أخرى من لوحة التحكم.",
+      "backToDashboard": "العودة إلى لوحة التحكم"
     },
     "ecommerceDashboard": {
-      "revenue": "الإيرادات",
-      "purchases": "المشتريات",
-      "avgOrderValue": "متوسط قيمة الطلب",
-      "abandonedCarts": "سلات مهجورة",
-      "currency": "ريال",
-      "revenuePath": "مسار الإيرادات",
-      "revenuePathSubtitle": "آخر 15 يوم",
-      "topProducts": "أعلى المنتجات مبيعاً",
-      "table": {
-        "product": "المنتج",
-        "revenue": "الإيرادات",
-        "units": "الوحدات",
-        "share": "الحصة"
-      },
-      "products": {
-        "enterprise": "حزمة Enterprise السنوية",
-        "pro": "حزمة Pro الشهرية",
-        "starter": "حزمة Starter السنوية",
-        "addons": "إضافات مخصصة"
-      }
+      "currency": "ريال"
     },
     "pagesDashboard": {
       "title": "أعلى الصفحات",
@@ -668,16 +647,24 @@
         "views": "المشاهدات",
         "avgTime": "متوسط الوقت",
         "bounceRate": "معدل الارتداد"
-      },
-      "items": {
-        "home": "الرئيسية",
-        "aiSolutions": "حلول الذكاء الاصطناعي للأعمال",
-        "pricing": "الأسعار",
-        "seoGuide": "دليل السيو الشامل",
-        "about": "من نحن",
-        "contact": "تواصل معنا",
-        "features": "المميزات",
-        "caseStudies": "دراسات الحالة"
+      }
+    },
+    "eventsDashboard": {
+      "title": "الأحداث",
+      "empty": "لا توجد أحداث مسجلة لهذه الفترة",
+      "table": {
+        "event": "الحدث",
+        "count": "العدد",
+        "users": "المستخدمون"
+      }
+    },
+    "conversionsDashboard": {
+      "title": "التحويلات",
+      "empty": "لا توجد تحويلات مسجلة لهذه الفترة",
+      "table": {
+        "event": "الحدث",
+        "conversions": "التحويلات",
+        "rate": "المعدل"
       }
     },
     "metrics": {
@@ -687,9 +674,8 @@
         "newUsers": "المستخدمون الجدد",
         "activeUsers": "المستخدمون النشطون",
         "sessions": "الجلسات",
-        "engagedSessions": "الجلسات التفاعلية",
+        "pageViews": "مشاهدات الصفحة",
         "avgSessionDuration": "متوسط مدة الجلسة",
-        "engagementRate": "معدل التفاعل",
         "bounceRate": "معدل الارتداد"
       },
       "ecommerce": {
@@ -699,21 +685,6 @@
         "itemsPurchased": "المنتجات المشتراة",
         "cartAbandonment": "التخلي عن السلة",
         "purchaseConversion": "تحويل الشراء"
-      },
-      "conversions": {
-        "orders": "الطلبات",
-        "conversionRate": "معدل التحويل",
-        "conversionValue": "قيمة التحويل",
-        "totalConversions": "إجمالي التحويلات",
-        "registrations": "التسجيلات"
-      },
-      "events": {
-        "videoPlayback": "تشغيل الفيديو",
-        "totalUsers": "إجمالي المستخدمين",
-        "buttonClicks": "النقرات على الأزرار",
-        "fileDownloads": "تنزيل الملفات",
-        "customEvents": "أحداث مخصصة",
-        "formSubmissions": "إرسال النماذج"
       },
       "audience": {
         "returningUsers": "المستخدمون العائدون",

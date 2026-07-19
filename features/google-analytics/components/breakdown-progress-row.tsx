@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -13,20 +13,11 @@ const TONE_BAR_COLORS: Record<MetricTone, string> = {
   red: "#EF4444",
 };
 
-const SOURCE_BAR_COLORS: Record<string, string> = {
-  organic: "#84CC16",
-  direct: "#3F6212",
-  social: "#22C55E",
-  paid: "#CA8A04",
-  referral: "#94A3B8",
-};
-
 type CountryBreakdownRowProps = {
   item: CountryBreakdownItem;
 };
 
 export function CountryBreakdownRow({ item }: CountryBreakdownRowProps) {
-  const t = useTranslations("googleAnalytics.audience");
   const locale = useLocale();
   const formatter = new Intl.NumberFormat(locale === "ar" ? "ar-SA" : "en-US");
 
@@ -37,9 +28,7 @@ export function CountryBreakdownRow({ item }: CountryBreakdownRowProps) {
           {item.code}
         </span>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-label-sm font-medium text-secondary-500">
-            {t(item.labelKey)}
-          </p>
+          <p className="truncate text-label-sm font-medium text-secondary-500">{item.label}</p>
           <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-neutral-100">
             <div
               className="h-full rounded-full bg-primary-400"
@@ -62,22 +51,22 @@ export function CountryBreakdownRow({ item }: CountryBreakdownRowProps) {
 
 type TrafficSourceBreakdownRowProps = {
   item: TrafficSourceBreakdownItem;
+  maxVisitors: number;
 };
 
-export function TrafficSourceBreakdownRow({ item }: TrafficSourceBreakdownRowProps) {
-  const t = useTranslations("googleAnalytics.trafficSources");
+export function TrafficSourceBreakdownRow({ item, maxVisitors }: TrafficSourceBreakdownRowProps) {
   const locale = useLocale();
   const formatter = new Intl.NumberFormat(locale === "ar" ? "ar-SA" : "en-US");
-  const changePrefix = item.change > 0 ? "+" : "";
-  const isPositive = item.change >= 0;
-  const barColor = SOURCE_BAR_COLORS[item.id] ?? TONE_BAR_COLORS[item.tone];
-  const maxVisitors = 12000;
-  const barWidth = Math.min(100, (item.visitors / maxVisitors) * 100);
+  const hasChange = typeof item.change === "number";
+  const changePrefix = hasChange && item.change! > 0 ? "+" : "";
+  const isPositive = hasChange && item.change! >= 0;
+  const barColor = TONE_BAR_COLORS[item.tone];
+  const barWidth = maxVisitors > 0 ? Math.min(100, (item.visitors / maxVisitors) * 100) : 0;
 
   return (
     <div className="flex items-center gap-3">
       <div className="flex min-w-0 flex-1 flex-col gap-2">
-        <p className="text-label-sm font-medium text-secondary-500">{t(item.labelKey)}</p>
+        <p className="truncate text-label-sm font-medium text-secondary-500">{item.label}</p>
         <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-100">
           <div
             className="h-full rounded-full"
@@ -86,15 +75,19 @@ export function TrafficSourceBreakdownRow({ item }: TrafficSourceBreakdownRowPro
         </div>
       </div>
       <div className="flex shrink-0 items-center gap-4 text-end">
-        <span
-          className={cn(
-            "w-12 text-label-sm font-medium",
-            isPositive ? "text-success-600" : "text-destructive",
-          )}
-        >
-          {changePrefix}
-          {item.change}%
-        </span>
+        {hasChange ? (
+          <span
+            className={cn(
+              "w-12 text-label-sm font-medium",
+              isPositive ? "text-success-600" : "text-destructive",
+            )}
+          >
+            {changePrefix}
+            {item.change}%
+          </span>
+        ) : (
+          <span className="w-12" />
+        )}
         <span className="w-16 text-label-sm font-semibold text-secondary-500">
           {formatter.format(item.visitors)}
         </span>

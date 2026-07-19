@@ -29,8 +29,12 @@ export function NotificationPreferenceRow({
   return (
     <>
       <div className={`flex flex-col justify-center gap-1 py-4 pe-4 text-start ${border}`}>
-        <p className="text-label-md font-medium text-secondary-500">{t(labelKey as any)}</p>
-        <p className="text-label-sm text-neutral-500">{t(descriptionKey as any)}</p>
+        <p className="text-label-md font-medium text-secondary-500">
+          {t(labelKey as Parameters<typeof t>[0])}
+        </p>
+        <p className="text-label-sm text-neutral-500">
+          {t(descriptionKey as Parameters<typeof t>[0])}
+        </p>
       </div>
       <div className={`flex items-center justify-center px-6 py-4 ${border}`}>
         <Switch checked={emailEnabled} onCheckedChange={onEmailToggle} />

@@ -41,6 +41,85 @@ const PRIMARY_BTN =
 const STOP_BTN =
   "h-9 gap-2 border-neutral-200 bg-white px-4 text-neutral-600 hover:border-error-200 hover:bg-error-50 hover:text-error-600";
 
+function StopButton({
+  onStop,
+  disabled,
+  isStopping,
+}: {
+  onStop: () => void;
+  disabled: boolean;
+  isStopping: boolean;
+}) {
+  const t = useTranslations("home.projects.crawl");
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      onClick={onStop}
+      disabled={disabled}
+      className={STOP_BTN}
+    >
+      {isStopping ? (
+        <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+      ) : (
+        <Square className="size-3.5 fill-current" aria-hidden="true" />
+      )}
+      {isStopping ? t("stopping") : t("stop")}
+    </Button>
+  );
+}
+
+function ContinueButton({
+  onContinue,
+  disabled,
+  isContinuing,
+}: {
+  onContinue: () => void;
+  disabled: boolean;
+  isContinuing: boolean;
+}) {
+  const t = useTranslations("home.projects.crawl");
+  return (
+    <Button
+      type="button"
+      onClick={onContinue}
+      disabled={disabled}
+      className={PRIMARY_BTN}
+    >
+      {isContinuing ? (
+        <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+      ) : null}
+      {isContinuing ? t("continuing") : t("continue")}
+    </Button>
+  );
+}
+
+function RetryButton({
+  onRetry,
+  disabled,
+  isRetrying,
+}: {
+  onRetry: () => void;
+  disabled: boolean;
+  isRetrying: boolean;
+}) {
+  const t = useTranslations("home.projects.crawl");
+  return (
+    <Button
+      type="button"
+      onClick={onRetry}
+      disabled={disabled}
+      className={PRIMARY_BTN}
+    >
+      <RefreshCw
+        className={cn("size-4", isRetrying && "animate-spin")}
+        aria-hidden="true"
+      />
+      {isRetrying ? t("retrying") : t("retry")}
+    </Button>
+  );
+}
+
 export default function ProjectCrawlControls({
   projectId,
   crawlJobId,
@@ -64,6 +143,7 @@ export default function ProjectCrawlControls({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus(crawlStatus);
     setJobId(crawlJobId);
   }, [crawlStatus, crawlJobId]);
@@ -86,6 +166,7 @@ export default function ProjectCrawlControls({
     const data = pollData?.data;
     if (!data) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStatus(data.status as ProjectCrawlStatus);
     setPagesCrawled(data.pages_crawled ?? 0);
     setPagesTotalEst(data.pages_total_est ?? null);
@@ -159,63 +240,11 @@ export default function ProjectCrawlControls({
       ? numberFormatter.format(pagesTotalEst)
       : "—";
 
-  function StopButton() {
-    return (
-      <Button
-        type="button"
-        variant="outline"
-        onClick={handleStop}
-        disabled={actionInFlight}
-        className={STOP_BTN}
-      >
-        {isStopping ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-        ) : (
-          <Square className="size-3.5 fill-current" aria-hidden="true" />
-        )}
-        {isStopping ? t("stopping") : t("stop")}
-      </Button>
-    );
-  }
-
-  function ContinueButton() {
-    return (
-      <Button
-        type="button"
-        onClick={handleContinue}
-        disabled={actionInFlight}
-        className={PRIMARY_BTN}
-      >
-        {isContinuing ? (
-          <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-        ) : null}
-        {isContinuing ? t("continuing") : t("continue")}
-      </Button>
-    );
-  }
-
-  function RetryButton() {
-    return (
-      <Button
-        type="button"
-        onClick={handleRetry}
-        disabled={actionInFlight}
-        className={PRIMARY_BTN}
-      >
-        <RefreshCw
-          className={cn("size-4", isRetrying && "animate-spin")}
-          aria-hidden="true"
-        />
-        {isRetrying ? t("retrying") : t("retry")}
-      </Button>
-    );
-  }
-
   if (isActive) {
     if (actionsOnly) {
       return (
         <div className={cn(className)}>
-          <StopButton />
+          <StopButton onStop={handleStop} disabled={actionInFlight} isStopping={isStopping} />
         </div>
       );
     }
@@ -267,7 +296,7 @@ export default function ProjectCrawlControls({
           </div>
           <Progress value={progressPct ?? 0} className="h-1.5 bg-neutral-100" />
         </div>
-        <StopButton />
+        <StopButton onStop={handleStop} disabled={actionInFlight} isStopping={isStopping} />
       </div>
     );
   }
@@ -284,7 +313,7 @@ export default function ProjectCrawlControls({
     if (actionsOnly) {
       return (
         <div className={cn(className)}>
-          <ContinueButton />
+          <ContinueButton onContinue={handleContinue} disabled={actionInFlight} isContinuing={isContinuing} />
         </div>
       );
     }
@@ -300,7 +329,7 @@ export default function ProjectCrawlControls({
         <p className="text-label-sm text-neutral-500">
           {t("incomplete", { crawled: crawledLabel, total: totalLabel })}
         </p>
-        <ContinueButton />
+        <ContinueButton onContinue={handleContinue} disabled={actionInFlight} isContinuing={isContinuing} />
       </div>
     );
   }
@@ -320,7 +349,7 @@ export default function ProjectCrawlControls({
     if (actionsOnly) {
       return (
         <div className={cn(className)}>
-          <RetryButton />
+          <RetryButton onRetry={handleRetry} disabled={actionInFlight} isRetrying={isRetrying} />
         </div>
       );
     }
@@ -339,7 +368,7 @@ export default function ProjectCrawlControls({
             <p className="truncate text-label-xs text-neutral-400">{errorMessage}</p>
           )}
         </div>
-        <RetryButton />
+        <RetryButton onRetry={handleRetry} disabled={actionInFlight} isRetrying={isRetrying} />
       </div>
     );
   }

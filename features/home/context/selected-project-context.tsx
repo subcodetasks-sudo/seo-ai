@@ -17,6 +17,7 @@ export function SelectedProjectProvider({ children }: { children: ReactNode }) {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMounted(true);
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {

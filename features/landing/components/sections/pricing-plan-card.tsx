@@ -30,6 +30,13 @@ const STATUS_CLASS: Record<NonNullable<PricingPlanCardProps['statusTone']>, stri
   neutral: 'bg-neutral-100 text-neutral-600',
 };
 
+function highlightParenthetical(html: string) {
+  return html.replace(
+    /\(([^()]*)\)/g,
+    '<span class="font-semibold text-black underline">($1)</span>',
+  );
+}
+
 export function PricingPlanCard({
   plan,
   isFeatured,
@@ -104,7 +111,7 @@ export function PricingPlanCard({
               isFeatured ? 'text-primary-900/65' : 'text-neutral-400',
             )}
           >
-            {parse(plan.description)}
+            {parse(highlightParenthetical(plan.description))}
           </div>
         ) : null}
       </div>
@@ -114,8 +121,8 @@ export function PricingPlanCard({
           className={cn(
             'font-black leading-none text-ink',
             isFeatured
-              ? 'text-[3.25rem] sm:text-[4rem] lg:text-[4.8rem]'
-              : 'text-[2.75rem] sm:text-[3.25rem] lg:text-[3.6rem]',
+              ? 'text-[2.85rem] sm:text-[3rem] lg:text-[4.3rem]'
+              : 'text-[2.4rem] sm:text-[2.9rem] lg:text-[3.25rem]',
           )}
         >
           {plan.monthly}
@@ -138,7 +145,7 @@ export function PricingPlanCard({
           onSubscribe?.();
         }}
         className={cn(
-          'btn mt-6 w-full transition-transform duration-200 sm:mt-9',
+          'btn mt-8 w-full transition-transform duration-200 sm:mt-12',
           !isBusy && 'group-hover:scale-[1.02]',
           isFeatured ? 'pricing-main-cta-featured py-4 text-lg sm:py-5 sm:text-xl' : 'btn-ghost py-3.5 text-base sm:py-4 sm:text-lg',
           isBusy && 'pointer-events-none opacity-70',

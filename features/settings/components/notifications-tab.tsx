@@ -52,6 +52,7 @@ export function NotificationsTab() {
 
   useEffect(() => {
     if (data?.data) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPrefs(data.data);
       serverPrefsRef.current = data.data;
     }

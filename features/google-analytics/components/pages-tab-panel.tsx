@@ -1,9 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight, Link2, Search } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
+import ErrorState from "@/components/error-state";
+import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -16,10 +19,11 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 
-import { getPagesTabData } from "../services/mock-data";
-import type { PageSortMode } from "../types";
+import { googleAnalyticsPagesQueryOptions } from "../queries/queries";
+import type { GoogleAnalyticsPeriod, PageSortMode, TopPageRow } from "../types";
 
 const PAGE_SIZE = 5;
+const EMPTY_PAGES: TopPageRow[] = [];
 
 function getBounceRateClass(rate: number) {
   if (rate <= 20) return "text-success-600";
@@ -27,15 +31,26 @@ function getBounceRateClass(rate: number) {
   return "text-destructive";
 }
 
-export function PagesTabPanel() {
+type PagesTabPanelProps = {
+  projectId: string;
+  period: GoogleAnalyticsPeriod;
+};
+
+export function PagesTabPanel({ projectId, period }: PagesTabPanelProps) {
   const t = useTranslations("googleAnalytics.pagesDashboard");
+  const tCommon = useTranslations("common.state");
   const locale = useLocale();
   const formatter = new Intl.NumberFormat(locale === "ar" ? "ar-SA" : "en-US");
-  const { pages } = getPagesTabData();
+
+  const { data, isLoading, isError, refetch } = useQuery(
+    googleAnalyticsPagesQueryOptions(projectId, period),
+  );
 
   const [sortMode, setSortMode] = useState<PageSortMode>("views");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+
+  const pages = data?.pages ?? EMPTY_PAGES;
 
   const filteredPages = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -51,11 +66,10 @@ export function PagesTabPanel() {
       return sorted;
     }
 
-    return sorted.filter((item) => {
-      const title = t(item.titleKey).toLowerCase();
-      return title.includes(query) || item.path.toLowerCase().includes(query);
-    });
-  }, [pages, search, sortMode, t]);
+    return sorted.filter(
+      (item) => item.title.toLowerCase().includes(query) || item.path.toLowerCase().includes(query),
+    );
+  }, [pages, search, sortMode]);
 
   const totalPages = Math.max(1, Math.ceil(filteredPages.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
@@ -74,6 +88,19 @@ export function PagesTabPanel() {
   function handleSortChange(mode: PageSortMode) {
     setSortMode(mode);
     setPage(1);
+  }
+
+  if (isLoading) return <LoadingState fullPage={false} />;
+
+  if (isError || !data) {
+    return (
+      <ErrorState
+        title={tCommon("errorTitle")}
+        retryLabel={tCommon("retry")}
+        onRetry={() => refetch()}
+        fullPage={false}
+      />
+    );
   }
 
   return (
@@ -144,9 +171,7 @@ export function PagesTabPanel() {
             <TableRow key={item.id}>
               <TableCell className="py-4">
                 <div className="flex flex-col gap-1 text-start">
-                  <p className="text-label-sm font-medium text-secondary-500">
-                    {t(item.titleKey)}
-                  </p>
+                  <p className="text-label-sm font-medium text-secondary-500">{item.title}</p>
                   <div className="flex items-center gap-2">
                     <p className="text-label-xs text-neutral-400" dir="ltr">
                       {item.path}

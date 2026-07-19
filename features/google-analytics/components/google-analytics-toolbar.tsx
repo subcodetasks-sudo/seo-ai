@@ -24,6 +24,7 @@ import { GOOGLE_ANALYTICS_PERIODS, type GoogleAnalyticsPeriod } from "../types";
 
 type GoogleAnalyticsToolbarProps = {
   projectName: string;
+  propertyName?: string;
   period: GoogleAnalyticsPeriod;
   onPeriodChange: (period: GoogleAnalyticsPeriod) => void;
   onRefresh: () => void;
@@ -32,6 +33,7 @@ type GoogleAnalyticsToolbarProps = {
 
 export function GoogleAnalyticsToolbar({
   projectName,
+  propertyName,
   period,
   onPeriodChange,
   onRefresh,
@@ -58,7 +60,9 @@ export function GoogleAnalyticsToolbar({
             <Badge className="bg-success-50 text-success-700 hover:bg-success-50">
               {t("connected")}
             </Badge>
-            <span className="text-label-sm text-neutral-400">{t("lastMonitored")}</span>
+            {propertyName ? (
+              <span className="text-label-sm text-neutral-400">{propertyName}</span>
+            ) : null}
           </div>
         </div>
       </div>

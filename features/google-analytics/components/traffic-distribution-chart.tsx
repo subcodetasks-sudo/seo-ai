@@ -18,12 +18,9 @@ export function TrafficDistributionChart({ segments }: TrafficDistributionChartP
   const chartConfig = useMemo(
     () =>
       Object.fromEntries(
-        segments.map((segment) => [
-          segment.id,
-          { label: t(segment.labelKey), color: segment.color },
-        ]),
+        segments.map((segment) => [segment.id, { label: segment.label, color: segment.color }]),
       ),
-    [segments, t],
+    [segments],
   );
 
   const chartData = segments.map((segment) => ({
@@ -48,7 +45,7 @@ export function TrafficDistributionChart({ segments }: TrafficDistributionChartP
                   style={{ backgroundColor: segment.color }}
                   aria-hidden="true"
                 />
-                <span className="text-label-sm text-neutral-600">{t(segment.labelKey)}</span>
+                <span className="text-label-sm text-neutral-600">{segment.label}</span>
               </div>
               <span className="text-label-sm font-semibold text-secondary-500">
                 {segment.percentage}%

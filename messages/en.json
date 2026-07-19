@@ -581,8 +581,11 @@
     "title": "Connect Google Analytics",
     "description": "Link your Google Analytics account to view traffic and visitor insights for {domain} directly in RankAI.",
     "connectButton": "Connect with Google",
+    "connecting": "Connecting...",
     "secureNote": "You will be securely redirected to Google to authorize access.",
     "logoAlt": "Google Analytics",
+    "connectError": "Failed to start the Google Analytics connection. Please try again.",
+    "disconnectError": "Failed to disconnect Google Analytics. Please try again.",
     "tabs": {
       "label": "Google Analytics sections",
       "overview": "Overview",
@@ -595,63 +598,39 @@
     },
     "toolbar": {
       "connected": "Connected",
-      "lastMonitored": "Last monitored: 5 minutes ago",
       "period": "Last {days} days",
       "refresh": "Refresh",
       "disconnect": "Disconnect"
     },
     "charts": {
-      "trafficDistribution": "Traffic distribution",
-      "distribution": {
-        "organic": "Organic search",
-        "direct": "Direct",
-        "social": "Social",
-        "paid": "Paid search",
-        "referral": "Referral"
-      }
+      "trafficDistribution": "Traffic distribution"
     },
     "audience": {
-      "countries": "Countries",
-      "country": {
-        "sa": "Saudi Arabia",
-        "ae": "United Arab Emirates",
-        "eg": "Egypt",
-        "kw": "Kuwait",
-        "bh": "Bahrain"
-      }
+      "countries": "Countries"
     },
     "trafficSources": {
       "title": "Traffic sources",
-      "visitorsSuccess": "Visitors / Success",
-      "items": {
-        "organic": "Organic search",
-        "direct": "Direct",
-        "social": "Social",
-        "paid": "Paid search",
-        "referral": "Referral"
-      }
+      "visitorsSuccess": "Visitors / Success"
+    },
+    "propertyPicker": {
+      "title": "Select a Google Analytics property",
+      "description": "Choose the GA4 property you want to connect to this project.",
+      "confirm": "Confirm selection",
+      "connecting": "Connecting...",
+      "loadError": "Failed to load Google Analytics properties.",
+      "retry": "Retry",
+      "noProperties": "No Google Analytics properties found",
+      "noPropertiesDescription": "The connected Google account has no GA4 properties. Add one in Google Analytics, then reconnect."
+    },
+    "callbackPage": {
+      "connecting": "Finishing Google Analytics connection...",
+      "redirecting": "Redirecting to your dashboard...",
+      "errorTitle": "Couldn't connect Google Analytics",
+      "errorDescription": "The authorization link is invalid or has expired. Please try connecting again from the dashboard.",
+      "backToDashboard": "Back to dashboard"
     },
     "ecommerceDashboard": {
-      "revenue": "Revenue",
-      "purchases": "Purchases",
-      "avgOrderValue": "Avg. order value",
-      "abandonedCarts": "Abandoned carts",
-      "currency": "SAR",
-      "revenuePath": "Revenue path",
-      "revenuePathSubtitle": "Last 15 days",
-      "topProducts": "Top selling products",
-      "table": {
-        "product": "Product",
-        "revenue": "Revenue",
-        "units": "Units",
-        "share": "Share"
-      },
-      "products": {
-        "enterprise": "Annual Enterprise package",
-        "pro": "Monthly Pro package",
-        "starter": "Annual Starter package",
-        "addons": "Custom add-ons"
-      }
+      "currency": "SAR"
     },
     "pagesDashboard": {
       "title": "Top pages",
@@ -668,16 +647,24 @@
         "views": "Views",
         "avgTime": "Avg. time",
         "bounceRate": "Bounce rate"
-      },
-      "items": {
-        "home": "Home",
-        "aiSolutions": "AI solutions for business",
-        "pricing": "Pricing",
-        "seoGuide": "Complete SEO guide",
-        "about": "About us",
-        "contact": "Contact",
-        "features": "Features",
-        "caseStudies": "Case studies"
+      }
+    },
+    "eventsDashboard": {
+      "title": "Events",
+      "empty": "No events recorded for this period",
+      "table": {
+        "event": "Event",
+        "count": "Count",
+        "users": "Users"
+      }
+    },
+    "conversionsDashboard": {
+      "title": "Conversions",
+      "empty": "No conversions recorded for this period",
+      "table": {
+        "event": "Event",
+        "conversions": "Conversions",
+        "rate": "Rate"
       }
     },
     "metrics": {
@@ -687,9 +674,8 @@
         "newUsers": "New users",
         "activeUsers": "Active users",
         "sessions": "Sessions",
-        "engagedSessions": "Engaged sessions",
+        "pageViews": "Page views",
         "avgSessionDuration": "Avg. session duration",
-        "engagementRate": "Engagement rate",
         "bounceRate": "Bounce rate"
       },
       "ecommerce": {
@@ -699,21 +685,6 @@
         "itemsPurchased": "Items purchased",
         "cartAbandonment": "Cart abandonment",
         "purchaseConversion": "Purchase conversion"
-      },
-      "conversions": {
-        "orders": "Orders",
-        "conversionRate": "Conversion rate",
-        "conversionValue": "Conversion value",
-        "totalConversions": "Total conversions",
-        "registrations": "Registrations"
-      },
-      "events": {
-        "videoPlayback": "Video playback",
-        "totalUsers": "Total users",
-        "buttonClicks": "Button clicks",
-        "fileDownloads": "File downloads",
-        "customEvents": "Custom events",
-        "formSubmissions": "Form submissions"
       },
       "audience": {
         "returningUsers": "Returning users",

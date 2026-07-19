@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   ArrowUpRight,
   Clock,
@@ -27,12 +28,11 @@ import {
   Zap,
   type LucideIcon,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
 import type { GoogleAnalyticsMetric, MetricIcon, MetricTone } from "../types";
-import { GoogleAnalyticsSparkline } from "./google-analytics-sparkline";
 
 const ICON_MAP: Record<MetricIcon, LucideIcon> = {
   users: Users,
@@ -80,6 +80,13 @@ const TONE_STYLES: Record<MetricTone, { icon: string; change: string }> = {
   },
 };
 
+function formatDurationSeconds(seconds: number) {
+  const total = Math.max(0, Math.round(seconds));
+  const minutes = Math.floor(total / 60);
+  const remainingSeconds = total % 60;
+  return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+}
+
 type GoogleAnalyticsMetricCardProps = {
   metric: GoogleAnalyticsMetric;
   labelNamespace?: string;
@@ -92,10 +99,21 @@ export function GoogleAnalyticsMetricCard({
   valueSuffix,
 }: GoogleAnalyticsMetricCardProps) {
   const t = useTranslations(labelNamespace);
+  const locale = useLocale();
+  const formatter = useMemo(() => new Intl.NumberFormat(locale === "ar" ? "ar-SA" : "en-US"), [locale]);
   const Icon = ICON_MAP[metric.icon];
   const toneStyles = TONE_STYLES[metric.tone];
-  const changePrefix = metric.change > 0 ? "+" : "";
-  const changeLabel = `${changePrefix}${metric.change}%`;
+
+  const formattedValue =
+    metric.format === "duration"
+      ? formatDurationSeconds(metric.value)
+      : metric.format === "percent"
+        ? `${formatter.format(Math.round(metric.value * 10) / 10)}%`
+        : formatter.format(Math.round(metric.value));
+
+  const hasChange = typeof metric.change === "number" && metric.trend;
+  const changePrefix = hasChange && metric.change! > 0 ? "+" : "";
+  const changeLabel = hasChange ? `${changePrefix}${metric.change}%` : null;
 
   return (
     <article className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white p-5">
@@ -114,17 +132,18 @@ export function GoogleAnalyticsMetricCard({
       <div className="flex items-end justify-between gap-4">
         <div className="flex min-w-0 flex-col gap-2">
           <p className="text-h2 font-semibold text-secondary-500">
-            {metric.value}
+            {formattedValue}
             {valueSuffix ? (
               <span className="ms-1 text-label-md font-medium text-neutral-400">{valueSuffix}</span>
             ) : null}
           </p>
-          <p className={cn("flex items-center gap-1 text-label-sm font-medium", toneStyles.change)}>
-            <span aria-hidden="true">{metric.trend === "up" ? "↑" : "↓"}</span>
-            <span>{changeLabel}</span>
-          </p>
+          {changeLabel ? (
+            <p className={cn("flex items-center gap-1 text-label-sm font-medium", toneStyles.change)}>
+              <span aria-hidden="true">{metric.trend === "up" ? "↑" : "↓"}</span>
+              <span>{changeLabel}</span>
+            </p>
+          ) : null}
         </div>
-        <GoogleAnalyticsSparkline data={metric.sparkline} tone={metric.tone} />
       </div>
 
       <p className="text-label-xs text-neutral-400">

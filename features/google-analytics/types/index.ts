@@ -25,6 +25,8 @@ export type MetricTrend = "up" | "down";
 
 export type MetricTone = "green" | "gray" | "yellow" | "red";
 
+export type MetricFormat = "number" | "percent" | "duration" | "currency";
+
 export type MetricIcon =
   | "users"
   | "userPlus"
@@ -54,32 +56,44 @@ export type MetricIcon =
 export type GoogleAnalyticsMetric = {
   id: string;
   labelKey: string;
-  value: string;
-  change: number;
-  trend: MetricTrend;
-  sparkline: number[];
+  value: number;
+  format: MetricFormat;
+  change?: number;
+  trend?: MetricTrend;
   icon: MetricIcon;
   tone: MetricTone;
 };
 
+export type GoogleAnalyticsStatus = {
+  connected: boolean;
+  propertyId: string | null;
+  propertyName: string | null;
+};
+
+export type GoogleAnalyticsProperty = {
+  propertyId: string;
+  displayName: string;
+  websiteUrl: string;
+};
+
 export type TrafficDistributionSegment = {
   id: string;
-  labelKey: string;
+  label: string;
   percentage: number;
   color: string;
 };
 
 export type CountryBreakdownItem = {
   code: string;
-  labelKey: string;
+  label: string;
   percentage: number;
   visitors: number;
 };
 
 export type TrafficSourceBreakdownItem = {
   id: string;
-  labelKey: string;
-  change: number;
+  label: string;
+  change?: number;
   visitors: number;
   tone: MetricTone;
 };
@@ -94,33 +108,15 @@ export type TrafficSourcesTabData = {
   distribution: TrafficDistributionSegment[];
 };
 
-export type RevenueTrendPoint = {
-  label: string;
-  value: number;
-};
-
-export type ProductTone = "green" | "blue" | "orange" | "purple";
-
-export type TopProductRow = {
-  id: string;
-  labelKey: string;
-  revenue: number;
-  units: number;
-  share: number;
-  tone: ProductTone;
-};
-
 export type EcommerceTabData = {
   summary: GoogleAnalyticsMetric[];
-  revenueTrend: RevenueTrendPoint[];
-  topProducts: TopProductRow[];
 };
 
 export type PageSortMode = "views" | "bounceRate";
 
 export type TopPageRow = {
   id: string;
-  titleKey: string;
+  title: string;
   path: string;
   views: number;
   avgTime: string;
@@ -129,4 +125,28 @@ export type TopPageRow = {
 
 export type PagesTabData = {
   pages: TopPageRow[];
+};
+
+export type EventRow = {
+  id: string;
+  eventName: string;
+  eventCount: number;
+  users: number;
+};
+
+export type EventsTabData = {
+  items: EventRow[];
+  totalEvents: number;
+};
+
+export type ConversionRow = {
+  id: string;
+  eventName: string;
+  conversions: number;
+  conversionRate: number;
+};
+
+export type ConversionsTabData = {
+  items: ConversionRow[];
+  totalConversions: number;
 };

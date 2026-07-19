@@ -32,9 +32,14 @@ function GoogleIcon() {
 type GoogleAnalyticsConnectCardProps = {
   domain: string;
   onConnect: () => void;
+  isConnecting?: boolean;
 };
 
-export function GoogleAnalyticsConnectCard({ domain, onConnect }: GoogleAnalyticsConnectCardProps) {
+export function GoogleAnalyticsConnectCard({
+  domain,
+  onConnect,
+  isConnecting = false,
+}: GoogleAnalyticsConnectCardProps) {
   const t = useTranslations("googleAnalytics");
 
   return (
@@ -57,10 +62,11 @@ export function GoogleAnalyticsConnectCard({ domain, onConnect }: GoogleAnalytic
       <Button
         type="button"
         onClick={onConnect}
+        disabled={isConnecting}
         className="h-11 w-full max-w-sm gap-2 bg-primary-300 text-secondary-500 hover:bg-primary-200"
       >
         <GoogleIcon />
-        {t("connectButton")}
+        {isConnecting ? t("connecting") : t("connectButton")}
       </Button>
 
       <p className="flex items-center justify-center gap-1.5 text-label-sm text-neutral-400">
