@@ -1666,15 +1666,20 @@
     "footer": {
       "cta": "Ready to boost your site to the top of search results?",
       "subtitle": "Join thousands of Arabic stores and websites that grow with Howyah. Start for free today.",
+      "tagline": "We leave a mark in designing your brand",
       "ctaButton": "Start now",
       "certified": "Certified by the Ministry of Commerce and Investment",
       "certifiedAlt": "Certified by the Ministry of Commerce and Investment",
+      "licensePreviewTitle": "Commercial License",
+      "trademark": "Registered trademark No. 181546",
       "platformTitle": "Platform",
       "companyTitle": "Company",
       "quickLinksTitle": "Important Links",
+      "legalTitle": "Legal",
       "phonesTitle": "Mobile / WhatsApp",
       "officesTitle": "Our Offices",
       "copyright": "© 2024 All rights reserved — Howyah Company",
+      "copyrightSubtitle": "A subsidiary of Masar for Digital Solutions.. Commercial Registration 1640611",
       "office0Name": "Turkey Office",
       "office0Address": "Al-Fatih, opposite Historia Mall",
       "office1Name": "Sultanate of Oman Office",
@@ -1691,7 +1696,8 @@
       "slide": "Slide {n}",
       "statisticsAlt": "Statistics",
       "videoPlayer": "YouTube video player",
-      "heroImage": "Hero image"
+      "heroImage": "Hero image",
+      "viewLicense": "View commercial license"
     }
   },
   "legal": {

@@ -1,19 +1,18 @@
 import { env } from "@/config/env";
-import { getLocale } from "next-intl/server";
 
 export { stripHtml } from "@/lib/strip-html";
 
 export const LANDING_API_BASE_URL =
   env.LANDING_API_URL ?? "https://api-landing-seo.subcodeco.com";
 
-export async function apiFetch<T>(path: string): Promise<T> {
-  const locale = await getLocale();
+/** Locale is passed explicitly (not read via next-intl/server) so this stays
+ * safe to call from a "use cache" scope and from client-side refetches. */
+export async function apiFetch<T>(path: string, locale: string): Promise<T> {
   const res = await fetch(`${LANDING_API_BASE_URL}${path}`, {
     headers: {
       Accept: "application/json",
       "Accept-Language": locale || "ar",
     },
-    cache: "no-store",
   });
 
   if (!res.ok) {

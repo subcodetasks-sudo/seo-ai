@@ -128,7 +128,10 @@ export function GsapAnimations() {
       if (!prefersReduced) {
         gsap.utils
           .toArray<HTMLElement>('[data-anim="fade-up"]', root)
-          .filter((el) => !el.closest(staggerSelector))
+          // #pricing and the footer stream in via their own Suspense boundary
+          // and handle their own reveal locally (see useFadeUpReveal) so this
+          // scan can't race their hydration.
+          .filter((el) => !el.closest(staggerSelector) && !el.closest('#pricing') && !el.closest('footer'))
           .forEach((el) => {
             gsap.fromTo(
               el,

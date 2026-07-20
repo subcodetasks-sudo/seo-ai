@@ -25,6 +25,7 @@ import {
 } from '@/features/settings/queries/queries';
 import { withCallbackUrl } from '@/lib/callback-url';
 import { useRouter } from '@/i18n/navigation';
+import { useFadeUpReveal } from '@/components/motion/scroll-reveal';
 
 import { PricingPlanCard } from './pricing-plan-card';
 
@@ -63,6 +64,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
   const { user } = useAuth();
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
   const isAuthenticated = !!user;
+  const fadeUpRef = useFadeUpReveal<HTMLDivElement>();
 
   const { data: plansData } = useQuery({
     ...billingPlansQueryOptions(),
@@ -154,7 +156,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
       <div className='glow pricing-glow h-[560px] w-[560px] -bottom-40 left-1/2 opacity-60'></div>
 
       <div className='layer-content mx-auto max-w-7xl px-5 lg:px-8'>
-        <div className='mx-auto max-w-2xl text-center' data-anim='fade-up'>
+        <div className='mx-auto max-w-2xl text-center' data-anim='fade-up' ref={fadeUpRef}>
           <div className='eyebrow mb-5'>{parse(eyebrow) ?? t('pricing.eyebrow')}</div>
           <h2 className='text-3xl font-extrabold leading-tight text-ink sm:text-4xl lg:text-[2.7rem]'>
             {title ? parse(title) : t('pricing.defaultTitle')}

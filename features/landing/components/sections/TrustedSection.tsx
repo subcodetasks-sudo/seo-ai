@@ -1,6 +1,7 @@
-import { getTranslations } from 'next-intl/server';
-import { apiFetch } from '@/lib/landing-api';
-import type { Hero, HeroPartner } from '@/features/landing/types/landing-api';
+'use client';
+
+import { useTranslations } from 'next-intl';
+import type { HeroPartner } from '@/features/landing/types/landing-api';
 
 const FALLBACK_PLATFORMS = ['WordPress', 'Shopify', 'salla', 'zid'];
 
@@ -44,10 +45,8 @@ function PartnerItem({ partner }: { partner: HeroPartner | string }) {
   );
 }
 
-export async function TrustedSection() {
-  const t = await getTranslations('landing');
-  // const heroes = await apiFetch<Hero[]>('/api/v1/heroes?lang=ar');
-  // const apiPartners = heroes?.[0]?.partners ?? [];
+export function TrustedSection() {
+  const t = useTranslations('landing');
 
   const items: (HeroPartner | string)[] = FALLBACK_PLATFORMS;
 
