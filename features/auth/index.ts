@@ -1,5 +1,6 @@
 export { AuthPreview } from "./components/AuthPreview";
 export { Header } from "./components/Header";
+export { GoogleSignInButton } from "./components/GoogleSignInButton";
 export { ForgetPasswordForm } from "./components/login/ForgetPasswordForm";
 export { LoginForm } from "./components/login/LoginForm";
 export { OtpCode } from "./components/OtpCode";
@@ -12,5 +13,5 @@ export { ResetSuccess } from "./components/reset-password/ResetSuccess";
 export { createLoginSchema } from "./schemas/login-schema";
 export { createRegisterSchema } from "./schemas/register-schema";
 export { createResetPasswordSchema } from "./schemas/reset-password-schema";
-export type { LoginFormValues, RegisterFormValues, ResetPasswordFormValues } from "./types";
-export { useLogin, useRegister, useResetPassword } from "./queries/mutations";
+export type { LoginFormValues, RegisterFormValues, ResetPasswordFormValues, GoogleOAuthCallbackData, GoogleOAuthUser } from "./types";
+export { useLogin, useRegister, useResetPassword, useCompleteGoogleOAuth } from "./queries/mutations";

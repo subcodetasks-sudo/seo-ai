@@ -53,6 +53,7 @@
     "notFoundProblems": "مشاكل 404",
     "reports": "التقارير",
     "googleAnalytics": "Google Analytics",
+    "searchConsole": "Search Console",
     "aiInsights": "رؤى الذكاء الاصطناعي",
     "pricing": "الأسعار",
     "changelog": "سجل التغييرات",
@@ -165,6 +166,16 @@
         "passwordsMismatch": "كلمات المرور غير متطابقة"
       },
       "registrationFailed": "فشل التسجيل."
+    },
+    "googleCallback": {
+      "connecting": "جاري تسجيل دخولك عبر Google...",
+      "redirecting": "جاري تحويلك إلى لوحة التحكم...",
+      "errorTitle": "تعذّر تسجيل الدخول عبر Google",
+      "errors": {
+        "notConfigured": "تسجيل الدخول عبر Google غير مُفعّل حالياً.",
+        "retry": "حدث خطأ أثناء تسجيل الدخول عبر Google. يرجى المحاولة مرة أخرى."
+      },
+      "backToLogin": "العودة لتسجيل الدخول"
     },
     "verify": {
       "metadata": {
@@ -705,6 +716,131 @@
         "social": "وسائل التواصل",
         "paid": "مدفوع",
         "email": "البريد الإلكتروني"
+      }
+    }
+  },
+  "searchConsole": {
+    "title": "ربط Search Console",
+    "description": "اربط Google Search Console لمشاهدة ترتيب الكلمات المفتاحية وحالة الفهرسة لموقع {domain} مباشرة داخل المنصة.",
+    "connectButton": "ربط مع Google",
+    "connecting": "جاري الاتصال...",
+    "secureNote": "سيتم توجيهك بشكل آمن إلى Google لمنح الصلاحيات.",
+    "logoAlt": "Google Search Console",
+    "connectError": "فشل بدء الاتصال بـ Search Console. يرجى المحاولة مرة أخرى.",
+    "disconnectError": "فشل قطع اتصال Search Console. يرجى المحاولة مرة أخرى.",
+    "tabs": {
+      "label": "أقسام Search Console",
+      "overview": "نظرة عامة",
+      "queries": "الكلمات المفتاحية",
+      "pages": "الصفحات",
+      "countries": "الدول",
+      "devices": "الأجهزة",
+      "sitemaps": "خرائط الموقع"
+    },
+    "toolbar": {
+      "connected": "متصل",
+      "period": "آخر {days} يوم",
+      "refresh": "تحديث",
+      "disconnect": "قطع الاتصال"
+    },
+    "sitePicker": {
+      "title": "اختر موقعاً من Search Console",
+      "description": "اختر الموقع الموثّق الذي تريد ربطه بهذا المشروع.",
+      "confirm": "تأكيد الاختيار",
+      "connecting": "جاري الاتصال...",
+      "loadError": "فشل تحميل مواقع Search Console.",
+      "retry": "إعادة المحاولة",
+      "noSites": "لم يتم العثور على مواقع في Search Console",
+      "noSitesDescription": "لا يحتوي حساب Google المتصل على أي مواقع موثّقة. أضف واحداً في Search Console ثم أعد الاتصال."
+    },
+    "callbackPage": {
+      "connecting": "جاري إنهاء الاتصال بـ Search Console...",
+      "redirecting": "جاري التوجيه إلى لوحة التحكم...",
+      "errorTitle": "تعذر الاتصال بـ Search Console",
+      "errorDescription": "رابط التفويض غير صالح أو منتهي الصلاحية. يرجى محاولة الاتصال مرة أخرى من لوحة التحكم.",
+      "backToDashboard": "العودة إلى لوحة التحكم"
+    },
+    "metrics": {
+      "footer": "إجمالي هذه الفترة",
+      "overview": {
+        "clicks": "النقرات",
+        "impressions": "مرات الظهور",
+        "ctr": "متوسط نسبة النقر",
+        "avgPosition": "متوسط الترتيب"
+      }
+    },
+    "queriesDashboard": {
+      "title": "أعلى الكلمات المفتاحية",
+      "sortByClicks": "حسب النقرات",
+      "sortByCtr": "حسب نسبة النقر",
+      "searchPlaceholder": "بحث في الكلمات المفتاحية...",
+      "pagination": "عرض {start}-{end} من {total} كلمة",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "pageNumber": "صفحة {page}",
+      "table": {
+        "query": "الكلمة المفتاحية",
+        "clicks": "النقرات",
+        "impressions": "مرات الظهور",
+        "ctr": "نسبة النقر",
+        "avgPosition": "متوسط الترتيب"
+      }
+    },
+    "pagesDashboard": {
+      "title": "أعلى الصفحات",
+      "sortByClicks": "حسب النقرات",
+      "sortByCtr": "حسب نسبة النقر",
+      "searchPlaceholder": "بحث في الصفحات...",
+      "copyPath": "نسخ مسار الصفحة",
+      "pagination": "عرض {start}-{end} من {total} صفحة",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "pageNumber": "صفحة {page}",
+      "table": {
+        "page": "الصفحة",
+        "clicks": "النقرات",
+        "impressions": "مرات الظهور",
+        "ctr": "نسبة النقر",
+        "avgPosition": "متوسط الترتيب"
+      }
+    },
+    "countriesDashboard": {
+      "title": "الدول",
+      "empty": "لا توجد بيانات دول مسجلة لهذه الفترة",
+      "table": {
+        "country": "الدولة",
+        "clicks": "النقرات",
+        "impressions": "مرات الظهور",
+        "ctr": "نسبة النقر",
+        "avgPosition": "متوسط الترتيب"
+      }
+    },
+    "devicesDashboard": {
+      "title": "الأجهزة",
+      "empty": "لا توجد بيانات أجهزة مسجلة لهذه الفترة",
+      "table": {
+        "device": "الجهاز",
+        "clicks": "النقرات",
+        "impressions": "مرات الظهور",
+        "ctr": "نسبة النقر",
+        "avgPosition": "متوسط الترتيب"
+      }
+    },
+    "sitemapsDashboard": {
+      "title": "خرائط الموقع",
+      "empty": "لم يتم إرسال أي خرائط موقع بعد",
+      "table": {
+        "path": "خريطة الموقع",
+        "status": "الحالة",
+        "submitted": "تاريخ الإرسال",
+        "downloaded": "تاريخ التنزيل",
+        "urlsIndexed": "الروابط المفهرسة / المرسلة",
+        "warnings": "التحذيرات",
+        "errors": "الأخطاء"
+      },
+      "status": {
+        "pending": "قيد الانتظار",
+        "indexed": "تمت المعالجة"
       }
     }
   },

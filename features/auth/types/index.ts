@@ -44,3 +44,22 @@ export type UpdatePasswordFormValues = {
   current_password: string;
   new_password: string;
 }
+
+export type GoogleOAuthCallbackData = {
+  access_token: string;
+  refresh_token: string;
+  token_type?: string;
+  user_id?: string;
+  email?: string;
+  display_name?: string;
+  plan_name?: string;
+  is_verified?: boolean;
+};
+
+export type GoogleOAuthUser = {
+  user_id?: string;
+  email?: string;
+  display_name?: string;
+  plan_name?: string;
+  is_verified?: boolean;
+};

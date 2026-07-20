@@ -55,6 +55,7 @@ const DASHBOARD_PAGE_LABEL_KEYS: Record<string, string> = {
   "404-problems": "notFoundProblems",
   reports: "reports",
   "google-analytics": "googleAnalytics",
+  "search-console": "searchConsole",
   "ai-insights": "aiInsights",
   pricing: "pricing",
   changelog: "changelog",

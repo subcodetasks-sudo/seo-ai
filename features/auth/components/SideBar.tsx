@@ -9,6 +9,7 @@ import {
   Link2Off,
   LogOut,
   PanelRightClose,
+  Search,
   Sparkles,
   Tags,
   type LucideIcon,
@@ -59,7 +60,8 @@ const NAV_ITEMS: NavItem[] = [
     imageSrc: "/imgs/google_analytics_logo.webp",
     exact: false,
   },
-  
+  { href: "/dashboard/search-console", labelKey: "searchConsole", icon: Search, exact: false },
+
   { href: "/dashboard/ai-insights", labelKey: "aiInsights", icon: Sparkles, exact: false },
   { href: "/dashboard/pricing", labelKey: "pricing", icon: Tags, exact: true },
   { href: "/dashboard/changelog", labelKey: "changelog", icon: Clock, exact: false },
@@ -147,7 +149,7 @@ export default function SideBar() {
       className="border-neutral-200"
     >
       <motion.div
-        className="flex h-full flex-col px-5 py-4 bg-white border-e border-neutral-200"
+        className="flex h-full flex-col px-5 py-3 bg-white border-e border-neutral-200"
         initial={false}
         animate={isOpen ? "visible" : "hidden"}
         variants={getSidebarContainerVariants()}
@@ -215,7 +217,7 @@ export default function SideBar() {
           )}
         </SidebarMotionItem>
 
-        <nav className="flex flex-1 flex-col gap-1">
+        <nav className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
           {NAV_ITEMS.map((item) => {
             const { href, labelKey, exact } = item;
             const isActive = exact ? pathname === href : pathname.startsWith(href);
@@ -251,10 +253,10 @@ export default function SideBar() {
           })}
         </nav>
 
-        <SidebarMotionItem side={side} className="mt-6">
-          <div className="border-t border-neutral-200 pt-5">
+        <SidebarMotionItem side={side} className="mt-3 shrink-0">
+          <div className="border-t border-neutral-200 pt-3">
             {isAuthLoading && !user ? (
-              <div className="mb-3 flex items-center gap-3">
+              <div className="mb-2 flex items-center gap-3">
                 <Skeleton className="size-10 shrink-0 rounded-full" />
                 <div className="min-w-0 flex-1 space-y-1.5">
                   <Skeleton className="h-4 w-24" />
@@ -262,7 +264,7 @@ export default function SideBar() {
                 </div>
               </div>
             ) : user ? (
-              <div className="mb-3 flex items-center gap-3">
+              <div className="mb-2 flex items-center gap-3">
                 <Avatar size="lg">
                   <AvatarFallback className="bg-primary-75 text-sm font-semibold text-secondary-500">
                     {user.initials}

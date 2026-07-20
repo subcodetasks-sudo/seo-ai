@@ -8,6 +8,7 @@ import {
   RefreshFormValues,
   ForgotPasswordFormValues,
   UpdatePasswordFormValues,
+  GoogleOAuthCallbackData,
 } from "../types";
 
 export const register = (body: RegisterFormValues) =>
@@ -61,4 +62,10 @@ export const updatePassword = (body: UpdatePasswordFormValues) =>
 export const logout = () =>
   apiClient("auth/logout", {
     method: "POST",
+  });
+
+export const completeGoogleOAuth = (body: GoogleOAuthCallbackData) =>
+  apiClient("auth/oauth/google", {
+    method: "POST",
+    body: JSON.stringify(body),
   });

@@ -53,6 +53,7 @@
     "notFoundProblems": "404 problems",
     "reports": "Reports",
     "googleAnalytics": "Google Analytics",
+    "searchConsole": "Search Console",
     "aiInsights": "AI Insights",
     "pricing": "Pricing",
     "changelog": "Changelog",
@@ -165,6 +166,16 @@
         "passwordsMismatch": "Passwords do not match"
       },
       "registrationFailed": "Registration failed."
+    },
+    "googleCallback": {
+      "connecting": "Signing you in with Google...",
+      "redirecting": "Redirecting to your dashboard...",
+      "errorTitle": "Couldn't sign in with Google",
+      "errors": {
+        "notConfigured": "Google login is not configured.",
+        "retry": "Something went wrong signing in with Google. Please try again."
+      },
+      "backToLogin": "Back to login"
     },
     "verify": {
       "metadata": {
@@ -705,6 +716,131 @@
         "social": "Social",
         "paid": "Paid",
         "email": "Email"
+      }
+    }
+  },
+  "searchConsole": {
+    "title": "Connect Search Console",
+    "description": "Link Google Search Console to see keyword rankings and indexing status for {domain} directly in RankAI.",
+    "connectButton": "Connect with Google",
+    "connecting": "Connecting...",
+    "secureNote": "You will be securely redirected to Google to authorize access.",
+    "logoAlt": "Google Search Console",
+    "connectError": "Failed to start the Search Console connection. Please try again.",
+    "disconnectError": "Failed to disconnect Search Console. Please try again.",
+    "tabs": {
+      "label": "Search Console sections",
+      "overview": "Overview",
+      "queries": "Queries",
+      "pages": "Pages",
+      "countries": "Countries",
+      "devices": "Devices",
+      "sitemaps": "Sitemaps"
+    },
+    "toolbar": {
+      "connected": "Connected",
+      "period": "Last {days} days",
+      "refresh": "Refresh",
+      "disconnect": "Disconnect"
+    },
+    "sitePicker": {
+      "title": "Select a Search Console property",
+      "description": "Choose the verified site you want to connect to this project.",
+      "confirm": "Confirm selection",
+      "connecting": "Connecting...",
+      "loadError": "Failed to load Search Console sites.",
+      "retry": "Retry",
+      "noSites": "No Search Console sites found",
+      "noSitesDescription": "The connected Google account has no verified sites. Add one in Search Console, then reconnect."
+    },
+    "callbackPage": {
+      "connecting": "Finishing Search Console connection...",
+      "redirecting": "Redirecting to your dashboard...",
+      "errorTitle": "Couldn't connect Search Console",
+      "errorDescription": "The authorization link is invalid or has expired. Please try connecting again from the dashboard.",
+      "backToDashboard": "Back to dashboard"
+    },
+    "metrics": {
+      "footer": "Total this period",
+      "overview": {
+        "clicks": "Clicks",
+        "impressions": "Impressions",
+        "ctr": "Average CTR",
+        "avgPosition": "Average position"
+      }
+    },
+    "queriesDashboard": {
+      "title": "Top queries",
+      "sortByClicks": "By clicks",
+      "sortByCtr": "By CTR",
+      "searchPlaceholder": "Search queries...",
+      "pagination": "Showing {start}-{end} of {total} queries",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "pageNumber": "Page {page}",
+      "table": {
+        "query": "Query",
+        "clicks": "Clicks",
+        "impressions": "Impressions",
+        "ctr": "CTR",
+        "avgPosition": "Avg. position"
+      }
+    },
+    "pagesDashboard": {
+      "title": "Top pages",
+      "sortByClicks": "By clicks",
+      "sortByCtr": "By CTR",
+      "searchPlaceholder": "Search pages...",
+      "copyPath": "Copy page path",
+      "pagination": "Showing {start}-{end} of {total} pages",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "pageNumber": "Page {page}",
+      "table": {
+        "page": "Page",
+        "clicks": "Clicks",
+        "impressions": "Impressions",
+        "ctr": "CTR",
+        "avgPosition": "Avg. position"
+      }
+    },
+    "countriesDashboard": {
+      "title": "Countries",
+      "empty": "No country data recorded for this period",
+      "table": {
+        "country": "Country",
+        "clicks": "Clicks",
+        "impressions": "Impressions",
+        "ctr": "CTR",
+        "avgPosition": "Avg. position"
+      }
+    },
+    "devicesDashboard": {
+      "title": "Devices",
+      "empty": "No device data recorded for this period",
+      "table": {
+        "device": "Device",
+        "clicks": "Clicks",
+        "impressions": "Impressions",
+        "ctr": "CTR",
+        "avgPosition": "Avg. position"
+      }
+    },
+    "sitemapsDashboard": {
+      "title": "Sitemaps",
+      "empty": "No sitemaps submitted yet",
+      "table": {
+        "path": "Sitemap",
+        "status": "Status",
+        "submitted": "Submitted",
+        "downloaded": "Downloaded",
+        "urlsIndexed": "URLs indexed / submitted",
+        "warnings": "Warnings",
+        "errors": "Errors"
+      },
+      "status": {
+        "pending": "Pending",
+        "indexed": "Processed"
       }
     }
   },
