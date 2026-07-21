@@ -16,6 +16,8 @@ type ErrorStateProps = {
   description?: string;
   retryLabel?: string;
   onRetry?: () => void;
+  secondaryLabel?: string;
+  onSecondary?: () => void;
   className?: string;
   fullPage?: boolean;
 };
@@ -25,9 +27,13 @@ export default function ErrorState({
   description,
   retryLabel,
   onRetry,
+  secondaryLabel,
+  onSecondary,
   className,
   fullPage = true,
 }: ErrorStateProps) {
+  const hasActions = Boolean(onRetry || onSecondary);
+
   return (
     <Empty className={cn(fullPage && "flex-1 py-16", className)}>
       <EmptyHeader>
@@ -37,11 +43,20 @@ export default function ErrorState({
         <EmptyTitle className="text-lg">{title}</EmptyTitle>
         {description && <EmptyDescription className="text-base">{description}</EmptyDescription>}
       </EmptyHeader>
-      {onRetry && (
+      {hasActions && (
         <EmptyContent>
-          <Button type="button" variant="outline" onClick={onRetry}>
-            {retryLabel}
-          </Button>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            {onRetry && (
+              <Button type="button" variant="outline" onClick={onRetry}>
+                {retryLabel}
+              </Button>
+            )}
+            {onSecondary && (
+              <Button type="button" variant="outline" onClick={onSecondary}>
+                {secondaryLabel}
+              </Button>
+            )}
+          </div>
         </EmptyContent>
       )}
     </Empty>

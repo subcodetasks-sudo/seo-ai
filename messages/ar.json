@@ -748,10 +748,14 @@
       "description": "اختر الموقع الموثّق الذي تريد ربطه بهذا المشروع.",
       "confirm": "تأكيد الاختيار",
       "connecting": "جاري الاتصال...",
+      "disconnect": "قطع الاتصال",
       "loadError": "فشل تحميل مواقع Search Console.",
       "retry": "إعادة المحاولة",
       "noSites": "لم يتم العثور على مواقع في Search Console",
-      "noSitesDescription": "لا يحتوي حساب Google المتصل على أي مواقع موثّقة. أضف واحداً في Search Console ثم أعد الاتصال."
+      "noSitesDescription": "حساب Google المتصل لا يملك أي مواقع موثّقة. أضف الموقع وثبّته من search.google.com/search-console بنفس حساب Google، ثم حاول مرة أخرى."
+    },
+    "errors": {
+      "apiUnreachable": "تعذّر الوصول إلى Search Console — تأكد من تفعيل Search Console API في Google Cloud وأن هذا الحساب يملك الموقع."
     },
     "callbackPage": {
       "connecting": "جاري إنهاء الاتصال بـ Search Console...",

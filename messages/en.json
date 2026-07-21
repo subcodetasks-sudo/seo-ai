@@ -748,10 +748,14 @@
       "description": "Choose the verified site you want to connect to this project.",
       "confirm": "Confirm selection",
       "connecting": "Connecting...",
+      "disconnect": "Disconnect",
       "loadError": "Failed to load Search Console sites.",
       "retry": "Retry",
       "noSites": "No Search Console sites found",
-      "noSitesDescription": "The connected Google account has no verified sites. Add one in Search Console, then reconnect."
+      "noSitesDescription": "The connected Google account has no verified properties. Add and verify the site at search.google.com/search-console with the same Google account, then try again."
+    },
+    "errors": {
+      "apiUnreachable": "Couldn't reach Search Console — make sure the Search Console API is enabled in Google Cloud and that this account owns the property."
     },
     "callbackPage": {
       "connecting": "Finishing Search Console connection...",

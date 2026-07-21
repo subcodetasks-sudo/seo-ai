@@ -9,18 +9,22 @@ import LoadingState from "@/components/loading-state";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ApiError } from "@/lib/errors";
 
 import { useSelectSearchConsoleSite } from "../queries/mutations";
 import { searchConsoleSitesQueryOptions } from "../queries/queries";
 
 type SearchConsoleSiteSetupProps = {
   projectId: string;
+  onDisconnect: () => void;
 };
 
-export function SearchConsoleSiteSetup({ projectId }: SearchConsoleSiteSetupProps) {
+export function SearchConsoleSiteSetup({ projectId, onDisconnect }: SearchConsoleSiteSetupProps) {
   const t = useTranslations("searchConsole.sitePicker");
+  const tErrors = useTranslations("searchConsole.errors");
   const {
     data: sites,
+    error,
     isLoading,
     isError,
     refetch,
@@ -40,7 +44,17 @@ export function SearchConsoleSiteSetup({ projectId }: SearchConsoleSiteSetupProp
   }
 
   if (isError) {
-    return <ErrorState title={t("loadError")} retryLabel={t("retry")} onRetry={() => refetch()} fullPage={false} />;
+    const isGoogleForbidden = error instanceof ApiError && error.status === 403;
+    return (
+      <ErrorState
+        title={isGoogleForbidden ? tErrors("apiUnreachable") : t("loadError")}
+        retryLabel={t("retry")}
+        onRetry={() => refetch()}
+        secondaryLabel={t("disconnect")}
+        onSecondary={onDisconnect}
+        fullPage={false}
+      />
+    );
   }
 
   if (!sites || sites.length === 0) {

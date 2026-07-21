@@ -3,12 +3,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
-import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
 
 import { searchConsoleQueriesQueryOptions } from "../queries/queries";
 import type { SearchConsolePeriod } from "../types";
 import { SearchConsoleItemsTable } from "./search-console-items-table";
+import { SearchConsoleQueryError } from "./search-console-query-error";
 
 type QueriesTabPanelProps = {
   projectId: string;
@@ -17,16 +17,13 @@ type QueriesTabPanelProps = {
 
 export function QueriesTabPanel({ projectId, period }: QueriesTabPanelProps) {
   const t = useTranslations("searchConsole.queriesDashboard");
-  const tCommon = useTranslations("common.state");
 
-  const { data, isLoading, isError, refetch } = useQuery(searchConsoleQueriesQueryOptions(projectId, period));
+  const { data, error, isLoading, isError, refetch } = useQuery(searchConsoleQueriesQueryOptions(projectId, period));
 
   if (isLoading) return <LoadingState fullPage={false} />;
 
   if (isError || !data) {
-    return (
-      <ErrorState title={tCommon("errorTitle")} retryLabel={tCommon("retry")} onRetry={() => refetch()} fullPage={false} />
-    );
+    return <SearchConsoleQueryError error={error} onRetry={() => refetch()} />;
   }
 
   return (

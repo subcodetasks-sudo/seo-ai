@@ -4,12 +4,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Globe } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
 
 import { searchConsoleCountriesQueryOptions } from "../queries/queries";
 import type { SearchConsolePeriod } from "../types";
 import { SearchConsoleBreakdownTable } from "./search-console-breakdown-table";
+import { SearchConsoleQueryError } from "./search-console-query-error";
 
 type CountriesTabPanelProps = {
   projectId: string;
@@ -18,16 +18,13 @@ type CountriesTabPanelProps = {
 
 export function CountriesTabPanel({ projectId, period }: CountriesTabPanelProps) {
   const t = useTranslations("searchConsole.countriesDashboard");
-  const tCommon = useTranslations("common.state");
 
-  const { data, isLoading, isError, refetch } = useQuery(searchConsoleCountriesQueryOptions(projectId, period));
+  const { data, error, isLoading, isError, refetch } = useQuery(searchConsoleCountriesQueryOptions(projectId, period));
 
   if (isLoading) return <LoadingState fullPage={false} />;
 
   if (isError || !data) {
-    return (
-      <ErrorState title={tCommon("errorTitle")} retryLabel={tCommon("retry")} onRetry={() => refetch()} fullPage={false} />
-    );
+    return <SearchConsoleQueryError error={error} onRetry={() => refetch()} />;
   }
 
   return (

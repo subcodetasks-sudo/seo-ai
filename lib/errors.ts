@@ -19,3 +19,8 @@ export function toErrorResponse(error: unknown): {
   }
   return { message: error instanceof Error ? error.message : String(error) };
 }
+
+/** Prefer the upstream HTTP status when an ApiError carries one. */
+export function resolveApiErrorStatus(error: unknown, fallback = 400): number {
+  return error instanceof ApiError && error.status ? error.status : fallback;
+}

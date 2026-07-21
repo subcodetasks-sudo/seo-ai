@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import { FileWarning } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 
-import ErrorState from "@/components/error-state";
 import LoadingState from "@/components/loading-state";
 import { Badge } from "@/components/ui/badge";
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
@@ -13,6 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { cn } from "@/lib/utils";
 
 import { searchConsoleSitemapsQueryOptions } from "../queries/queries";
+import { SearchConsoleQueryError } from "./search-console-query-error";
 
 function formatDate(iso: string | null): string {
   if (!iso) return "—";
@@ -29,18 +29,15 @@ type SitemapsTabPanelProps = {
 
 export function SitemapsTabPanel({ projectId }: SitemapsTabPanelProps) {
   const t = useTranslations("searchConsole.sitemapsDashboard");
-  const tCommon = useTranslations("common.state");
   const locale = useLocale();
   const formatter = new Intl.NumberFormat(locale === "ar" ? "ar-SA" : "en-US");
 
-  const { data, isLoading, isError, refetch } = useQuery(searchConsoleSitemapsQueryOptions(projectId));
+  const { data, error, isLoading, isError, refetch } = useQuery(searchConsoleSitemapsQueryOptions(projectId));
 
   if (isLoading) return <LoadingState fullPage={false} />;
 
   if (isError || !data) {
-    return (
-      <ErrorState title={tCommon("errorTitle")} retryLabel={tCommon("retry")} onRetry={() => refetch()} fullPage={false} />
-    );
+    return <SearchConsoleQueryError error={error} onRetry={() => refetch()} />;
   }
 
   return (

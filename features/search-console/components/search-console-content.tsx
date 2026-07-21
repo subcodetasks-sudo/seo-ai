@@ -41,12 +41,8 @@ export function SearchConsoleContent() {
 
   function handleConnect() {
     connect(undefined, {
-      // TODO: temporary — opens in a new tab so local dev can complete the
-      // OAuth round trip on the production callback domain without losing
-      // the localhost tab. Revert to `window.location.href = authUrl` once
-      // the backend supports a localhost redirect_uri.
       onSuccess: (authUrl) => {
-        window.open(authUrl, "_blank", "noopener,noreferrer");
+        window.location.href = authUrl;
       },
       onError: () => toast.error(t("connectError")),
     });
@@ -84,7 +80,7 @@ export function SearchConsoleContent() {
           </div>
         ) : !status.siteUrl ? (
           <div className="flex flex-1 items-center justify-center py-12">
-            <SearchConsoleSiteSetup projectId={selectedProjectId} />
+            <SearchConsoleSiteSetup projectId={selectedProjectId} onDisconnect={handleDisconnect} />
           </div>
         ) : (
           <Suspense
