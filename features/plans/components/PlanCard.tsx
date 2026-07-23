@@ -5,11 +5,14 @@ import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
-import { getPlanFeatures } from "../services/plan-features";
-import type { Plan } from "../types/types";
+import {
+  formatPlanPrice,
+  getPublicPlanFeatureBullets,
+} from "../services/public-plan-display";
+import type { PublicPlan } from "../types/types";
 
 type PlanCardProps = {
-  plan: Plan;
+  plan: PublicPlan;
   isSelected?: boolean;
   isPopular?: boolean;
   onSelect?: () => void;
@@ -38,16 +41,6 @@ function PlanIcon({ planName }: { planName: string }) {
   );
 }
 
-function formatPrice(price: string): string {
-  const num = parseFloat(price);
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(num);
-}
-
 export function PlanCard({
   plan,
   isSelected = false,
@@ -56,7 +49,17 @@ export function PlanCard({
   className,
 }: PlanCardProps) {
   const t = useTranslations("plans");
-  const features = getPlanFeatures(plan, t);
+  const features = getPublicPlanFeatureBullets(plan, t);
+  const priceLabel =
+    plan.price_monthly == null
+      ? t("customPricing")
+      : plan.price_monthly === 0
+        ? t("free")
+        : formatPlanPrice(plan.price_monthly);
+  const title =
+    typeof plan.features?.display_name === "string" && plan.features.display_name.trim()
+      ? plan.features.display_name.trim()
+      : plan.name;
 
   return (
     <article
@@ -86,21 +89,30 @@ export function PlanCard({
         </span>
       ) : null}
 
+      {plan.discount_type && plan.discount_value != null ? (
+        <span className="absolute -top-3.5 end-4 rounded-full bg-primary-50 px-3 py-1 text-label-sm font-semibold text-primary-700">
+          {plan.discount_type === "percent"
+            ? t("discountPercent", { value: plan.discount_value })
+            : t("discountFixed", { value: plan.discount_value })}
+        </span>
+      ) : null}
+
       <div className="flex flex-1 flex-col items-center gap-6 text-center">
         <PlanIcon planName={plan.name} />
 
         <div className="flex flex-col gap-1">
-          <h2 className="text-h3 font-medium text-secondary-500">
-            {plan.name}
-          </h2>
+          <h2 className="text-h3 font-medium capitalize text-secondary-500">{title}</h2>
+          {plan.description ? (
+            <p className="text-label-md text-neutral-500">{plan.description}</p>
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-1">
           <div className="flex items-baseline justify-center gap-1">
-            <span className="text-4xl font-semibold text-secondary-500">
-              {formatPrice(plan.price_monthly_usd)}
-            </span>
-            <span className="text-label-md text-neutral-500">{t("perMonth")}</span>
+            <span className="text-4xl font-semibold text-secondary-500">{priceLabel}</span>
+            {plan.price_monthly != null && plan.price_monthly > 0 ? (
+              <span className="text-label-md text-neutral-500">{t("perMonth")}</span>
+            ) : null}
           </div>
         </div>
 

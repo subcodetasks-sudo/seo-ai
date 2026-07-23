@@ -2,8 +2,7 @@ import { Suspense } from "react";
 import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
 import { setRequestLocale } from "next-intl/server";
 
-import { DashboardPricingContent } from "@/features/plans";
-import { pricingQueryOptions } from "@/features/landing/queries/queries";
+import { DashboardPricingContent, publicPlansQueryOptions } from "@/features/plans";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -14,7 +13,7 @@ export default async function DashboardPricingPage({ params }: PageProps) {
   setRequestLocale(locale);
 
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(pricingQueryOptions(locale));
+  await queryClient.prefetchQuery(publicPlansQueryOptions());
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

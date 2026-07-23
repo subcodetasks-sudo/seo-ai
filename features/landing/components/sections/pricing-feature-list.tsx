@@ -1,4 +1,6 @@
 'use client';
+
+import { useLayoutEffect, useRef, useState } from 'react';
 import parse from 'html-react-parser';
 import { useTranslations } from 'next-intl';
 import { Check } from 'lucide-react';
@@ -21,10 +23,32 @@ interface Props {
 
 export function PricingFeatureList({ planName, features, isActive, barClass }: Props) {
   const t = useTranslations('landing');
+  const listRef = useRef<HTMLUListElement>(null);
+  const [hasOverflow, setHasOverflow] = useState(false);
+
+  useLayoutEffect(() => {
+    const list = listRef.current;
+    if (!list) {
+      setHasOverflow(false);
+      return;
+    }
+
+    function updateOverflow() {
+      if (!list) return;
+      setHasOverflow(list.scrollHeight > list.clientHeight + 1);
+    }
+
+    updateOverflow();
+
+    const observer = new ResizeObserver(updateOverflow);
+    observer.observe(list);
+    return () => observer.disconnect();
+  }, [features]);
 
   return (
     <div className='mt-9'>
       <ul
+        ref={listRef}
         className={cn(
           'max-h-64 space-y-4 overflow-hidden text-lg font-semibold leading-7',
           isActive ? 'text-ink/80' : 'text-ink-soft'
@@ -38,7 +62,7 @@ export function PricingFeatureList({ planName, features, isActive, barClass }: P
         ))}
       </ul>
 
-      {features.length > 0 && (
+      {hasOverflow && (
         <Dialog>
           <DialogTrigger asChild>
             <button

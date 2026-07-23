@@ -76,9 +76,18 @@
     "title": "Choose your plan",
     "subtitle": "Start for free and scale as you grow. All paid plans include a 14-day free trial — no credit card required.",
     "empty": "No plans are available right now.",
+    "comingSoon": "Pricing coming soon",
+    "contactUs": "Contact us",
+    "customPricing": "Custom pricing",
+    "free": "Free",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
     "perMonth": "/month",
+    "perYear": "/year",
     "mostPopular": "Most popular",
     "continue": "Continue",
+    "discountPercent": "Save {value}%",
+    "discountFixed": "Save ${value}",
     "max_projects": "Projects",
     "max_pages_per_crawl": "Pages per crawl",
     "max_crawls_per_month": "Crawls per month",
@@ -87,7 +96,21 @@
     "manual": "Manual",
     "weekly": "Weekly",
     "daily": "Daily",
-    "realtime": "Real-time"
+    "realtime": "Real-time",
+    "features": {
+      "unlimitedProjects": "Unlimited projects",
+      "projects": "{count} projects",
+      "requestsLimit": "{count} requests",
+      "apiTokenLimit": "{count} API tokens",
+      "maxWebsites": "{count} websites",
+      "crawlingEnabled": "Website crawling included",
+      "crawlingDisabled": "Website crawling not included",
+      "support": {
+        "email": "Email support",
+        "priority": "Priority support",
+        "dedicated": "Dedicated support"
+      }
+    }
   },
   "auth": {
     "header": {

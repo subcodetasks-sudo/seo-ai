@@ -2,43 +2,30 @@
 
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { getLocaleDirection } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
-import { getPlans } from "../services/api";
-import type { Plan } from "../types/types";
+import { publicPlansQueryOptions } from "../queries/queries";
 import { PlanCard } from "./PlanCard";
 
 export function PlansContent() {
   const t = useTranslations("plans");
   const locale = useLocale();
   const direction = getLocaleDirection(locale);
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [selectedPlanId, setSelectedPlanId] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: plans = [], isLoading } = useQuery(publicPlansQueryOptions());
+  const [selectedPlanId, setSelectedPlanId] = useState("");
   const ContinueArrow = direction === "rtl" ? ArrowLeft : ArrowRight;
 
   useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const fetchedPlans = await getPlans();
-        setPlans(fetchedPlans);
-        if (fetchedPlans.length > 0) {
-          setSelectedPlanId(fetchedPlans[0].id);
-        }
-      } catch (error) {
-        console.error("Failed to fetch plans:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchPlans();
-  }, []);
+    if (!selectedPlanId && plans.length > 0) {
+      setSelectedPlanId(plans[0].id);
+    }
+  }, [plans, selectedPlanId]);
 
   const selectedPlan = plans.find((plan) => plan.id === selectedPlanId);
   const selectedIndex = plans.findIndex((plan) => plan.id === selectedPlanId);
@@ -68,7 +55,7 @@ export function PlansContent() {
         </p>
       </div>
 
-      {plans.length > 0 && (
+      {plans.length > 0 ? (
         <>
           <div className="relative mx-auto flex w-full max-w-full rounded-2xl bg-neutral-100 p-1 lg:hidden">
             <span
@@ -85,7 +72,7 @@ export function PlansContent() {
                 type="button"
                 onClick={() => setSelectedPlanId(plan.id)}
                 className={cn(
-                  "relative z-10 flex-1 rounded-xl px-3 py-2.5 text-label-md font-medium transition-colors duration-300",
+                  "relative z-10 flex-1 rounded-xl px-3 py-2.5 text-label-md font-medium capitalize transition-colors duration-300",
                   selectedPlanId === plan.id
                     ? "text-secondary-500"
                     : "text-neutral-500 hover:text-secondary-400",
@@ -97,20 +84,22 @@ export function PlansContent() {
           </div>
 
           <div className="lg:hidden">
-            {selectedPlan && (
+            {selectedPlan ? (
               <PlanCard
                 plan={selectedPlan}
                 isSelected
                 isPopular={selectedPlan.name.toLowerCase() === "pro"}
               />
-            )}
+            ) : null}
           </div>
 
-          <div className={cn("hidden gap-6 lg:grid lg:items-stretch", {
-            "lg:grid-cols-2": plans.length === 2,
-            "lg:grid-cols-3": plans.length === 3,
-            "lg:grid-cols-4": plans.length >= 4,
-          })}>
+          <div
+            className={cn("hidden gap-6 lg:grid lg:items-stretch", {
+              "lg:grid-cols-2": plans.length === 2,
+              "lg:grid-cols-3": plans.length === 3,
+              "lg:grid-cols-4": plans.length >= 4,
+            })}
+          >
             {plans.map((plan) => (
               <PlanCard
                 key={plan.id}
@@ -122,6 +111,8 @@ export function PlansContent() {
             ))}
           </div>
         </>
+      ) : (
+        <p className="py-10 text-center text-label-md text-neutral-500">{t("comingSoon")}</p>
       )}
 
       <div className="flex justify-center px-4">

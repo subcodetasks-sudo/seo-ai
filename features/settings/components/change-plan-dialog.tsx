@@ -14,10 +14,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { PlanCard } from "@/features/plans";
+import { publicPlansQueryOptions } from "@/features/plans/queries/queries";
 
 import type { CurrentBilling } from "../queries/api";
 import { useChangeBillingPlan, useStartBillingCheckout } from "../queries/mutations";
-import { billingPlansQueryOptions } from "../queries/queries";
 
 type ChangePlanDialogProps = {
   open: boolean;
@@ -27,8 +27,7 @@ type ChangePlanDialogProps = {
 
 export function ChangePlanDialog({ open, onOpenChange, currentBilling }: ChangePlanDialogProps) {
   const t = useTranslations("settings.billing");
-  const { data } = useQuery(billingPlansQueryOptions());
-  const plans = data?.data.plans ?? [];
+  const { data: plans = [] } = useQuery(publicPlansQueryOptions());
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
   const { mutate: changePlan, isPending: isChangingPlan } = useChangeBillingPlan();
@@ -48,7 +47,13 @@ export function ChangePlanDialog({ open, onOpenChange, currentBilling }: ChangeP
 
     // Free plan or an already-active subscription can be swapped in place;
     // moving from free to a paid plan needs a payment method via checkout.
-    const needsCheckout = selectedPlan.name !== "free" && !currentBilling?.subscription_status;
+    // Free / $0 plans or an already-active subscription can be swapped in place;
+    // moving to a paid plan needs a payment method via checkout.
+    if (selectedPlan.price_monthly == null) return;
+
+    const treatAsFree =
+      selectedPlan.price_monthly === 0 || selectedPlan.name.toLowerCase() === "free";
+    const needsCheckout = !treatAsFree && !currentBilling?.subscription_status;
 
     if (needsCheckout) {
       startCheckout(selectedPlan.name, {

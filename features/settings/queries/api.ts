@@ -1,5 +1,4 @@
 import { apiClient } from "@/lib/client";
-import type { Plan } from "@/features/plans";
 import type { ProfileFormValues } from "../types";
 
 export type UserPlan = {
@@ -112,9 +111,10 @@ export function getUsage() {
 type PlansResponse = {
   status: boolean;
   message: string;
-  data: { plans: Plan[] };
+  data: { plans: import("@/features/plans").PublicPlan[]; total?: number };
 };
 
+/** @deprecated Prefer `getPublicPlans` / `publicPlansQueryOptions`. */
 export function getBillingPlans() {
   return apiClient<PlansResponse>("billing/plans", { method: "GET" }, "Failed to fetch plans");
 }

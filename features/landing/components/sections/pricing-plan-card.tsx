@@ -4,22 +4,31 @@ import parse from 'html-react-parser';
 import { useTranslations } from 'next-intl';
 
 import { cn } from '@/lib/utils';
+import type { BillingPeriod, PricingDisplayPlan } from '@/features/plans/services/public-plan-display';
+import {
+  formatPlanPrice,
+  isCustomPricing,
+  priceForPeriod,
+  shouldShowDiscount,
+} from '@/features/plans/services/public-plan-display';
 
 import { PricingFeatureList } from './pricing-feature-list';
-import type { Plan } from './PricingCards';
 
 type PricingPlanCardProps = {
-  plan: Plan;
+  plan: PricingDisplayPlan;
+  billingPeriod: BillingPeriod;
   isFeatured: boolean;
   /** Whole-card click (e.g. carousel focus). */
   onSelect?: () => void;
-  /** Subscribe CTA click — payment / auth flow. */
+  /** Subscribe CTA click — payment / auth / contact flow. */
   onSubscribe?: () => void;
   badge?: string;
   statusLabel?: string;
   statusTone?: 'active' | 'pending' | 'canceled' | 'past_due' | 'neutral';
   isBusy?: boolean;
   className?: string;
+  /** Override CTA label (e.g. current plan). */
+  actionLabel?: string;
 };
 
 const STATUS_CLASS: Record<NonNullable<PricingPlanCardProps['statusTone']>, string> = {
@@ -39,6 +48,7 @@ function highlightParenthetical(html: string) {
 
 export function PricingPlanCard({
   plan,
+  billingPeriod,
   isFeatured,
   onSelect,
   onSubscribe,
@@ -47,8 +57,36 @@ export function PricingPlanCard({
   statusTone = 'neutral',
   isBusy = false,
   className,
+  actionLabel,
 }: PricingPlanCardProps) {
   const t = useTranslations('landing');
+  const tPlans = useTranslations('plans');
+  const custom = isCustomPricing(plan, billingPeriod);
+  const amount = priceForPeriod(plan, billingPeriod);
+  const priceLabel = custom
+    ? tPlans('customPricing')
+    : amount === 0
+      ? tPlans('free')
+      : formatPlanPrice(amount);
+  const showDiscount = shouldShowDiscount(plan, billingPeriod);
+  const cta =
+    actionLabel ??
+    (custom ? tPlans('contactUs') : plan.priceMonthly === 0 && billingPeriod === 'month'
+      ? t('pricing.subscribeBtn')
+      : t('pricing.subscribeBtn'));
+
+  function discountLabel(): string | null {
+    if (!showDiscount || plan.discountValue == null) return null;
+    if (plan.discountType === 'percent') {
+      return tPlans('discountPercent', { value: plan.discountValue });
+    }
+    if (plan.discountType === 'fixed') {
+      return tPlans('discountFixed', { value: plan.discountValue });
+    }
+    return null;
+  }
+
+  const discount = discountLabel();
 
   function handleCardActivate() {
     onSelect?.();
@@ -90,6 +128,11 @@ export function PricingPlanCard({
             {badge}
           </span>
         ) : null}
+        {discount ? (
+          <span className='rounded-full bg-primary-100 px-3 py-1 text-xs font-bold text-primary-800'>
+            {discount}
+          </span>
+        ) : null}
         {statusLabel ? (
           <span
             className={cn(
@@ -123,18 +166,24 @@ export function PricingPlanCard({
             isFeatured
               ? 'text-[2.85rem] sm:text-[3rem] lg:text-[4.3rem]'
               : 'text-[2.4rem] sm:text-[2.9rem] lg:text-[3.25rem]',
+            custom && 'text-[1.75rem] sm:text-[2rem] lg:text-[2.25rem]',
           )}
         >
-          {plan.monthly}
+          {priceLabel}
         </span>
-        <span
-          className={cn(
-            'mb-2 text-lg font-extrabold sm:mb-3 sm:text-2xl',
-            isFeatured ? 'text-primary-900/55' : 'text-neutral-400',
-          )}
-        >
-          {t('pricing.currency')} <span>{t('pricing.perMonth')}</span>
-        </span>
+        {!custom && amount !== 0 ? (
+          <span
+            className={cn(
+              'mb-2 text-lg font-extrabold sm:mb-3 sm:text-2xl',
+              isFeatured ? 'text-primary-900/55' : 'text-neutral-400',
+            )}
+          >
+            {t('pricing.currency')}{' '}
+            <span>
+              {billingPeriod === 'year' ? t('pricing.perYear') : t('pricing.perMonth')}
+            </span>
+          </span>
+        ) : null}
       </div>
 
       <button
@@ -147,11 +196,13 @@ export function PricingPlanCard({
         className={cn(
           'btn mt-8 w-full transition-transform duration-200 sm:mt-12',
           !isBusy && 'group-hover:scale-[1.02]',
-          isFeatured ? 'pricing-main-cta-featured py-4 text-lg sm:py-5 sm:text-xl' : 'btn-ghost py-3.5 text-base sm:py-4 sm:text-lg',
+          isFeatured
+            ? 'pricing-main-cta-featured py-4 text-lg sm:py-5 sm:text-xl'
+            : 'btn-ghost py-3.5 text-base sm:py-4 sm:text-lg',
           isBusy && 'pointer-events-none opacity-70',
         )}
       >
-        {isBusy ? t('pricing.processing') : plan.action}
+        {isBusy ? t('pricing.processing') : cta}
       </button>
 
       <PricingFeatureList

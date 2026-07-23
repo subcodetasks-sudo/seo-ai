@@ -14,6 +14,8 @@ type StartPaymentArgs = {
   billingPlanName: string | null | undefined;
   currentBilling?: CurrentBilling;
   onStarted?: () => void;
+  /** Zero-priced plans should skip checkout even when the slug isn't `"free"`. */
+  isFree?: boolean;
 };
 
 export function useStartPlanPayment() {
@@ -24,7 +26,12 @@ export function useStartPlanPayment() {
 
   const isPending = isChangingPlan || isStartingCheckout;
 
-  function startPayment({ billingPlanName, currentBilling, onStarted }: StartPaymentArgs) {
+  function startPayment({
+    billingPlanName,
+    currentBilling,
+    onStarted,
+    isFree = false,
+  }: StartPaymentArgs) {
     if (!billingPlanName) {
       toast.error(tBilling("planUnavailable"));
       return;
@@ -40,8 +47,8 @@ export function useStartPlanPayment() {
     inFlightRef.current = normalized;
     onStarted?.();
 
-    const needsCheckout =
-      normalized !== "free" && !currentBilling?.subscription_status;
+    const treatAsFree = isFree || normalized === "free";
+    const needsCheckout = !treatAsFree && !currentBilling?.subscription_status;
 
     if (needsCheckout) {
       startCheckout(billingPlanName, {

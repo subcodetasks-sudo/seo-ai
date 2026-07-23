@@ -76,9 +76,18 @@
     "title": "اختر خطتك",
     "subtitle": "ابدأ مجاناً وتوسع مع نموك. تشمل جميع الخطط المدفوعة تجربة مجانية لمدة 14 يوماً — لا يلزم بطاقة ائتمانية.",
     "empty": "لا توجد خطط متاحة حالياً.",
+    "comingSoon": "الأسعار قادمة قريباً",
+    "contactUs": "تواصل معنا",
+    "customPricing": "تسعير مخصص",
+    "free": "مجاني",
+    "monthly": "شهري",
+    "yearly": "سنوي",
     "perMonth": "/شهر",
+    "perYear": "/سنة",
     "mostPopular": "الأكثر شيوعاً",
     "continue": "استمرار",
+    "discountPercent": "وفّر {value}%",
+    "discountFixed": "وفّر ${value}",
     "max_projects": "المشاريع",
     "max_pages_per_crawl": "الصفحات لكل فحص",
     "max_crawls_per_month": "الفحوصات في الشهر",
@@ -87,7 +96,21 @@
     "manual": "يدوي",
     "weekly": "أسبوعي",
     "daily": "يومي",
-    "realtime": "فوري"
+    "realtime": "فوري",
+    "features": {
+      "unlimitedProjects": "مشاريع غير محدودة",
+      "projects": "{count} مشاريع",
+      "requestsLimit": "{count} طلبات",
+      "apiTokenLimit": "{count} رمز API",
+      "maxWebsites": "{count} مواقع",
+      "crawlingEnabled": "فحص المواقع مضمّن",
+      "crawlingDisabled": "فحص المواقع غير مضمّن",
+      "support": {
+        "email": "دعم عبر البريد",
+        "priority": "دعم ذو أولوية",
+        "dedicated": "دعم مخصص"
+      }
+    }
   },
   "auth": {
     "header": {

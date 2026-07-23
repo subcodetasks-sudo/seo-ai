@@ -21,11 +21,11 @@ import {
   aboutUsQueryOptions,
   statisticsQueryOptions,
   toolUsageQueryOptions,
-  pricingQueryOptions,
   testimonialsQueryOptions,
   faqsQueryOptions,
   settingsQueryOptions,
 } from "@/features/landing/queries/queries";
+import { publicPlansQueryOptions } from "@/features/plans";
 
 export default async function LandingPage({
   params,
@@ -103,10 +103,10 @@ async function StaticLanding({
 /** Pricing stays live/per-request: it prefetches with the same no-store
  * fetcher as before, just scoped to its own Suspense boundary instead of
  * forcing the whole route dynamic. */
-async function DynamicPricing({ locale }: { locale: string }) {
+async function DynamicPricing({ locale: _locale }: { locale: string }) {
   await connection();
   const queryClient = new QueryClient();
-  await queryClient.prefetchQuery(pricingQueryOptions(locale));
+  await queryClient.prefetchQuery(publicPlansQueryOptions());
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

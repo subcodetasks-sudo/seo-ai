@@ -1,6 +1,5 @@
 'use client';
 
-import parse from 'html-react-parser';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocale, useTranslations } from 'next-intl';
@@ -13,39 +12,24 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from '@/components/ui/carousel';
+import { useFadeUpReveal } from '@/components/motion/scroll-reveal';
 import { useAuth } from '@/features/auth/context/auth-context';
 import { useStartPlanPayment } from '@/features/plans/hooks/use-start-plan-payment';
-import {
-  enrichPlansWithBillingNames,
-  getStablePlanId,
-} from '@/features/plans/services/landing-plans';
-import {
-  billingPlansQueryOptions,
-  currentBillingQueryOptions,
-} from '@/features/settings/queries/queries';
+import { getStablePlanId } from '@/features/plans/services/landing-plans';
+import type {
+  BillingPeriod,
+  PricingDisplayPlan,
+} from '@/features/plans/services/public-plan-display';
+import { isCustomPricing, priceForPeriod } from '@/features/plans/services/public-plan-display';
+import { currentBillingQueryOptions } from '@/features/settings/queries/queries';
 import { withCallbackUrl } from '@/lib/callback-url';
 import { useRouter } from '@/i18n/navigation';
-import { useFadeUpReveal } from '@/components/motion/scroll-reveal';
+import { cn } from '@/lib/utils';
 
 import { PricingPlanCard } from './pricing-plan-card';
 
-export interface Plan {
-  id: string;
-  name: string;
-  description: string;
-  monthly: string;
-  features: string[];
-  action: string;
-  barClass: string;
-  button_text?: string;
-  billingPlanName?: string;
-}
-
 interface Props {
-  plans: Plan[];
-  eyebrow: string;
-  title: string;
-  subtitle: string;
+  plans: PricingDisplayPlan[];
 }
 
 const PLAN_BAR_CLASSES = [
@@ -57,46 +41,38 @@ const PLAN_BAR_CLASSES = [
 const AUTOPLAY_MS = 4500;
 const MIN_LOOP_SLIDES = 6;
 
-export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
+export function PricingCards({ plans }: Props) {
   const t = useTranslations('landing');
+  const tPlans = useTranslations('plans');
   const locale = useLocale();
   const router = useRouter();
   const { user } = useAuth();
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
   const isAuthenticated = !!user;
   const fadeUpRef = useFadeUpReveal<HTMLDivElement>();
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('month');
 
-  const { data: plansData } = useQuery({
-    ...billingPlansQueryOptions(),
-    enabled: isAuthenticated,
-  });
   const { data: billingData } = useQuery({
     ...currentBillingQueryOptions(),
     enabled: isAuthenticated,
   });
 
-  const billingPlans = plansData?.data.plans ?? [];
   const currentBilling = billingData?.data;
   const { startPayment, isPending } = useStartPlanPayment();
   const [busyPlanId, setBusyPlanId] = useState<string | null>(null);
 
-  const enrichedPlans = useMemo(
-    () => enrichPlansWithBillingNames(plans, billingPlans),
-    [plans, billingPlans],
-  );
-
   const loopPlans = useMemo(() => {
-    if (enrichedPlans.length === 0) return [];
-    if (enrichedPlans.length >= MIN_LOOP_SLIDES) return enrichedPlans;
-    const copies = Math.ceil(MIN_LOOP_SLIDES / enrichedPlans.length);
+    if (plans.length === 0) return [];
+    if (plans.length >= MIN_LOOP_SLIDES) return plans;
+    const copies = Math.ceil(MIN_LOOP_SLIDES / plans.length);
     return Array.from({ length: copies }, (_, copy) =>
-      enrichedPlans.map((plan, index) => ({
+      plans.map((plan, index) => ({
         ...plan,
         id: `${plan.id}-loop-${copy}`,
         barClass: plan.barClass || PLAN_BAR_CLASSES[index % PLAN_BAR_CLASSES.length],
       })),
     ).flat();
-  }, [enrichedPlans]);
+  }, [plans]);
 
   const defaultIndex = Math.min(1, Math.max(0, loopPlans.length - 1));
   const [api, setApi] = useState<CarouselApi>();
@@ -124,29 +100,46 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
     return () => clearInterval(timer);
   }, [api, loopPlans.length]);
 
-  function handleSubscribe(plan: Plan) {
+  function handleSubscribe(plan: PricingDisplayPlan) {
     const planId = getStablePlanId(plan.id);
-    const pricingPath = `/dashboard/pricing?planId=${encodeURIComponent(planId)}`;
+    const pricingPath = `/dashboard/pricing?planId=${encodeURIComponent(plan.billingPlanName || planId)}`;
+
+    if (isCustomPricing(plan, billingPeriod)) {
+      const footer = document.getElementById('landing-footer');
+      footer?.scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
 
     if (isAuthenticated) {
-      if (plan.billingPlanName) {
-        setBusyPlanId(planId);
-        startPayment({
-          billingPlanName: plan.billingPlanName,
-          currentBilling,
-          onStarted: () => setBusyPlanId(planId),
-        });
-        return;
-      }
-      // Billing names not ready yet — complete payment on the pricing page.
-      router.push(pricingPath);
+      setBusyPlanId(planId);
+      startPayment({
+        billingPlanName: plan.billingPlanName,
+        currentBilling,
+        isFree: priceForPeriod(plan, billingPeriod) === 0,
+        onStarted: () => setBusyPlanId(planId),
+      });
       return;
     }
 
     router.push(withCallbackUrl('/login', pricingPath));
   }
 
-  if (!plans.length) return null;
+  if (!plans.length) {
+    return (
+      <section
+        id='pricing'
+        className='pricing-section bg-pattern relative overflow-hidden py-16 lg:py-24'
+      >
+        <div className='layer-content mx-auto max-w-7xl px-5 text-center lg:px-8'>
+          <div className='eyebrow mb-5'>{t('pricing.eyebrow')}</div>
+          <h2 className='text-3xl font-extrabold text-ink sm:text-4xl'>
+            {t('pricing.defaultTitle')}
+          </h2>
+          <p className='mt-4 text-lg text-ink-soft'>{tPlans('comingSoon')}</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -157,12 +150,37 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
 
       <div className='layer-content mx-auto max-w-7xl px-5 lg:px-8'>
         <div className='mx-auto max-w-2xl text-center' data-anim='fade-up' ref={fadeUpRef}>
-          <div className='eyebrow mb-5'>{parse(eyebrow) ?? t('pricing.eyebrow')}</div>
+          <div className='eyebrow mb-5'>{t('pricing.eyebrow')}</div>
           <h2 className='text-3xl font-extrabold leading-tight text-ink sm:text-4xl lg:text-[2.7rem]'>
-            {title ? parse(title) : t('pricing.defaultTitle')}
+            {t('pricing.defaultTitle')}
           </h2>
-          <div className='mt-4 text-lg text-ink-soft'>
-            {subtitle ? parse(subtitle) : t('pricing.subtitle')}
+          <div className='mt-4 text-lg text-ink-soft'>{t('pricing.subtitle')}</div>
+
+          <div className='mt-8 inline-flex rounded-full bg-white/80 p-1 shadow-sm ring-1 ring-black/5'>
+            <button
+              type='button'
+              onClick={() => setBillingPeriod('month')}
+              className={cn(
+                'rounded-full px-5 py-2 text-sm font-bold transition-colors',
+                billingPeriod === 'month'
+                  ? 'bg-ink text-white'
+                  : 'text-neutral-500 hover:text-ink',
+              )}
+            >
+              {t('pricing.monthly')}
+            </button>
+            <button
+              type='button'
+              onClick={() => setBillingPeriod('year')}
+              className={cn(
+                'rounded-full px-5 py-2 text-sm font-bold transition-colors',
+                billingPeriod === 'year'
+                  ? 'bg-ink text-white'
+                  : 'text-neutral-500 hover:text-ink',
+              )}
+            >
+              {t('pricing.yearly')}
+            </button>
           </div>
 
           <p className='mt-7 text-sm font-bold text-neutral-400'>{t('pricing.clickHint')}</p>
@@ -212,6 +230,7 @@ export function PricingCards({ plans, eyebrow, title, subtitle }: Props) {
                     >
                       <PricingPlanCard
                         plan={plan}
+                        billingPeriod={billingPeriod}
                         isFeatured={isActive}
                         isBusy={isPending && busyPlanId === stableId}
                         onSelect={() => {

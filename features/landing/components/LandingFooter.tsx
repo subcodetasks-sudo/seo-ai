@@ -42,7 +42,7 @@ export function LandingFooter() {
     { label: t('footer.pricingPolicy'), url: '/pricing' },
   ];
   return (
-    <footer className='relative overflow-hidden bg-white text-ink'>
+    <footer id='landing-footer' className='relative overflow-hidden bg-white text-ink'>
       <div className='swirl-watermark -left-20 -top-20 h-[520px] w-[520px]' style={{ opacity: '0.04' }} />
 
       {/* CTA banner */}

@@ -2,22 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 import { serverClient } from "@/lib/server";
 import { toErrorResponse } from "@/lib/errors";
 
-function getAuthHeaders(req: NextRequest) {
-  const accessToken = req.cookies.get("access_token")?.value;
-  if (!accessToken) return null;
-  return { Authorization: `Bearer ${accessToken}` };
-}
-
+/**
+ * Plan catalog is public marketing data (names, limits, prices).
+ * Auth is optional — attach Bearer when present so authenticated clients
+ * share the same cache key / response shape.
+ */
 export async function GET(req: NextRequest) {
-  const authHeaders = getAuthHeaders(req);
-  if (!authHeaders) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-  }
+  const accessToken = req.cookies.get("access_token")?.value;
+  const headers: HeadersInit = accessToken
+    ? { Authorization: `Bearer ${accessToken}` }
+    : {};
 
   try {
     const data = await serverClient(
       "billing/plans",
-      { method: "GET", headers: authHeaders },
+      { method: "GET", headers },
       "Failed to fetch plans",
     );
     return NextResponse.json(data);

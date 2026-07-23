@@ -2,22 +2,21 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 
 import { PricingPlanCard } from '@/features/landing/components/sections/pricing-plan-card';
-import { pricingQueryOptions } from '@/features/landing/queries/queries';
-import type { Pricing } from '@/features/landing/types/landing-api';
 import { useStartPlanPayment } from '@/features/plans/hooks/use-start-plan-payment';
+import { publicPlansQueryOptions } from '@/features/plans/queries/queries';
+import type { BillingPeriod } from '@/features/plans/services/public-plan-display';
 import {
-  findPlanById,
-  mapLandingPackagesToPlans,
-} from '@/features/plans/services/landing-plans';
+  findDisplayPlan,
+  isCustomPricing,
+  mapPublicPlansToDisplay,
+  priceForPeriod,
+} from '@/features/plans/services/public-plan-display';
 import { InvoiceHistoryCard } from '@/features/settings/components/invoice-history-card';
-import {
-  billingPlansQueryOptions,
-  currentBillingQueryOptions,
-} from '@/features/settings/queries/queries';
+import { currentBillingQueryOptions } from '@/features/settings/queries/queries';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 
@@ -85,26 +84,19 @@ function useSubscriptionStatusLabel(
 export function DashboardPricingContent() {
   const t = useTranslations('plans');
   const tBilling = useTranslations('settings.billing');
-  const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const planIdParam = searchParams.get('planId');
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('month');
 
-  const { data: pricingRaw, isLoading: isPricingLoading } = useQuery(
-    pricingQueryOptions(locale),
-  );
-  const { data: plansData, isLoading: isBillingPlansLoading } = useQuery(
-    billingPlansQueryOptions(),
+  const { data: plans = [], isLoading: isPlansLoading } = useQuery(
+    publicPlansQueryOptions(),
   );
   const { data: billingData, isLoading: isBillingLoading } = useQuery(
     currentBillingQueryOptions(),
   );
 
-  const pricing = Array.isArray(pricingRaw)
-    ? (pricingRaw as Pricing[])[0]
-    : (pricingRaw as Pricing | undefined);
-  const billingPlans = plansData?.data.plans ?? [];
   const currentBilling = billingData?.data;
   const currentPlanName = currentBilling?.plan_name?.toLowerCase() ?? '';
   const subscriptionStatus = normalizeStatus(currentBilling?.subscription_status);
@@ -118,27 +110,28 @@ export function DashboardPricingContent() {
   );
 
   const displayPlans = useMemo(
-    () => mapLandingPackagesToPlans(pricing?.packages?.items, billingPlans),
-    [pricing?.packages?.items, billingPlans],
+    () => mapPublicPlansToDisplay(plans, t),
+    [plans, t],
   );
 
   const { startPayment, isPending } = useStartPlanPayment();
   const [busyPlanId, setBusyPlanId] = useState<string | null>(null);
   const autoStartedRef = useRef(false);
 
-  const isLoading = isPricingLoading || isBillingPlansLoading || isBillingLoading;
+  const isLoading = isPlansLoading || isBillingLoading;
 
   function clearPlanIdFromUrl() {
     if (!planIdParam) return;
     router.replace(pathname);
   }
 
-  function beginPayment(billingPlanName: string | undefined, displayId: string) {
+  function beginPayment(billingPlanName: string | undefined, displayId: string, isFree: boolean) {
     if (!billingPlanName) return;
     setBusyPlanId(displayId);
     startPayment({
       billingPlanName,
       currentBilling,
+      isFree,
       onStarted: () => setBusyPlanId(displayId),
     });
   }
@@ -147,15 +140,19 @@ export function DashboardPricingContent() {
     if (autoStartedRef.current || isLoading) return;
     if (!planIdParam) return;
 
-    const plan = findPlanById(displayPlans, planIdParam);
-    if (!plan?.billingPlanName) return;
+    const plan = findDisplayPlan(displayPlans, planIdParam);
+    if (!plan?.billingPlanName || isCustomPricing(plan, billingPeriod)) return;
 
     autoStartedRef.current = true;
     clearPlanIdFromUrl();
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    beginPayment(plan.billingPlanName, plan.id);
+    beginPayment(
+      plan.billingPlanName,
+      plan.id,
+      priceForPeriod(plan, billingPeriod) === 0,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, planIdParam, displayPlans, currentBilling]);
+  }, [isLoading, planIdParam, displayPlans, currentBilling, billingPeriod]);
 
   if (isLoading) {
     return (
@@ -196,6 +193,33 @@ export function DashboardPricingContent() {
             ) : null}
           </p>
         ) : null}
+
+        <div className='mt-2 inline-flex rounded-full bg-neutral-100 p-1'>
+          <button
+            type='button'
+            onClick={() => setBillingPeriod('month')}
+            className={cn(
+              'rounded-full px-4 py-1.5 text-sm font-semibold transition-colors',
+              billingPeriod === 'month'
+                ? 'bg-white text-secondary-500 shadow-sm'
+                : 'text-neutral-500',
+            )}
+          >
+            {t('monthly')}
+          </button>
+          <button
+            type='button'
+            onClick={() => setBillingPeriod('year')}
+            className={cn(
+              'rounded-full px-4 py-1.5 text-sm font-semibold transition-colors',
+              billingPeriod === 'year'
+                ? 'bg-white text-secondary-500 shadow-sm'
+                : 'text-neutral-500',
+            )}
+          >
+            {t('yearly')}
+          </button>
+        </div>
       </div>
 
       {displayPlans.length > 0 ? (
@@ -204,22 +228,32 @@ export function DashboardPricingContent() {
             const isActive =
               !!plan.billingPlanName &&
               plan.billingPlanName.toLowerCase() === currentPlanName;
+            const custom = isCustomPricing(plan, billingPeriod);
 
             return (
               <div key={plan.id} className='relative flex min-h-0 flex-col'>
                 <PricingPlanCard
-                  plan={{
-                    ...plan,
-                    action: isActive ? tBilling('currentPlan') : plan.action,
-                  }}
+                  plan={plan}
+                  billingPeriod={billingPeriod}
                   isFeatured={isActive}
                   badge={isActive ? tBilling('active') : undefined}
                   statusLabel={isActive ? statusLabel : undefined}
                   statusTone={isActive ? activeTone : 'neutral'}
                   isBusy={isPending && busyPlanId === plan.id}
+                  actionLabel={
+                    isActive
+                      ? tBilling('currentPlan')
+                      : custom
+                        ? t('contactUs')
+                        : undefined
+                  }
                   onSubscribe={() => {
-                    if (isActive) return;
-                    beginPayment(plan.billingPlanName, plan.id);
+                    if (isActive || custom) return;
+                    beginPayment(
+                      plan.billingPlanName,
+                      plan.id,
+                      priceForPeriod(plan, billingPeriod) === 0,
+                    );
                   }}
                 />
               </div>
@@ -227,7 +261,7 @@ export function DashboardPricingContent() {
           })}
         </div>
       ) : (
-        <p className='py-10 text-center text-label-md text-neutral-500'>{t('empty')}</p>
+        <p className='py-10 text-center text-label-md text-neutral-500'>{t('comingSoon')}</p>
       )}
 
       <div className='mx-auto w-full max-w-6xl px-1'>
